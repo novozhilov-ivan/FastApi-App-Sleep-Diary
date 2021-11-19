@@ -1,0 +1,30 @@
+body {
+    background-color: #6C7156;
+}
+
+h1 {
+    color: navy;
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+ul.spisok-v-stroku {
+    padding-left: 0;
+    font-size: 160%;
+}
+
+ul.spisok-v-stroku li {
+    display: inline-block; /* Отображать как строчный элемент */
+    padding: 20px; /* Поля вокруг текста */
+}
+
+a.shapka {
+    color: black;
+    text-decoration: none;
+    margin: 0;
+}
+
+.menu{
+    align-self: center;
+    text-align: center;
+}
