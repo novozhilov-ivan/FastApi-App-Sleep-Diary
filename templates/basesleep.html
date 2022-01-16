@@ -1,0 +1,694 @@
+{% extends 'base.html' %}
+{% block title %}
+Дневник сна
+{% endblock %}
+
+{% block body %}
+    <h1>Здесь дневник сна. 6 недель ежедневного учета продолжительности сна. рассчет среднего времени и тд</h1>
+    <div class="container-fluid  text-center">
+
+        {% block sleep %}{% endblock %}
+{#    тут форма добавления#}
+
+        <div class="accordion" id="week-menu">
+            <!--Неделя 1-->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="accordion-header">
+                      <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#item-1">
+                        <b>Неделя 1</b>
+                      </button>
+                    </div>
+                    <div id="item-1" class="accordion-collapse collapse show" data-bs-parent="#week-menu">
+                        <div class="accordion-body row justify-content-center">
+                            <!--Дни-->
+                            <div class="col-12 col-md-8 ">
+                                <div class="accordion" id="daymenu">
+                                    <!-- item-11 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-11">
+                                            День 1
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-11" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class=" p-2">
+                                                        <form class="row justify-content-center" method="post">
+                                                            <div class="col-md-6 col-12 mx-5">
+                                                                <label class="sr-only" for="date">Дата</label>
+                                                                <input type="datetime-local" id="date" class="form-control" placeholder="22.12.2021">
+                                                            </div>
+                                                            <div class="col-md-6 col-12 col-">
+                                                                <label class="sr-only" for="leg">Лег</label>
+                                                                <input type="time" id="leg" class="form-control"  placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="usnul">Уснул</label>
+                                                                <input type="time" id="usnul" class="form-control" placeholder="22:50">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="prosnul">Проснулся</label>
+                                                                <input type="time" id="prosnul" class="form-control" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="vstal">Встал</label>
+                                                                <input type="time" id="vstal" class="form-control" placeholder="7:35">
+                                                            </div>
+                                                            <div class="col-md-6 col-12 mx-5">
+                                                                <label class="sr-only" for="nespal">Не спал</label>
+                                                                <input type="number" id="nespal" class="form-control" placeholder="Количество минут">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-12 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-12">
+                                            День 2
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-12" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-13 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-13">
+                                            День 3
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-13" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-14 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-14">
+                                            День 4
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-14" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-15 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-15">
+                                            День 5
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-15" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-16 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-16">
+                                            День 6
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-16" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-17 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-17">
+                                            День 7
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-17" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Эффективность сна-->
+                            <div class="col-12 col-md-4  mt-2 mt-md-0">
+                                <div class="">
+                                    Эффективность сна - <b>N</b> %<br>Среднее время сна за неделю - <b>N</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--Неделя 2-->
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="accordion-header">
+                      <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-2">
+                        <b>Неделя 2</b>
+                      </button>
+                    </div>
+                    <div id="item-2" class="accordion-collapse collapse" data-bs-parent="#week-menu">
+                        <div class="accordion-body row justify-content-center">
+                            <!--Дни-->
+                            <div class="col-12 col-md-8 ">
+                                <div class="accordion" id="daymenu2">
+                                    <!-- item-21 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-21">
+                                            День 1
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-21" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class=" p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-22 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-22">
+                                            День 2
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-22" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-23 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-23">
+                                            День 3
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-23" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-24 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-24">
+                                            День 4
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-24" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-25 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-25">
+                                            День 5
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-25" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-26 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-26">
+                                            День 6
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-26" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                    <!-- item-27 -->
+                                    <div class="accordion-item">
+                                        <div class="accordion-header">
+                                          <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item-27">
+                                            День 7
+                                          </button>
+                                        </div>
+                                        <!-- класс show делает пункт открытым -->
+                                        <div id="item-27" class="accordion-collapse collapse" data-bs-parent="#daymenu2">
+                                              <div class="accordion-body">
+                                                  <div class="p-2">
+                                                        <form class="row justify-content-center">
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Дата</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22.12.2021 тут автозаполнение">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInput">Лег</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="22:30">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only" for="autoSizingInputGroup">Уснул</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="22:50">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Проснулся</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="7:20">
+                                                            </div>
+                                                            <div class="col-md-6 col-12">
+                                                                <label class="sr-only">Встал</label>
+                                                                <div class="input-group">
+                                                                    <input type="text" class="form-control" id="autoSizingInputGroup" placeholder="7:35">
+                                                                </div>
+                                                            </div>
+                                                            <div class="col-6 mx-5">
+                                                                <label class="sr-only" for="autoSizingInput">Не спал</label>
+                                                                <input type="text" class="form-control" id="autoSizingInput" placeholder="15">
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                              </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--Эффективность сна-->
+                            <div class="col-12 col-md-4  mt-2 mt-md-0">
+                                <div class="">
+                                    Эффективность сна - <b>N</b> %<br>Среднее время сна за неделю - <b>N</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+{% endblock %}

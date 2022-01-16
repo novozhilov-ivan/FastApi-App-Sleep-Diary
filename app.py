@@ -1,6 +1,69 @@
-from flask import Flask, render_template, url_for
+from flask import Flask, render_template, url_for, request, redirect
+from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
+from jinja2 import Template
+
 
 app = Flask(__name__)
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
+class Notation(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    date = db.Column(db.Date, nullable=False)
+    week = db.Column(db.Integer, nullable=False)
+    day = db.Column(db.Integer, nullable=False)
+    leg = db.Column(db.Time, nullable=False)
+    usnul = db.Column(db.Time, nullable=False)
+    prosnul = db.Column(db.Time, nullable=False)
+    vstal = db.Column(db.Time, nullable=False)
+    nespal = db.Column(db.Time, nullable=False)
+
+    # def __repr__(self):
+    #     return '<Notation %r>' % self.date
+
+
+def strtotime(self):
+    return datetime.time(datetime.strptime(self, "%H:%M"))
+
+
+def strtoymd(self):
+    return datetime.date(datetime.strptime(self, "%Y-%m-%d"))
+
+
+@app.route('/sleep', methods=['POST', 'GET'])
+def sleep():
+    if request.method == "POST":
+        date = strtoymd(request.form['date'])
+        week = request.form['week']
+        day = request.form['day']
+        leg = strtotime(request.form['leg'])
+        usnul = strtotime(request.form['usnul'])
+        prosnul = strtotime(request.form['prosnul'])
+        vstal = strtotime(request.form['vstal'])
+        nespal = strtotime(request.form['nespal'])
+
+        notation = Notation(date=date, week=week, day=day, leg=leg, usnul=usnul, prosnul=prosnul, vstal=vstal,
+                            nespal=nespal)
+        try:
+            db.session.add(notation)
+            db.session.commit()
+            return redirect('/')
+
+        except:
+            return "При добавлении статьи произошла ошибка"
+    else:
+        return render_template('sleep.html')
+    # if request.method == "POST":
+    #     date = strtoymd(request.form['date'])
+    #     leg = strtotime(request.form['leg'])
+    #     print(type(date), date)
+    #     print(type(leg), leg)
+    #     return render_template('main.html')
+    # else:
+    #     return render_template('sleep.html')
 
 
 @app.route('/')
@@ -25,7 +88,7 @@ def analytics():
 
 
 @app.route('/support')
-def analytica():
+def support():
     return render_template('support.html')
 
 
