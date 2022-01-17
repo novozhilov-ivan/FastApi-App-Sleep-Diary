@@ -1,7 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
-from jinja2 import Template
 
 
 app = Flask(__name__)
@@ -22,7 +21,7 @@ class Notation(db.Model):
     nespal = db.Column(db.Time, nullable=False)
 
     # def __repr__(self):
-    #     return '<Notation %r>' % self.date
+    #     return '<Notation %r>' % self.id
 
 
 def strtotime(self):
@@ -33,8 +32,14 @@ def strtoymd(self):
     return datetime.date(datetime.strptime(self, "%Y-%m-%d"))
 
 
-@app.route('/sleep', methods=['POST', 'GET'])
+@app.route('/sleep')
 def sleep():
+    notations = Notation.query.order_by(Notation.date.desc()).all()
+    return render_template("sleep.html", notations=notations)
+
+
+@app.route('/sleep', methods=['POST', 'GET'])
+def addnotation():
     if request.method == "POST":
         date = strtoymd(request.form['date'])
         week = request.form['week']
@@ -51,20 +56,10 @@ def sleep():
             db.session.add(notation)
             db.session.commit()
             return redirect('/')
-
         except:
             return "При добавлении статьи произошла ошибка"
     else:
         return render_template('sleep.html')
-    # if request.method == "POST":
-    #     date = strtoymd(request.form['date'])
-    #     leg = strtotime(request.form['leg'])
-    #     print(type(date), date)
-    #     print(type(leg), leg)
-    #     return render_template('main.html')
-    # else:
-    #     return render_template('sleep.html')
-
 
 @app.route('/')
 @app.route('/main')

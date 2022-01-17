@@ -6,11 +6,65 @@
 {% block body %}
     <h1>Здесь дневник сна. 6 недель ежедневного учета продолжительности сна. рассчет среднего времени и тд</h1>
     <div class="container-fluid  text-center">
-
-        {% block sleep %}{% endblock %}
-{#    тут форма добавления#}
-
-        <div class="accordion" id="week-menu">
+{#        Форма добавления записи в дневник#}
+        {% block addnotation %}{% endblock %}
+{#        Аккордион с записями дневника из бд #}
+        <div class="accordion mt-5" id="week-menu">
+            {% if notations|length > 0 %}
+{#Неделя 1#}
+            <div class="accordion-item">
+                <div class="accordion-header">
+                    <div class="accordion-header">
+                          <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#week-1">
+                            <b>Неделя 1</b>
+                            <div class="alert alert-info m-1">
+                                Eсть записи
+                            </div>
+                            {% else %}
+                            <div class="alert alert-info m-1">
+                                <b>У вас еще нет записей в дневнике сна</b>
+                            </div>
+                          </button>
+                        {% endif %}
+                    </div>
+                    <div id="week-1" class="accordion-collapse collapse show" data-bs-parent="#week-menu">
+                        <div class="accordion-body row justify-content-center">
+                            <div class="col-12 col-md-8">
+{#                      Дни#}
+                                <div class="accordion" id="daymenu">
+                                {% for el in notations if el.id < 8 %}
+                                    <div class="my-2">
+                                        <!-- items -->
+                                        <div class="accordion-item">
+                                            <div class="accordion-header">
+                                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item{{ el.id }}">
+                                                 <h5>День {{ el.id }}</h5>
+                                              </button>
+                                            </div>
+                                            <!-- класс show делает пункт открытым -->
+                                            <div id="item{{ el.id }}" class="accordion-collapse collapse" data-bs-parent="#daymenu">
+                                                  <div class="accordion-body">
+                                                      <h6>{{ el.leg }}</h6>
+                                                  </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                </div>
+                            </div>
+                            {#                      Эффективность сна#}
+                            <div class="col-12 col-md-4  mt-2 mt-md-0">
+                                <div>
+                                    Эффективность сна - <b>N</b> %<br>
+                                    Среднее время сна за неделю - <b>N</b>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="accordion mt-5" id="week-menu">
             <!--Неделя 1-->
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -688,7 +742,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 {% endblock %}
