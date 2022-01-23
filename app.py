@@ -25,32 +25,79 @@ class Notation(db.Model):
         return '<Notation %r>' % self.id
 
 
-def str_to_time(self):
-    return datetime.time(datetime.strptime(self, '%H:%M'))
+def str_to_time(s):
+    return datetime.time(datetime.strptime(s, '%H:%M'))
 
 
-def str_to_ymd(self):
-    return datetime.date(datetime.strptime(self, '%Y-%m-%d'))
+def str_to_ymd(s):
+    return datetime.date(datetime.strptime(s, '%Y-%m-%d'))
 
 
-def timedelta_to_minutes(self):
-    return self.seconds / 60
+def timedelta_to_minutes(s):
+    return s.seconds / 60
 
 
 @app.route('/sleep')
 def sleep():
-    def h_m(self):
-        if type(self) == int:
-            hm = str(self // 60) + ':' + str(self % 60)
+    def h_m(vremya):
+        if type(vremya) == int:
+            if vremya % 60 < 10:
+                hm = str(vremya // 60) + ':0' + str(vremya % 60)
+            else:
+                hm = str(vremya // 60) + ':' + str(vremya % 60)
         else:
-            hm = self.strftime('%H:%M')
+            hm = vremya.strftime('%H:%M')
         return hm
 
     def eff(spal, nespal, vkrovati):
         return round(((spal - nespal) / vkrovati * 100), 2)
 
-    notations = Notation.query.order_by(Notation.date.desc()).all()
-    return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff)
+    def eff_sleep_of_week(nedelya):
+        sum_eff = 0
+        elem_of_week = 0
+        for day in range(1 + 7 * (nedelya - 1), 8 * nedelya - (nedelya - 1)):
+            for elem in notations:
+                if elem.id == day:
+                    elem_of_week += 1
+                    sum_eff += (elem.spal - elem.nespal) / elem.vkrovati
+        if elem_of_week == 0:
+            return 0
+        else:
+            eff_count = (sum_eff / elem_of_week) * 100
+            eff_count = round(eff_count, 2)
+            return eff_count
+
+    def avg_duration_sleep_of_week(nedelya):
+        sum_min = 0
+        elem_of_week = 0
+        for day in range(1 + 7 * (nedelya - 1), 8 * nedelya - (nedelya - 1)):
+            for elem in notations:
+                if elem.id == day:
+                    elem_of_week += 1
+                    sum_min += elem.spal - elem.nespal
+        if elem_of_week == 0:
+            return 0
+        else:
+            avg = sum_min / elem_of_week
+            return int(avg)
+
+    def check_notations(nedelya):
+        amount = 0
+        for day in range(1 + 7 * (nedelya - 1), 8 * nedelya - (nedelya - 1)):
+            for elem in notations:
+                if elem.id == day:
+                    amount += 1
+        if amount == 0:
+            return 0
+        else:
+            return amount
+
+    notations = db.session.query(Notation).order_by(Notation.id)
+    db_elem_counter = db.session.query(Notation).count()
+
+    return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff, db_elem_counter=db_elem_counter,
+                           eff_sleep_of_week=eff_sleep_of_week, avg_duration_sleep_of_week=avg_duration_sleep_of_week,
+                           check_notations=check_notations)
 
 
 @app.route('/sleep', methods=['POST', 'GET'])
@@ -64,10 +111,8 @@ def add_notation():
         prosnul = str_to_time(request.form['prosnul'])
         vstal = str_to_time(request.form['vstal'])
         nespal = str_to_time(request.form['nespal']).hour * 60 + str_to_time(request.form['nespal']).minute
-
         delta_spal = datetime.combine(date, prosnul) - datetime.combine(date, usnul)
         delta_vkrovati = datetime.combine(date, vstal) - datetime.combine(date, leg)
-
         spal = timedelta_to_minutes(delta_spal) - nespal
         vkrovati = timedelta_to_minutes(delta_vkrovati)
 

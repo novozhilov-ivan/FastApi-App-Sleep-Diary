@@ -20,36 +20,36 @@
           </a>
 
           <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-            <li>
-              <a href="/main" class="nav-link text-secondary">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#shop"></use></svg>
-                Home
-              </a>
-            </li>
-            <li>
-              <a href="/analytics" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#speedometer2"></use></svg>
-                Analytics
-              </a>
-            </li>
-            <li>
-              <a href="/data_form" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#table"></use></svg>
-                Forms
-              </a>
-            </li>
-            <li>
-              <a href="/support" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#grid"></use></svg>
-                Support
-              </a>
-            </li>
-            <li>
-              <a href="/login" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#person-circle"></use></svg>
-                Account
-              </a>
-            </li>
+{#            <li>#}
+{#              <a href="/main" class="nav-link text-secondary">#}
+{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#shop"></use></svg>#}
+{#                Home#}
+{#              </a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a href="/analytics" class="nav-link text-white">#}
+{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#speedometer2"></use></svg>#}
+{#                Analytics#}
+{#              </a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a href="/data_form" class="nav-link text-white">#}
+{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#table"></use></svg>#}
+{#                Forms#}
+{#              </a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a href="/support" class="nav-link text-white">#}
+{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#grid"></use></svg>#}
+{#                Support#}
+{#              </a>#}
+{#            </li>#}
+{#            <li>#}
+{#              <a href="/login" class="nav-link text-white">#}
+{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#person-circle"></use></svg>#}
+{#                Account#}
+{#              </a>#}
+{#            </li>#}
             <li>
               <a href="/sleep" class="nav-link text-white">
                   <svg class="bi d-block mx-auto mb-1" width="30" height="24" viewBox="0 0 640 512"><path fill="currentColor" d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"></path></svg>
@@ -60,25 +60,22 @@
         </div>
       </div>
     </div>
-    <div class="px-3 py-2 border-bottom mb-3">
-      <div class="container d-flex flex-wrap justify-content-center">
-        <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">
-          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">
-        </form>
-
-        <div class="text-end">
-          <button type="button" class="btn btn-light text-dark me-2">Login</button>
-          <button type="button" class="btn btn-primary">Sign-up</button>
-        </div>
-      </div>
-    </div>
+{#    <div class="px-3 py-2 border-bottom mb-3">#}
+{#      <div class="container d-flex flex-wrap justify-content-center">#}
+{#        <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">#}
+{#          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">#}
+{#        </form>#}
+{##}
+{#        <div class="text-end">#}
+{#          <button type="button" class="btn btn-light text-dark me-2">Login</button>#}
+{#          <button type="button" class="btn btn-primary">Sign-up</button>#}
+{#        </div>#}
+{#      </div>#}
+{#    </div>#}
 </header>
-
 <div class="container">
     {% block body %}{% endblock %}
 </div>
-
 <script src="/static/js/bootstrap.bundle.min.js"></script>
-
 </body>
 </html>

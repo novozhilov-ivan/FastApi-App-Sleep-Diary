@@ -4,14 +4,19 @@
 {% endblock %}
 
 {% block body %}
-    <h1>Здесь дневник сна. 6 недель ежедневного учета продолжительности сна. рассчет среднего времени и тд</h1>
-    <div class="container-fluid  text-center">
+    <h1 class="alert alert-info m-1">Здесь дневник сна. 6 недель ежедневного учета продолжительности сна. рассчет среднего времени и тд</h1>
+    <div class="container-fluid text-center">
 {#        Форма добавления записи в дневник#}
         {% block addnotation %}{% endblock %}
 {#        Аккордион с записями дневника из бд #}
         <div class="accordion mt-5" id="week-menu">
-        {% for nedelya in range(1,7) %}
-            {% if notations|length > 0 %}
+        {% if db_elem_counter == 0 %}
+        <div class="alert alert-info m-1">
+            У вас еще нет записей в дневнике сна
+        </div>
+        {% else %}
+        {% for nedelya in range(1,7) if db_elem_counter > 0  %}
+            {% if db_elem_counter > 0 %}
 {#Неделя 1#}
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -19,13 +24,21 @@
                     <div class="accordion-header">
                           <button class="accordion-button {% if nedelya == 1 %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#week{{ nedelya }}">
                             <b>Неделя {{ nedelya }}</b>
-                            <div class="alert alert-info m-1">
-                                Eсть записи
+                            {% if check_notations(nedelya) == 0 %}
+                            <div class="alert alert-dark m-1">
+                                Записи отсутствуют
                             </div>
-            {% else %}
+                            {% else %}
+                            {% if 7 < check_notations(nedelya) > 0 %}
                             <div class="alert alert-info m-1">
-                                У вас еще нет записей в дневнике сна
+                                Количество записей {{ check_notations(nedelya) }}/7
                             </div>
+                            {% else %}
+                            <div class="alert alert-success m-1">
+                                Количество записей {{ check_notations(nedelya) }}/7
+                            </div>
+                            {% endif %}
+                            {% endif %}
                           </button>
             {% endif %}
                     </div>
@@ -35,14 +48,14 @@
                             <div class="col-12 col-md-8">
                             {# Дни #}
                                 <div class="accordion" id="daymenu">
-                                {% for el in notations if el.id <= (nedelya * 7) and el.id > ((nedelya-1)*7) %}
+                                {% for el in notations if el.id <= (nedelya * 7) and el.id > ((nedelya - 1) * 7) %}
                                     <div class="my-2">
                                         <!-- items -->
                                         <div class="accordion-item">
                                             {# Кнопка(голова) аккордиона с днями #}
                                             <div class="accordion-header">
                                               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item{{ el.id }}">
-                                                 <h5>День {{ el.id }}</h5>
+                                                 День {{ el.id }}
                                               </button>
                                             </div>
                                             {# Тело аккордиона с днями #} <!-- класс show делает пункт открытым -->
@@ -51,7 +64,7 @@
                                                       <p><b>Дата:</b> {{ el.date }}</p>
                                                       <p><b>Лег в</b> {{ h_m(el.leg) }} | <b>Уснул в</b> {{ h_m(el.usnul) }}</p>
                                                       <p><b>Проснулся в</b> {{ h_m(el.prosnul) }} | <b>Встал в</b> {{ h_m(el.vstal) }}</p>
-                                                      <p><b>Не спал</b> {{ el.nespal }} <b>минут</b></p>
+                                                      <p><b>Не спал минут - </b> {{ el.nespal }} </p>
                                                       <p><b>Время сна</b> - {{ h_m(el.spal) }}</p>
                                                       <p><b>Время в кровати</b> - {{ h_m(el.vkrovati) }}</p>
                                                       <h5>Эффективность сна - <b>{{ eff(el.spal, el.nespal, el.vkrovati) }}</b> %<br></h5>
@@ -63,17 +76,20 @@
                                 </div>
                             </div>
                             {# Эффективность сна #}
+
                             <div class="col-12 col-md-4 mt-md-0">
                                 <div class="mt-2">
-{#                                    Эффективность сна - <b>{{ (el.prosnul - el.usnul) / el.vstal - el.leg }}</b> %<br>#}
-                                    Среднее время сна за неделю - <b>N</b>
+                                    Эффективность сна за неделю {{ nedelya }}- <b> {{ eff_sleep_of_week(nedelya) }} </b> %<br>
+                                    Среднее время сна за неделю {{ nedelya }}- <b>{{ h_m(avg_duration_sleep_of_week(nedelya)) }}</b>
                                 </div>
                             </div>
+
                         </div>
                     </div>
                 </div>
             </div>
         {% endfor %}
+        {% endif %}
         </div>
 {#    шаблон#}
 {#        <div class="accordion mt-5" id="week-menu">#}
