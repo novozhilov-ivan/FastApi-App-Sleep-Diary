@@ -1,49 +1,50 @@
-{% extends 'basesleep.html' %}
+{% extends 'base.html' %}
 {% block title %}
-Дневник сна
+Обновление записи
 {% endblock %}
-{% block addnotation %}
-    <div class="container-fluid text-center mt-4">
+{% block update %}
+        <div class="alert alert-success text-center">
+        <h1>Обновление записи в дневнике</h1>
+        </div>
         <div class=" p-2">
             <form class="row justify-content-center" method="POST">
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-12 ">
                     <label class="sr-only" for="date">Дата</label>
-                    <input type="date" name="date" id="date" class="form-control" placeholder="22.12.2021">
+                    <input type="date" name="date" id="date" class="form-control" value="{{ notations.date }}" placeholder="22.12.2021">
                     </div>
                     <div class="col-md-3 col-12">
                         <label class="sr-only" for="week">Неделя</label>
-                        <input type="number" name="week" id="week" min="1" max="6" class="form-control"  placeholder="1-6">
+                        <input type="number" name="week" id="week" min="1" max="6" class="form-control" value="{{ notations.week }}" placeholder="1-6">
                     </div>
                     <div class="col-md-3 col-12">
                          <label class="sr-only" for="day">День</label>
-                        <input type="number" name="day" id="day" min="1" max="7" class="form-control"  placeholder="1-7">
+                        <input type="number" name="day" id="day" min="1" max="7" class="form-control" value="{{ notations.day }}" placeholder="1-7">
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-12">
                         <label class="sr-only" for="leg">Лег</label>
-                        <input type="time" name="leg" id="leg" class="form-control">
+                        <input type="time" name="leg" id="leg" class="form-control" value="{{ notations.leg }}" placeholder="22:30">
                     </div>
                     <div class="col-md-2 col-12">
                         <label class="sr-only" for="usnul">Уснул</label>
-                        <input type="time" name="usnul" id="usnul" class="form-control">
+                        <input type="time" name="usnul" id="usnul" class="form-control" value="{{ notations.usnul }}" placeholder="22:50">
                     </div>
                     <div class="col-md-2 col-12">
                         <label class="sr-only" for="prosnul">Проснулся</label>
-                        <input type="time" name="prosnul" id="prosnul" class="form-control">
+                        <input type="time" name="prosnul" id="prosnul" class="form-control" value="{{ notations.prosnul }}" placeholder="7:20">
                     </div>
                     <div class="col-md-2 col-12">
                         <label class="sr-only" for="vstal">Встал</label>
-                        <input type="time" name="vstal" id="vstal" class="form-control">
+                        <input type="time" name="vstal" id="vstal" class="form-control" value="{{ notations.vstal }}" placeholder="7:35">
                     </div>
                     <div class="col-md-2 col-12 ">
                         <label class="sr-only" for="nespal">Не спал</label>
-                        <input type="time" name="nespal" id="nespal" class="form-control" value="00:00">
+                        <input type="time" name="nespal" id="nespal" class="form-control" value="00:00" placeholder="Количество минут">
                     </div>
                 </div>
                 <input type="submit"  class="btn btn-success mt-5 w-50" value="Отправить">
             </form>
         </div>
-    </div>
 {% endblock %}

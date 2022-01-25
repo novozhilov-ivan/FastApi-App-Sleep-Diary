@@ -1,6 +1,6 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime, time
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
@@ -92,12 +92,57 @@ def sleep():
         else:
             return amount
 
+    def last_day(day_number):
+        day = 0
+        for elem in notations:
+            day += 1
+        if day_number == day:
+            return True
+        else:
+            return False
+
     notations = db.session.query(Notation).order_by(Notation.id)
     db_elem_counter = db.session.query(Notation).count()
 
     return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff, db_elem_counter=db_elem_counter,
                            eff_sleep_of_week=eff_sleep_of_week, avg_duration_sleep_of_week=avg_duration_sleep_of_week,
-                           check_notations=check_notations)
+                           check_notations=check_notations, last_day=last_day)
+
+
+@app.route('/sleep/<int:id>/delete')
+def delete_notation(id):
+    notations = Notation.query.get_or_404(id)
+
+    try:
+        db.session.delete(notations)
+        db.session.commit()
+        return redirect('/sleep')
+    except:
+        return "При удалении записи произошла ошибка"
+
+
+@app.route('/sleep/<int:id>/update', methods=['POST', 'GET'])
+def update(id):
+    notations = Notation.query.get(id)
+    if request.method == "POST":
+        notations.date = str_to_ymd(request.form['date'])
+        notations.leg = str_to_time(request.form['leg'])
+        notations.usnul = str_to_time(request.form['usnul'])
+        notations.prosnul = str_to_time(request.form['prosnul'])
+        notations.vstal = str_to_time(request.form['vstal'])
+        notations.nespal = str_to_time(request.form['nespal']).hour * 60 + str_to_time(request.form['nespal']).minute
+        delta_spal = datetime.combine(notations.date, notations.prosnul) - datetime.combine(notations.date, notations.usnul)
+        delta_vkrovati = datetime.combine(notations.date, notations.vstal) - datetime.combine(notations.date, notations.leg)
+        notations.spal = timedelta_to_minutes(delta_spal) - notations.nespal
+        notations.vkrovati = timedelta_to_minutes(delta_vkrovati)
+
+        try:
+            db.session.commit()
+            return redirect('/sleep')
+        except:
+            return "При редактировании статьи статьи произошла ошибка"
+    else:
+        return render_template("notation_update.html", notations=notations)
 
 
 @app.route('/sleep', methods=['POST', 'GET'])
