@@ -1,6 +1,7 @@
 from flask import Flask, render_template, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
+import csv
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
@@ -11,8 +12,6 @@ db = SQLAlchemy(app)
 class Notation(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     date = db.Column(db.Date, nullable=False)
-    week = db.Column(db.Integer, nullable=False)
-    day = db.Column(db.Integer, nullable=False)
     leg = db.Column(db.Time, nullable=False)
     usnul = db.Column(db.Time, nullable=False)
     prosnul = db.Column(db.Time, nullable=False)
@@ -38,7 +37,7 @@ def timedelta_to_minutes(s):
 
 
 @app.route('/sleep')
-def sleep():
+def basesleep():
     def h_m(vremya):
         if type(vremya) == int:
             if vremya % 60 < 10:
@@ -49,8 +48,11 @@ def sleep():
             hm = vremya.strftime('%H:%M')
         return hm
 
-    def eff(spal, nespal, vkrovati):
-        return round(((spal - nespal) / vkrovati * 100), 2)
+    def eff(spal, vkrovati):
+        if spal == 0:
+            return 0
+        else:
+            return round((spal / vkrovati * 100), 2)
 
     def eff_sleep_of_week(nedelya):
         sum_eff = 0
@@ -59,7 +61,8 @@ def sleep():
             for elem in notations:
                 if elem.id == day:
                     elem_of_week += 1
-                    sum_eff += (elem.spal - elem.nespal) / elem.vkrovati
+                    if elem.spal != elem.nespal:
+                        sum_eff += (elem.spal - elem.nespal) / elem.vkrovati
         if elem_of_week == 0:
             return 0
         else:
@@ -101,12 +104,15 @@ def sleep():
         else:
             return False
 
+    def dmy_today():
+        return datetime.date(datetime.today())
+
     notations = db.session.query(Notation).order_by(Notation.id)
     db_elem_counter = db.session.query(Notation).count()
 
     return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff, db_elem_counter=db_elem_counter,
                            eff_sleep_of_week=eff_sleep_of_week, avg_duration_sleep_of_week=avg_duration_sleep_of_week,
-                           check_notations=check_notations, last_day=last_day)
+                           check_notations=check_notations, last_day=last_day, dmy_today=dmy_today)
 
 
 @app.route('/sleep/<int:id>/delete')
@@ -149,8 +155,6 @@ def update(id):
 def add_notation():
     if request.method == "POST":
         date = str_to_ymd(request.form['date'])
-        week = request.form['week']
-        day = request.form['day']
         leg = str_to_time(request.form['leg'])
         usnul = str_to_time(request.form['usnul'])
         prosnul = str_to_time(request.form['prosnul'])
@@ -161,7 +165,7 @@ def add_notation():
         spal = timedelta_to_minutes(delta_spal) - nespal
         vkrovati = timedelta_to_minutes(delta_vkrovati)
 
-        notation = Notation(date=date, week=week, day=day, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
+        notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
                             prosnul=prosnul, vstal=vstal, nespal=nespal)
         try:
             db.session.add(notation)
@@ -171,6 +175,30 @@ def add_notation():
             return "При добавлении статьи произошла ошибка"
     else:
         return render_template('sleep.html')
+
+
+@app.route('/edit', methods=['POST', 'GET'])
+def edit_dairy():
+    notations = db.session.query(Notation).order_by(Notation.id)
+    if request.method == 'POST':
+        if request.form['export'] == 'Экспортировать дневник':
+            try:
+                with open("export_dairy.csv", "w") as file:
+                    writer = csv.writer(file)
+                    writer.writerow(
+                        ('Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал', 'Не спал', 'Время сна', 'Время в кровати',
+                         'Эффективность сна')
+                    )
+                    for elem in notations:
+                        writer.writerow(
+                            [elem.date, elem.leg, elem.usnul, elem.prosnul, elem.vstal, elem.nespal, elem.spal,
+                             elem.vkrovati]
+                        )
+                return "Экспортировано успешно"
+            except:
+                return "При эспортировании произошла ошибка"
+    else:
+        return render_template("edit_dairy.html")
 
 
 @app.route('/')

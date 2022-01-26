@@ -1,16 +1,17 @@
 {% extends 'base.html' %}
 {% block title %}
-Дневник сна
+Дневник сна базе слип
 {% endblock %}
 
 {% block body %}
     <div class="row justify-content-center">
-    <h1 class="alert alert-primary m-1 w-50 text-center">Дневник сна</h1>
-    <h4 class="alert alert-primary m-1 text-center">Ежедневный учет времени отхода ко сну, засыпания, пробуждения и подъема, а также времени нахождения в кровати без сна. Еженедельный рассчет средней эффективности и продолжительности сна.</h4>
+    <h4 class="alert alert-primary m-1 text-center">Добавление записи</h4>
     </div>
     <div class="container-fluid text-center mt-4">
 {#        Форма добавления записи в дневник#}
         {% block addnotation %}{% endblock %}
+{#        Форма добавления записи в дневник#}
+        {% block edit %}{% endblock %}
 {#        Аккордион с записями дневника из бд #}
         <div class="accordion mt-5" id="week-menu">
         {% if db_elem_counter == 0 %}
@@ -69,7 +70,7 @@
                                                       <p><b>Проснулся в</b> {{ h_m(el.prosnul) }} | <b>Встал в</b> {{ h_m(el.vstal) }}</p>
                                                       <p><b>Не спал минут - </b> {{ el.nespal }} </p>
                                                       <p><b>Время сна</b> - {{ h_m(el.spal) }} | <b>Время в кровати</b> - {{ h_m(el.vkrovati) }}</p>
-                                                      <h5>Эффективность сна - <b>{{ eff(el.spal, el.nespal, el.vkrovati) }}</b> %<br></h5>
+                                                      <h5>Эффективность сна - <b>{{ eff(el.spal, el.vkrovati) }}</b> %<br></h5>
                                                       <div class="mt-3">
                                                         {% if last_day(el.id) %}<a href="/sleep/{{ el.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
                                                         <a href="/sleep/{{ el.id }}/update" class="btn btn-success">Редактировать</a>
@@ -91,7 +92,6 @@
                                     <h3>{{ h_m(avg_duration_sleep_of_week(nedelya)) }}</h3>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -99,6 +99,7 @@
         {% endfor %}
         {% endif %}
         </div>
+        <input type="submit"  class="btn btn-primary m-5 w-50" value="Импортировать дневник">
     </div>
 
 {% endblock %}
