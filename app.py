@@ -36,24 +36,34 @@ def timedelta_to_minutes(s):
     return s.seconds / 60
 
 
+def eff(spal, vkrovati):
+    if spal == 0:
+        return 0
+    else:
+        return round((spal / vkrovati * 100), 2)
+
+
+def h_m(vremya):
+    if type(vremya) == int:
+        if vremya % 60 < 10:
+            hm = str(vremya // 60) + ':0' + str(vremya % 60)
+        else:
+            hm = str(vremya // 60) + ':' + str(vremya % 60)
+    else:
+        hm = vremya.strftime('%H:%M')
+    return hm
+
+
+def delta(date1, date2, vremya1, vremya2):
+    return datetime.combine(date1, vremya1) - datetime.combine(date2, vremya2)
+
+
+def date_dmy_to_ymd(s):
+    return s[0][6:] + '-' + s[0][3:5] + '-' + s[0][0:2]
+
+
 @app.route('/sleep')
 def basesleep():
-    def h_m(vremya):
-        if type(vremya) == int:
-            if vremya % 60 < 10:
-                hm = str(vremya // 60) + ':0' + str(vremya % 60)
-            else:
-                hm = str(vremya // 60) + ':' + str(vremya % 60)
-        else:
-            hm = vremya.strftime('%H:%M')
-        return hm
-
-    def eff(spal, vkrovati):
-        if spal == 0:
-            return 0
-        else:
-            return round((spal / vkrovati * 100), 2)
-
     def eff_sleep_of_week(nedelya):
         sum_eff = 0
         elem_of_week = 0
@@ -61,14 +71,12 @@ def basesleep():
             for elem in notations:
                 if elem.id == day:
                     elem_of_week += 1
-                    if elem.spal != elem.nespal:
-                        sum_eff += (elem.spal - elem.nespal) / elem.vkrovati
+                    if elem.spal != 0:
+                        sum_eff += elem.spal / elem.vkrovati
         if elem_of_week == 0:
             return 0
         else:
-            eff_count = (sum_eff / elem_of_week) * 100
-            eff_count = round(eff_count, 2)
-            return eff_count
+            return round(((sum_eff / elem_of_week) * 100), 2)
 
     def avg_duration_sleep_of_week(nedelya):
         sum_min = 0
@@ -77,12 +85,11 @@ def basesleep():
             for elem in notations:
                 if elem.id == day:
                     elem_of_week += 1
-                    sum_min += elem.spal - elem.nespal
+                    sum_min += elem.spal
         if elem_of_week == 0:
             return 0
         else:
-            avg = sum_min / elem_of_week
-            return int(avg)
+            return int(sum_min / elem_of_week)
 
     def check_notations(nedelya):
         amount = 0
@@ -118,7 +125,6 @@ def basesleep():
 @app.route('/sleep/<int:id>/delete')
 def delete_notation(id):
     notations = Notation.query.get_or_404(id)
-
     try:
         db.session.delete(notations)
         db.session.commit()
@@ -160,10 +166,8 @@ def add_notation():
         prosnul = str_to_time(request.form['prosnul'])
         vstal = str_to_time(request.form['vstal'])
         nespal = str_to_time(request.form['nespal']).hour * 60 + str_to_time(request.form['nespal']).minute
-        delta_spal = datetime.combine(date, prosnul) - datetime.combine(date, usnul)
-        delta_vkrovati = datetime.combine(date, vstal) - datetime.combine(date, leg)
-        spal = timedelta_to_minutes(delta_spal) - nespal
-        vkrovati = timedelta_to_minutes(delta_vkrovati)
+        spal = timedelta_to_minutes(delta(date, date, prosnul, usnul)) - nespal
+        vkrovati = timedelta_to_minutes(delta(date, date, vstal, leg))
 
         notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
                             prosnul=prosnul, vstal=vstal, nespal=nespal)
@@ -181,9 +185,9 @@ def add_notation():
 def edit_dairy():
     notations = db.session.query(Notation).order_by(Notation.id)
     if request.method == 'POST':
-        if request.form['export'] == 'Экспортировать дневник':
+        if request.form.get('export') == 'Экспортировать дневник':
             try:
-                with open("export_dairy.csv", "w") as file:
+                with open("export_dairy.csv", "w", encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow(
                         ('Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал', 'Не спал', 'Время сна', 'Время в кровати',
@@ -192,11 +196,46 @@ def edit_dairy():
                     for elem in notations:
                         writer.writerow(
                             [elem.date, elem.leg, elem.usnul, elem.prosnul, elem.vstal, elem.nespal, elem.spal,
-                             elem.vkrovati]
+                             elem.vkrovati, eff(elem.spal, elem.vkrovati)]
                         )
                 return "Экспортировано успешно"
             except:
                 return "При эспортировании произошла ошибка"
+        elif request.form.get('import') == 'Импортировать дневник':
+            try:
+                count = 0
+                with open(request.form['importfile'], "r") as file:
+                    reader = csv.reader(file)
+                    next(reader)
+                    for row in reader:
+                        date = datetime.date(datetime.strptime(row[0], '%Y-%m-%d'))
+                        leg = str_to_time(row[1])
+                        usnul = str_to_time(row[2])
+                        prosnul = str_to_time(row[3])
+                        vstal = str_to_time(row[4])
+                        nespal = str_to_time(row[5]).hour * 60 + str_to_time(row[5]).minute
+                        spal = timedelta_to_minutes(delta(date, date, prosnul, usnul)) - nespal
+                        vkrovati = timedelta_to_minutes(delta(date, date, vstal, leg))
+
+                        notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
+                                            prosnul=prosnul, vstal=vstal, nespal=nespal)
+                        try:
+                            db.session.add(notation)
+                            db.session.commit()
+                            count += 1
+                        except:
+                            return "При добавлении статьи произошла ошибка"
+                return f"Успешно импортировано записей: {count}"
+            except:
+                return "При импортировании произошла ошибка"
+
+        elif request.form['deletedairy'] == 'Удалить дневник':
+            try:
+                db.session.query(Notation).delete()
+                db.session.commit()
+                return 'Все записи успешно удалены'
+            except:
+                return 'При удалении записей произошла ошибка'
     else:
         return render_template("edit_dairy.html")
 
