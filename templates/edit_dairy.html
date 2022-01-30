@@ -7,17 +7,18 @@
         <div class="row justify-content-center">
             <h4 class="alert alert-primary m-1 text-center">Редактирование дневника</h4>
         </div>
-        <form class="container" method="POST">
-            <div class="row justify-content-center mt-5 pb-4 border-bottom border-dark">
-                <label class="sr-only" for="export">Сохранить все записи двневника сна в CSV-файл</label>
+        <form class="container " method="POST">
+            <div class="row justify-content-center mt-5 p-4 border-bottom border-top border-dark">
+                <div>Сохранить все записи двневника сна в CSV-файл</div>
                 <input type="submit" class="btn btn-primary mt-2 mt-md-2 w-auto" name="export" id="export" value="Экспортировать дневник">
             </div>
-            <div class="row justify-content-center text-center mt-4 pb-4 border-bottom border-dark">
-                <label class="sr-only" for="import">Добавить(к имеющимся) записи в дневник сна из CSV-файла</label>
-                <div class="mt-md-2">
+            <div class="row justify-content-center text-center mt-4 pb-2 border-bottom border-dark">
+                <div class="mb-2">Добавить(к имеющимся) записи в дневник сна из CSV-файла.</div>
+                <div class="mt-md-2 mb-2">
                     <input type="file" class="mt-2 mt-md-0 border-dark py-2 border ps-4 pe-1" name="importfile" id="importfile">
-                    <input type="submit" class="btn btn-success w-auto mt-2 mt-md-0" name="import" id="import" value="Импортировать дневник">
+                    <input type="submit" class="btn btn-success w-auto mt-2 mt-md-0" onClick="javascript: DisableEnable();" name="import" id="import" value="Импортировать дневник">
                 </div>
+                <p class="text-black-50">Скачать файл для заполнения с примером можно <a href="/static/example/dairy.csv" title="Пример дневника сна" download="/static/example/dairy.csv">тут</a></p>
             </div>
             <div class="row justify-content-center text-center mt-4 pb-4 border-bottom border-dark">
                 <label class="sr-only" for="import">Удалить <b>все</b> имеющиеся записи в дневнике сна</label>

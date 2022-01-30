@@ -33,7 +33,7 @@
                                 Записи отсутствуют
                             </div>
                             {% else %}
-                            {% if 7 < check_notations(nedelya) > 0 %}
+                            {% if 0 < check_notations(nedelya) < 7 %}
                             <div class="alert alert-info m-1">
                                 Количество записей {{ check_notations(nedelya) }}/7
                             </div>
@@ -83,7 +83,6 @@
                                 </div>
                             </div>
                             {# Эффективность сна #}
-
                             <div class="col-12 col-md-4 mt-md-0">
                                 <div class="mt-2">
                                     Эффективность сна за неделю {{ nedelya }}<br>
@@ -99,7 +98,6 @@
         {% endfor %}
         {% endif %}
         </div>
-{#        <input type="submit"  class="btn btn-primary m-5 w-50" value="Импортировать дневник">#}
     </div>
 
 {% endblock %}

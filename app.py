@@ -1,6 +1,6 @@
-from flask import Flask, render_template, url_for, request, redirect
+from flask import Flask, render_template, url_for, request, redirect, send_file
 from flask_sqlalchemy import SQLAlchemy
-from datetime import datetime
+from datetime import datetime, time
 import csv
 
 app = Flask(__name__)
@@ -195,10 +195,11 @@ def edit_dairy():
                     )
                     for elem in notations:
                         writer.writerow(
-                            [elem.date, elem.leg, elem.usnul, elem.prosnul, elem.vstal, elem.nespal, elem.spal,
+                            [elem.date, elem.leg.strftime('%H:%M'), elem.usnul.strftime('%H:%M'),
+                             elem.prosnul.strftime('%H:%M'), elem.vstal.strftime('%H:%M'), elem.nespal, elem.spal,
                              elem.vkrovati, eff(elem.spal, elem.vkrovati)]
                         )
-                return "Экспортировано успешно"
+                return send_file('export_dairy.csv')
             except:
                 return "При эспортировании произошла ошибка"
         elif request.form.get('import') == 'Импортировать дневник':
@@ -213,7 +214,7 @@ def edit_dairy():
                         usnul = str_to_time(row[2])
                         prosnul = str_to_time(row[3])
                         vstal = str_to_time(row[4])
-                        nespal = str_to_time(row[5]).hour * 60 + str_to_time(row[5]).minute
+                        nespal = int(row[5])
                         spal = timedelta_to_minutes(delta(date, date, prosnul, usnul)) - nespal
                         vkrovati = timedelta_to_minutes(delta(date, date, vstal, leg))
 
@@ -229,7 +230,7 @@ def edit_dairy():
             except:
                 return "При импортировании произошла ошибка"
 
-        elif request.form['deletedairy'] == 'Удалить дневник':
+        elif request.form.get('deletedairy') == 'Удалить дневник':
             try:
                 db.session.query(Notation).delete()
                 db.session.commit()
@@ -244,26 +245,6 @@ def edit_dairy():
 @app.route('/main')
 def main():
     return render_template("main.html")
-
-
-@app.route('/login')
-def login():
-    return render_template("login.html")
-
-
-@app.route('/data_form')
-def data():
-    return render_template("data-form.html")
-
-
-@app.route('/analytics')
-def analytics():
-    return render_template('analytics.html')
-
-
-@app.route('/support')
-def support():
-    return render_template('support.html')
 
 
 if __name__ == "__main__":

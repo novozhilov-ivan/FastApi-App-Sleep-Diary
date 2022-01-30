@@ -10,49 +10,27 @@
     <link href="/static/css/main.css" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 </head>
-<body><!---->
+<body>
 <header>
     <div class="px-3 py-2 bg-dark text-white">
       <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href="/" class="d-flex align-items-center my-2 my-lg-0 me-lg-auto text-white text-decoration-none">
-            <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="/static/img/bootstrap-icons.svg#bootstrap"></use></svg>
-          </a>
-
-          <ul class="nav col-12 col-lg-auto my-2 justify-content-center my-md-0 text-small">
-{#            <li>#}
-{#              <a href="/main" class="nav-link text-secondary">#}
-{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#shop"></use></svg>#}
-{#                Home#}
-{#              </a>#}
-{#            </li>#}
-{#            <li>#}
-{#              <a href="/analytics" class="nav-link text-white">#}
-{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#speedometer2"></use></svg>#}
-{#                Analytics#}
-{#              </a>#}
-{#            </li>#}
-{#            <li>#}
-{#              <a href="/data_form" class="nav-link text-white">#}
-{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#table"></use></svg>#}
-{#                Forms#}
-{#              </a>#}
-{#            </li>#}
-{#            <li>#}
-{#              <a href="/support" class="nav-link text-white">#}
-{#                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#grid"></use></svg>#}
-{#                Support#}
-{#              </a>#}
-{#            </li>#}
+        <div class="d-flex flex-wrap align-items-center justify-content-center">
+          <ul class="nav col-12 col-lg-auto my-2 my-md-0 justify-content-center text-small">
             <li>
-              <a href="/edit" class="nav-link text-white">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="24"><use xlink:href="/static/img/bootstrap-icons.svg#journal-code"></use></svg>
+              <a href="/" class="nav-link text-white mx-3">
+                <svg class="bi d-block mx-auto mb-1" width="26" height="26" viewBox="0 0 512 512"><path fill="currentColor" d="M279.135 512c78.756 0 150.982-35.804 198.844-94.775 28.27-34.831-2.558-85.722-46.249-77.401-82.348 15.683-158.272-47.268-158.272-130.792 0-48.424 26.06-92.292 67.434-115.836 38.745-22.05 28.999-80.788-15.022-88.919A257.936 257.936 0 0 0 279.135 0c-141.36 0-256 114.575-256 256 0 141.36 114.576 256 256 256zm0-464c12.985 0 25.689 1.201 38.016 3.478-54.76 31.163-91.693 90.042-91.693 157.554 0 113.848 103.641 199.2 215.252 177.944C402.574 433.964 344.366 464 279.135 464c-114.875 0-208-93.125-208-208s93.125-208 208-208z"></path></svg>
+                Main
+              </a>
+            </li>
+            <li>
+              <a href="/edit" class="nav-link text-white ">
+                <svg class="bi d-block mx-auto mb-1" width="24" height="28"><use xlink:href="/static/img/bootstrap-icons.svg#journal-code"></use></svg>
                 Edit dairy
               </a>
             </li>
             <li>
               <a href="/sleep" class="nav-link text-white">
-                  <svg class="bi d-block mx-auto mb-1" width="30" height="24" viewBox="0 0 640 512"><path fill="currentColor" d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"></path></svg>
+                  <svg class="bi d-block mx-auto mb-1" width="30" height="28" viewBox="0 0 640 512"><path fill="currentColor" d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"></path></svg>
                 Sleep Diary
               </a>
             </li>
@@ -60,18 +38,6 @@
         </div>
       </div>
     </div>
-{#    <div class="px-3 py-2 border-bottom mb-3">#}
-{#      <div class="container d-flex flex-wrap justify-content-center">#}
-{#        <form class="col-12 col-lg-auto mb-2 mb-lg-0 me-lg-auto">#}
-{#          <input type="search" class="form-control" placeholder="Search..." aria-label="Search">#}
-{#        </form>#}
-{##}
-{#        <div class="text-end">#}
-{#          <button type="button" class="btn btn-light text-dark me-2">Login</button>#}
-{#          <button type="button" class="btn btn-primary">Sign-up</button>#}
-{#        </div>#}
-{#      </div>#}
-{#    </div>#}
 </header>
 <div class="container">
     {% block body %}{% endblock %}
