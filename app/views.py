@@ -46,18 +46,33 @@ def eff(spal, vkrovati):
 
 # todo rename
 def h_m(vremya: int or datetime):
-    if isinstance(vremya, int):
+    if type(vremya) == int:
         if vremya % 60 < 10:
             # todo rename var
             hm = str(vremya // 60) + ':0' + str(vremya % 60)
         else:
             hm = str(vremya // 60) + ':' + str(vremya % 60)
-    elif isinstance(vremya, datetime):
+    elif type(vremya) == datetime:
         hm = vremya.strftime('%H:%M')
     else:
-        raise TypeError
-
+        # raise
+        hm = 'TypeError'
     return hm
+
+# # todo rename
+# def h_m(vremya: int or datetime):
+#     if isinstance(vremya, int):
+#         if vremya % 60 < 10:
+#             # todo rename var
+#             hm = str(vremya // 60) + ':0' + str(vremya % 60)
+#         else:
+#             hm = str(vremya // 60) + ':' + str(vremya % 60)
+#     elif isinstance(vremya, datetime):
+#         hm = vremya.strftime('%H:%M')
+#     else:
+#         raise TypeError
+#
+#     return hm
 
 
 def get_timedelta(date1, date2, vremya1, vremya2):
@@ -122,10 +137,16 @@ def basesleep():
             return amount
 
     def last_day(day_number: int):
-
         if day_number == len(notations):
             return True
         return False
+
+
+    # def last_day(day_number: int):
+    #     if day_number == len(notations):
+    #         return True
+    #     return False
+
 
     # todo функиця наверное не нужна
     def dmy_today():
@@ -135,13 +156,13 @@ def basesleep():
     notations = db.session.query(Notation).order_by(Notation.id)
     # todo нет смысла делать 2 запрос. количеством можно получить из первой переменной
     db_elem_counter = db.session.query(Notation).count()
-    # dmy_today = datetime.now().date()
+
     return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff,
                            db_elem_counter=db_elem_counter,
                            eff_sleep_of_week=eff_sleep_of_week,
                            avg_duration_sleep_of_week=avg_duration_sleep_of_week,
                            check_notations=check_notations, last_day=last_day,
-                           dmy_today=datetime.now().date())
+                           dmy_today=dmy_today)
 
 
 @app.route('/sleep/<int:id>/delete')
