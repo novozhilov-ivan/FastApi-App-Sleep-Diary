@@ -1,36 +1,30 @@
-from datetime import datetime
-
-from flask import (
-    Flask,
-    render_template,
-    request,
-    redirect,
-    send_file
-)
-from flask_sqlalchemy import SQLAlchemy
 import csv
+from app import app
+from datetime import datetime
+from flask import render_template, request, redirect, send_file
+# from flask_sqlalchemy import SQLAlchemy
 
-app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
+# app = Flask(__name__)
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
+# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+# db = SQLAlchemy(app)
 
 
-# todo вынести в отдельный модуль
-class Notation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, nullable=False)
-    # todo rename var
-    leg = db.Column(db.Time, nullable=False)
-    usnul = db.Column(db.Time, nullable=False)
-    prosnul = db.Column(db.Time, nullable=False)
-    vstal = db.Column(db.Time, nullable=False)
-    nespal = db.Column(db.INT, nullable=False)
-    spal = db.Column(db.INT, nullable=False)
-    vkrovati = db.Column(db.INT, nullable=False)
-
-    def __repr__(self):
-        return '<Notation %r>' % self.id
+# # todo вынести в отдельный модуль
+# class Notation(db.Model):
+#     id = db.Column(db.Integer, primary_key=True)
+#     date = db.Column(db.Date, nullable=False)
+#     # todo rename var
+#     leg = db.Column(db.Time, nullable=False)
+#     usnul = db.Column(db.Time, nullable=False)
+#     prosnul = db.Column(db.Time, nullable=False)
+#     vstal = db.Column(db.Time, nullable=False)
+#     nespal = db.Column(db.INT, nullable=False)
+#     spal = db.Column(db.INT, nullable=False)
+#     vkrovati = db.Column(db.INT, nullable=False)
+#
+#     def __repr__(self):
+#         return '<Notation %r>' % self.id
 
 
 # Todo переименовать параметр
@@ -228,7 +222,7 @@ def edit_dairy():
     if request.method == 'POST':
         if request.form.get('export') == 'Экспортировать дневник':
             try:
-                with open("export_dairy.csv", "w", encoding='utf-8') as file:
+                with open("../export_dairy.csv", "w", encoding='utf-8') as file:
                     writer = csv.writer(file)
                     writer.writerow((
                         'Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал',
@@ -242,7 +236,7 @@ def edit_dairy():
                             elem.prosnul.strftime('%H:%M'), elem.vstal.strftime('%H:%M'), elem.nespal, elem.spal,
                             elem.vkrovati, eff(elem.spal, elem.vkrovati)
                         ])
-                return send_file('export_dairy.csv')
+                return send_file('../export_dairy.csv')
             except:
                 return "При эспортировании произошла ошибка"
         elif request.form.get('import') == 'Импортировать дневник':
@@ -291,5 +285,6 @@ def main():
     return render_template("main.html")
 
 
-if __name__ == "__main__":
-    app.run(debug=True)
+# if __name__ == "__main__":
+#     app.run()
+    # app.run(debug=True)
