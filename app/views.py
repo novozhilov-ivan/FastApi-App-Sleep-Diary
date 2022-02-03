@@ -2,12 +2,7 @@ import csv
 from app import app
 from datetime import datetime
 from flask import render_template, request, redirect, send_file
-# from flask_sqlalchemy import SQLAlchemy
-
-# app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleepdairy.db'
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db = SQLAlchemy(app)
+from .models import *
 
 
 # # todo вынести в отдельный модуль
@@ -140,7 +135,7 @@ def basesleep():
     notations = db.session.query(Notation).order_by(Notation.id)
     # todo нет смысла делать 2 запрос. количеством можно получить из первой переменной
     db_elem_counter = db.session.query(Notation).count()
-
+    # dmy_today = datetime.now().date()
     return render_template("sleep.html", notations=notations, h_m=h_m, eff=eff,
                            db_elem_counter=db_elem_counter,
                            eff_sleep_of_week=eff_sleep_of_week,
@@ -252,8 +247,8 @@ def edit_dairy():
                         prosnul = str_to_time(row[3])
                         vstal = str_to_time(row[4])
                         nespal = int(row[5])
-                        spal = timedelta_to_minutes(delta(date, date, prosnul, usnul)) - nespal
-                        vkrovati = timedelta_to_minutes(delta(date, date, vstal, leg))
+                        spal = timedelta_to_minutes(get_timedelta(date, date, prosnul, usnul)) - nespal
+                        vkrovati = timedelta_to_minutes(get_timedelta(date, date, vstal, leg))
 
                         notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
                                             prosnul=prosnul, vstal=vstal, nespal=nespal)
@@ -283,8 +278,3 @@ def edit_dairy():
 @app.route('/main')
 def main():
     return render_template("main.html")
-
-
-# if __name__ == "__main__":
-#     app.run()
-    # app.run(debug=True)
