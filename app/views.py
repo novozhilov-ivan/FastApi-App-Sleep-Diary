@@ -5,23 +5,6 @@ from flask import render_template, request, redirect, send_file
 from .models import *
 
 
-# # todo вынести в отдельный модуль
-# class Notation(db.Model):
-#     id = db.Column(db.Integer, primary_key=True)
-#     date = db.Column(db.Date, nullable=False)
-#     # todo rename var
-#     leg = db.Column(db.Time, nullable=False)
-#     usnul = db.Column(db.Time, nullable=False)
-#     prosnul = db.Column(db.Time, nullable=False)
-#     vstal = db.Column(db.Time, nullable=False)
-#     nespal = db.Column(db.INT, nullable=False)
-#     spal = db.Column(db.INT, nullable=False)
-#     vkrovati = db.Column(db.INT, nullable=False)
-#
-#     def __repr__(self):
-#         return '<Notation %r>' % self.id
-
-
 # Todo переименовать параметр
 def str_to_time(s):
     return datetime.time(datetime.strptime(s, '%H:%M'))
@@ -90,7 +73,8 @@ def basesleep():
     # todo raname "eff"
     # todo добавить докстрингу
     # todo переименовать пераметр
-    # todo Поправить логику связанную с тем, что используется id. Если 1 день не созхдать notation, то все соотношения сдвинутся
+    # todo Поправить логику связанную с тем, что используется id. Если 1 день не созхдать notation,
+    #  то все соотношения сдвинутся
     def eff_sleep_of_week(nedelya):
         """Вычисляет среднюю эффективность сна за неделю"""
         sum_eff, elem_of_week = 0, 0
@@ -136,17 +120,19 @@ def basesleep():
         else:
             return amount
 
+    # def last_day(day_number):
+    #     day = 0
+    #     for elem in notations:
+    #         day += 1
+    #     if day_number == day:
+    #         return True
+    #     else:
+    #         return False
+
     def last_day(day_number: int):
         if day_number == len(notations):
             return True
         return False
-
-
-    # def last_day(day_number: int):
-    #     if day_number == len(notations):
-    #         return True
-    #     return False
-
 
     # todo функиця наверное не нужна
     def dmy_today():
