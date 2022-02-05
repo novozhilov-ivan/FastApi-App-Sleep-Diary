@@ -76,7 +76,7 @@
 #     # todo строка ниже является совсем не очевидной
 #     for day in range(1 + 7 * (nedelya - 1), 8 * nedelya - (nedelya - 1)):
 #         # todo мб вместо elem иользовать еременную notation
-#         for elem in notations:
+#         for elem in notation:
 #             # todo почему elem.id, а не elem.data???
 #             if elem.id != day:
 #                 continue

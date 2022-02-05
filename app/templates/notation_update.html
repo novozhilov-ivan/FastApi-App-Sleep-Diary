@@ -10,30 +10,30 @@
             <form class="row justify-content-center" method="POST">
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-12 text-center mb-2">
-                    <label class="sr-only" for="date">Дата</label>
-                    <input required type="date" name="date" id="date" class="form-control" value="{{ notations.date }}">
+                    <label class="sr-only" for="calendar_date">Дата</label>
+                    <input required type="date" name="calendar_date" id="calendar_date" class="form-control" value="{{ notation.calendar_date }}">
                     </div>
                 </div>
                 <div class="row justify-content-center">
                     <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="leg">Лег</label>
-                        <input required type="time" name="leg" id="leg" class="form-control" value="{{ notations.leg }}">
+                        <label class="sr-only" for="bedtime">Лег</label>
+                        <input required type="time" name="bedtime" id="bedtime" class="form-control" value="{{ notation.bedtime }}">
                     </div>
                     <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="usnul">Уснул</label>
-                        <input required type="time" name="usnul" id="usnul" class="form-control" value="{{ notations.usnul }}">
+                        <label class="sr-only" for="asleep">Уснул</label>
+                        <input required type="time" name="asleep" id="asleep" class="form-control" value="{{ notation.asleep }}">
                     </div>
                     <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="prosnul">Проснулся</label>
-                        <input required type="time" name="prosnul" id="prosnul" class="form-control" value="{{ notations.prosnul }}">
+                        <label class="sr-only" for="awake">Проснулся</label>
+                        <input required type="time" name="awake" id="awake" class="form-control" value="{{ notation.awake }}">
                     </div>
                     <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="vstal">Встал</label>
-                        <input required type="time" name="vstal" id="vstal" class="form-control" value="{{ notations.vstal }}">
+                        <label class="sr-only" for="rise">Встал</label>
+                        <input required type="time" name="rise" id="rise" class="form-control" value="{{ notation.rise }}">
                     </div>
                     <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="nespal">Не спал</label>
-                        <input required type="time" name="nespal" id="nespal" class="form-control" value="00:00">
+                        <label class="sr-only" for="without_sleep">Не спал</label>
+                        <input required type="time" name="without_sleep" id="without_sleep" class="form-control" value="00:00">
                     </div>
                 </div>
                 <input type="submit"  class="btn btn-success mt-5 w-50" value="Сохранить изменения">
