@@ -5,6 +5,9 @@ from flask import render_template, request, redirect, send_file
 from .models import *
 from .config import Errors
 
+# todo Узнать насчет except, разобраться и доделать
+# todo Разбить это файл на 2: routes, functions(попробовать забрать отсюда все функции)
+
 
 def str_to_time(string_time: str):
     """Изменяет тип данных str на time в формате 'HH:MM'"""
@@ -240,7 +243,7 @@ def edit_dairy():
                 return f"{Errors['import']}: {Errors['other']}"
         elif request.form.get('delete_dairy') == 'Удалить дневник':
             try:
-                db.session.query(Notati).delete()
+                db.session.query(Notation).delete()
                 db.session.commit()
                 return "Все записи успешно удалены"
             except (NameError, TypeError):
