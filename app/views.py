@@ -1,23 +1,20 @@
 import csv
 from app import app
-from datetime import datetime
+from datetime import datetime, timedelta, time
 from flask import render_template, request, redirect, send_file
 from .models import *
 
 
 # Todo переименовать параметр
-def str_to_time(s):
-    return datetime.time(datetime.strptime(s, '%H:%M'))
+def str_to_time(string: str):
+    """Изменяет тип данных str на time в формате 'HH:MM'"""
+    return datetime.time(datetime.strptime(string, '%H:%M'))
 
 
 # Todo переименовать параметр
-def str_to_ymd(s):
-    return datetime.date(datetime.strptime(s, '%Y-%m-%d'))
-
-
-# Todo переименовать параметр
-def timedelta_to_minutes(s):
-    return s.seconds / 60
+def str_to_ymd(string: str):
+    """Изменяет тип данных str на date в формате 'YYYY-MM-DD'"""
+    return datetime.date(datetime.strptime(string, '%Y-%m-%d'))
 
 
 # Todo переименовать функцию
@@ -35,7 +32,7 @@ def h_m(vremya: int or datetime):
             hm = str(vremya // 60) + ':0' + str(vremya % 60)
         else:
             hm = str(vremya // 60) + ':' + str(vremya % 60)
-    elif type(vremya) == datetime:
+    elif type(vremya) == time:
         hm = vremya.strftime('%H:%M')
     else:
         # raise
@@ -130,7 +127,7 @@ def basesleep():
     #         return False
 
     def last_day(day_number: int):
-        if day_number == len(notations):
+        if day_number == db_elem_counter:
             return True
         return False
 
@@ -178,8 +175,8 @@ def update(update_id):
                                                                                             notations.usnul)
         delta_vkrovati = datetime.combine(notations.date, notations.vstal) - datetime.combine(notations.date,
                                                                                               notations.leg)
-        notations.spal = timedelta_to_minutes(delta_spal) - notations.nespal
-        notations.vkrovati = timedelta_to_minutes(delta_vkrovati)
+        notations.spal = delta_spal.seconds / 60 - notations.nespal
+        notations.vkrovati = delta_vkrovati.seconds / 60
 
         try:
             db.session.commit()
@@ -200,8 +197,8 @@ def add_notation():
         prosnul = str_to_time(request.form['prosnul'])
         vstal = str_to_time(request.form['vstal'])
         nespal = str_to_time(request.form['nespal']).hour * 60 + str_to_time(request.form['nespal']).minute
-        spal = timedelta_to_minutes(get_timedelta(date, date, prosnul, usnul)) - nespal
-        vkrovati = timedelta_to_minutes(get_timedelta(date, date, vstal, leg))
+        spal = get_timedelta(date, date, prosnul, usnul).seconds / 60 - nespal
+        vkrovati = get_timedelta(date, date, vstal, leg).seconds / 60
 
         # todo отформатировать передавемые параметры(сдалть на разных сроках)
         notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
@@ -254,8 +251,8 @@ def edit_dairy():
                         prosnul = str_to_time(row[3])
                         vstal = str_to_time(row[4])
                         nespal = int(row[5])
-                        spal = timedelta_to_minutes(get_timedelta(date, date, prosnul, usnul)) - nespal
-                        vkrovati = timedelta_to_minutes(get_timedelta(date, date, vstal, leg))
+                        spal = get_timedelta(date, date, prosnul, usnul).seconds / 60 - nespal
+                        vkrovati = get_timedelta(date, date, vstal, leg).seconds / 60
 
                         notation = Notation(date=date, spal=spal, vkrovati=vkrovati, leg=leg, usnul=usnul,
                                             prosnul=prosnul, vstal=vstal, nespal=nespal)
