@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
-{% block title %}
-Дневник сна базе слип
-{% endblock %}
+{#{% block title %}#}
+{#Дневник сна базе слип#}
+{#{% endblock %}#}
 
 {% block body %}
     <div class="row justify-content-center">
@@ -14,13 +14,13 @@
         {% block edit %}{% endblock %}
 {#        Аккордион с записями дневника из бд #}
         <div class="accordion mt-5" id="week-menu">
-        {% if db_elem_counter == 0 %}
+        {% if db_notation_counter == 0 %}
         <div class="alert alert-info m-1">
             У вас еще нет записей в дневнике сна
         </div>
         {% else %}
-        {% for week_number in range(1,7) if db_elem_counter > 0  %}
-            {% if db_elem_counter > 0 %}
+        {% for week_number in range(1, 7) if db_notation_counter > 0  %}
+            {% if db_notation_counter > 0 %}
 {#Неделя 1#}
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -52,28 +52,30 @@
                             <div class="col-12 col-md-8">
                             {# Дни #}
                                 <div class="accordion" id="day_menu">
-                                {% for el in notations if el.id <= (week_number * 7) and el.id > ((week_number - 1) * 7) %}
+
+                                {% for notation in notations if ((week_number - 1) * 7) < day_number_in_week(notation.calendar_date) <= (week_number * 7)%}
+{#                                     if notation.id <= (week_number * 7) and notation.id > ((week_number - 1) * 7)#}
                                     <div class="my-2">
                                         <!-- items -->
                                         <div class="accordion-item">
                                             {# Кнопка(голова) аккордиона с днями #}
                                             <div class="accordion-header">
-                                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item{{ el.id }}">
-                                                 День {{ el.id }}
+                                              <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#item{{ notation.id }}">
+                                                 День {{ notation.id }}
                                               </button>
                                             </div>
                                             {# Тело аккордиона с днями #} <!-- класс show делает пункт открытым -->
-                                            <div id="item{{ el.id }}" class="accordion-collapse collapse" data-bs-parent="#day_menu">
+                                            <div id="item{{ notation.id }}" class="accordion-collapse collapse" data-bs-parent="#day_menu">
                                                   <div class="accordion-body">
-                                                      <p><b>Дата:</b> {{ el.calendar_date }}</p>
-                                                      <p><b>Лег в</b> {{ time_display(el.bedtime) }} | <b>Уснул в</b> {{ time_display(el.asleep) }}</p>
-                                                      <p><b>Проснулся в</b> {{ time_display(el.awake) }} | <b>Встал в</b> {{ time_display(el.rise) }}</p>
-                                                      <p><b>Не спал минут - </b> {{ el.without_sleep }} </p>
-                                                      <p><b>Время сна</b> - {{ time_display(el.sleep_duration) }} | <b>Время в кровати</b> - {{ time_display(el.time_in_bed) }}</p>
-                                                      <h5>Эффективность сна - <b>{{ sleep_efficiency(el.sleep_duration, el.time_in_bed) }}</b> %<br></h5>
+                                                      <p><b>Дата:</b> {{ notation.calendar_date }}</p>
+                                                      <p><b>Лег в</b> {{ time_display(notation.bedtime) }} | <b>Уснул в</b> {{ time_display(notation.asleep) }}</p>
+                                                      <p><b>Проснулся в</b> {{ time_display(notation.awake) }} | <b>Встал в</b> {{ time_display(notation.rise) }}</p>
+                                                      <p><b>Не спал минут - </b> {{ notation.without_sleep }} </p>
+                                                      <p><b>Время сна</b> - {{ time_display(notation.sleep_duration) }} | <b>Время в кровати</b> - {{ time_display(notation.time_in_bed) }}</p>
+                                                      <h5>Эффективность сна - <b>{{ sleep_efficiency(notation.sleep_duration, notation.time_in_bed) }}</b> %<br></h5>
                                                       <div class="mt-3">
-                                                        {% if last_day(el.id) %}<a href="/sleep/{{ el.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
-                                                        <a href="/sleep/{{ el.id }}/update" class="btn btn-success">Редактировать</a>
+                                                        {% if last_day(notation.id) %}<a href="/sleep/{{ notation.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
+                                                        <a href="/sleep/{{ notation.id }}/update" class="btn btn-success">Редактировать</a>
                                                       </div>
                                                   </div>
                                             </div>

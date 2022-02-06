@@ -3,7 +3,7 @@ from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy(app)
 # Создание бд:
-# from app import db;
+# from app import db
 # db.create_all()
 
 
