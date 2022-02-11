@@ -52,8 +52,8 @@
                             <div class="col-12 col-md-8">
                             {# Дни #}
                                 <div class="accordion" id="day_menu">
-
-                                {% for notation in notations if ((week_number - 1) * 7) < day_number_in_week(notation.calendar_date) <= (week_number * 7)%}
+                                {% for notation in all_notations if notation.id <= (week_number * 7) and notation.id > ((week_number - 1) * 7) %}
+{#                                    if day_number_in_week(notation.calendar_date) <= (week_number * 7) and day_number_in_week(notation.calendar_date) > ((week_number - 1) * 7)#}
 {#                                     if notation.id <= (week_number * 7) and notation.id > ((week_number - 1) * 7)#}
                                     <div class="my-2">
                                         <!-- items -->
@@ -74,7 +74,7 @@
                                                       <p><b>Время сна</b> - {{ time_display(notation.sleep_duration) }} | <b>Время в кровати</b> - {{ time_display(notation.time_in_bed) }}</p>
                                                       <h5>Эффективность сна - <b>{{ sleep_efficiency(notation.sleep_duration, notation.time_in_bed) }}</b> %<br></h5>
                                                       <div class="mt-3">
-                                                        {% if last_day(notation.id) %}<a href="/sleep/{{ notation.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
+                                                        {% if last_day == notation.id %}<a href="/sleep/{{ notation.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
                                                         <a href="/sleep/{{ notation.id }}/update" class="btn btn-success">Редактировать</a>
                                                       </div>
                                                   </div>

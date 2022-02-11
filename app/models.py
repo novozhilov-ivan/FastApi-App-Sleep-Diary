@@ -8,8 +8,8 @@ db = SQLAlchemy(app)
 
 
 class Notation(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    calendar_date = db.Column(db.Date, nullable=False)
+    id = db.Column(db.Integer, nullable=True)
+    calendar_date = db.Column(db.Date, primary_key=True)
     bedtime = db.Column(db.Time, nullable=False)
     asleep = db.Column(db.Time, nullable=False)
     awake = db.Column(db.Time, nullable=False)

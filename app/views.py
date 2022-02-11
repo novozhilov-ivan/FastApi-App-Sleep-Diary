@@ -1,12 +1,17 @@
 import csv
-from app import app
 from datetime import datetime, time, date
+
+import sqlalchemy.exc
 from flask import render_template, request, redirect, send_file
-from .models import *
+
 from .config import Errors
+from .models import *
+
 
 # todo Узнать насчет except, разобраться и доделать
 # todo Разбить это файл на 2: routes, functions(попробовать забрать отсюда все функции)
+# todo Разобраться с ошибкой update и delete (мб связано с с тем что брать записи нужно по первичному ключу)
+# todo кроме первой недели аккордион не работает
 
 
 def str_to_time(string_time: str):
@@ -43,10 +48,28 @@ def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time):
     return datetime.combine(calendar_date, time_point_1) - datetime.combine(calendar_date, time_point_2)
 
 
+def id_notations_update():
+    """Перезаписывает все id в бд согласно очередности дат записей"""
+    all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
+    check = 0
+    for notation in all_notations:
+        if notation.id is None and check == 0:
+            check += 1
+            notation.id = check
+        else:
+            check += 1
+            notation.id = check
+    try:
+        db.session.commit()
+        return 'Переиндексированные записи успешно сохранены в базу данных'
+    except (Exception, ):
+        return 'Ошибка сохранения переиндексированных записей в базу данных'
+
+
 @app.route('/sleep', methods=['POST', 'GET'])
 def sleep_dairy():
     """Отображает все записи дневника сна из базы данных"""
-
+    # id_notations_update()
     if request.method == "POST":
         calendar_date = str_to_date(request.form['calendar_date'])
         bedtime = str_to_time(request.form['bedtime'])
@@ -62,19 +85,15 @@ def sleep_dairy():
                             bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep)
         try:
             db.session.add(notation)
-            db.session.commit()
+            # db.session.commit()
+            id_notations_update()
             return redirect('/')
+        except sqlalchemy.exc.IntegrityError:
+            return "При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной."
         except (Exception, ):
-            return "При добавлении статьи произошла ошибка"
+            return "При добавлении записи в базу данных произошла ошибка. Прочая ошибка"
     elif request.method == "GET":
-        # return render_template('sleep.html')
-        # todo Поправить логику связанную с тем, что используется id. Если 1 день не создать notation,
-        #  то все соотношения сдвинутся
-
-        # todo добавить аннотацию. мб название сделать all_notations?
-        # todo сортировка по id не имеет смысла, так как записи добавляются по автоинкрементному id и
-        #  уже отсортированы по возрастанию id
-        notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
+        all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
         db_notation_counter = db.session.query(Notation).count()
 
         def average_sleep_efficiency_per_week(week_number):
@@ -83,14 +102,12 @@ def sleep_dairy():
             first_day_of_week = 7 * (week_number - 1) + 1
             last_day_of_week = 8 * week_number - (week_number - 1)
             for day in range(first_day_of_week, last_day_of_week):
-                # todo мб вместо elem использовать временную notation
-                for note in notations:
-                    # todo почему elem.id, а не elem.data???
-                    if note.id != day:
+                for _notation in all_notations:
+                    if _notation.id != day:
                         continue
                     week_length += 1
-                    if note.sleep_duration != 0:
-                        sum_of_efficiency += note.sleep_duration / note.time_in_bed
+                    if _notation.sleep_duration != 0:
+                        sum_of_efficiency += _notation.sleep_duration / _notation.time_in_bed
             if week_length == 0:
                 return 0
             return round(((sum_of_efficiency / week_length) * 100), 2)
@@ -101,90 +118,49 @@ def sleep_dairy():
             first_day_of_week = 7 * (week_number - 1) + 1
             last_day_of_week = 8 * week_number - (week_number - 1)
             for day in range(first_day_of_week, last_day_of_week):
-                for note in notations:
-                    # print(type(elem.id))
-                    if note.id != day:
+                for _notation in all_notations:
+                    if _notation.id != day:
                         continue
                     week_length += 1
-                    sum_of_minutes += note.sleep_duration
+                    sum_of_minutes += _notation.sleep_duration
             if week_length == 0:
                 return 0
             return int(sum_of_minutes / week_length)
 
         def check_notations(week_number):
+            """Проверка количества записей в неделе"""
             amount = 0
             first_day_of_week = 7 * (week_number - 1) + 1
             last_day_of_week = 8 * week_number - (week_number - 1)
             for day in range(first_day_of_week, last_day_of_week):
-                for note in notations:
-                    if note.id != day:
+                for _notation in all_notations:
+                    if _notation.id != day:
                         continue
                     amount += 1
             if amount == 0:
                 return 0
             return amount
 
-        def last_day(day_number: int):
-            if day_number == db_notation_counter:
-                return True
-            return False
-
         def today_date():
             """Возвращает текущую локальную дату в формате 'YYYY-MM-DD'"""
             return datetime.date(datetime.today())
 
-        def day_number_in_week(date_from_db: date):
-            count = 0
-            for note in notations:
-                if note.calendar_date <= date_from_db:
-                    count += 1
-                else:
-                    return count
-            return count
-            # raise StopIteration
-
-        return render_template("sleep.html", notations=notations, time_display=time_display,
+        return render_template("sleep.html", all_notations=all_notations, time_display=time_display,
                                average_sleep_duration_per_week=average_sleep_duration_per_week,
                                sleep_efficiency=sleep_efficiency, db_notation_counter=db_notation_counter,
                                average_sleep_efficiency_per_week=average_sleep_efficiency_per_week,
-                               check_notations=check_notations, last_day=last_day, today_date=today_date,
-                               day_number_in_week=day_number_in_week)
+                               check_notations=check_notations, last_day=db_notation_counter, today_date=today_date)
 
 
-# @app.route('/sleep', methods=['POST', 'GET'])
-# def add_notation():
-#     if request.method == "POST":
-#         calendar_date = str_to_date(request.form['calendar_date'])
-#         bedtime = str_to_time(request.form['bedtime'])
-#         asleep = str_to_time(request.form['asleep'])
-#         awake = str_to_time(request.form['awake'])
-#         rise = str_to_time(request.form['rise'])
-#         without_sleep = str_to_time(request.form['without_sleep'])
-#         without_sleep = without_sleep.hour * 60 + without_sleep.minute
-#         sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-#         time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
-#
-#         notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
-#                             bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep)
-#         try:
-#             db.session.add(notation)
-#             db.session.commit()
-#             return redirect('/')
-#         except (Exception, ):
-#             return "При добавлении статьи произошла ошибка"
-#     elif request.method == "GET":
-#         return render_template('sleep.html')
-#
-#
-# @app.route('/sleep/<int:delete_id>/delete')
-# def delete_notation(delete_id):
-#     notation = Notation.query.get_or_404(delete_id)
-#     try:
-#         db.session.delete(notation)
-#         db.session.commit()
-#         return redirect('/sleep')
-#     except (Exception, ):
-#         return "При удалении записи произошла ошибка"
+@app.route('/sleep/<int:delete_id>/delete')
+def delete_notation(delete_id):
+    notation = Notation.query.get(delete_id)
+    try:
+        db.session.delete(notation)
+        db.session.commit()
+        return redirect('/sleep')
+    except (Exception, ):
+        return "При удалении записи произошла ошибка"
 
 
 @app.route('/sleep/<int:update_id>/update', methods=['POST', 'GET', 'PUT'])
@@ -211,12 +187,11 @@ def update(update_id):
         return render_template("notation_update.html", notation=notation)
 
 
-# todo разбит на несколько функций
+# todo разбить на несколько функций
+
 @app.route('/edit', methods=['POST', 'GET'])
 def edit_dairy():
-    # todo сортировка по id не имеет смысла, так как записи добавляются по автоинкрементному id и
-    #  уже отсортированы по возрастанию id
-    notations = db.session.query(Notation).order_by(Notation.id)
+    all_notations = db.session.query(Notation).order_by(Notation.id)
     if request.method == 'POST':
         if request.form.get('export') == 'Экспортировать дневник':
             try:
@@ -227,8 +202,7 @@ def edit_dairy():
                         'Не спал', 'Время сна', 'Время в кровати',
                         'Эффективность сна'
                     ))
-                    # todo rename elem to notation
-                    for notation in notations:
+                    for notation in all_notations:
                         writer.writerow([
                             notation.calendar_date, notation.bedtime.strftime('%H:%M'),
                             notation.asleep.strftime('%H:%M'), notation.awake.strftime('%H:%M'),
@@ -262,9 +236,11 @@ def edit_dairy():
                             db.session.add(notation)
                             db.session.commit()
                             count += 1
+                        except sqlalchemy.exc.IntegrityError:
+                            return "Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными."
                         except (Exception, ):
-                            return f"add"
-                return f"Успешно импортировано записей: {count}"
+                            return "Ошибка при добавлении записей в базу данных. Прочая ошибка"
+                    return f"Успешно импортировано записей: {count}"
             except TypeError:
                 return f"{Errors['import']}: {Errors['type']}"
             except ValueError:

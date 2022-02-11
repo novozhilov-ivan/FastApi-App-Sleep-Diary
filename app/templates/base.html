@@ -5,9 +5,9 @@
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/headers/">
-    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/static/css/bootstrap-icons.css" rel="stylesheet">
-    <link href="/static/css/main.css" rel="stylesheet">
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="../static/css/bootstrap-icons.css" rel="stylesheet">
+    <link href="../static/css/main.css" rel="stylesheet">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -24,7 +24,8 @@
             </li>
             <li>
               <a href="/edit" class="nav-link text-white ">
-                <svg class="bi d-block mx-auto mb-1" width="24" height="28"><use xlink:href="/static/img/bootstrap-icons.svg#journal-code"></use></svg>
+                <svg class="bi d-block mx-auto mb-1" width="24" height="28"><use href="/static/img/bootstrap-icons.svg#journal-code"></use></svg>
+{#                  xlink:href#}
                 Edit dairy
               </a>
             </li>
@@ -44,6 +45,6 @@
     {% block update %}{% endblock %}
     {% block edit %}{% endblock %}
 </div>
-<script src="/static/js/bootstrap.bundle.min.js"></script>
+<script src="../static/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
