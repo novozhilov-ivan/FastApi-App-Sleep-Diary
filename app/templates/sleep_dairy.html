@@ -8,6 +8,16 @@
     <h4 class="alert alert-primary m-1 text-center">Добавление записи</h4>
     </div>
     <div class="container-fluid text-center mt-4">
+{#        flasch message#}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info m-1">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {%  endif %}
+        {% endwith %}
 {#        Форма добавления записи в дневник#}
         {% block addnotation %}{% endblock %}
 {#        Форма добавления записи в дневник#}

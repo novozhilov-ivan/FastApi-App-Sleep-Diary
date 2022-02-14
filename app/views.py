@@ -2,14 +2,13 @@ import csv
 from datetime import datetime, time, date
 
 import sqlalchemy.exc
-from flask import render_template, request, redirect, send_file
+from flask import render_template, request, redirect, send_file, url_for, flash
 
-from .config import Errors
+from app import app, Errors
 from .models import *
 
 
 # todo Узнать насчет except, разобраться и доделать
-# todo Разбить это файл на 2: routes, functions(попробовать забрать отсюда все функции)
 # todo Разобраться с ошибкой update и delete (мб связано с с тем что брать записи нужно по первичному ключу)
 # todo кроме первой недели аккордион не работает
 
@@ -87,11 +86,14 @@ def sleep_dairy():
             db.session.add(notation)
             # db.session.commit()
             id_notations_update()
-            return redirect('/')
+            flash('Запись успешно добавлена')
+            return redirect(url_for('sleep_dairy'))
         except sqlalchemy.exc.IntegrityError:
-            return "При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной."
+            flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
+            return redirect(url_for('sleep_dairy'))
         except (Exception, ):
-            return "При добавлении записи в базу данных произошла ошибка. Прочая ошибка"
+            flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка')
+            return redirect(url_for('sleep_dairy'))
     elif request.method == "GET":
         all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
         db_notation_counter = db.session.query(Notation).count()
