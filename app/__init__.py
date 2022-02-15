@@ -14,6 +14,7 @@ APP_MODE = os.getenv('FLASK_ENV')
 
 # Создание бд: from app import db; db.create_all()
 db = SQLAlchemy(app)
+MAX_CONTENT_LENGTH = 1024 * 1024
 # manager = LoginManager(app)
 
 Errors = {

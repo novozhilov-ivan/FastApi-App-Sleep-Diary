@@ -8,7 +8,6 @@ from app import app, Errors
 from .models import *
 
 
-# todo Узнать насчет except, разобраться и доделать
 # todo Разобраться с ошибкой update и delete (мб связано с с тем что брать записи нужно по первичному ключу)
 # todo кроме первой недели аккордион не работает
 
@@ -156,6 +155,7 @@ def sleep_dairy():
 
 @app.route('/sleep/<int:delete_id>/delete')
 def delete_notation(delete_id):
+    """Удаление одной записи дневника из базы данных"""
     notation = Notation.query.get(delete_id)
     try:
         db.session.delete(notation)
@@ -167,6 +167,7 @@ def delete_notation(delete_id):
 
 @app.route('/sleep/<int:update_id>/update', methods=['POST', 'GET', 'PUT'])
 def update(update_id):
+    """Обновление одной записи в дневнике"""
     notation = Notation.query.get(update_id)
     if request.method == "POST":
         notation.calendar_date = str_to_date(request.form['calendar_date'])
@@ -189,79 +190,109 @@ def update(update_id):
         return render_template("notation_update.html", notation=notation)
 
 
-# todo разбить на несколько функций
+def edit_dairy_export():
+    """Сохраняет все записи дневника из базы данных в csv-файл"""
+    all_notations = db.session.query(Notation).order_by(Notation.id)
+    try:
+        with open("export_dairy.csv", "w", encoding='utf-8') as file:
+            writer = csv.writer(file)
+            writer.writerow((
+                'Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал',
+                'Не спал', 'Время сна', 'Время в кровати',
+                'Эффективность сна'
+            ))
+            for notation in all_notations:
+                writer.writerow([
+                    notation.calendar_date, notation.bedtime.strftime('%H:%M'),
+                    notation.asleep.strftime('%H:%M'), notation.awake.strftime('%H:%M'),
+                    notation.rise.strftime('%H:%M'), notation.without_sleep,
+                    notation.sleep_duration, notation.time_in_bed,
+                    sleep_efficiency(notation.sleep_duration, notation.time_in_bed)
+                ])
+        return send_file('../export_dairy.csv')
+    except (Exception,):
+        return "При экспортировании произошла ошибка"
+
+
+def edit_dairy_import():
+    """Импортирует записи из csv-файла в базу данных"""
+    try:
+        count = 0
+        with open('importfile.csv', "r", encoding='utf-8') as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                calendar_date = datetime.date(datetime.strptime(row[0], '%Y-%m-%d'))
+                bedtime = str_to_time(row[1])
+                asleep = str_to_time(row[2])
+                awake = str_to_time(row[3])
+                rise = str_to_time(row[4])
+                without_sleep = int(row[5])
+                sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
+                time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+                notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
+                                    time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
+                                    without_sleep=without_sleep)
+                try:
+                    db.session.add(notation)
+                    id_notations_update()
+                    count += 1
+                except sqlalchemy.exc.IntegrityError:
+                    flash('Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными.')
+                    return redirect(url_for('edit_dairy'))
+                except (Exception, ):
+                    flash('Ошибка при добавлении записей в базу данных. Прочая ошибка')
+                    return redirect(url_for('edit_dairy'))
+            flash(f"Успешно импортировано записей: {count}")
+            return redirect(url_for('edit_dairy'))
+    except TypeError:
+        flash(f"{Errors['import']}: {Errors['type']}")
+        return redirect(url_for('edit_dairy'))
+    except ValueError:
+        flash(f"{Errors['import']}: {Errors['value']}")
+        return redirect(url_for('edit_dairy'))
+    except SyntaxError:
+        flash(f"{Errors['import']}: {Errors['syntax']}")
+        return redirect(url_for('edit_dairy'))
+    except FileNotFoundError:
+        flash(f"{Errors['import']}: {Errors['file']}")
+        return redirect(url_for('edit_dairy'))
+    except (Exception, ):
+        flash(f"{Errors['import']}: {Errors['other']}")
+        return redirect(url_for('edit_dairy'))
+
+
+def edit_dairy_delete_all_notations():
+    """Удаляет все записи из базы данных"""
+    try:
+        db.session.query(Notation).delete()
+        db.session.commit()
+        flash("Все записи успешно удалены")
+        return redirect(url_for('edit_dairy'))
+    except (NameError, TypeError):
+        flash("При удалении записей из базы данных произошла ошибка SQLAlchemy")
+        return redirect(url_for('edit_dairy'))
+    except (Exception, ):
+        flash("При удалении записей из базы данных произошла ошибка: Прочая ошибка")
+        return redirect(url_for('edit_dairy'))
+
 
 @app.route('/edit', methods=['POST', 'GET'])
 def edit_dairy():
-    all_notations = db.session.query(Notation).order_by(Notation.id)
+    """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех записей"""
     if request.method == 'POST':
         if request.form.get('export') == 'Экспортировать дневник':
-            try:
-                with open("../export_dairy.csv", "w", encoding='utf-8') as file:
-                    writer = csv.writer(file)
-                    writer.writerow((
-                        'Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал',
-                        'Не спал', 'Время сна', 'Время в кровати',
-                        'Эффективность сна'
-                    ))
-                    for notation in all_notations:
-                        writer.writerow([
-                            notation.calendar_date, notation.bedtime.strftime('%H:%M'),
-                            notation.asleep.strftime('%H:%M'), notation.awake.strftime('%H:%M'),
-                            notation.rise.strftime('%H:%M'), notation.without_sleep,
-                            notation.sleep_duration, notation.time_in_bed,
-                            sleep_efficiency(notation.sleep_duration, notation.time_in_bed)
-                        ])
-                return send_file('../export_dairy.csv')
-            except (Exception, ):
-                return "При экспортировании произошла ошибка"
+            return edit_dairy_export()
         elif request.form.get('import') == 'Импортировать дневник':
-            try:
-                count = 0
-                with open(request.form['importfile'], "r") as file:
-                    reader = csv.reader(file)
-                    next(reader)
-                    for row in reader:
-                        calendar_date = datetime.date(datetime.strptime(row[0], '%Y-%m-%d'))
-                        bedtime = str_to_time(row[1])
-                        asleep = str_to_time(row[2])
-                        awake = str_to_time(row[3])
-                        rise = str_to_time(row[4])
-                        without_sleep = int(row[5])
-                        sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-                        time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
-
-                        notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
-                                            time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
-                                            without_sleep=without_sleep)
-                        try:
-                            db.session.add(notation)
-                            db.session.commit()
-                            count += 1
-                        except sqlalchemy.exc.IntegrityError:
-                            return "Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными."
-                        except (Exception, ):
-                            return "Ошибка при добавлении записей в базу данных. Прочая ошибка"
-                    return f"Успешно импортировано записей: {count}"
-            except TypeError:
-                return f"{Errors['import']}: {Errors['type']}"
-            except ValueError:
-                return f"{Errors['import']}: {Errors['value']}"
-            except SyntaxError:
-                return f"{Errors['import']}: {Errors['syntax']}"
-            except FileNotFoundError:
-                return f"{Errors['import']}: {Errors['file']}"
-            except (Exception, ):
-                return f"{Errors['import']}: {Errors['other']}"
-        elif request.form.get('delete_dairy') == 'Удалить дневник':
-            try:
-                db.session.query(Notation).delete()
-                db.session.commit()
-                return "Все записи успешно удалены"
-            except (NameError, TypeError):
-                return "При удалении записей из базы данных произошла ошибка SQLAlchemy"
-            except Exception as error:
-                return error
+            f = request.files['importfile']
+            f.save('importfile.csv')
+            return edit_dairy_import()
+        elif request.form.get('delete_dairy_1') == 'Удалить дневник':
+            request_delete = True
+            flash('Вы действительно хотите удалить все записи из дневника сна?')
+            return render_template("edit_dairy.html", request_delete=request_delete)
+        elif request.form.get('delete_dairy_2') == 'Да, удалить все записи из дневника':
+            return edit_dairy_delete_all_notations()
     elif request.method == "GET":
         return render_template("edit_dairy.html")
 
@@ -269,4 +300,5 @@ def edit_dairy():
 @app.route('/')
 @app.route('/main')
 def main():
+    """Открывает начальную страницу"""
     return render_template("main.html")

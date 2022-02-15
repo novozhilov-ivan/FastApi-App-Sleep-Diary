@@ -41,6 +41,16 @@
     </div>
 </header>
 <div class="container">
+{#        flasch message#}
+        {% with messages = get_flashed_messages() %}
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="alert alert-info m-1 text-center mt-2">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {%  endif %}
+        {% endwith %}
     {% block body %}{% endblock %}
     {% block update %}{% endblock %}
     {% block edit %}{% endblock %}
