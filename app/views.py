@@ -8,8 +8,11 @@ from app import app, Errors
 from .models import *
 
 
-# todo Разобраться с ошибкой update и delete (мб связано с с тем что брать записи нужно по первичному ключу)
-# todo кроме первой недели аккордион не работает
+# todo Доделать update: разобраться с ошибкой и сделать обновление записи с первого раза
+# todo перенести кнопку удаления на страницу редактирования записи
+# TODO добавить в функции экспорта и импорта удаление созданных csv-файлов в каталоге
+# todo кроме первой недели аккордеон не работает
+# todo вставить везде флеши
 
 
 def str_to_time(string_time: str):
@@ -51,12 +54,8 @@ def id_notations_update():
     all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
     check = 0
     for notation in all_notations:
-        if notation.id is None and check == 0:
-            check += 1
-            notation.id = check
-        else:
-            check += 1
-            notation.id = check
+        check += 1
+        notation.id = check
     try:
         db.session.commit()
         return 'Переиндексированные записи успешно сохранены в базу данных'
@@ -67,7 +66,6 @@ def id_notations_update():
 @app.route('/sleep', methods=['POST', 'GET'])
 def sleep_dairy():
     """Отображает все записи дневника сна из базы данных"""
-    # id_notations_update()
     if request.method == "POST":
         calendar_date = str_to_date(request.form['calendar_date'])
         bedtime = str_to_time(request.form['bedtime'])
@@ -83,9 +81,8 @@ def sleep_dairy():
                             bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep)
         try:
             db.session.add(notation)
-            # db.session.commit()
             id_notations_update()
-            flash('Запись успешно добавлена')
+            flash('Новая запись успешно добавлена в дневник сна')
             return redirect(url_for('sleep_dairy'))
         except sqlalchemy.exc.IntegrityError:
             flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
@@ -165,29 +162,38 @@ def delete_notation(delete_id):
         return "При удалении записи произошла ошибка"
 
 
-@app.route('/sleep/<int:update_id>/update', methods=['POST', 'GET', 'PUT'])
-def update(update_id):
+@app.route('/sleep/update/<update_date>', methods=['POST', 'GET'])
+def notation_update(update_date):
     """Обновление одной записи в дневнике"""
-    notation = Notation.query.get(update_id)
-    if request.method == "POST":
-        notation.calendar_date = str_to_date(request.form['calendar_date'])
-        notation.bedtime = str_to_time(request.form['bedtime'])
-        notation.asleep = str_to_time(request.form['asleep'])
-        notation.awake = str_to_time(request.form['awake'])
-        notation.rise = str_to_time(request.form['rise'])
-        without_sleep = str_to_time(request.form['without_sleep'])
-        notation.without_sleep = without_sleep.hour * 60 + without_sleep.minute
-        sleep_duration = get_timedelta(notation.calendar_date, notation.awake, notation.asleep)
-        time_in_bed = get_timedelta(notation.calendar_date, notation.rise, notation.bedtime)
-        notation.sleep_duration = sleep_duration.seconds / 60 - notation.without_sleep
-        notation.time_in_bed = time_in_bed.seconds / 60
-        try:
-            db.session.commit()
-            return redirect('/sleep')
-        except Exception as err:
-            return err
-    elif request.method == "GET":
-        return render_template("notation_update.html", notation=notation)
+    try:
+        notation = Notation.query.get(str_to_date(update_date))
+        if request.method == "POST":
+            notation.bedtime = str_to_time(request.form['bedtime'])
+            notation.asleep = str_to_time(request.form['asleep'])
+            notation.awake = str_to_time(request.form['awake'])
+            notation.rise = str_to_time(request.form['rise'])
+            without_sleep = str_to_time(request.form['without_sleep'])
+            notation.without_sleep = without_sleep.hour * 60 + without_sleep.minute
+            sleep_duration = get_timedelta(notation.calendar_date, notation.awake, notation.asleep)
+            time_in_bed = get_timedelta(notation.calendar_date, notation.rise, notation.bedtime)
+            notation.sleep_duration = sleep_duration.seconds / 60 - notation.without_sleep
+            notation.time_in_bed = time_in_bed.seconds / 60
+            try:
+                db.session.commit()
+                id_notations_update()
+                flash(f'Запись {notation.calendar_date} успешно обновлена')
+                return redirect(url_for('sleep_dairy'))
+            except (Exception, ):
+                flash('При обновлении записи произошла ошибка')
+                return redirect(url_for('sleep_dairy'))
+        elif request.method == "GET":
+            return render_template("notation_update.html", notation=notation)
+    except ValueError:
+        flash(f'Записи с датой {update_date} не существует')
+        return redirect(url_for('sleep_dairy'))
+    except (Exception, ):
+        flash('При загрузки страницы редактирования произошла ошибка')
+        return redirect(url_for('sleep_dairy'))
 
 
 def edit_dairy_export():
@@ -211,7 +217,8 @@ def edit_dairy_export():
                 ])
         return send_file('../export_dairy.csv')
     except (Exception,):
-        return "При экспортировании произошла ошибка"
+        flash("При экспортировании произошла ошибка")
+        return redirect(url_for('edit_dairy'))
 
 
 def edit_dairy_import():

@@ -2,16 +2,16 @@
 {% block title %}
 Обновление записи
 {% endblock %}
-{% block update %}
+{% block notation_update %}
         <div class="alert alert-success text-center my-2">
         <h4>Обновление записи в дневнике</h4>
         </div>
         <div class=" p-2">
-            <form class="row justify-content-center" method="POST">
+            <form class="row justify-content-center" method="POST" enctype="multipart/form-data">
                 <div class="row justify-content-center">
                     <div class="col-md-3 col-12 text-center mb-2">
                     <label class="sr-only" for="calendar_date">Дата</label>
-                    <input required type="date" name="calendar_date" id="calendar_date" class="form-control" value="{{ notation.calendar_date }}">
+                    <input disabled type="date" name="calendar_date" id="calendar_date" class="form-control" value="{{ notation.calendar_date }}">
                     </div>
                 </div>
                 <div class="row justify-content-center">
