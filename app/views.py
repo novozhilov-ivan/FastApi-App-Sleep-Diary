@@ -61,11 +61,11 @@ def id_notations_update():
         return 'Ошибка сохранения переиндексированных записей в базу данных'
 
 
-def edit_dairy_export():
+def edit_diary_export():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
     all_notations = db.session.query(Notation).order_by(Notation.id)
     try:
-        with open("export_dairy.csv", "w", encoding='utf-8') as file:
+        with open("export_diary.csv", "w", encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow((
                 'Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал',
@@ -80,13 +80,13 @@ def edit_dairy_export():
                     notation.sleep_duration, notation.time_in_bed,
                     sleep_efficiency(notation.sleep_duration, notation.time_in_bed)
                 ])
-        return send_file('export_dairy.csv')
+        return send_file('export_diary.csv')
     except (Exception,):
         flash("При экспортировании произошла ошибка")
-        return redirect(url_for('edit_dairy'))
+        return redirect(url_for('edit_diary'))
 
 
-def edit_dairy_import():
+def edit_diary_import():
     """Импортирует записи из csv-файла в базу данных"""
     try:
         count = 0
@@ -125,26 +125,27 @@ def edit_dairy_import():
     except (Exception, ):
         flash(f"{Errors['import']}: {Errors['other']}")
     finally:
-        return redirect(url_for('edit_dairy'))
+        return redirect(url_for('edit_diary'))
 
 
-def edit_dairy_delete_all_notations():
+def edit_diary_delete_all_notations():
     """Удаляет все записи из базы данных"""
     try:
         db.session.query(Notation).delete()
         db.session.commit()
         flash("Все записи успешно удалены")
-        return redirect(url_for('edit_dairy'))
+        return redirect(url_for('edit_diary'))
     except (NameError, TypeError):
         flash("При удалении записей из базы данных произошла ошибка SQLAlchemy")
-        return redirect(url_for('edit_dairy'))
+        return redirect(url_for('edit_diary'))
     except (Exception, ):
         flash("При удалении записей из базы данных произошла ошибка: Прочая ошибка")
-        return redirect(url_for('edit_dairy'))
+        return redirect(url_for('edit_diary'))
 
 
-def edit_notation_update(notation):
+def edit_notation_update(notation_date: str):
     """Обновление одной записи в дневнике сна/базе данных"""
+    notation = Notation.query.get(str_to_date(notation_date))
     notation.bedtime = str_to_time(request.form['bedtime'][:5])
     notation.asleep = str_to_time(request.form['asleep'][:5])
     notation.awake = str_to_time(request.form['awake'][:5])
@@ -159,28 +160,27 @@ def edit_notation_update(notation):
         db.session.commit()
         id_notations_update()
         flash(f'Запись {notation.calendar_date} успешно обновлена')
-        return redirect(url_for('sleep_dairy'))
+        return redirect(url_for('sleep_diary'))
     except (Exception,):
         flash('При обновлении записи произошла ошибка')
         return edit_notation(notation.calendar_date)
 
 
-def delete_notation(delete_notation_date):
+def delete_notation(delete_notation_date: str):
     """Удаление одной записи дневника из дневника сна/базы данных"""
     notation = Notation.query.get(str_to_date(delete_notation_date))
     try:
         db.session.delete(notation)
         id_notations_update()
-        print(delete_notation_date)
         flash(f'Запись {delete_notation_date} успешно удалена')
-        return redirect(url_for('sleep_dairy'))
+        return redirect(url_for('sleep_diary'))
     except (Exception, ):
         flash(f'При удалении записи {delete_notation_date} произошла ошибка')
         return redirect(url_for(f'/sleep/update/<{delete_notation_date}>'))
 
 
 @app.route('/sleep', methods=['POST', 'GET'])
-def sleep_dairy():
+def sleep_diary():
     """Отображает все записи дневника сна из базы данных"""
     if request.method == "POST":
         calendar_date = str_to_date(request.form['calendar_date'])
@@ -199,13 +199,13 @@ def sleep_dairy():
             db.session.add(notation)
             id_notations_update()
             flash('Новая запись успешно добавлена в дневник сна')
-            return redirect(url_for('sleep_dairy'))
+            return redirect(url_for('sleep_diary'))
         except sqlalchemy.exc.IntegrityError:
             flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
-            return redirect(url_for('sleep_dairy'))
+            return redirect(url_for('sleep_diary'))
         except (Exception, ):
             flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка')
-            return redirect(url_for('sleep_dairy'))
+            return redirect(url_for('sleep_diary'))
     elif request.method == "GET":
         all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
         db_notation_counter = db.session.query(Notation).count()
@@ -266,50 +266,50 @@ def sleep_dairy():
                                check_notations=check_notations, today_date=today_date)
 
 
-@app.route('/sleep/update/<update_notation_date>', methods=['POST', 'GET'])
-def edit_notation(update_notation_date):
+@app.route('/sleep/update/<notation_date>', methods=['POST', 'GET'])
+def edit_notation(notation_date):
     """Редактирование одной записи в дневнике. Удаление всей записи/изменения времени в формах"""
     try:
-        notation = Notation.query.get(str_to_date(update_notation_date))
+        notation = Notation.query.get(str_to_date(notation_date))
     except ValueError:
-        flash(f'Записи с датой {update_notation_date} не существует')
-        return redirect(url_for('sleep_dairy'))
+        flash(f'Записи с датой {notation_date} не существует')
+        return redirect(url_for('sleep_diary'))
     except (Exception,):
         flash('При загрузки страницы редактирования произошла ошибка')
-        return redirect(url_for('sleep_dairy'))
+        return redirect(url_for('sleep_diary'))
     else:
         if request.method == "POST":
             if request.form.get('update_save') == 'Сохранить изменения':
-                return edit_notation_update(notation)
+                return edit_notation_update(notation_date)
             elif request.form.get('delete_notation_1') == 'Удалить запись':
                 request_delete_notation = True
-                flash(f'Вы действительно хотите удалить запись {update_notation_date} из дневника?')
+                flash(f'Вы действительно хотите удалить запись {notation_date} из дневника?')
                 return render_template("edit_notation.html", request_delete_notation=request_delete_notation,
-                                       update_notation_date=update_notation_date, notation=notation)
+                                       notation_date=notation_date, notation=notation)
             elif request.form.get('delete_notation_2') == 'Да, удалить запись из дневника':
-                return delete_notation(update_notation_date)
+                return delete_notation(notation_date)
         elif request.method == "GET":
             return render_template("edit_notation.html", notation=notation)
 
 
 @app.route('/edit', methods=['POST', 'GET'])
-def edit_dairy():
+def edit_diary():
     """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех записей"""
     if request.method == 'POST':
         if request.form.get('export') == 'Экспортировать дневник':
-            return edit_dairy_export()
+            return edit_diary_export()
         elif request.form.get('import') == 'Импортировать дневник':
             f = request.files['importfile']
             f.save('importfile.csv')
-            return edit_dairy_import()
-        elif request.form.get('delete_dairy_1') == 'Удалить дневник':
+            return edit_diary_import()
+        elif request.form.get('delete_diary_1') == 'Удалить дневник':
             request_delete_all_notations = True
             flash('Вы действительно хотите удалить все записи из дневника сна?')
-            return render_template("edit_dairy.html", request_delete_all_notations=request_delete_all_notations)
-        elif request.form.get('delete_dairy_2') == 'Да, удалить все записи из дневника':
-            return edit_dairy_delete_all_notations()
+            return render_template("edit_diary.html", request_delete_all_notations=request_delete_all_notations)
+        elif request.form.get('delete_diary_2') == 'Да, удалить все записи из дневника':
+            return edit_diary_delete_all_notations()
     elif request.method == "GET":
-        return render_template("edit_dairy.html")
+        return render_template("edit_diary.html")
 
 
 @app.route('/')

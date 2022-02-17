@@ -8,7 +8,7 @@ from flask_sqlalchemy import SQLAlchemy
 load_dotenv(find_dotenv())
 app = Flask(__name__)
 app.secret_key = 'super secret key'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleep_dairy.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleep_diary.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 APP_MODE = os.getenv('FLASK_ENV')
 
