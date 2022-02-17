@@ -1,4 +1,5 @@
 import csv
+import os
 from datetime import datetime, time, date
 
 import sqlalchemy.exc
@@ -6,11 +7,6 @@ from flask import render_template, request, redirect, send_file, url_for, flash
 
 from app import app, Errors
 from .models import *
-
-
-# TODO добавить в функции экспорта и импорта удаление созданных csv-файлов в каталоге
-# todo кроме первой недели аккордеон не работает
-# todo вставить везде флеши
 
 
 def str_to_time(string_time: str):
@@ -65,7 +61,7 @@ def edit_diary_export():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
     all_notations = db.session.query(Notation).order_by(Notation.id)
     try:
-        with open("export_diary.csv", "w", encoding='utf-8') as file:
+        with open("app/export_diary.csv", "w", encoding='utf-8') as file:
             writer = csv.writer(file)
             writer.writerow((
                 'Дата', 'Лег', 'Уснул', 'Проснулся', 'Встал',
@@ -80,17 +76,19 @@ def edit_diary_export():
                     notation.sleep_duration, notation.time_in_bed,
                     sleep_efficiency(notation.sleep_duration, notation.time_in_bed)
                 ])
-        return send_file('export_diary.csv')
+        return send_file("export_diary.csv")
     except (Exception,):
         flash("При экспортировании произошла ошибка")
         return redirect(url_for('edit_diary'))
+    finally:
+        os.remove("app/export_diary.csv")
 
 
 def edit_diary_import():
     """Импортирует записи из csv-файла в базу данных"""
     try:
         count = 0
-        with open('importfile.csv', "r", encoding='utf-8') as file:
+        with open('import_file.csv', "r", encoding='utf-8') as file:
             reader = csv.reader(file)
             next(reader)
             for row in reader:
@@ -125,7 +123,7 @@ def edit_diary_import():
     except (Exception, ):
         flash(f"{Errors['import']}: {Errors['other']}")
     finally:
-        return redirect(url_for('edit_diary'))
+        return redirect(url_for('edit_diary')), os.remove('import_file.csv')
 
 
 def edit_diary_delete_all_notations():
@@ -282,10 +280,9 @@ def edit_notation(notation_date):
             if request.form.get('update_save') == 'Сохранить изменения':
                 return edit_notation_update(notation_date)
             elif request.form.get('delete_notation_1') == 'Удалить запись':
-                request_delete_notation = True
                 flash(f'Вы действительно хотите удалить запись {notation_date} из дневника?')
-                return render_template("edit_notation.html", request_delete_notation=request_delete_notation,
-                                       notation_date=notation_date, notation=notation)
+                return render_template("edit_notation.html", request_delete_notation=True, notation_date=notation_date,
+                                       notation=notation)
             elif request.form.get('delete_notation_2') == 'Да, удалить запись из дневника':
                 return delete_notation(notation_date)
         elif request.method == "GET":
@@ -300,12 +297,11 @@ def edit_diary():
             return edit_diary_export()
         elif request.form.get('import') == 'Импортировать дневник':
             f = request.files['importfile']
-            f.save('importfile.csv')
+            f.save('import_file.csv')
             return edit_diary_import()
         elif request.form.get('delete_diary_1') == 'Удалить дневник':
-            request_delete_all_notations = True
             flash('Вы действительно хотите удалить все записи из дневника сна?')
-            return render_template("edit_diary.html", request_delete_all_notations=request_delete_all_notations)
+            return render_template("edit_diary.html", request_delete_all_notations=True)
         elif request.form.get('delete_diary_2') == 'Да, удалить все записи из дневника':
             return edit_diary_delete_all_notations()
     elif request.method == "GET":
