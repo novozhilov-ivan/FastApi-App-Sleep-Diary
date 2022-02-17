@@ -74,10 +74,7 @@
                                                       <p><b>Время сна</b> - {{ time_display(notation.sleep_duration) }} | <b>Время в кровати</b> - {{ time_display(notation.time_in_bed) }}</p>
                                                       <h5>Эффективность сна - <b>{{ sleep_efficiency(notation.sleep_duration, notation.time_in_bed) }}</b> %<br></h5>
                                                       <div class="mt-3">
-                                                        {% if last_day == notation.id %}<a href="/sleep/{{ notation.id }}/delete" class="btn btn-danger">Удалить</a>{% endif %}
                                                         <a href="/sleep/update/{{ notation.calendar_date }}" class="btn btn-success">Редактировать</a>
-{#                                                      /sleep/./update#}
-{#                                                      {{ url_for(notation_update(notation.calendar_date)) }}#}
                                                       </div>
                                                   </div>
                                             </div>

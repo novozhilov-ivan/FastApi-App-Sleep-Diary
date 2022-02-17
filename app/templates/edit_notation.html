@@ -2,7 +2,7 @@
 {% block title %}
 Обновление записи
 {% endblock %}
-{% block notation_update %}
+{% block edit_notation %}
         <div class="alert alert-success text-center my-2">
         <h4>Обновление записи в дневнике</h4>
         </div>
@@ -36,7 +36,12 @@
                         <input required type="time" name="without_sleep" id="without_sleep" class="form-control" value="00:00">
                     </div>
                 </div>
-                <input type="submit"  class="btn btn-success mt-5 w-50" value="Сохранить изменения">
+                    <input type="submit"  class="btn btn-success mt-4 mx-2 w-50" name="update_save" id="update_save" value="Сохранить изменения">
+                    {% if request_delete_notation %}
+                    <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_2" id="delete_notation_2" value="Да, удалить запись из дневника">
+                    {% else %}
+                    <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_1" id="delete_notation_1" value="Удалить запись">
+                    {% endif %}
             </form>
         </div>
 {% endblock %}
