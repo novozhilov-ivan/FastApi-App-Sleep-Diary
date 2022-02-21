@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Авторизация
+{% endblock %}
+
+{% block login %}
+    <h1 class="alert alert-primary m-2 text-center">Пользователь</h1>
+    <div class="container-fluid text-center mt-4">
+        <div class="p-2">
+            <form class="col-12 justify-content-center" method="POST">
+                <div class="mt-1">
+                    <label class="sr-only" for="login">Login
+                        <input type="text" id="login" class="form-control">
+                    </label>
+                </div>
+                <div class="mt-1">
+                    <label class="sr-only" for="password">Password
+                        <input type="password" id="password" class="form-control">
+                    </label>
+                </div>
+                    <div class="form-check mt-1">
+                        <label class="form-check-label" for="checkbox">Запомнить меня
+                            <input class="form-check-input" type="checkbox" value="" id="checkbox">
+                        </label>
+                    </div>
+                <div>
+                    <input type="submit" class="btn btn-success mt-2" value="Sign in">
+                </div>
+                <div class="mt-2">
+                    <a href="{{ url_for('registration') }}">Create account</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

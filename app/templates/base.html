@@ -34,6 +34,12 @@
                 Sleep Diary
               </a>
             </li>
+            <li>
+              <a href="{{ url_for('sign_in') }}" class="nav-link text-white">
+                  <svg class="bi d-block mx-auto mb-1" width="29" height="28"><use href="/static/img/bootstrap-icons.svg#person-circle"></use></svg>
+                  User
+              </a>
+            </li>
           </ul>
         </div>
       </div>
@@ -53,6 +59,7 @@
     {% block body %}{% endblock %}
     {% block edit_notation %}{% endblock %}
     {% block edit %}{% endblock %}
+    {% block login %}{% endblock %}
 </div>
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>

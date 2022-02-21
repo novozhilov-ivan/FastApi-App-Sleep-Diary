@@ -1,9 +1,9 @@
 import os
-from dotenv import load_dotenv, find_dotenv
 
+from dotenv import load_dotenv, find_dotenv
 from flask import Flask
+from flask_login import LoginManager
 from flask_sqlalchemy import SQLAlchemy
-# from flask_login import LoginManager
 
 load_dotenv(find_dotenv())
 app = Flask(__name__)
@@ -15,7 +15,7 @@ APP_MODE = os.getenv('FLASK_ENV')
 # Создание бд: from app import db; db.create_all()
 db = SQLAlchemy(app)
 MAX_CONTENT_LENGTH = 1024 * 1024
-# manager = LoginManager(app)
+login_manager = LoginManager(app)
 
 Errors = {
     'add': 'При добавлении записи в дневник произошла ошибка',
@@ -33,7 +33,7 @@ Errors = {
 
 # Views необходимо импортировать после app = Flask(__name__),
 # иначе ошибка из-за зацикленности наследования
-from app import models, views
+from app import models, routes
 
 # Смысл нахождения этой хуйни? - если мы не в production, то можем читать данный файл(как?)
 # If production mode
