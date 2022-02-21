@@ -3,34 +3,40 @@ from flask_login import login_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import app
+from app.models import User
 from .functions import *
 from .models import *
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def sign_in():
-    login = request.form.get('login')
-    password = request.form.get('password')
-    if login and password:
-        user = User.query.filter_by(login=login).first()
+    if request.method == 'POST' and request.form.get('signin') == 'Sign in':
+        login = request.form.get('login')
+        password = request.form.get('password')
+        if login and password:
+            user = User.query.filter_by(login=login).first()
 
-        if user and check_password_hash(user.password, password):
-            login_user(user)
-            next_page = request.args.get('next')
-            redirect(next_page)
+            if user and check_password_hash(user.password, password):
+                login_user(user)
+                next_page = request.args.get('next')
+                # redirect(next_page)
+                redirect(url_for('main'))
+            else:
+                flash('Неверное имя пользователя или пароль')
+                return render_template("login.html")
         else:
-            flash('Неверное имя пользователя или пароль')
-    else:
-        flash('Пожалуйста заполните поля логин и пароль')
+            flash('Пожалуйста заполните поля логин и пароль')
+            return render_template("login.html")
+    elif request.method == 'GET':
+        return render_template("login.html")
     return render_template("login.html")
 
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
-    login = request.form.get('login')
-    password1 = request.form.get('password1')
-    password2 = request.form.get('password2')
-
+    login = request.form['login']
+    password1 = request.form['password1']
+    password2 = request.form['password2']
     if request.method == 'POST':
         if not (login or password1 or password2):
             flash('Пожалуйста заполните все поля')
@@ -42,6 +48,8 @@ def registration():
             try:
                 db.session.add(new_user)
                 db.session.commit()
+                flash(f'Пользователь с именем {login} успешно создан')
+                return redirect(url_for('sleep_diary'))
             except (Exception, ):
                 flash('Ошибка создания пользователя в БД')
                 return redirect(url_for('registration'))
