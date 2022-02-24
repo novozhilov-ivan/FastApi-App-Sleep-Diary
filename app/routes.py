@@ -1,26 +1,55 @@
 from flask import render_template
-from flask_login import login_user
+from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import app
-from app.models import User
 from .functions import *
-from .models import *
+from .models import User, db
+from .config import login_manager
+
+
+# todo настроить куки
+# todo настроить отображение данных отдельно для каждого пользователя
+# todo переделать бд, сделать отдельную колонку, которая обозначает очередь записи согласно дате записи для уникального
+#  пользователя; колонку id сделать первичным ключом, а у даты забрать;
+#  todo Колонка с номером очереди записи должна быть уникальной для каждого пользователя
+
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(user_id)
+
+
+@app.route('/user_page', methods=['POST', 'GET'])
+@login_required
+def get_user_page():
+    """Вызывается с кнопки 'User'. Открывает страницу пользователя, если он авторизован,
+    иначе переадресовывает на страницу логин"""
+    if request.method == 'POST':
+        sign_out()
+        return redirect(url_for('sign_in'))
+    elif request.method == 'GET':
+        return render_template('user_page.html', signout=sign_out())
 
 
 @app.route('/login', methods=['POST', 'GET'])
 def sign_in():
-    if request.method == 'POST' and request.form.get('signin') == 'Sign in':
+    """Форма авторизации пользователя"""
+    if current_user.is_authenticated:
+        return redirect(url_for('get_user_page'))
+    if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
         if login and password:
             user = User.query.filter_by(login=login).first()
-
             if user and check_password_hash(user.password, password):
-                login_user(user)
-                next_page = request.args.get('next')
-                # redirect(next_page)
-                redirect(url_for('main'))
+                remain = True if request.form.get('remain') else False
+                login_user(user, remember=remain)
+                flash(f"Вы успешно вошли на аккаунт {user.login}")
+                try:
+                    return redirect(request.args.get("next"))
+                except AttributeError:
+                    return redirect(url_for('sign_in'))
             else:
                 flash('Неверное имя пользователя или пароль')
                 return render_template("login.html")
@@ -34,38 +63,49 @@ def sign_in():
 
 @app.route('/registration', methods=['POST', 'GET'])
 def registration():
-    login = request.form['login']
-    password1 = request.form['password1']
-    password2 = request.form['password2']
+    """Регистрация нового пользователя"""
+    login = request.form.get('login')
+    password1 = request.form.get('password1')
+    password2 = request.form.get('password2')
     if request.method == 'POST':
         if not (login or password1 or password2):
-            flash('Пожалуйста заполните все поля')
+            flash('Пожалуйста заполните все поля.')
         elif password2 != password1:
-            flash('Пароли должны быть одинаковые')
+            flash('Пароли должны быть одинаковые.')
         else:
             hash_password = generate_password_hash(password1)
             new_user = User(login=login, password=hash_password)
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                flash(f'Пользователь с именем {login} успешно создан')
-                return redirect(url_for('sleep_diary'))
+                flash(f"Пользователь с именем '{login}' успешно создан.")
+                return redirect(url_for('get_user_page'))
+            except sqlalchemy.exc.IntegrityError:
+                flash(f"Пользователь '{login}' уже существует. Придумайте уникальное имя пользователя.")
             except (Exception, ):
-                flash('Ошибка создания пользователя в БД')
+                flash('Ошибка создания пользователя в БД.')
                 return redirect(url_for('registration'))
     return render_template("registration.html")
 
 
 @app.route('/logout', methods=['POST', 'GET'])
+@login_required
 def sign_out():
-    return """<h1>Sign out</h1>"""
+    """Де авторизация пользователя"""
+    if request.method == "POST":
+        logout_user()
+        return redirect(url_for('sign_in'))
+    elif request.method == "GET":
+        return render_template('user_page.html')
 
 
 @app.route('/sleep', methods=['POST', 'GET'])
+@login_required
 def sleep_diary():
-    """Отображает все записи дневника сна из базы данных"""
+    """Отображает все записи дневника сна из БД;
+    Добавляет одну запись в БД, используя данные из формы"""
     if request.method == "POST":
-        calendar_date = str_to_date(request.form['calendar_date'])
+        calendar_date = str_to_date(request.form.get('calendar_date'))
         bedtime = str_to_time(request.form['bedtime'])
         asleep = str_to_time(request.form['asleep'])
         awake = str_to_time(request.form['awake'])
@@ -74,20 +114,22 @@ def sleep_diary():
         without_sleep = without_sleep.hour * 60 + without_sleep.minute
         sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
         time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+        user_id = current_user.id
 
         notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
-                            bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep)
-        try:
-            db.session.add(notation)
-            id_notations_update()
-            flash('Новая запись успешно добавлена в дневник сна')
-            return redirect(url_for('sleep_diary'))
-        except sqlalchemy.exc.IntegrityError:
-            flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
-            return redirect(url_for('sleep_diary'))
-        except (Exception,):
-            flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка')
-            return redirect(url_for('sleep_diary'))
+                            bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
+                            user_id=user_id)
+        # try:
+        db.session.add(notation)
+        id_notations_update()
+        flash('Новая запись успешно добавлена в дневник сна')
+        return redirect(url_for('sleep_diary'))
+        # except sqlalchemy.exc.IntegrityError:
+        #     flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
+        #     return redirect(url_for('sleep_diary'))
+        # except (Exception,):
+        #     flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка.')
+        #     return redirect(url_for('sleep_diary'))
     elif request.method == "GET":
         all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
         db_notation_counter = db.session.query(Notation).count()
@@ -149,6 +191,7 @@ def sleep_diary():
 
 
 @app.route('/sleep/update/<notation_date>', methods=['POST', 'GET'])
+@login_required
 def edit_notation(notation_date):
     """Редактирование одной записи в дневнике. Удаление всей записи/изменения времени в формах"""
     try:
@@ -174,6 +217,7 @@ def edit_notation(notation_date):
 
 
 @app.route('/edit', methods=['POST', 'GET'])
+@login_required
 def edit_diary():
     """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех записей"""
     if request.method == 'POST':

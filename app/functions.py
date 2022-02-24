@@ -5,8 +5,8 @@ from datetime import datetime, time, date
 import sqlalchemy.exc
 from flask import request, redirect, send_file, url_for, flash
 
-from app import Errors
-from .models import *
+from .config import Errors, db
+from .models import Notation
 
 
 def str_to_time(string_time: str):

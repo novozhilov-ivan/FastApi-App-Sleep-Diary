@@ -5,30 +5,30 @@
 {% endblock %}
 
 {% block login %}
-    <h1 class="alert alert-primary m-2 text-center">Пользователь</h1>
+    <h1 class="alert alert-primary m-2 text-center">Регистрация</h1>
     <div class="container-fluid text-center mt-4">
         <div class="p-2">
             <form class="col-12 justify-content-center" method="POST">
                 <div class="mt-1">
                     <label class="sr-only" for="login">
-                        Login
-                        <input type="text" id="login" class="form-control">
+                        Логин
+                        <input type="text" id="login" name="login" class="form-control">
                     </label>
                 </div>
                 <div class="mt-1">
                     <label class="sr-only" for="password1">
-                        Password
-                        <input type="password" id="password1" class="form-control">
+                        Пароль
+                        <input type="password" id="password1" name="password1" class="form-control">
                     </label>
                 </div>
                 <div class="mt-1">
                     <label class="sr-only" for="password2">
-                        Password retype
-                        <input type="password" id="password2" class="form-control">
+                        Повторите пароль
+                        <input type="password" id="password2" name="password2" class="form-control">
                     </label>
                 </div>
                 <div>
-                    <input type="submit" class="btn btn-success mt-2" value="register">
+                    <input type="submit" class="btn btn-success mt-2" name="register" value="Зарегистрироваться">
                 </div>
             </form>
         </div>

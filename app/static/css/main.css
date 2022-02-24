@@ -40,3 +40,17 @@
     background-color: #ffffff;
 }
 /*sleep*/
+/* avatar */
+.big-avatar{
+  display: inline-block;
+  border-radius: 50%;
+  overflow: hidden;
+  width: 180px;
+  height: 180px;
+}
+.big-avatar img{
+  width:100%;
+  height:73%;
+  object-fit: cover;
+}
+/* avatar */
