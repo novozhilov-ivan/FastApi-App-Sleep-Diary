@@ -1,4 +1,4 @@
-from flask import render_template
+from flask import render_template, g
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
@@ -13,6 +13,15 @@ from .config import login_manager
 # todo переделать бд, сделать отдельную колонку, которая обозначает очередь записи согласно дате записи для уникального
 #  пользователя; колонку id сделать первичным ключом, а у даты забрать;
 #  todo Колонка с номером очереди записи должна быть уникальной для каждого пользователя
+
+@app.context_processor
+def get_mode():
+    """Выводит в конце страницы 'development', если включен debug и FLASK_ENV=development;
+    Если FLASK_ENV=production, то выводит пустую строку"""
+    g.mode = ''
+    if os.getenv('FLASK_ENV') != "production":
+        g.mode = os.getenv('FLASK_ENV')
+    return dict(mode=g.mode)
 
 
 @login_manager.user_loader
@@ -29,7 +38,7 @@ def get_user_page():
         sign_out()
         return redirect(url_for('sign_in'))
     elif request.method == 'GET':
-        return render_template('user_page.html', signout=sign_out())
+        return render_template('user_page.html')
 
 
 @app.route('/login', methods=['POST', 'GET'])

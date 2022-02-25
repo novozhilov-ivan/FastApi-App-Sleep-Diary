@@ -1,8 +1,3 @@
-import os
-
-
-# from .config import app
-
 # Load App Settings
 # app.config.from_pyfile('config.py')
 from .config import *
