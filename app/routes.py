@@ -8,7 +8,6 @@ from .models import User, db
 from .config import login_manager
 
 
-# todo настроить куки
 # todo настроить отображение данных отдельно для каждого пользователя
 # todo переделать бд, сделать отдельную колонку, которая обозначает очередь записи согласно дате записи для уникального
 #  пользователя; колонку id сделать первичным ключом, а у даты забрать;
@@ -140,7 +139,7 @@ def sleep_diary():
         #     flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка.')
         #     return redirect(url_for('sleep_diary'))
     elif request.method == "GET":
-        all_notations = db.session.query(Notation).order_by(Notation.calendar_date).all()
+        all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
         db_notation_counter = db.session.query(Notation).count()
 
         def average_sleep_efficiency_per_week(week_number):
