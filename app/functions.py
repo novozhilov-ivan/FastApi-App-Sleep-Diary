@@ -10,6 +10,56 @@ from .config import Errors, db
 from .models import Notation
 
 
+def analyze_week(week_number):
+    """
+    По номеру недели рассчитывает ее длину в днях, количество записей, суммарную эффективность за все дни недели,
+    суммарное время сна за все дни недели.
+    """
+    sum_of_minutes, sum_of_efficiency, week_length, amount = 0, 0, 0, 0
+    first_day_of_week = 7 * (week_number - 1) + 1
+    last_day_of_week = 8 * week_number - (week_number - 1)
+    all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
+    for day in range(first_day_of_week, last_day_of_week):
+        for day_number, _notation in enumerate(all_notations, start=1):
+            if day_number != day:
+                continue
+            week_length += 1
+            amount += 1
+            sum_of_minutes += _notation.sleep_duration
+            if _notation.sleep_duration != 0:
+                sum_of_efficiency += _notation.sleep_duration / _notation.time_in_bed
+    return week_length, amount, sum_of_efficiency, sum_of_minutes
+
+
+def get_average_sleep_efficiency_per_week(week_number):
+    """Вычисляет среднюю эффективность сна за неделю"""
+    week_length, sum_of_efficiency = analyze_week(week_number)[0], analyze_week(week_number)[2]
+    if week_length == 0:
+        return 0
+    return round(((sum_of_efficiency / week_length) * 100), 2)
+
+
+def get_average_sleep_duration_per_week(week_number):
+    """Вычисляет среднюю продолжительность сна за неделю"""
+    week_length, sum_of_minutes = analyze_week(week_number)[0], analyze_week(week_number)[3]
+    if week_length == 0:
+        return 0
+    return int(sum_of_minutes / week_length)
+
+
+def get_amount_notations_of_week(week_number):
+    """Рассчитывает количество добавленных записей в неделе"""
+    amount = analyze_week(week_number)[1]
+    if amount == 0:
+        return 0
+    return amount
+
+
+def today_date():
+    """Возвращает текущую локальную дату в формате 'YYYY-MM-DD'"""
+    return datetime.date(datetime.today())
+
+
 def str_to_time(string_time: str):
     """Изменяет тип данных str на time в формате 'HH:MM'"""
     return datetime.time(datetime.strptime(string_time, '%H:%M'))
@@ -44,24 +94,24 @@ def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time):
     return datetime.combine(calendar_date, time_point_1) - datetime.combine(calendar_date, time_point_2)
 
 
-def id_notations_update():
-    """Перезаписывает все id в бд согласно очередности дат записей"""
-    all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
-    # сверху в конце было .all()
-    check = 0
-    for notation in all_notations:
-        check += 1
-        notation.id = check
-    try:
-        db.session.commit()
-        return 'Переиндексированные записи успешно сохранены в базу данных'
-    except (Exception, ):
-        return 'Ошибка сохранения переиндексированных записей в базу данных'
+# def id_notations_update():
+#     """Перезаписывает все id в бд согласно очередности дат записей"""
+#     all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
+#     # сверху в конце было .all()
+#     check = 0
+#     for notation in all_notations:
+#         check += 1
+#         notation.id = check
+#     try:
+#         db.session.commit()
+#         return 'Переиндексированные записи успешно сохранены в базу данных'
+#     except (Exception, ):
+#         return 'Ошибка сохранения переиндексированных записей в базу данных'
 
 
 def edit_diary_export():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
-    all_notations = db.session.query(Notation).order_by(Notation.id)
+    all_notations = db.session.query(Notation).order_by(Notation.calendar_date)
     try:
         with open("app/export_diary.csv", "w", encoding='utf-8') as file:
             writer = csv.writer(file)
@@ -88,46 +138,46 @@ def edit_diary_export():
 
 def edit_diary_import():
     """Импортирует записи из csv-файла в базу данных"""
-    # try:
-    count = 0
-    with open('import_file.csv', "r", encoding='utf-8') as file:
-        reader = csv.reader(file)
-        next(reader)
-        for row in reader:
-            calendar_date = datetime.date(datetime.strptime(row[0], '%Y-%m-%d'))
-            bedtime = str_to_time(row[1])
-            asleep = str_to_time(row[2])
-            awake = str_to_time(row[3])
-            rise = str_to_time(row[4])
-            without_sleep = int(row[5])
-            sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-            time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
-            notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
-                                time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
-                                without_sleep=without_sleep, user_id=current_user.id)
-            # try:
-            db.session.add(notation)
-            id_notations_update()
-            # db.session.commit()
-            count += 1
-                # except sqlalchemy.exc.IntegrityError:
-                #     flash('Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными.')
-                # except (Exception, ):
-                #     flash('Ошибка при добавлении записей в базу данных. Прочая ошибка')
-    #         flash(f"Успешно импортировано записей: {count}")
-    # except TypeError:
-    #     flash(f"{Errors['import']}: {Errors['type']}")
-    # except ValueError:
-    #     flash(f"{Errors['import']}: {Errors['value']}")
-    # except SyntaxError:
-    #     flash(f"{Errors['import']}: {Errors['syntax']}")
-    # except FileNotFoundError:
-    #     flash(f"{Errors['import']}: {Errors['file']}")
-    # except (Exception, ):
-    #     flash(f"{Errors['import']}: {Errors['other']}")
-    # finally:
-    #     return redirect(url_for('edit_diary')), os.remove('import_file.csv')
-    return redirect(url_for('sleep_diary'))
+    try:
+        count = 0
+        with open('import_file.csv', "r", encoding='utf-8') as file:
+            reader = csv.reader(file)
+            next(reader)
+            for row in reader:
+                calendar_date = datetime.date(datetime.strptime(row[0], '%Y-%m-%d'))
+                bedtime = str_to_time(row[1])
+                asleep = str_to_time(row[2])
+                awake = str_to_time(row[3])
+                rise = str_to_time(row[4])
+                without_sleep = int(row[5])
+                sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
+                time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+                notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
+                                    time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
+                                    without_sleep=without_sleep, user_id=current_user.id)
+                try:
+                    db.session.add(notation)
+                    # id_notations_update()
+                    db.session.commit()
+                    count += 1
+                except sqlalchemy.exc.IntegrityError:
+                    flash('Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными.')
+                except (Exception, ):
+                    flash('Ошибка при добавлении записей в базу данных. Прочая ошибка')
+        flash(f"Успешно импортировано записей: {count}")
+        return redirect(url_for('sleep_diary'))
+    except TypeError:
+        flash(f"{Errors['import']}: {Errors['type']}")
+    except ValueError:
+        flash(f"{Errors['import']}: {Errors['value']}")
+    except SyntaxError:
+        flash(f"{Errors['import']}: {Errors['syntax']}")
+    except FileNotFoundError:
+        flash(f"{Errors['import']}: {Errors['file']}")
+    except (Exception, ):
+        flash(f"{Errors['import']}: {Errors['other']}")
+    finally:
+        return redirect(url_for('edit_diary')), os.remove('import_file.csv')
 
 
 def edit_diary_delete_all_notations():
@@ -160,7 +210,7 @@ def edit_notation_update(notation_date: str):
     notation.time_in_bed = time_in_bed.seconds / 60
     try:
         db.session.commit()
-        id_notations_update()
+        # id_notations_update()
         flash(f'Запись {notation.calendar_date} успешно обновлена')
         return redirect(url_for('sleep_diary'))
     except (Exception,):
@@ -173,7 +223,8 @@ def delete_notation(delete_notation_date: str):
     notation = Notation.query.get(str_to_date(delete_notation_date))
     try:
         db.session.delete(notation)
-        id_notations_update()
+        db.session.commit()
+        # id_notations_update()
         flash(f'Запись {delete_notation_date} успешно удалена')
         return redirect(url_for('sleep_diary'))
     except (Exception, ):

@@ -2,13 +2,11 @@ from flask_login import UserMixin
 
 from .functions import datetime
 from .config import db
-from sqlalchemy import UniqueConstraint, PrimaryKeyConstraint
 
 
 class Notation(db.Model):
     __tablename__ = 'notation'
-    id_pk = db.Column(db.Integer, primary_key=True)
-    id = db.Column(db.Integer, nullable=True)
+    id = db.Column(db.Integer, primary_key=True)
     calendar_date = db.Column(db.Date, nullable=False)
     bedtime = db.Column(db.Time, nullable=False)
     asleep = db.Column(db.Time, nullable=False)

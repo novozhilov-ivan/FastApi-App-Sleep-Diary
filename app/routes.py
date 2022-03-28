@@ -3,15 +3,16 @@ from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
 from app import app
+from .config import login_manager
 from .functions import *
 from .models import User, db
-from .config import login_manager
 
 
-# todo настроить отображение данных отдельно для каждого пользователя
-# todo переделать бд, сделать отдельную колонку, которая обозначает очередь записи согласно дате записи для уникального
-#  пользователя; колонку id сделать первичным ключом, а у даты забрать;
-#  todo Колонка с номером очереди записи должна быть уникальной для каждого пользователя
+#  todo Колонка с датой записи должна быть уникальной для каждого отдельного пользователя
+
+# todo сделать возникновение исключения при добавлении времени сна меньше нуля.
+#  поправить analyze_week() в 'if _notation.sleep_duration != 0:'(тогда будет проверка не нужна)
+
 
 @app.context_processor
 def get_mode():
@@ -82,7 +83,9 @@ def registration():
             flash('Пароли должны быть одинаковые.')
         else:
             hash_password = generate_password_hash(password1)
-            new_user = User(login=login, password=hash_password)
+            new_user = User()
+            new_user.login, new_user.password = login, hash_password
+            # new_user = User(login=login, password=hash_password)
             try:
                 db.session.add(new_user)
                 db.session.commit()
@@ -127,75 +130,28 @@ def sleep_diary():
         notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
                             bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
                             user_id=user_id)
-        # try:
-        db.session.add(notation)
-        id_notations_update()
-        flash('Новая запись успешно добавлена в дневник сна')
-        return redirect(url_for('sleep_diary'))
-        # except sqlalchemy.exc.IntegrityError:
-        #     flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
-        #     return redirect(url_for('sleep_diary'))
-        # except (Exception,):
-        #     flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка.')
-        #     return redirect(url_for('sleep_diary'))
+        try:
+            db.session.add(notation)
+            db.session.commit()
+            # id_notations_update()
+            flash('Новая запись успешно добавлена в дневник сна')
+            return redirect(url_for('sleep_diary'))
+        except sqlalchemy.exc.IntegrityError:
+            flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
+            return redirect(url_for('sleep_diary'))
+        except (Exception,):
+            flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка.')
+            return redirect(url_for('sleep_diary'))
     elif request.method == "GET":
         all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
         db_notation_counter = db.session.query(Notation).count()
 
-        def average_sleep_efficiency_per_week(week_number):
-            """Вычисляет среднюю эффективность сна за неделю"""
-            sum_of_efficiency, week_length = 0, 0
-            first_day_of_week = 7 * (week_number - 1) + 1
-            last_day_of_week = 8 * week_number - (week_number - 1)
-            for day in range(first_day_of_week, last_day_of_week):
-                for _notation in all_notations:
-                    if _notation.id != day:
-                        continue
-                    week_length += 1
-                    if _notation.sleep_duration != 0:
-                        sum_of_efficiency += _notation.sleep_duration / _notation.time_in_bed
-            if week_length == 0:
-                return 0
-            return round(((sum_of_efficiency / week_length) * 100), 2)
-
-        def average_sleep_duration_per_week(week_number):
-            """Вычисляет среднюю продолжительность сна за неделю"""
-            sum_of_minutes, week_length = 0, 0
-            first_day_of_week = 7 * (week_number - 1) + 1
-            last_day_of_week = 8 * week_number - (week_number - 1)
-            for day in range(first_day_of_week, last_day_of_week):
-                for _notation in all_notations:
-                    if _notation.id != day:
-                        continue
-                    week_length += 1
-                    sum_of_minutes += _notation.sleep_duration
-            if week_length == 0:
-                return 0
-            return int(sum_of_minutes / week_length)
-
-        def check_notations(week_number):
-            """Проверка количества записей в неделе"""
-            amount = 0
-            first_day_of_week = 7 * (week_number - 1) + 1
-            last_day_of_week = 8 * week_number - (week_number - 1)
-            for day in range(first_day_of_week, last_day_of_week):
-                for _notation in all_notations:
-                    if _notation.id != day:
-                        continue
-                    amount += 1
-            if amount == 0:
-                return 0
-            return amount
-
-        def today_date():
-            """Возвращает текущую локальную дату в формате 'YYYY-MM-DD'"""
-            return datetime.date(datetime.today())
-
         return render_template("sleep.html", all_notations=all_notations, time_display=time_display,
-                               average_sleep_duration_per_week=average_sleep_duration_per_week,
+                               average_sleep_duration_per_week=get_average_sleep_duration_per_week,
                                sleep_efficiency=sleep_efficiency, db_notation_counter=db_notation_counter,
-                               average_sleep_efficiency_per_week=average_sleep_efficiency_per_week,
-                               check_notations=check_notations, today_date=today_date)
+                               average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
+                               check_notations=get_amount_notations_of_week, today_date=today_date,
+                               enumerate=enumerate)
 
 
 @app.route('/sleep/update/<notation_date>', methods=['POST', 'GET'])
