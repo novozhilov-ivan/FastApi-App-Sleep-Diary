@@ -1,0 +1,2 @@
+class SleepLessTimeInBedError(Exception):
+    pass

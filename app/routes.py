@@ -6,13 +6,14 @@ from app import app
 from .config import login_manager
 from .functions import *
 from .models import User, db
+from .exception import SleepLessTimeInBedError
 
 
-#  todo Колонка с датой записи должна быть уникальной для каждого отдельного пользователя
+# todo доработать возникновение исключения - при времени сна больше времени в кровати
 
-# todo сделать возникновение исключения при добавлении времени сна меньше нуля.
-#  поправить analyze_week() в 'if _notation.sleep_duration != 0:'(тогда будет проверка не нужна)
-
+# todo в импорт дневника добавить проверку перед добавлением данных из файла.
+#  Если дата записи из файла имеется в бд, то указать какие даты повторяются и попросить пользователя их исправить
+#  и импортировать еще раз
 
 @app.context_processor
 def get_mode():
@@ -46,6 +47,7 @@ def sign_in():
     """Форма авторизации пользователя"""
     if current_user.is_authenticated:
         return redirect(url_for('get_user_page'))
+
     if request.method == 'POST':
         login = request.form.get('login')
         password = request.form.get('password')
@@ -59,15 +61,12 @@ def sign_in():
                     return redirect(request.args.get("next"))
                 except AttributeError:
                     return redirect(url_for('sign_in'))
-            else:
-                flash('Неверное имя пользователя или пароль')
-                return render_template("login.html")
-        else:
-            flash('Пожалуйста заполните поля логин и пароль')
+            flash('Неверное имя пользователя или пароль')
             return render_template("login.html")
+        flash('Пожалуйста заполните поля логин и пароль')
+        return render_template("login.html")
     elif request.method == 'GET':
         return render_template("login.html")
-    return render_template("login.html")
 
 
 @app.route('/registration', methods=['POST', 'GET'])
@@ -85,18 +84,18 @@ def registration():
             hash_password = generate_password_hash(password1)
             new_user = User()
             new_user.login, new_user.password = login, hash_password
-            # new_user = User(login=login, password=hash_password)
             try:
                 db.session.add(new_user)
                 db.session.commit()
-                flash(f"Пользователь с именем '{login}' успешно создан.")
+                flash(f"Пользователь '{login}' успешно создан.")
                 return redirect(url_for('get_user_page'))
             except sqlalchemy.exc.IntegrityError:
                 flash(f"Пользователь '{login}' уже существует. Придумайте уникальное имя пользователя.")
-            except (Exception, ):
+            except (Exception,):
                 flash('Ошибка создания пользователя в БД.')
                 return redirect(url_for('registration'))
-    return render_template("registration.html")
+    elif request.method == 'GET':
+        return render_template("registration.html")
 
 
 @app.route('/logout', methods=['POST', 'GET'])
@@ -127,31 +126,38 @@ def sleep_diary():
         time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
         user_id = current_user.id
 
-        notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
-                            bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
-                            user_id=user_id)
+        notation = Notation(
+            calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
+            bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
+            user_id=user_id
+        )
         try:
+            if time_in_bed < sleep_duration:
+                raise SleepLessTimeInBedError
             db.session.add(notation)
             db.session.commit()
-            # id_notations_update()
             flash('Новая запись успешно добавлена в дневник сна')
-            return redirect(url_for('sleep_diary'))
         except sqlalchemy.exc.IntegrityError:
-            flash("При добавлении записи в базу данных произошла ошибка. Дата записи должна быть уникальной.")
+            flash('При добавлении записи в произошла ошибка.')
+            flash(f'Запись с датой "{calendar_date}" уже существует.')
+        except SleepLessTimeInBedError:
+            flash('Ошибка данных. Время проведенное в кровати не может быть меньше времени сна.')
+        except (Exception,) as err:
+            flash(f'При добавлении записи произошла ошибка. Прочая ошибка. {err}')
+        finally:
             return redirect(url_for('sleep_diary'))
-        except (Exception,):
-            flash('При добавлении записи в базу данных произошла ошибка. Прочая ошибка.')
-            return redirect(url_for('sleep_diary'))
+
     elif request.method == "GET":
         all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
         db_notation_counter = db.session.query(Notation).count()
-
-        return render_template("sleep.html", all_notations=all_notations, time_display=time_display,
-                               average_sleep_duration_per_week=get_average_sleep_duration_per_week,
-                               sleep_efficiency=sleep_efficiency, db_notation_counter=db_notation_counter,
-                               average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
-                               check_notations=get_amount_notations_of_week, today_date=today_date,
-                               enumerate=enumerate)
+        return render_template(
+            "sleep.html", all_notations=all_notations, time_display=time_display,
+            average_sleep_duration_per_week=get_average_sleep_duration_per_week,
+            sleep_efficiency=sleep_efficiency, db_notation_counter=db_notation_counter,
+            average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
+            check_notations=get_amount_notations_of_week, today_date=today_date,
+            enumerate=enumerate
+        )
 
 
 @app.route('/sleep/update/<notation_date>', methods=['POST', 'GET'])
@@ -159,7 +165,7 @@ def sleep_diary():
 def edit_notation(notation_date):
     """Редактирование одной записи в дневнике. Удаление всей записи/изменения времени в формах"""
     try:
-        notation = Notation.query.get(str_to_date(notation_date))
+        notation = db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=notation_date).first()
     except ValueError:
         flash(f'Записи с датой {notation_date} не существует')
         return redirect(url_for('sleep_diary'))
@@ -172,8 +178,10 @@ def edit_notation(notation_date):
                 return edit_notation_update(notation_date)
             elif request.form.get('delete_notation_1') == 'Удалить запись':
                 flash(f'Вы действительно хотите удалить запись {notation_date} из дневника?')
-                return render_template("edit_notation.html", request_delete_notation=True, notation_date=notation_date,
-                                       notation=notation)
+                return render_template(
+                    "edit_notation.html", request_delete_notation=True,
+                    notation_date=notation_date, notation=notation
+                )
             elif request.form.get('delete_notation_2') == 'Да, удалить запись из дневника':
                 return delete_notation(notation_date)
         elif request.method == "GET":

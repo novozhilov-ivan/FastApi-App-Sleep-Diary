@@ -1,4 +1,5 @@
 from flask_login import UserMixin
+from sqlalchemy import UniqueConstraint
 
 from .functions import datetime
 from .config import db
@@ -19,6 +20,8 @@ class Notation(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', backref=db.backref('notations', lazy=True))
 
+    __table_args__ = (UniqueConstraint('calendar_date', 'user_id', name='uniq_calendar_date_for_user'),)
+
     def __repr__(self):
         return '<Notation %r>' % self.calendar_date
 
@@ -32,7 +35,3 @@ class User(db.Model, UserMixin):
 
     def __repr__(self):
         return '<User %r>' % self.id
-
-
-class BadRequest(Exception):
-    pass

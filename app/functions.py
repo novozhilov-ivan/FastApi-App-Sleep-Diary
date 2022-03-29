@@ -8,6 +8,7 @@ from flask import request, redirect, send_file, url_for, flash
 from .routes import current_user
 from .config import Errors, db
 from .models import Notation
+from .exception import SleepLessTimeInBedError
 
 
 def analyze_week(week_number):
@@ -94,21 +95,6 @@ def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time):
     return datetime.combine(calendar_date, time_point_1) - datetime.combine(calendar_date, time_point_2)
 
 
-# def id_notations_update():
-#     """Перезаписывает все id в бд согласно очередности дат записей"""
-#     all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
-#     # сверху в конце было .all()
-#     check = 0
-#     for notation in all_notations:
-#         check += 1
-#         notation.id = check
-#     try:
-#         db.session.commit()
-#         return 'Переиндексированные записи успешно сохранены в базу данных'
-#     except (Exception, ):
-#         return 'Ошибка сохранения переиндексированных записей в базу данных'
-
-
 def edit_diary_export():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
     all_notations = db.session.query(Notation).order_by(Notation.calendar_date)
@@ -157,12 +143,11 @@ def edit_diary_import():
                                     without_sleep=without_sleep, user_id=current_user.id)
                 try:
                     db.session.add(notation)
-                    # id_notations_update()
                     db.session.commit()
                     count += 1
                 except sqlalchemy.exc.IntegrityError:
                     flash('Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными.')
-                except (Exception, ):
+                except (Exception,):
                     flash('Ошибка при добавлении записей в базу данных. Прочая ошибка')
         flash(f"Успешно импортировано записей: {count}")
         return redirect(url_for('sleep_diary'))
@@ -174,7 +159,7 @@ def edit_diary_import():
         flash(f"{Errors['import']}: {Errors['syntax']}")
     except FileNotFoundError:
         flash(f"{Errors['import']}: {Errors['file']}")
-    except (Exception, ):
+    except (Exception,):
         flash(f"{Errors['import']}: {Errors['other']}")
     finally:
         return redirect(url_for('edit_diary')), os.remove('import_file.csv')
@@ -190,14 +175,15 @@ def edit_diary_delete_all_notations():
     except (NameError, TypeError):
         flash("При удалении записей из базы данных произошла ошибка SQLAlchemy")
         return redirect(url_for('edit_diary'))
-    except (Exception, ):
+    except (Exception,):
         flash("При удалении записей из базы данных произошла ошибка: Прочая ошибка")
         return redirect(url_for('edit_diary'))
 
 
 def edit_notation_update(notation_date: str):
     """Обновление одной записи в дневнике сна/базе данных"""
-    notation = Notation.query.get(str_to_date(notation_date))
+
+    notation = db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=notation_date).first()
     notation.bedtime = str_to_time(request.form['bedtime'][:5])
     notation.asleep = str_to_time(request.form['asleep'][:5])
     notation.awake = str_to_time(request.form['awake'][:5])
@@ -208,13 +194,19 @@ def edit_notation_update(notation_date: str):
     time_in_bed = get_timedelta(notation.calendar_date, notation.rise, notation.bedtime)
     notation.sleep_duration = sleep_duration.seconds / 60 - notation.without_sleep
     notation.time_in_bed = time_in_bed.seconds / 60
+
     try:
+        if notation.time_in_bed < notation.sleep_duration:
+            raise SleepLessTimeInBedError
+
         db.session.commit()
-        # id_notations_update()
         flash(f'Запись {notation.calendar_date} успешно обновлена')
         return redirect(url_for('sleep_diary'))
+    except SleepLessTimeInBedError:
+        flash('Ошибка данных. Время проведенное в кровати не может быть меньше времени сна.')
     except (Exception,):
         flash('При обновлении записи произошла ошибка')
+    finally:
         return redirect(f'/sleep/update/{notation.calendar_date}')
 
 
@@ -224,9 +216,8 @@ def delete_notation(delete_notation_date: str):
     try:
         db.session.delete(notation)
         db.session.commit()
-        # id_notations_update()
         flash(f'Запись {delete_notation_date} успешно удалена')
         return redirect(url_for('sleep_diary'))
-    except (Exception, ):
+    except (Exception,):
         flash(f'При удалении записи {delete_notation_date} произошла ошибка')
         return redirect(url_for(f'/sleep/update/<{delete_notation_date}>'))
