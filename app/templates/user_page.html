@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends "base.html" %}
 
 {% block title %}
 Пользователь: {{ current_user.login }}
@@ -9,10 +9,9 @@
         Информация о пользователе
     </h2>
     <div class="text-center mt-4 border border-success">
-{#        <img class="big-avatar" alt="avatar" src="{{ url_for('static', filename='img/arn.jpg') }}">#}
         <h4 class="mt-3">Пользователь: <b>{{ current_user.login }}</b></h4>
-        <h4>Идентификатор пользователя: <b>{{ current_user.id }}</b></h4>
-        <h4>Дата регистрации: <b>{{ current_user.date_of_registration }}</b></h4>
+        <h4>Количество записей в дневнике сна: <b>{{ amount_notations_of_user() }}</b></h4>
+        <h4>Дата регистрации: <b>{{ date_and_time_display(current_user.date_of_registration) }}</b></h4>
     </div>
     <div class="container-fluid text-center mt-4">
         <form class="col-12 justify-content-center" method="POST">

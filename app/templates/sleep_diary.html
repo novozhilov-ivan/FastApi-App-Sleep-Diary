@@ -1,26 +1,24 @@
 {% extends 'base.html' %}
-{#{% block title %}#}
-{#Дневник сна базе слип#}
-{#{% endblock %}#}
+
 
 {% block body %}
     <div class="row justify-content-center">
     <h4 class="alert alert-primary m-1 text-center">Добавление записи</h4>
     </div>
     <div class="container-fluid text-center mt-4">
-{#        Форма добавления записи в дневник#}
+{#        Форма добавления записи в дневник #}
         {% block addnotation %}{% endblock %}
-{#        Форма добавления записи в дневник#}
-        {% block edit %}{% endblock %}
+{#        Страница редактирования дневника #}
+        {% block edit_diary %}{% endblock %}
 {#        Аккордион с записями дневника из бд #}
         <div class="accordion mt-5" id="week-menu">
-        {% if db_notation_counter == 0 %}
+        {% if amount_notations_of_user() == 0 %}
         <div class="alert alert-info m-1">
             У вас еще нет записей в дневнике сна
         </div>
         {% else %}
-        {% for week_number in range(1, 7) if db_notation_counter > 0  %}
-            {% if db_notation_counter > 0 %}
+        {% for week_number in range(1, 7) if amount_notations_of_user() > 0  %}
+            {% if amount_notations_of_user() > 0 %}
 {#Неделя 1#}
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -28,18 +26,18 @@
                     <div class="accordion-header">
                           <button class="accordion-button {% if week_number == 1 %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#week{{ week_number }}">
                             <b>Неделя {{ week_number }}</b>
-                            {% if check_notations(week_number) == 0 %}
+                            {% if get_amount_notations_of_week(week_number) == 0 %}
                             <div class="alert alert-dark m-1">
                                 Записи отсутствуют
                             </div>
                             {% else %}
-                            {% if 0 < check_notations(week_number) < 7 %}
+                            {% if 0 < get_amount_notations_of_week(week_number) < 7 %}
                             <div class="alert alert-info m-1">
-                                Количество записей {{ check_notations(week_number) }}/7
+                                Количество записей {{ get_amount_notations_of_week(week_number) }}/7
                             </div>
                             {% else %}
                             <div class="alert alert-success m-1">
-                                Количество записей {{ check_notations(week_number) }}/7
+                                Количество записей {{ get_amount_notations_of_week(week_number) }}/7
                             </div>
                             {% endif %}
                             {% endif %}
@@ -52,8 +50,7 @@
                             <div class="col-12 col-md-8">
                             {# Дни #}
                                 <div class="accordion" id="day-menu{{ week_number }}">
-{#                                {% for notation in all_notations if notation.id <= (week_number * 7) and notation.id > ((week_number - 1) * 7) %}#}
-                                  {% for day_number, notation in enumerate(all_notations, start=1) if day_number <= (week_number * 7) and day_number > ((week_number - 1) * 7) %}
+                                  {% for day_number, notation in enumerate(all_notations(), start=1) if day_number <= (week_number * 7) and day_number > ((week_number - 1) * 7) %}
                                     <div class="my-2">
                                         <!-- items -->
                                         <div class="accordion-item">

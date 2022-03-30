@@ -1,8 +1,9 @@
+from datetime import datetime
+
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
 
-from .functions import datetime
-from .config import db
+from app.config import db
 
 
 class Notation(db.Model):
@@ -31,7 +32,7 @@ class User(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     login = db.Column(db.String(128), nullable=False, unique=True)
     password = db.Column(db.String(128), nullable=False)
-    date_of_registration = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+    date_of_registration = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def __repr__(self):
         return '<User %r>' % self.id
