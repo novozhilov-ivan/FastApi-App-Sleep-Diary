@@ -3,7 +3,17 @@ from datetime import datetime, time, date
 from flask_login import current_user
 
 from app.config import db
+from app.controller import *
 from app.model import *
+
+
+def get_duplicate_dates(all_calendar_dates: list):
+    """Генерирует и отдает список дат, которые уже существуют в записях дневника"""
+    duplicate_dates = []
+    for new_date in all_calendar_dates:
+        if check_notation_availability(new_date) is not None:
+            duplicate_dates.append(new_date.strftime('%Y-%m-%d'))
+    return duplicate_dates
 
 
 def analyze_week(week_number):

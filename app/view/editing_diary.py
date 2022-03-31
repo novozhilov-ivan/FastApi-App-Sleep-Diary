@@ -22,15 +22,17 @@ def edit_notation(notation_date):
     else:
         if request.method == "POST":
             if request.form.get('update_save') == 'Сохранить изменения':
-                return edit_notation_update(notation_date)
+                return update_notation(notation)
+
             elif request.form.get('delete_notation_1') == 'Удалить запись':
                 flash(f'Вы действительно хотите удалить запись {notation_date} из дневника?')
-                return render_template(
-                    "edit_notation.html", request_delete_notation=True,
-                    notation_date=notation_date, notation=notation
-                )
+                return render_template("edit_notation.html", request_delete_notation=True,
+                                       notation_date=notation_date, notation=notation
+                                       )
+
             elif request.form.get('delete_notation_2') == 'Да, удалить запись из дневника':
-                return delete_notation(notation_date)
+                return delete_notation(notation)
+
         elif request.method == "GET":
             return render_template("edit_notation.html", notation=notation)
 
@@ -41,15 +43,15 @@ def edit_diary():
     """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех записей"""
     if request.method == 'POST':
         if request.form.get('export') == 'Экспортировать дневник':
-            return edit_diary_export()
+            return export_diary()
         elif request.form.get('import') == 'Импортировать дневник':
             f = request.files['importfile']
             f.save('import_file.csv')
-            return edit_diary_import()
+            return import_diary()
         elif request.form.get('delete_diary_1') == 'Удалить дневник':
             flash('Вы действительно хотите удалить все записи из дневника сна?')
             return render_template("edit_diary.html", request_delete_all_notations=True)
         elif request.form.get('delete_diary_2') == 'Да, удалить все записи из дневника':
-            return edit_diary_delete_all_notations()
+            return delete_diary()
     elif request.method == "GET":
         return render_template("edit_diary.html")

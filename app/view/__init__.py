@@ -1,5 +1,5 @@
-from .authorization import get_user_page, sign_in, sign_out, registration
 from .general import get_mode, load_user, main
+from .authorization import get_user_page, sign_in, sign_out, registration
 from .sleep_diary import sleep_diary
 from .editing_diary import edit_notation, edit_diary
 

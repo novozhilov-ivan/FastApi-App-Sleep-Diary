@@ -2,15 +2,17 @@ import sqlalchemy.exc
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
-
 from app import app
 from app.controller import *
-from app.model import *
-
 from app.exception import TimeInBedLessSleepError
+from app.model import *
 
 
 # todo доработать возникновение исключения - при времени сна больше времени в кровати
+
+# todo наладить работу БД на heroku.
+# todo создать вручную таблицы со всеми ограничениями в pgadmin4. Подключиться со своего компа и поробовать добавить.
+# todo Если все успешно то деплой на хероку
 
 # todo прикрутить визуализацию данных на гистограммах
 
