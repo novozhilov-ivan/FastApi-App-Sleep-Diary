@@ -70,8 +70,8 @@ def registration():
                 return redirect(url_for('get_user_page'))
             except sqlalchemy.exc.IntegrityError:
                 flash(f"Пользователь '{login}' уже существует. Придумайте уникальное имя пользователя.")
-            except (Exception,):
-                flash('Ошибка создания пользователя в БД.')
+            except (Exception,) as err:
+                flash(f'Ошибка создания пользователя в БД. {err}')
                 return redirect(url_for('registration'))
     elif request.method == 'GET':
         return render_template("registration.html")

@@ -1,7 +1,8 @@
+import os
 from flask import g, render_template
 
 from app import app
-from app.config import login_manager, APP_MODE
+from app.config import login_manager
 from app.controller import *
 
 
@@ -10,8 +11,8 @@ def get_mode():
     """Выводит в конце страницы 'development', если включен debug и FLASK_ENV=development;
     Если FLASK_ENV=production, то выводит пустую строку"""
     g.mode = ''
-    if APP_MODE != "production":
-        g.mode = APP_MODE
+    if os.getenv('FLASK_ENV') != "production":
+        g.mode = os.getenv('FLASK_ENV')
     return dict(mode=g.mode)
 
 
@@ -24,4 +25,4 @@ def load_user(user_id):
 @app.route('/main')
 def main():
     """Открывает начальную страницу"""
-    return render_template("main.html")
+    return render_template('main.html')

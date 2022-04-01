@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime,date
 
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint

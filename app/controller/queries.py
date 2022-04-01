@@ -51,6 +51,6 @@ def get_notation_by_date(notation_date: str):
     return db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=notation_date).one()
 
 
-def add_and_commit(notation: Notation):
+def add_and_commit(obj):
     """Добавляет одну запись в дневник и сохраняет состояние"""
-    return db.session.add(notation), db.session.commit()
+    return db.session.add(obj), db.session.commit()
