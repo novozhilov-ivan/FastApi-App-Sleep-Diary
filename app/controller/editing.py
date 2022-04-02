@@ -11,8 +11,6 @@ from app.controller import *
 from app.exception import *
 from app.model import *
 
-# todo перенести все запросы в модуль с запросами
-
 
 def export_diary():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
@@ -68,11 +66,12 @@ def import_diary():
                 notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
                                     time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
                                     without_sleep=without_sleep, user_id=current_user.id)
+
                 all_calendar_dates.append(calendar_date)
                 notations_for_adding.append(notation)
         duplicate_dates = get_duplicate_dates(all_calendar_dates)
         try:
-            if len(duplicate_dates) != 0:
+            if duplicate_dates:
                 string_dates = str(duplicate_dates).replace('[', '').replace(']', '').replace("'", '')
                 raise NonUniqueNotationDate
             add_all_and_commit(notations_for_adding)
