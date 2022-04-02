@@ -28,7 +28,7 @@ def delete_all_notations():
 
 def get_user(user_id: str):
     """Получает пользователя по id"""
-    return User.query.get(user_id)
+    return db.session.query(User).get(user_id)
 
 
 def get_amount_notations_of_user():
@@ -38,7 +38,7 @@ def get_amount_notations_of_user():
 
 def check_user(login: str):
     """Проверяет существует ли такой пользователь по получаемому логину"""
-    return User.query.filter_by(login=login).first()
+    return db.session.query(User).filter_by(login=login).first()
 
 
 def get_all_notations():
