@@ -17,7 +17,7 @@ app.config['SQLALCHEMY_ECHO'] = True if os.getenv('SQLALCHEMY_ECHO') == 'True' e
 
 db = SQLAlchemy(app)
 
-# Необходимо для создания базы данных
+# Необходимо для создания базы данных и/или таблиц в ней
 # from app.model import Notation, User
 # db.create_all()
 

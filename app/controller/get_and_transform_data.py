@@ -1,11 +1,7 @@
 from datetime import datetime, time, date, timedelta
 from typing import Optional, Union
 
-from flask_login import current_user
-
-from app.config import db
 from app.controller import *
-from app.model import *
 
 
 def get_duplicate_dates(all_calendar_dates: list[date]) -> list[Optional[str]]:
@@ -17,7 +13,7 @@ def get_duplicate_dates(all_calendar_dates: list[date]) -> list[Optional[str]]:
     return duplicate_dates
 
 
-def analyze_week(week_number):
+def analyze_week(week_number, all_notations):
     """
     По номеру недели рассчитывает ее длину в днях, количество записей, суммарную эффективность за все дни недели,
     суммарное время сна за все дни недели.
@@ -25,8 +21,6 @@ def analyze_week(week_number):
     sum_of_minutes, sum_of_efficiency, week_length, amount = 0, 0, 0, 0
     first_day_of_week = 7 * (week_number - 1) + 1
     last_day_of_week = 8 * week_number - (week_number - 1)
-    all_notations = db.session.query(Notation.sleep_duration, Notation.time_in_bed).order_by(
-        Notation.calendar_date).filter_by(user_id=current_user.id)
     for day in range(first_day_of_week, last_day_of_week):
         for day_number, _notation in enumerate(all_notations, start=1):
             if day_number != day:
@@ -39,32 +33,34 @@ def analyze_week(week_number):
     return week_length, amount, sum_of_efficiency, sum_of_minutes
 
 
-def get_average_sleep_efficiency_per_week(week_number):
+def get_average_sleep_efficiency_per_week(week_number, all_notations):
     """Вычисляет среднюю эффективность сна за неделю"""
-    week_length, sum_of_efficiency = analyze_week(week_number)[0], analyze_week(week_number)[2]
+    week_length, sum_of_efficiency = analyze_week(week_number, all_notations)[0], analyze_week(
+        week_number, all_notations)[2]
     if week_length == 0:
         return 0
     return round(((sum_of_efficiency / week_length) * 100), 2)
 
 
-def get_average_sleep_duration_per_week(week_number):
+def get_average_sleep_duration_per_week(week_number, all_notations):
     """Вычисляет среднюю продолжительность сна за неделю"""
-    week_length, sum_of_minutes = analyze_week(week_number)[0], analyze_week(week_number)[3]
+    week_length, sum_of_minutes = analyze_week(week_number, all_notations)[0], analyze_week(week_number, all_notations
+                                                                                            )[3]
     if week_length == 0:
         return 0
     return int(sum_of_minutes / week_length)
 
 
-def get_amount_notations_of_week(week_number):
+def get_amount_notations_of_week(week_number, all_notations):
     """Рассчитывает количество добавленных записей в неделе"""
-    amount = analyze_week(week_number)[1]
+    amount = analyze_week(week_number, all_notations)[1]
     if amount == 0:
         return 0
     return amount
 
 
 def today_date() -> date:
-    """Возвращает текущую локальную дату в формате 'YYYY-MM-DD'"""
+    """Возвращает текущую дату в формате 'YYYY-MM-DD'"""
     return datetime.date(datetime.today())
 
 

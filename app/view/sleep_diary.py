@@ -3,6 +3,7 @@ from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from app import app
+from app.config import db
 from app.controller import *
 from app.exception import TimeInBedLessSleepError
 from app.model import *
@@ -53,19 +54,12 @@ def sleep_diary():
             return redirect(url_for('sleep_diary'))
 
     elif request.method == "GET":
-        # time_display - 0 запросов
-        # today_date - 0
-        # amount_notations_of_user - 1 запрос
-        # enumerate -
-        # get_amount_notations_of_week -
-        # get_average_sleep_efficiency_per_week -
-        # amount_notations_of_user -
-        # sleep_efficiency -
+        all_notations = get_all_notations()
         return render_template(
-            "sleep.html", time_display=time_display,
+            "sleep.html", time_display=time_display, all_notations=all_notations,
             average_sleep_duration_per_week=get_average_sleep_duration_per_week,
             sleep_efficiency=sleep_efficiency, amount_notations_of_user=get_amount_notations_of_user(),
             average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
-            get_amount_notations_of_week=get_amount_notations_of_week, today_date=today_date,
-            enumerate=enumerate
+            get_amount_notations_of_week=get_amount_notations_of_week,
+            today_date=today_date, enumerate=enumerate
         )

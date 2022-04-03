@@ -33,7 +33,7 @@ def get_user(user_id: str):
 
 def get_amount_notations_of_user():
     """Получает количество записей в дневнике пользователя"""
-    return db.session.query(Notation).filter_by(user_id=current_user.id).count()
+    return Notation.query.filter_by(user_id=current_user.id).count()
 
 
 def check_user(login: str):
@@ -43,7 +43,7 @@ def check_user(login: str):
 
 def get_all_notations():
     """Получает все записи пользователя и сортирует их по дате"""
-    return db.session.query(Notation).filter_by(user_id=current_user.id).order_by(Notation.calendar_date)
+    return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
 
 
 def get_notation_by_date(notation_date: str):
