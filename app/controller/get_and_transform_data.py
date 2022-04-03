@@ -1,4 +1,5 @@
-from datetime import datetime, time, date
+from datetime import datetime, time, date, timedelta
+from typing import Optional, Union
 
 from flask_login import current_user
 
@@ -7,7 +8,7 @@ from app.controller import *
 from app.model import *
 
 
-def get_duplicate_dates(all_calendar_dates: list):
+def get_duplicate_dates(all_calendar_dates: list[date]) -> list[Optional[str]]:
     """Генерирует и отдает список дат, которые уже существуют в записях дневника"""
     duplicate_dates = []
     for new_date in all_calendar_dates:
@@ -24,7 +25,8 @@ def analyze_week(week_number):
     sum_of_minutes, sum_of_efficiency, week_length, amount = 0, 0, 0, 0
     first_day_of_week = 7 * (week_number - 1) + 1
     last_day_of_week = 8 * week_number - (week_number - 1)
-    all_notations = db.session.query(Notation).order_by(Notation.calendar_date).filter_by(user_id=current_user.id)
+    all_notations = db.session.query(Notation.sleep_duration, Notation.time_in_bed).order_by(
+        Notation.calendar_date).filter_by(user_id=current_user.id)
     for day in range(first_day_of_week, last_day_of_week):
         for day_number, _notation in enumerate(all_notations, start=1):
             if day_number != day:
@@ -61,34 +63,34 @@ def get_amount_notations_of_week(week_number):
     return amount
 
 
-def today_date():
+def today_date() -> date:
     """Возвращает текущую локальную дату в формате 'YYYY-MM-DD'"""
     return datetime.date(datetime.today())
 
 
-def str_to_time(string_time: str):
+def str_to_time(string_time: str) -> time:
     """Изменяет тип данных str на time в формате 'HH:MM'"""
     return datetime.time(datetime.strptime(string_time, '%H:%M'))
 
 
-def str_to_date(string_date: str):
+def str_to_date(string_date: str) -> date:
     """Изменяет тип данных str на date в формате 'YYYY-MM-DD'"""
     return datetime.date(datetime.strptime(string_date, '%Y-%m-%d'))
 
 
-def sleep_efficiency(sleep_duration: int, time_in_bed: int):
+def sleep_efficiency(sleep_duration: int, time_in_bed: int) -> Union[int, float]:
     """Вычисляет эффективность сна(отношение времени сна к времени нахождения в кровати) в процентах"""
     if sleep_duration == 0:
         return 0
     return round((sleep_duration / time_in_bed) * 100, 2)
 
 
-def date_and_time_display(date_and_time: datetime):
-    """Отображает время из базы данных в более дружелюбное для пользователя"""
+def date_and_time_display(date_and_time: datetime) -> str:
+    """Конвертирует время из бд из datetime в str"""
     return date_and_time.strftime('%Y-%m-%d %H:%M')
 
 
-def time_display(time_point: int or time):
+def time_display(time_point: Union[int, time]) -> Union[str, time]:
     """Конвертирует время из типа данных int или time в str в формате 'HH:MM'"""
     if isinstance(time_point, int):
         if time_point % 60 < 10:
@@ -100,6 +102,6 @@ def time_display(time_point: int or time):
         raise TypeError
 
 
-def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time):
+def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time) -> timedelta:
     """Получает временной интервал между двумя точками, каждая из которых скомбинирована из даты с времени"""
     return datetime.combine(calendar_date, time_point_1) - datetime.combine(calendar_date, time_point_2)

@@ -12,13 +12,13 @@
         {% block edit_diary %}{% endblock %}
 {#        Аккордион с записями дневника из бд #}
         <div class="accordion mt-5" id="week-menu">
-        {% if amount_notations_of_user() == 0 %}
+        {% if amount_notations_of_user == 0 %}
         <div class="alert alert-info m-1">
             У вас еще нет записей в дневнике сна
         </div>
         {% else %}
-        {% for week_number in range(1, 7) if amount_notations_of_user() > 0  %}
-            {% if amount_notations_of_user() > 0 %}
+        {% for week_number in range(1, 7) if amount_notations_of_user > 0  %}
+            {% if amount_notations_of_user > 0 %}
 {#Неделя 1#}
             <div class="accordion-item">
                 <div class="accordion-header">
@@ -26,6 +26,7 @@
                     <div class="accordion-header">
                           <button class="accordion-button {% if week_number == 1 %}{% else %}collapsed{% endif %}" type="button" data-bs-toggle="collapse" data-bs-target="#week{{ week_number }}">
                             <b>Неделя {{ week_number }}</b>
+
                             {% if get_amount_notations_of_week(week_number) == 0 %}
                             <div class="alert alert-dark m-1">
                                 Записи отсутствуют
@@ -48,20 +49,20 @@
                     <div id="week{{ week_number }}" class="accordion-collapse collapse {% if week_number == 1 %}show{% endif %}" data-bs-parent="#week-menu">  {# Дни show #}
                         <div class="accordion-body row justify-content-center">
                             <div class="col-12 col-md-8">
-                            {# Дни #}
+                             Дни
                                 <div class="accordion" id="day-menu{{ week_number }}">
-                                  {% for day_number, notation in enumerate(all_notations(), start=1) if day_number <= (week_number * 7) and day_number > ((week_number - 1) * 7) %}
+                                  {% for day_number, notation in enumerate(all_notations, start=1) if day_number <= (week_number * 7) and day_number > ((week_number - 1) * 7) %}
                                     <div class="my-2">
                                         <!-- items -->
                                         <div class="accordion-item">
-                                            {# Кнопка(голова) аккордиона с днями #}
+                                             Кнопка(голова) аккордиона с днями
                                             <div class="accordion-header">
                                               <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#day{{ day_number }}">
                                                  День {{ day_number }}
                                               </button>
                                             </div>
 
-                                            {# Тело аккордиона с днями #} <!-- класс show делает пункт открытым -->
+                                             Тело аккордиона с днями  <!-- класс show делает пункт открытым -->
                                             <div id="day{{ day_number }}" class="accordion-collapse collapse" data-bs-parent="#day-menu{{ week_number }}">
                                                   <div class="accordion-body">
                                                       <p><b>Дата:</b> {{ notation.calendar_date }}</p>

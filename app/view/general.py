@@ -1,5 +1,7 @@
 import os
-from flask import g, render_template
+
+import sqlalchemy.exc
+from flask import g, render_template, flash
 
 from app import app
 from app.config import login_manager
@@ -18,7 +20,12 @@ def get_mode():
 
 @login_manager.user_loader
 def load_user(user_id):
-    return get_user(user_id)
+    try:
+        return get_user(user_id)
+    except sqlalchemy.exc.ProgrammingError as err:
+        return flash('Таблица "User" - не создана.'), flash(err.args[0])
+    except Exception as err:
+        return flash('Ошибка при проверке пользователя в базе данных. Прочая ошибка.'), flash(err.args[0])
 
 
 @app.route('/')

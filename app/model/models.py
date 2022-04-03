@@ -1,4 +1,4 @@
-from datetime import datetime,date
+from datetime import datetime
 
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
@@ -19,12 +19,12 @@ class Notation(db.Model):
     time_in_bed = db.Column(db.Integer, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
-    user = db.relationship('User', backref=db.backref('notations', lazy=True))
+    user = db.relationship('User', lazy=True, backref=db.backref('notations', lazy=True))
 
     __table_args__ = (UniqueConstraint('calendar_date', 'user_id', name='uniq_calendar_date_for_user'),)
 
     def __repr__(self):
-        return '<Notation %r>' % self.calendar_date
+        return f"Запись в дневнике: [ID: {self.id}, ДАТА: {self.calendar_date}, ID ВЛАДЕЛЬЦА: {self.user_id}]"
 
 
 class User(db.Model, UserMixin):
@@ -35,4 +35,4 @@ class User(db.Model, UserMixin):
     date_of_registration = db.Column(db.DateTime, nullable=False, default=datetime.now)
 
     def __repr__(self):
-        return '<User %r>' % self.id
+        return f"Пользователь [ID: {self.login}, LOGIN: {self.login}]"

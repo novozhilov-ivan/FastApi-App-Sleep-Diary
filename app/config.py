@@ -7,18 +7,19 @@ from flask_sqlalchemy import SQLAlchemy
 
 load_dotenv()
 
-app = Flask('Sleep diary', template_folder='app/templates', static_folder='app/static')
 
-# Для создания локальной бд
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///sleep_diary.db'
-# Для пользования или для серверной бд
-app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@" \
-                                        f"{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
+app = Flask('Sleep diary', template_folder='app/templates', static_folder='app/static')
+app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}" \
+                                        f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_ECHO'] = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
 
-# Создание бд: from app import db; db.create_all()
 db = SQLAlchemy(app)
+
+# Необходимо для создания базы данных
+# from app.model import Notation, User
+# db.create_all()
 
 
 login_manager = LoginManager(app)
