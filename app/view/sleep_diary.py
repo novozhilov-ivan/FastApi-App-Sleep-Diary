@@ -9,7 +9,8 @@ from app.exception import TimeInBedLessSleepError
 from app.model import *
 
 
-# todo доработать возникновение исключения - при времени сна больше времени в кровати
+# todo переместить все проверки, изменение формата и создание записи в дневнике -
+#  в класс Notation (например сделать  Notation.add_notation(*args))
 
 
 # todo прикрутить визуализацию данных на гистограммах
@@ -22,6 +23,7 @@ def sleep_diary():
     """Отображает все записи дневника сна из БД;
     Добавляет одну запись в БД, используя данные из формы"""
     if request.method == "POST":
+
         calendar_date = str_to_date(request.form.get('calendar_date'))
         bedtime = str_to_time(request.form['bedtime'])
         asleep = str_to_time(request.form['asleep'])
@@ -38,7 +40,17 @@ def sleep_diary():
             bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
             user_id=user_id
         )
+        # notation = Notation.add_notation_and_commit(
+        #     request.form.get('calendar_date'),
+        #     request.form['bedtime'],
+        #     request.form['asleep'],
+        #     request.form['awake'],
+        #     request.form['rise'],
+        #     request.form['without_sleep']
+        # )
+
         try:
+            # sleep_time_check()
             if time_in_bed < sleep_duration:
                 raise TimeInBedLessSleepError
             add_and_commit(notation)

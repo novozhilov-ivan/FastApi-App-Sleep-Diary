@@ -4,6 +4,17 @@ from typing import Optional, Union
 from app.controller import *
 
 
+def sleep_time_check(calendar_date, bedtime, asleep, awake, rise, without_sleep):
+    if bedtime < asleep:
+        pass
+    elif awake > rise:
+        pass
+    elif asleep + awake - without_sleep < bedtime + rise:
+        pass
+    else:
+        pass
+
+
 def get_duplicate_dates(all_calendar_dates: list[date]) -> list[Optional[str]]:
     """Генерирует и отдает список дат, которые уже существуют в записях дневника"""
     duplicate_dates = []
