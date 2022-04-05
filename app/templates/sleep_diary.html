@@ -54,7 +54,7 @@
                      data-bs-parent="#week-menu">  {# Дни show #}
                     <div class="accordion-body row justify-content-center">
                         <div class="col-12 col-md-8">
-                            Дни
+{#                            Дни   #}
                             <div class="accordion" id="day-menu{{ week_number }}">
                                 {% for day_number, notation in enumerate(all_notations, start=1) if day_number <= (week_number * 7) and day_number > ((week_number - 1) * 7) %}
                                     <div class="my-2">

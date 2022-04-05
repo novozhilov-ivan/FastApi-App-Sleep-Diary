@@ -14,7 +14,7 @@ from app.model import *
 
 def export_diary():
     """Сохраняет все записи дневника из базы данных в csv-файл"""
-    all_notations = get_all_notations()
+    all_notations = get_all_notations_of_user()
     try:
         with open("app/export_diary.csv", "w", encoding='utf-8') as file:
             writer = csv.writer(file)

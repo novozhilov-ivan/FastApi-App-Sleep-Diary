@@ -1,5 +1,5 @@
 from .queries import (
-    get_amount_notations_of_user, get_notation_by_date, check_user, get_all_notations, add_all_and_commit,
+    get_amount_notations_of_user, get_notation_by_date, check_user, get_all_notations_of_user, add_all_and_commit,
     add_and_commit, get_user, delete_notation_and_commit, delete_all_notations, check_notation_availability
 )
 from .get_and_transform_data import (
@@ -24,7 +24,7 @@ __all__ = [
     'get_notation_by_date',
     'get_duplicate_dates',
     'import_diary',
-    'get_all_notations',
+    'get_all_notations_of_user',
     'add_all_and_commit',
     'export_diary',
     'sleep_efficiency',

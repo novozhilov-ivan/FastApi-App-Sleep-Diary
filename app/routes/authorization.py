@@ -19,7 +19,7 @@ def get_user_page():
         return redirect(url_for('sign_in'))
     elif request.method == 'GET':
         return render_template('user_page.html', date_and_time_display=date_and_time_display,
-                               amount_notations_of_user=get_amount_notations_of_user)
+                               amount_notations_of_user=get_amount_notations_of_user())
 
 
 @app.route('/login', methods=['POST', 'GET'])

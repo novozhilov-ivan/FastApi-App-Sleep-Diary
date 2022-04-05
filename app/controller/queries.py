@@ -41,7 +41,7 @@ def check_user(login: str):
     return db.session.query(User).filter_by(login=login).first()
 
 
-def get_all_notations():
+def get_all_notations_of_user():
     """Получает все записи пользователя и сортирует их по дате"""
     return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
 

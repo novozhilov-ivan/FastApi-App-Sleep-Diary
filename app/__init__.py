@@ -1,2 +1,2 @@
 from app.config import *
-from app.view import *
+from app.routes import *
