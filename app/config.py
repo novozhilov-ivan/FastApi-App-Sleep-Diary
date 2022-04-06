@@ -14,7 +14,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{o
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_ECHO'] = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
-
+mode = True if os.getenv('FLASK_ENV') == 'development' else False
 db = SQLAlchemy(app)
 
 # Необходимо для создания базы данных и/или таблиц в ней

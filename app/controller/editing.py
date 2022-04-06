@@ -84,7 +84,7 @@ def import_diary():
             flash(f'Ошибка при добавлении записей в базу данных. Прочая ошибка. {err}')
         else:
             flash(f"Импортировано записей: {len(notations_for_adding)}")
-            return redirect(url_for('sleep_diary'))
+            return redirect(url_for('get_sleep_diary_entries'))
     except TypeError:
         flash(f"{Errors['import']}: {Errors['type']}")
     except ValueError:
@@ -145,7 +145,7 @@ def delete_notation(notation: Notation):
     try:
         delete_notation_and_commit(notation)
         flash(f'Запись {notation.calendar_date} удалена.')
-        return redirect(url_for('sleep_diary'))
+        return redirect(url_for('get_sleep_diary_entries'))
     except (Exception,):
         flash(f'При удалении записи {notation.calendar_date} произошла ошибка.')
         return redirect(url_for(f'/sleep/update/<{notation.calendar_date}>'))

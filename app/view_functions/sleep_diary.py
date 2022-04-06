@@ -2,7 +2,6 @@ import sqlalchemy.exc
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
 
-from app import app
 from app.controller import *
 from app.exception import TimeInBedLessSleepError
 from app.model import *
@@ -33,14 +32,13 @@ def create_and_save_entry():
         add_and_commit(notation)
         flash('Новая запись добавлена в дневник сна')
     except sqlalchemy.exc.IntegrityError:
-        flash('При добавлении записи в произошла ошибка.')
         flash(f'Запись с датой "{calendar_date}" уже существует.')
     except TimeInBedLessSleepError:
-        flash('Ошибка данных. Время проведенное в кровати не может быть меньше времени сна.')
-    except (Exception,):
-        flash(f'При добавлении записи произошла ошибка. Прочая ошибка.')
+        flash('Время проведенное в кровати не может быть меньше времени сна.')
+    except Exception as err:
+        flash(f'При добавлении записи произошла ошибка. Прочая ошибка. {err.args[0]}')
     finally:
-        return redirect(url_for('sleep_diary'))
+        return redirect(url_for('get_sleep_diary_entries'))
 
 
 @login_required

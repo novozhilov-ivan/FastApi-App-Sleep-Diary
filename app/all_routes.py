@@ -1,5 +1,7 @@
 from app import app
+from app.view_functions import *
 
+# todo посмотреть в мастер как происходит редирект в user_page, когда авторизован, при нажатии на 'User' иконку
 
 # todo из .queries переметить все в .models
 # todo создать в controller .manager и там class Manager(), который будет получать, переваривать, сохранять данные
@@ -8,9 +10,6 @@ from app import app
 
 # todo переместить все проверки, изменение формата и создание записи в дневнике -
 #  в класс Notation (например сделать  Notation.add_notation(*args))
-
-# todo пофиксить ошибку пустых полей в регистрации
-# todo пофиксить регистрацию нового пользователя без пароля
 
 # todo прикрутить визуализацию данных на гистограммах
 
@@ -48,6 +47,38 @@ def edit_diary():
 @app.route('/edit', methods=['GET'])
 def get_edit_diary_page():
     return render_edit_diary_page()
+
+
+@app.route('/user_page', methods=['POST'])
+def deauthorize_user():
+    return deauthorize()
+
+
+@app.route('/user_page', methods=['GET'])
+def get_user_page():
+    return render_user_page()
+
+
+@app.route('/login', methods=['POST'])
+def sign_in():
+    """Форма авторизации пользователя"""
+    return authorize()
+
+
+@app.route('/login', methods=['GET'])
+def get_login_page():
+    return render_login_page()
+
+
+@app.route('/registration', methods=['POST'])
+def registration():
+    """Регистрация нового пользователя"""
+    return register()
+
+
+@app.route('/registration', methods=['GET'])
+def get_registration_page():
+    return render_registration_page()
 
 
 @app.route('/')

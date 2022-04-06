@@ -1,2 +1,2 @@
 from app.config import *
-from app.routes import *
+from .all_routes import *
