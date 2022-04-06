@@ -7,25 +7,9 @@ from app.controller import *
 from app.exception import TimeInBedLessSleepError
 from app.model import *
 
-# todo из .queries переметить все в .models
-# todo создать в controller .manager и там class Manager(), который будет получать, переваривать, сохранять данные
-#  в соответствующем методе. По такому же принципу добавить методы.
 
-
-# todo переместить все проверки, изменение формата и создание записи в дневнике -
-#  в класс Notation (например сделать  Notation.add_notation(*args))
-
-
-# todo прикрутить визуализацию данных на гистограммах
-
-# todo сделать unit тесты
-
-@app.route('/sleep', methods=['POST'])
 @login_required
-def sleep_diary_post():
-    """Отображает все записи дневника сна из БД;
-    Добавляет одну запись в БД, используя данные из формы"""
-    # if request.method == "POST":
+def create_and_save_entry():
     calendar_date = str_to_date(request.form['calendar_date'])
     bedtime = str_to_time(request.form['bedtime'])
     asleep = str_to_time(request.form['asleep'])
@@ -59,9 +43,9 @@ def sleep_diary_post():
         return redirect(url_for('sleep_diary'))
 
 
-@app.route('/sleep', methods=['GET'])
 @login_required
-def sleep_diary():
+def render_sleep_diary_page():
+    """Отображает все записи дневника сна из БД"""
     # return controller.Manager.get_sleep_diary()
     all_notations_of_user = get_all_notations_of_user()
     return render_template(

@@ -132,7 +132,6 @@ def update_notation(notation: Notation):
             raise TimeInBedLessSleepError
         db.session.commit()
         flash(f'Запись {notation.calendar_date} обновлена.')
-        return redirect(url_for('sleep_diary'))
     except TimeInBedLessSleepError:
         flash('Ошибка данных. Время проведенное в кровати не может быть меньше времени сна.')
     except (Exception,):

@@ -28,8 +28,6 @@ def load_user(user_id):
         return flash('Ошибка при проверке пользователя в базе данных. Прочая ошибка.'), flash(err.args[0])
 
 
-@app.route('/')
-@app.route('/main')
-def main():
-    """Открывает начальную страницу"""
+def render_main_page():
+    """Формирует основную страницу"""
     return render_template('main.html')
