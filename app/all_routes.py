@@ -1,8 +1,6 @@
 from app import app
 from app.view_functions import *
 
-# todo посмотреть в мастер как происходит редирект в user_page, когда авторизован, при нажатии на 'User' иконку
-
 # todo из .queries переметить все в .models
 # todo создать в controller .manager и там class Manager(), который будет получать, переваривать, сохранять данные
 #  в соответствующем методе. По такому же принципу добавить методы.

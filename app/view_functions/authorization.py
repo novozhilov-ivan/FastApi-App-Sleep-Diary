@@ -9,8 +9,6 @@ from app.model import *
 
 
 def authorize():
-    if current_user.is_authenticated:
-        return redirect(url_for('get_user_page'))
     login = request.form.get('login')
     password = request.form.get('password')
     if login and password:
@@ -22,7 +20,7 @@ def authorize():
             try:
                 return redirect(request.args.get("next"))
             except AttributeError:
-                return redirect(url_for('render_user_page'))
+                return redirect(url_for('get_user_page'))
         flash('Неверное имя пользователя или пароль')
         return redirect(url_for('render_login_page'))
     flash('Пожалуйста заполните поля логин и пароль')
@@ -81,6 +79,8 @@ def render_user_page():
 
 
 def render_login_page():
+    if current_user.is_authenticated:
+        return redirect(url_for('get_user_page'))
     return render_template("login.html")
 
 
