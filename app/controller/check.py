@@ -1,11 +1,19 @@
 from datetime import datetime, date, time, timedelta
 
+from app.controller import *
+
 # todo проверять чтобы время сна было меньше времени проведенного в кровати
+# without_sleep = without_sleep.hour * 60 + without_sleep.minute
+# sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
+# time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
 
 
-def sleep_duration_less_time_in_bed():
-    pass
-
+def sleep_duration_less_time_in_bed(calendar_date, bedtime, asleep, awake, rise):
+    sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60
+    time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+    if time_in_bed >= sleep_duration:
+        return True
+    raise ValueError('Время проведенное в кровати не может быть меньше времени сна.')
 
 
 def sleep_time_check(sleep_date, bedtime, asleep):
@@ -25,11 +33,12 @@ def sleep_time_check(sleep_date, bedtime, asleep):
         elif datetime_asleep - datetime_bedtime > timedelta(hours=12):
             """Вызывает ошибку если разница между отходом ко сну и засыпанием больше 12 часов"""
             raise ValueError("Время отхода ко сну не может быть позже времени засыпания!\n"
-                             "Или разница между временем засыпания и временем отхода ко сну не может быть "
-                             "более 12 часов!")
-        return datetime_asleep - datetime_bedtime
+                             "Или время между этими событиями не может быть более 12 часов!")
+        return True
+        # datetime_asleep - datetime_bedtime
     else:
-        return datetime.combine(sleep_date, asleep) - datetime.combine(sleep_date, bedtime)
+        return True
+        # datetime.combine(sleep_date, asleep) - datetime.combine(sleep_date, bedtime)
 
 
 def wake_up_time_check(sleep_date, awake, rise):
@@ -48,29 +57,30 @@ def wake_up_time_check(sleep_date, awake, rise):
             raise ValueError("Не можешь в рамках часа уснуть раньше чем лег!")
         elif datetime_rise - datetime_awake > timedelta(hours=12):
             """"""
-            raise ValueError("Время отхода ко сну не может быть позже времени засыпания!\n"
-                             "Или разница между временем засыпания и временем отхода ко сну не может быть "
-                             "более 12 часов!")
-        return datetime_rise - datetime_awake
+            raise ValueError("Время пробуждения не может быть позже времени подъема с кровати!\n"
+                             "Или время между этими событиями не может быть более 12 часов!")
+        return True
+        # datetime_rise - datetime_awake
     else:
-        return datetime.combine(sleep_date, rise) - datetime.combine(sleep_date, awake)
+        return True
+        # datetime.combine(sleep_date, rise) - datetime.combine(sleep_date, awake)
 
 
-sleeeeep = date(2022, 1, 5)
-print('1 бывает')
-awake = time(hour=23, minute=55)
-rise = time(hour=0, minute=5)
-print(wake_up_time_check(sleeeeep, awake, rise))
-
-try:
-    print('\n2 ошибка должна быть')
-    awake = time(hour=3, minute=50)
-    rise = time(hour=4, minute=30)
-    print(wake_up_time_check(sleeeeep, awake, rise), '\n')
-except ValueError as err:
-    print(err.args[0], '\n')
-
-print('3 бывает')
-awake = time(hour=5, minute=50)
-rise = time(hour=6, minute=5)
-print(wake_up_time_check(sleeeeep, awake, rise))
+# sleeeeep = date(2022, 1, 5)
+# print('1 бывает')
+# awake = time(hour=23, minute=55)
+# rise = time(hour=0, minute=5)
+# print(wake_up_time_check(sleeeeep, awake, rise))
+#
+# try:
+#     print('\n2 ошибка должна быть')
+#     awake = time(hour=3, minute=50)
+#     rise = time(hour=4, minute=30)
+#     print(wake_up_time_check(sleeeeep, awake, rise), '\n')
+# except ValueError as err:
+#     print(err.args[0], '\n')
+#
+# print('3 бывает')
+# awake = time(hour=5, minute=50)
+# rise = time(hour=6, minute=5)
+# print(wake_up_time_check(sleeeeep, awake, rise))

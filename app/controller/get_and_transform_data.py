@@ -80,9 +80,9 @@ def str_to_time(string_time: str) -> time:
     return datetime.time(datetime.strptime(string_time, '%H:%M'))
 
 
-def str_to_date(string_date: str) -> date:
-    """Изменяет тип данных str на date в формате 'YYYY-MM-DD'"""
-    return datetime.date(datetime.strptime(string_date, '%Y-%m-%d'))
+# def str_to_date(string_date: str) -> date:
+#     """Изменяет тип данных str на date в формате 'YYYY-MM-DD'"""
+#     return datetime.date(datetime.strptime(string_date, '%Y-%m-%d'))
 
 
 def sleep_efficiency(sleep_duration: int, time_in_bed: int) -> Union[int, float]:

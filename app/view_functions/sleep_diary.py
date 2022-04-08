@@ -9,42 +9,43 @@ from app.model import *
 
 @login_required
 def create_and_save_entry():
-    calendar_date = str_to_date(request.form['calendar_date'])
-    bedtime = str_to_time(request.form['bedtime'])
-    asleep = str_to_time(request.form['asleep'])
-    awake = str_to_time(request.form['awake'])
-    rise = str_to_time(request.form['rise'])
-    without_sleep = str_to_time(request.form['without_sleep'])
-    without_sleep = without_sleep.hour * 60 + without_sleep.minute
-    sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-    time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
-    user_id = current_user.id
-
-    notation = Notation(
-        calendar_date=calendar_date, sleep_duration=sleep_duration, time_in_bed=time_in_bed,
-        bedtime=bedtime, asleep=asleep, awake=awake, rise=rise, without_sleep=without_sleep,
-        user_id=user_id
-    )
     try:
-        # sleep_time_check()
-        if time_in_bed < sleep_duration:
-            raise TimeInBedLessSleepError
+        # calendar_date = request.form['calendar_date']
+        # bedtime = request.form['bedtime']
+        # asleep = request.form['asleep']
+        # awake = request.form['awake']
+        # rise = request.form['rise']
+        # without_sleep = request.form['without_sleep']
+        # without_sleep = without_sleep.hour * 60 + without_sleep.minute
+        # sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
+        # time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+        new_entry = DiaryEntryManager().get_forms_data_and_reformat()
+
+        notation = Notation(
+            calendar_date=new_entry.calendar_date, bedtime=new_entry.bedtime, asleep=new_entry.asleep,
+            awake=new_entry.awake, rise=new_entry.rise, without_sleep=new_entry.without_sleep,
+            user_id=current_user.id
+        )
+
         add_and_commit(notation)
         flash('Новая запись добавлена в дневник сна')
-    except sqlalchemy.exc.IntegrityError:
-        flash(f'Запись с датой "{calendar_date}" уже существует.')
+    # except sqlalchemy.exc.IntegrityError:
+    #     flash(f'Запись с датой "{notation.calendar_date}" уже существует.')
     except TimeInBedLessSleepError:
         flash('Время проведенное в кровати не может быть меньше времени сна.')
+    except ValueError as err:
+        flash(f"{err.args[0]}")
     except Exception as err:
         flash(f'При добавлении записи произошла ошибка. Прочая ошибка. {err.args[0]}')
     finally:
-        return redirect(url_for('get_sleep_diary_entries'))
+        return redirect(url_for('get_main_page'))
+    # return redirect(url_for('get_sleep_diary_entries'))
 
 
 @login_required
 def render_sleep_diary_page():
     """Отображает все записи дневника сна из БД"""
-    # return controller.Manager.get_sleep_diary()
+    # sleep_diary = Manager.get_sleep_diary()
     all_notations_of_user = get_all_notations_of_user()
     return render_template(
         "sleep.html", time_display=time_display, all_notations=all_notations_of_user,

@@ -14,9 +14,10 @@ class Notation(db.Model):
     asleep = db.Column(db.Time, nullable=False)
     awake = db.Column(db.Time, nullable=False)
     rise = db.Column(db.Time, nullable=False)
-    without_sleep = db.Column(db.Integer, nullable=False)
-    sleep_duration = db.Column(db.Integer, nullable=False)
-    time_in_bed = db.Column(db.Integer, nullable=False)
+    without_sleep = db.Column(db.Time, nullable=False)
+    # without_sleep = db.Column(db.Integer, nullable=False)
+    # sleep_duration = db.Column(db.Integer, nullable=False)
+    # time_in_bed = db.Column(db.Integer, nullable=False)
 
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     user = db.relationship('User', lazy=True, backref=db.backref('notations', lazy=True))
