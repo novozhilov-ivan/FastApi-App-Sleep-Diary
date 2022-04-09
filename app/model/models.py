@@ -24,6 +24,7 @@ class Notation(db.Model):
 
     __table_args__ = (UniqueConstraint('calendar_date', 'user_id', name='uniq_calendar_date_for_user'),)
 
+    # todo прописать on_delete действие. При удалении пользователя - что происходит с записями дневника?
     def __repr__(self):
         return f"Запись в дневнике: [ID: {self.id}, ДАТА: {self.calendar_date}, ID ВЛАДЕЛЬЦА: {self.user_id}]"
 
