@@ -97,16 +97,17 @@ def date_and_time_display(date_and_time: datetime) -> str:
     return date_and_time.strftime('%Y-%m-%d %H:%M')
 
 
-def time_display(time_point: Union[int, time]) -> Union[str, time]:
+def time_display(time_point: Union[int, float, time]) -> Union[str, time]:
     """Конвертирует время из типа данных int или time в str в формате 'HH:MM'"""
-    if isinstance(time_point, int):
+    if isinstance(time_point, int) or isinstance(time_point, float):
+        time_point = int(time_point)
         if time_point % 60 < 10:
             return str(time_point // 60) + ':0' + str(time_point % 60)
         return str(time_point // 60) + ':' + str(time_point % 60)
     elif isinstance(time_point, time):
         return time_point.strftime('%H:%M')
     else:
-        raise TypeError
+        raise TypeError('Ошибка типа данных времени.')
 
 
 def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time) -> timedelta:

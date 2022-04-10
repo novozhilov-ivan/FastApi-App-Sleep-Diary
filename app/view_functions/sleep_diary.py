@@ -17,12 +17,9 @@ def create_and_save_entry():
     # rise = request.form['rise']
     # without_sleep = request.form['without_sleep']
 
-    new_entry = DiaryEntryManager.get_data_forms()
-    notation = Notation(
-        calendar_date=new_entry.calendar_date, bedtime=new_entry.bedtime, asleep=new_entry.asleep,
-        awake=new_entry.awake, rise=new_entry.rise, without_sleep=new_entry.without_sleep,
-        user_id=current_user.id
-    )
+    new_entry = DiaryEntryManager().get_form_data()
+
+    notation = DiaryEntryManager().get_form_data()
     add_and_commit(notation)
     flash('Новая запись добавлена в дневник сна')
     # except sqlalchemy.exc.IntegrityError:
@@ -43,11 +40,13 @@ def create_and_save_entry():
 @login_required
 def render_sleep_diary_page():
     """Отображает все записи дневника сна из БД"""
-    all_notations_of_user = get_all_notations_of_user()
-    get_entry = DiaryEntryManager.get_entry_from_db(all_notations_of_user)
+    diary_entries = DiaryEntryManager().get_all_diary_entries()
 
-    return f'{get_entry[0].calendar_date}\n{get_entry[0].bedtime}, {get_entry[0].asleep}\n' \
-           f'{get_entry[0].awake}, {get_entry[0].rise}\n{get_entry[0].without_sleep}'
+    return f'Дата - {diary_entries[0].calendar_date}' \
+           f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
+           f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
+           f' Не спал - {diary_entries[0].without_sleep}' \
+           f' Длительность сна - {diary_entries[0].sleep_duration}'
     # return render_template(
     #     "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
     #     average_sleep_duration_per_week=get_average_sleep_duration_per_week,
