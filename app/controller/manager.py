@@ -19,6 +19,9 @@ TIME_FORMAT = '%H:%M'
 
 
 class DiaryEntryManager:
+    def __repr__(self):
+        return f"\n\nЗаготовка для записи: [Дата: {self.__calendar_date}, Лег: {self.__bedtime}, Уснул: " \
+               f"{self.__asleep}, Проснулся: {self.__awake}, Встал: {self.__rise}, Не спал: {self.__without_sleep}]\n\n"
 
     def __init__(self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None,
                  sleep_duration=None):
@@ -28,16 +31,13 @@ class DiaryEntryManager:
         self.awake = awake
         self.rise = rise
         self.without_sleep = without_sleep
-        if self.__calendar_date is not None:
-            self.sleep_duration = sleep_duration
+        self.sleep_duration = sleep_duration
         # self.__correct_wake_up_time(self.__calendar_date, self.__awake, self.__rise)
         # self.__correct_durations(self.__calendar_date, self.__bedtime, self.__asleep, self.__awake, self.__rise)
         # self.__time_in_bed = 0
         # self.__sleep_efficiency = 0.00
 
-    def __repr__(self):
-        return f"\n\nЗаготовка для записи: [Дата: {self.__calendar_date}, Лег: {self.__bedtime}, Уснул: " \
-               f"{self.__asleep}, Проснулся: {self.__awake}, Встал: {self.__rise}, Не спал: {self.__without_sleep}]\n\n"
+
 
     def _sleep_duration(self):
         without_sleep = self.__without_sleep.hour * 60 + self.__without_sleep.minute
@@ -114,7 +114,6 @@ class DiaryEntryManager:
         )
 # todo может изменить, хотя тут только создается класс с правильными форматами атрибутов и возвращается,
 # todo а там уже делается коммит
-
 
     def get_all_diary_entries(self):
         notations = get_all_notations_of_user()
@@ -246,10 +245,14 @@ class DiaryEntryManager:
 
     @property
     def sleep_duration(self):
-        if isinstance(self.__sleep_duration, time):
-            return f"{self.__sleep_duration:{TIME_FORMAT}}"
-        else:
+        if self.__sleep_duration is None:
             return None
+        elif isinstance(self.__sleep_duration, time):
+            return f"{self.__sleep_duration:{TIME_FORMAT}}"
+        elif isinstance(self.__sleep_duration, str):
+            return self.__sleep_duration
+        else:
+            raise TypeError('Ошибка типа данных времени.')
 
     @sleep_duration.setter
     def sleep_duration(self, set_time):
