@@ -7,74 +7,113 @@ from flask_login import login_required, current_user
 from app.controller import *
 from app.model import *
 
+
 # todo по аналогии с временем сна добавить подсчет времени в кровати и эффективности сна за ночь
 # todo Добавить метод который возвращает список со средними значениями за неделю
 
 
-# without_sleep = without_sleep.hour * 60 + without_sleep.minute
-# sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-# time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
+class Descriptor:
+    def __set_name__(self, owner, name):
+        self.name = f"_{name}"
 
-TIME_FORMAT = '%H:%M'
+    def __get__(self, instance, owner):
+        if getattr(instance, self.name) is None:
+            return getattr(instance, self.name)
+        elif isinstance(getattr(instance, self.name), date):
+            return f'{getattr(instance, self.name):%Y-%m-%d}'
+        elif isinstance(getattr(instance, self.name), time):
+            return f'{getattr(instance, self.name):%H:%M}'
+        else:
+            raise TypeError('Неверный тип данных')
+
+    def __set__(self, instance, value):
+        if value is None:
+            setattr(instance, self.name, None)
+        elif isinstance(value, time):
+            setattr(instance, self.name, value)
+        elif isinstance(value, str) and len(value) > 8:
+            setattr(instance, self.name, str_to_date(value))
+        elif isinstance(value, str):
+            setattr(instance, self.name, str_to_time(value))
+        elif isinstance(value, date):
+            setattr(instance, self.name, value)
+        else:
+            raise TypeError('Ошибка типа данных времени.')
 
 
 class DiaryEntryManager:
-    def __repr__(self):
-        return f"\n\nЗаготовка для записи: [Дата: {self.__calendar_date}, Лег: {self.__bedtime}, Уснул: " \
-               f"{self.__asleep}, Проснулся: {self.__awake}, Встал: {self.__rise}, Не спал: {self.__without_sleep}]\n\n"
+    __TIME_FORMAT = '%H:%M'
 
-    def __init__(self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None,
-                 sleep_duration=None):
-        self.calendar_date = calendar_date
-        self.bedtime = bedtime
-        self.asleep = asleep
-        self.awake = awake
-        self.rise = rise
-        self.without_sleep = without_sleep
-        self.__sleep_duration = sleep_duration
-        self.__check_timings()
+    def __repr__(self):
+        return f"\n\nЗаготовка для записи: [Дата: {self.calendar_date}, Лег: {self.bedtime}, Уснул: " \
+               f"{self.asleep}, Проснулся: {self.awake}, Встал: {self.rise}, Не спал: {self.without_sleep}]\n\n"
+
+    calendar_date = Descriptor()
+    bedtime = Descriptor()
+    asleep = Descriptor()
+    awake = Descriptor()
+    rise = Descriptor()
+    without_sleep = Descriptor()
+
+# todo подставил один "_" в инициализацию работает, на отдачу, а создание нет. Попробовать поменять убрать статик метод
+
+    def __init__(self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None):
+        self._calendar_date = calendar_date
+        self._bedtime = bedtime
+        self._asleep = asleep
+        self._awake = awake
+        self._rise = rise
+        self._without_sleep = without_sleep
+        self.__sleep_duration = None
+        # self.__check_timings()
 
     def get_sleep_duration(self):
-        without_sleep = self.__without_sleep.hour * 60 + self.__without_sleep.minute
-        sleep_timing = int(
-            (
-                    datetime.combine(self.__calendar_date, self.__awake) -
-                    datetime.combine(self.__calendar_date, self.__asleep)
-            ).seconds / 60
-        )
+        without_sleep = str_to_time(self.without_sleep)
+        calendar_date = str_to_date(self.calendar_date)
+        awake = str_to_time(self.awake)
+        asleep = str_to_time(self.asleep)
+
+        without_sleep = without_sleep.hour * 60 + without_sleep.minute
+        sleep_timing = int(get_timedelta(calendar_date, awake, asleep).seconds / 60)
         return time_display(sleep_timing - without_sleep)
 
     def __check_timings(self):
-        if (self.__calendar_date or self.__bedtime or self.__asleep or self.__awake or self.__rise) is None:
+        if (self.calendar_date or self.bedtime or self.asleep or self.awake or self.rise) is None:
             return
+        calendar_date = str_to_date(self.calendar_date)
+        bedtime = str_to_time(self.bedtime)
+        asleep = str_to_time(self.asleep)
+        awake = str_to_time(self.awake)
+        rise = str_to_time(self.rise)
+        without_sleep = str_to_time(self.without_sleep)
 
-        if self.__awake > self.__rise:
-            datetime_awake = datetime.combine(self.__calendar_date, self.__awake)
+        if awake > rise:
+            datetime_awake = datetime.combine(calendar_date, awake)
             datetime_rise = datetime.combine(
-                date(self.__calendar_date.year, self.__calendar_date.month, self.__calendar_date.day + 1),
-                self.__rise
+                date(calendar_date.year, calendar_date.month, calendar_date.day + 1),
+                rise
             )
-            if self.__awake.hour == self.__rise.hour and self.__awake.minute > self.__rise.minute:
+            if awake.hour == rise.hour and awake.minute > rise.minute:
                 raise ValueError("Не можешь в рамках часа проснуться позже чем встал с кровати!")
             elif datetime_rise - datetime_awake > timedelta(hours=12):
                 raise ValueError("Время пробуждения не может быть позже времени подъема с кровати!\n"
                                  "Или время между этими событиями не может быть более 12 часов!")
 
-        if self.__bedtime > self.__asleep:
-            datetime_bedtime = datetime.combine(self.__calendar_date, self.__bedtime)
+        if bedtime > asleep:
+            datetime_bedtime = datetime.combine(calendar_date, bedtime)
             datetime_asleep = datetime.combine(
-                date(self.__calendar_date.year, self.__calendar_date.month, self.__calendar_date.day + 1),
-                self.__asleep
+                date(calendar_date.year, calendar_date.month, calendar_date.day + 1),
+                asleep
             )
-            if self.__bedtime.hour == self.__asleep.hour and self.__bedtime.minute > self.__asleep.minute:
+            if bedtime.hour == asleep.hour and bedtime.minute > asleep.minute:
                 raise ValueError("Не можешь в рамках часа уснуть раньше чем лег на кровать!")
             elif datetime_asleep - datetime_bedtime > timedelta(hours=12):
                 raise ValueError("Время отхода ко сну не может быть позже времени засыпания!\n"
                                  "Или время между этими событиями не может быть более 12 часов!")
 
-        without_sleep = self.__without_sleep.hour * 60 + self.__without_sleep.minute
-        sleep_duration = get_timedelta(self.__calendar_date, self.__awake, self.__asleep).seconds / 60
-        time_in_bed = get_timedelta(self.__calendar_date, self.__rise, self.__bedtime).seconds / 60
+        without_sleep = without_sleep.hour * 60 + without_sleep.minute
+        sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60
+        time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
         if sleep_duration < without_sleep:
             raise ValueError('Время проведенное без сна не может быть больше времени сна')
         if time_in_bed < sleep_duration:
@@ -90,13 +129,15 @@ class DiaryEntryManager:
             request.form['rise'],
             request.form['without_sleep']
         )
+        # todo тут поменять метод на статик и попробовать создавать через селф._имя
+        print(type(new_entry._calendar_date))
         notation = Notation(
-            calendar_date=new_entry.__calendar_date,
-            bedtime=new_entry.__bedtime,
-            asleep=new_entry.__asleep,
-            awake=new_entry.__awake,
-            rise=new_entry.__rise,
-            without_sleep=new_entry.__without_sleep,
+            calendar_date=new_entry.calendar_date,
+            bedtime=new_entry.bedtime,
+            asleep=new_entry.asleep,
+            awake=new_entry.awake,
+            rise=new_entry.rise,
+            without_sleep=new_entry.without_sleep,
             user_id=current_user.id
         )
         return notation
@@ -118,116 +159,8 @@ class DiaryEntryManager:
         return list_of_instances
 
     @property
-    def calendar_date(self):
-        if isinstance(self.__calendar_date, date):
-            return f'{self.__calendar_date:%Y-%m-%d}'
-        else:
-            return None
-
-    @calendar_date.setter
-    def calendar_date(self, set_date):
-        if set_date is None:
-            self.__calendar_date = None
-        elif isinstance(set_date, str):
-            self.__calendar_date = datetime.strptime(set_date, "%Y-%m-%d")
-        elif isinstance(set_date, date):
-            self.__calendar_date = set_date
-        else:
-            raise TypeError('Ошибка типа данных даты.')
-
-    @property
-    def bedtime(self):
-        if isinstance(self.__bedtime, time):
-            return f"{self.__bedtime:{TIME_FORMAT}}"
-        else:
-            return None
-
-    @bedtime.setter
-    def bedtime(self, set_time: Optional[time]):
-        if set_time is None:
-            self.__bedtime = None
-        elif isinstance(set_time, time):
-            self.__bedtime = set_time
-        elif isinstance(set_time, str):
-            self.__bedtime = str_to_time(set_time)
-        else:
-            raise TypeError('Ошибка типа данных даты.')
-
-    @property
-    def asleep(self):
-        if isinstance(self.__asleep, time):
-            return f"{self.__asleep:{TIME_FORMAT}}"
-        else:
-            return None
-
-    @asleep.setter
-    def asleep(self, set_time: Optional[time]):
-        if set_time is None:
-            self.__asleep = None
-        elif isinstance(set_time, time):
-            self.__asleep = set_time
-        elif isinstance(set_time, str):
-            self.__asleep = str_to_time(set_time)
-        else:
-            raise TypeError('Ошибка типа данных времени.')
-
-    @property
-    def awake(self):
-        if isinstance(self.__awake, time):
-            return f"{self.__awake:{TIME_FORMAT}}"
-        else:
-            return None
-
-    @awake.setter
-    def awake(self, set_time: Optional[time]):
-        if set_time is None:
-            self.__awake = None
-        elif isinstance(set_time, time):
-            self.__awake = set_time
-        elif isinstance(set_time, str):
-            self.__awake = str_to_time(set_time)
-        else:
-            raise TypeError('Ошибка типа данных времени.')
-
-    @property
-    def rise(self):
-        if isinstance(self.__rise, time):
-            return f"{self.__rise:{TIME_FORMAT}}"
-        else:
-            return None
-
-    @rise.setter
-    def rise(self, set_time: Optional[time]):
-        if set_time is None:
-            self.__rise = None
-        elif isinstance(set_time, time):
-            self.__rise = set_time
-        elif isinstance(set_time, str):
-            self.__rise = str_to_time(set_time)
-        else:
-            raise TypeError('Ошибка типа данных времени.')
-
-    @property
-    def without_sleep(self):
-        if isinstance(self.__without_sleep, time):
-            return f"{self.__without_sleep:{TIME_FORMAT}}"
-        else:
-            return None
-
-    @without_sleep.setter
-    def without_sleep(self, set_time):
-        if set_time is None:
-            self.__without_sleep = None
-        elif isinstance(set_time, str):
-            self.__without_sleep = str_to_time(set_time)
-        elif isinstance(set_time, time):
-            self.__without_sleep = set_time
-        else:
-            raise TypeError('Ошибка типа данных времени.')
-
-    @property
     def sleep_duration(self):
-        if self.__calendar_date is None:
+        if self.calendar_date is None:
             return None
         else:
             return self.get_sleep_duration()

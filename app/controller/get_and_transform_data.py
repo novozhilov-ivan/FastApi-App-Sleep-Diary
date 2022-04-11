@@ -75,6 +75,10 @@ def today_date() -> date:
     return datetime.date(datetime.today())
 
 
+def str_to_date(string_date):
+    return datetime.strptime(string_date, "%Y-%m-%d")
+
+
 def str_to_time(string_time: str) -> time:
     """Изменяет тип данных str на time в формате 'HH:MM'"""
     return datetime.time(datetime.strptime(string_time, '%H:%M'))
@@ -101,7 +105,9 @@ def time_display(time_point: Union[int, float, time]) -> Union[str, time]:
     """Конвертирует время из типа данных int или time в str в формате 'HH:MM'"""
     if isinstance(time_point, int) or isinstance(time_point, float):
         time_point = int(time_point)
-        if time_point % 60 < 10:
+        if time_point == 0:
+            return '00:00'
+        elif time_point % 60 < 10:
             return str(time_point // 60) + ':0' + str(time_point % 60)
         return str(time_point // 60) + ':' + str(time_point % 60)
     elif isinstance(time_point, time):
@@ -112,4 +118,5 @@ def time_display(time_point: Union[int, float, time]) -> Union[str, time]:
 
 def get_timedelta(calendar_date: date, time_point_1: time, time_point_2: time) -> timedelta:
     """Получает временной интервал между двумя точками, каждая из которых скомбинирована из даты с времени"""
+
     return datetime.combine(calendar_date, time_point_1) - datetime.combine(calendar_date, time_point_2)

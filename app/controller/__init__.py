@@ -5,7 +5,7 @@ from .queries import (
 from .get_and_transform_data import (
     get_average_sleep_efficiency_per_week, date_and_time_display, time_display, today_date,
     get_timedelta, get_amount_notations_of_week, get_average_sleep_duration_per_week,
-    str_to_time, sleep_efficiency, get_duplicate_dates
+    str_to_time, sleep_efficiency, get_duplicate_dates, str_to_date
 )
 from .editing import (
     update_notation, export_diary, import_diary, delete_diary, delete_notation
@@ -43,5 +43,6 @@ __all__ = [
     'str_to_time',
     'check_user',
     'today_date',
-    'get_user'
+    'get_user',
+    'str_to_date'
 ]
