@@ -17,9 +17,9 @@ def create_and_save_entry():
     # rise = request.form['rise']
     # without_sleep = request.form['without_sleep']
 
-    new_entry = DiaryEntryManager().get_form_data()
+    # new_entry = DiaryEntryManager().get_form_data()
 
-    notation = DiaryEntryManager().get_form_data()
+    notation = DiaryEntryManager().create_entry()
     add_and_commit(notation)
     flash('Новая запись добавлена в дневник сна')
     # except sqlalchemy.exc.IntegrityError:
@@ -43,16 +43,16 @@ def render_sleep_diary_page():
     all_notations_of_user = get_all_notations_of_user()
     diary_entries = DiaryEntryManager().get_all_diary_entries()
 
-    # return f'Дата - {diary_entries[0].calendar_date}' \
-    #        f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
-    #        f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
-    #        f' Не спал - {diary_entries[0].without_sleep}' \
-    #        f' Длительность сна - {diary_entries[0].sleep_duration}'
-    return render_template(
-        "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
-        average_sleep_duration_per_week=get_average_sleep_duration_per_week,
-        sleep_efficiency=sleep_efficiency, amount_notations_of_user=len(all_notations_of_user),
-        average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
-        get_amount_notations_of_week=get_amount_notations_of_week,
-        today_date=today_date, enumerate=enumerate
-    )
+    return f'Дата - {diary_entries[0].calendar_date}' \
+           f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
+           f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
+           f' Не спал - {diary_entries[0].without_sleep}' \
+           f' Длительность сна - {diary_entries[0].sleep_duration}'
+    # return render_template(
+    #     "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
+    #     average_sleep_duration_per_week=get_average_sleep_duration_per_week,
+    #     sleep_efficiency=sleep_efficiency, amount_notations_of_user=len(all_notations_of_user),
+    #     average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
+    #     get_amount_notations_of_week=get_amount_notations_of_week,
+    #     today_date=today_date, enumerate=enumerate
+    # )
