@@ -43,19 +43,18 @@ def render_sleep_diary_page():
     all_notations_of_user = get_all_notations_of_user()
     diary_entries = DiaryEntryManager().get_all_diary_entries()
 
-    # print(type(diary_entries[0].calendar_date))
-    # print(type(diary_entries[0].__dict__.get('str_calendar_date')))
-
-    # return f'Дата - {diary_entries[0].calendar_date}' \
-    #        f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
-    #        f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
-    #        f' Не спал - {diary_entries[0].without_sleep}' \
-           # f' Длительность сна - {diary_entries[0].sleep_duration}'
-    return render_template(
-        "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
-        average_sleep_duration_per_week=get_average_sleep_duration_per_week,
-        sleep_efficiency=sleep_efficiency, amount_notations_of_user=len(all_notations_of_user),
-        average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
-        get_amount_notations_of_week=get_amount_notations_of_week,
-        today_date=today_date, enumerate=enumerate
-    )
+    return f'Дата - {diary_entries[0].calendar_date}' \
+           f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
+           f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
+           f' Не спал - {diary_entries[0].without_sleep}' \
+           f' Длительность сна - {diary_entries[0].sleep_duration}' \
+           f' Время в кровати - {diary_entries[0].in_bed_duration}' \
+           f' Эффективность сна - {diary_entries[0].sleep_efficiency} %'
+    # return render_template(
+    #     "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
+    #     average_sleep_duration_per_week=get_average_sleep_duration_per_week,
+    #     sleep_efficiency=sleep_efficiency, amount_notations_of_user=len(all_notations_of_user),
+    #     average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
+    #     get_amount_notations_of_week=get_amount_notations_of_week,
+    #     today_date=today_date, enumerate=enumerate
+    # )
