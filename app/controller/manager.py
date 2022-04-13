@@ -8,12 +8,7 @@ from app.controller import *
 from app.model import *
 
 
-# todo по аналогии с временем сна добавить подсчет времени в кровати и эффективности сна за ночь
-# todo Добавить метод который возвращает список со средними значениями за неделю
-
-
 class Descriptor:
-    # set_name нахуй не нужен
     def __set_name__(self, owner, name):
         self.name = f"_{name}"
 
@@ -32,9 +27,9 @@ class Descriptor:
             setattr(instance, self.name, None)
         elif isinstance(value, time):
             setattr(instance, self.name, value)
-        elif isinstance(value, str) and len(value) == 5:
+        elif isinstance(value, str) and len(value) <= 7:
             setattr(instance, self.name, str_to_time(value))
-        elif isinstance(value, str) and len(value) == 10:
+        elif isinstance(value, str) and len(value) > 8:
             setattr(instance, self.name, str_to_date(value))
         elif isinstance(value, date):
             setattr(instance, self.name, value)
@@ -54,7 +49,12 @@ class DiaryEntryManager:
     rise = Descriptor()
     without_sleep = Descriptor()
 
-    def __init__(self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None):
+    def __init__(
+            self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None,
+            average_sleep_duration_per_week=None, average_time_in_bed_per_week=None, week_length=None,
+            average_sleep_efficiency_per_week=None
+    ):
+
         self._calendar_date = calendar_date
         self._bedtime = bedtime
         self._asleep = asleep
@@ -62,9 +62,15 @@ class DiaryEntryManager:
         self._rise = rise
         self._without_sleep = without_sleep
         self.__check_timings()
-        # self.__sleep_duration = None
-        # self.__in_bed_duration = None
-        # self.__sleep_efficiency = None
+
+        self.__sleep_duration = None
+        self.__in_bed_duration = None
+        self.__sleep_efficiency = None
+
+        self.__average_sleep_duration_per_week = average_sleep_duration_per_week
+        self.__average_time_in_bed_per_week = average_time_in_bed_per_week
+        self.__average_sleep_efficiency_per_week = average_sleep_efficiency_per_week
+        self.__week_length = week_length
 
     def _get_sleep_duration(self) -> int:
         without_sleep = self._without_sleep.hour * 60 + self._without_sleep.minute
@@ -154,13 +160,13 @@ class DiaryEntryManager:
             list_of_instances.append(get_diary_entry)
         return list_of_instances
 
-    @staticmethod
-    def statistics(instances: list):
+    def statistics(self, instances):
         average_values_per_week = []
         days_amount = len(instances)
 
         while days_amount > 0:
-            sleep_duration_per_week, sleep_efficiency_per_week = 0, 0
+            sleep_duration_per_week, time_in_bed_per_week, sleep_efficiency_per_week = 0, 0, 0
+
             if days_amount >= 7:
                 week_length = 7
                 days_amount -= 7
@@ -169,16 +175,27 @@ class DiaryEntryManager:
                 days_amount = 0
 
             for day_number in range(week_length):
-                sleep_duration_per_week += instances[day_number].sleep_duration
-                sleep_efficiency_per_week += instances[day_number].sleep_efficiency
+                self.calendar_date = instances[day_number].calendar_date
+                self.bedtime = instances[day_number].bedtime
+                self.asleep = instances[day_number].asleep
+                self.awake = instances[day_number].awake
+                self.rise = instances[day_number].rise
+                self.without_sleep = instances[day_number].without_sleep
 
+                sleep_duration_per_week += self._get_sleep_duration()
+                time_in_bed_per_week += self._get_time_in_bed()
+                sleep_efficiency_per_week += self._get_sleep_efficiency()
+
+            week_length = week_length
             average_sleep_duration_per_week = int(sleep_duration_per_week / week_length)
+            average_time_in_bed_per_week = int(time_in_bed_per_week / week_length)
             average_sleep_efficiency_per_week = sleep_efficiency_per_week / week_length
-            # добавить статистики каким-нибудь образом в класс
+
             average_values = DiaryEntryManager(
-                average_sleep_duration_per_week,
-                average_sleep_efficiency_per_week,
-                week_length
+                average_sleep_duration_per_week=average_sleep_duration_per_week,
+                average_time_in_bed_per_week=average_time_in_bed_per_week,
+                average_sleep_efficiency_per_week=average_sleep_efficiency_per_week,
+                week_length=week_length
             )
             average_values_per_week.append(average_values)
 
@@ -204,3 +221,19 @@ class DiaryEntryManager:
             return None
         else:
             return self._get_sleep_efficiency()
+
+    @property
+    def average_sleep_duration_per_week(self):
+        return time_display(self.__average_sleep_duration_per_week)
+
+    @property
+    def average_time_in_bed_per_week(self):
+        return time_display(self.__average_time_in_bed_per_week)
+
+    @property
+    def average_sleep_efficiency_per_week(self):
+        return f"{self.__average_sleep_efficiency_per_week:.2f}"
+
+    @property
+    def week_length(self):
+        return self.__week_length
