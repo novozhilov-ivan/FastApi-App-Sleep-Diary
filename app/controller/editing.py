@@ -60,12 +60,16 @@ def import_diary():
                 asleep = str_to_time(row[2])
                 awake = str_to_time(row[3])
                 rise = str_to_time(row[4])
-                without_sleep = int(row[5])
-                sleep_duration = get_timedelta(calendar_date, awake, asleep).seconds / 60 - without_sleep
-                time_in_bed = get_timedelta(calendar_date, rise, bedtime).seconds / 60
-                notation = Notation(calendar_date=calendar_date, sleep_duration=sleep_duration, rise=rise,
-                                    time_in_bed=time_in_bed, bedtime=bedtime, asleep=asleep, awake=awake,
-                                    without_sleep=without_sleep, user_id=current_user.id)
+                without_sleep = str_to_time(time_display(int(row[5])))
+                notation = Notation(
+                    calendar_date=calendar_date,
+                    bedtime=bedtime,
+                    asleep=asleep,
+                    awake=awake,
+                    rise=rise,
+                    without_sleep=without_sleep,
+                    user_id=current_user.id
+                )
 
                 all_calendar_dates.append(calendar_date)
                 notations_for_adding.append(notation)

@@ -63,9 +63,9 @@ class DiaryEntryManager:
         self._without_sleep = without_sleep
         self.__check_timings()
 
-        self.__sleep_duration = None
-        self.__in_bed_duration = None
-        self.__sleep_efficiency = None
+        # self.__sleep_duration = None
+        # self.__in_bed_duration = None
+        # self.__sleep_efficiency = None
 
         self.__average_sleep_duration_per_week = average_sleep_duration_per_week
         self.__average_time_in_bed_per_week = average_time_in_bed_per_week
