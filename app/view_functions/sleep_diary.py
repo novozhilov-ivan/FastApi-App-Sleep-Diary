@@ -1,3 +1,5 @@
+from datetime import datetime
+
 import sqlalchemy.exc
 from flask import render_template, request, redirect, url_for, flash
 from flask_login import login_required, current_user
@@ -32,8 +34,8 @@ def create_and_save_entry():
     #     flash(f'При добавлении записи произошла ошибка. Прочая ошибка. {err.args[0]}')
     # finally:
 
-    # return redirect(url_for('get_main_page'))
-    return redirect(url_for('get_sleep_diary_entries'))
+    return redirect(url_for('get_main_page'))
+    # return redirect(url_for('get_sleep_diary_entries'))
 
 
 # todo поправить отображение(переделать запросы в расчетах средних значений)
@@ -41,20 +43,31 @@ def create_and_save_entry():
 def render_sleep_diary_page():
     """Отображает все записи дневника сна из БД"""
     all_notations_of_user = get_all_notations_of_user()
-    diary_entries = DiaryEntryManager().get_all_diary_entries()
+    diary_entries = DiaryEntryManager().diary_entries()
+    # statistics = DiaryEntryManager().statistics(diary_entries)
 
-    return f'Дата - {diary_entries[0].calendar_date}' \
-           f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
-           f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
-           f' Не спал - {diary_entries[0].without_sleep}' \
-           f' Длительность сна - {diary_entries[0].sleep_duration}' \
-           f' Время в кровати - {diary_entries[0].in_bed_duration}' \
-           f' Эффективность сна - {diary_entries[0].sleep_efficiency} %'
-    # return render_template(
-    #     "sleep.html", time_display=time_display, all_notations=all_notations_of_user,
-    #     average_sleep_duration_per_week=get_average_sleep_duration_per_week,
-    #     sleep_efficiency=sleep_efficiency, amount_notations_of_user=len(all_notations_of_user),
-    #     average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
-    #     get_amount_notations_of_week=get_amount_notations_of_week,
-    #     today_date=today_date, enumerate=enumerate
-    # )
+    # return f'Дата - {diary_entries[0].calendar_date}' \
+    #        f' Лег - {diary_entries[0].bedtime}, Уснул - {diary_entries[0].asleep}' \
+    #        f' Проснулся - {diary_entries[0].awake}, Встал - {diary_entries[0].rise}' \
+    #        f' Не спал - {diary_entries[0].without_sleep}' \
+    #        f' Длительность сна - {diary_entries[0].sleep_duration}' \
+    #        f' Время в кровати - {diary_entries[0].in_bed_duration}' \
+    #        f' Эффективность сна - {diary_entries[0].sleep_efficiency} %'
+    return render_template(
+        "sleep.html",
+        # diary_entries=diary_entries
+        # amount_entries=len(diary_entries),
+        # statistics=DiaryEntryManager().statistics(diary_entries),
+        today_date=datetime.date(datetime.today()),
+        enumerate=enumerate,
+        all_notations=all_notations_of_user,
+
+        # todo  Нижние переменные и функции должны передаваться списком с экземплярами класса
+        # todo Сделать statistics = DiaryEntryManager().statistics(diary_entries)
+        average_sleep_duration_per_week=get_average_sleep_duration_per_week,
+        average_sleep_efficiency_per_week=get_average_sleep_efficiency_per_week,
+        get_amount_notations_of_week=get_amount_notations_of_week,
+        amount_notations_of_user=len(all_notations_of_user)
+        # sleep_efficiency = sleep_efficiency,
+        # time_display=time_display
+    )

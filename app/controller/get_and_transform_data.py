@@ -38,6 +38,7 @@ def analyze_week(week_number, all_notations):
                 continue
             week_length += 1
             amount += 1
+            # Amount нахуй не нужен. Он то же самое что и week_length
             sum_of_minutes += _notation.sleep_duration
             if _notation.sleep_duration != 0:
                 sum_of_efficiency += _notation.sleep_duration / _notation.time_in_bed
@@ -55,8 +56,9 @@ def get_average_sleep_efficiency_per_week(week_number, all_notations):
 
 def get_average_sleep_duration_per_week(week_number, all_notations):
     """Вычисляет среднюю продолжительность сна за неделю"""
-    week_length, sum_of_minutes = analyze_week(week_number, all_notations)[0], analyze_week(week_number, all_notations
-                                                                                            )[3]
+    week_length, sum_of_minutes = analyze_week(week_number, all_notations)[0], analyze_week(
+        week_number, all_notations
+    )[3]
     if week_length == 0:
         return 0
     return int(sum_of_minutes / week_length)

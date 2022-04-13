@@ -1,8 +1,8 @@
 from datetime import datetime, time, date, timedelta
-from typing import Optional, Union
+from typing import Optional
 
-from flask import render_template, request, redirect, url_for, flash
-from flask_login import login_required, current_user
+from flask import request
+from flask_login import current_user
 
 from app.controller import *
 from app.model import *
@@ -13,6 +13,7 @@ from app.model import *
 
 
 class Descriptor:
+    # set_name нахуй не нужен
     def __set_name__(self, owner, name):
         self.name = f"_{name}"
 
@@ -24,27 +25,27 @@ class Descriptor:
         elif isinstance(getattr(instance, self.name), time):
             return f'{getattr(instance, self.name):%H:%M}'
         else:
-            raise TypeError('Неверный тип данных при попытке получить.')
+            raise TypeError('Неверный тип данных при попытке получить значение.')
 
     def __set__(self, instance, value):
         if value is None:
             setattr(instance, self.name, None)
         elif isinstance(value, time):
             setattr(instance, self.name, value)
-        elif isinstance(value, str) and len(value) > 8:
-            setattr(instance, self.name, str_to_date(value))
-        elif isinstance(value, str):
+        elif isinstance(value, str) and len(value) == 5:
             setattr(instance, self.name, str_to_time(value))
+        elif isinstance(value, str) and len(value) == 10:
+            setattr(instance, self.name, str_to_date(value))
         elif isinstance(value, date):
             setattr(instance, self.name, value)
         else:
-            raise TypeError('Неверный тип данных при попытке присвоить.')
+            raise TypeError('Неверный тип данных при попытке присвоить значение.')
 
 
 class DiaryEntryManager:
     def __repr__(self):
-        return f"\n\nЗаготовка для записи: [Дата: {self.calendar_date}, Лег: {self.bedtime}, Уснул: " \
-               f"{self.asleep}, Проснулся: {self.awake}, Встал: {self.rise}, Не спал: {self.without_sleep}]\n\n"
+        return f"\nЗаготовка для записи: [Дата: {self._calendar_date}, Лег: {self._bedtime}, Уснул: " \
+               f"{self._asleep}, Проснулся: {self._awake}, Встал: {self._rise}, Не спал: {self._without_sleep}]\n"
 
     calendar_date = Descriptor()
     bedtime = Descriptor()
@@ -61,26 +62,27 @@ class DiaryEntryManager:
         self._rise = rise
         self._without_sleep = without_sleep
         self.__check_timings()
-        self.__sleep_duration = None
-        self.__in_bed_duration = None
-        self.__sleep_efficiency = None
+        # self.__sleep_duration = None
+        # self.__in_bed_duration = None
+        # self.__sleep_efficiency = None
 
-    def _get_sleep_duration(self):
+    def _get_sleep_duration(self) -> int:
         without_sleep = self._without_sleep.hour * 60 + self._without_sleep.minute
         sleep_timing = get_timedelta(self._calendar_date, self._awake, self._asleep).seconds / 60
-        return sleep_timing - without_sleep
+        minutes_amount = int(sleep_timing - without_sleep)
+        return minutes_amount
 
-    def _get_time_in_bed(self):
-        return get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds / 60
+    def _get_time_in_bed(self) -> int:
+        return int(get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds / 60)
 
-    def _get_sleep_efficiency(self):
+    def _get_sleep_efficiency(self) -> float:
         sleep_duration = self._get_sleep_duration()
         in_bed_duration = self._get_time_in_bed()
         if sleep_duration == 0:
             return 0
         return round((sleep_duration / in_bed_duration) * 100, 2)
 
-    def __check_timings(self):
+    def __check_timings(self) -> Optional:
         if (self._calendar_date or self._bedtime or self._asleep or self._awake or self._rise) is None:
             return
 
@@ -137,7 +139,7 @@ class DiaryEntryManager:
         return notation
 
     @staticmethod
-    def get_all_diary_entries():
+    def diary_entries():
         notations = get_all_notations_of_user()
         list_of_instances = []
         for notation in notations:
@@ -151,6 +153,36 @@ class DiaryEntryManager:
             )
             list_of_instances.append(get_diary_entry)
         return list_of_instances
+
+    @staticmethod
+    def statistics(instances: list):
+        average_values_per_week = []
+        days_amount = len(instances)
+
+        while days_amount > 0:
+            sleep_duration_per_week, sleep_efficiency_per_week = 0, 0
+            if days_amount >= 7:
+                week_length = 7
+                days_amount -= 7
+            else:
+                week_length = days_amount
+                days_amount = 0
+
+            for day_number in range(week_length):
+                sleep_duration_per_week += instances[day_number].sleep_duration
+                sleep_efficiency_per_week += instances[day_number].sleep_efficiency
+
+            average_sleep_duration_per_week = int(sleep_duration_per_week / week_length)
+            average_sleep_efficiency_per_week = sleep_efficiency_per_week / week_length
+            # добавить статистики каким-нибудь образом в класс
+            average_values = DiaryEntryManager(
+                average_sleep_duration_per_week,
+                average_sleep_efficiency_per_week,
+                week_length
+            )
+            average_values_per_week.append(average_values)
+
+        return average_values_per_week
 
     @property
     def sleep_duration(self):
