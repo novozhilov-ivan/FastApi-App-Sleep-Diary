@@ -6,6 +6,7 @@ from flask import g, render_template, flash
 from app import app
 from app.config import login_manager
 from app.controller import *
+from app.exception import *
 
 
 @app.context_processor
@@ -21,13 +22,22 @@ def get_mode():
 @login_manager.user_loader
 def load_user(user_id):
     try:
+        # logger
         return get_user(user_id)
     except sqlalchemy.exc.ProgrammingError as err:
         return flash('Таблица "User" - не создана.'), flash(err.args[0])
     except Exception as err:
-        return flash('Ошибка при проверке пользователя в базе данных. Прочая ошибка.'), flash(err.args[0])
+        return display_unknown_error(err)
+    # finally:
+#         logger
 
 
 def render_main_page():
     """Формирует основную страницу"""
-    return render_template('main.html')
+    try:
+        # logger
+        return render_template('main.html')
+    except Exception as err:
+        flash(f'Прочая ошибка. {err.args[0]}')
+    # finally:
+#         logger

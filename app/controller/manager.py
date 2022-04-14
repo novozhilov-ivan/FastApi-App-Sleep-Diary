@@ -1,3 +1,4 @@
+import math
 from datetime import datetime, time, date, timedelta
 from typing import Optional
 
@@ -162,19 +163,23 @@ class DiaryEntryManager:
 
     def statistics(self, instances):
         average_values_per_week = []
-        days_amount = len(instances)
+        amount_of_days = len(instances)
+        first_day_of_week = 0
+        last_day_of_week = 7
 
-        while days_amount > 0:
+        while amount_of_days > 0:
             sleep_duration_per_week, time_in_bed_per_week, sleep_efficiency_per_week = 0, 0, 0
 
-            if days_amount >= 7:
+            if amount_of_days >= 7:
                 week_length = 7
-                days_amount -= 7
+                amount_of_days -= 7
             else:
-                week_length = days_amount
-                days_amount = 0
+                week_length = amount_of_days
+                amount_of_days = 0
+                first_day_of_week = first_day_of_week
+                last_day_of_week = first_day_of_week + week_length
 
-            for day_number in range(week_length):
+            for day_number in range(first_day_of_week, last_day_of_week):
                 self.calendar_date = instances[day_number].calendar_date
                 self.bedtime = instances[day_number].bedtime
                 self.asleep = instances[day_number].asleep
@@ -186,15 +191,13 @@ class DiaryEntryManager:
                 time_in_bed_per_week += self._get_time_in_bed()
                 sleep_efficiency_per_week += self._get_sleep_efficiency()
 
-            week_length = week_length
-            average_sleep_duration_per_week = int(sleep_duration_per_week / week_length)
-            average_time_in_bed_per_week = int(time_in_bed_per_week / week_length)
-            average_sleep_efficiency_per_week = sleep_efficiency_per_week / week_length
+            first_day_of_week += 7
+            last_day_of_week += 7
 
             average_values = DiaryEntryManager(
-                average_sleep_duration_per_week=average_sleep_duration_per_week,
-                average_time_in_bed_per_week=average_time_in_bed_per_week,
-                average_sleep_efficiency_per_week=average_sleep_efficiency_per_week,
+                average_sleep_duration_per_week=int(sleep_duration_per_week / week_length),
+                average_time_in_bed_per_week=int(time_in_bed_per_week / week_length),
+                average_sleep_efficiency_per_week=sleep_efficiency_per_week / week_length,
                 week_length=week_length
             )
             average_values_per_week.append(average_values)

@@ -3,6 +3,8 @@ from flask_login import login_required
 
 from app.controller import *
 
+# todo сделать try/except/finally
+
 
 @login_required
 def render_edit_diary_page():

@@ -97,13 +97,18 @@
                         </div>
                         {# Эффективность сна #}
                         <div class="col-12 col-md-4 mt-md-0">
-                            <div class="mt-2">
-                                Эффективность сна за неделю {{ week_number }}<br>
-                                <h3>{{ stats.average_sleep_efficiency_per_week }} %</h3><br>
-                                Среднее время сна за неделю {{ week_number }}
-                                <h3>{{ stats.average_sleep_duration_per_week }}</h3><br>
-                                Среднее время проведенное в кровати<br>
-                                <h3>{{ stats.average_time_in_bed_per_week }}</h3><br>
+                            <div class="border-bottom">
+                                <h5>
+                                    Средние показатели за неделю {{ week_number }}
+                                </h5>
+                            </div><br>
+                            <div class="mt-2 ">
+                                Эффективность сна<br>
+                                <h3>{{ stats.average_sleep_efficiency_per_week }} %</h3>
+                                Время сна
+                                <h3>{{ stats.average_sleep_duration_per_week }}</h3>
+                                Время проведенное в кровати<br>
+                                <h3>{{ stats.average_time_in_bed_per_week }}</h3>
                             </div>
                         </div>
                     </div>

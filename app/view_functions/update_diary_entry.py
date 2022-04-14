@@ -4,6 +4,8 @@ from flask_login import login_required
 
 from app.controller import *
 
+# todo сделать try/except/finally
+
 
 @login_required
 def update_one_diary_entry(notation_date):

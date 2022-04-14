@@ -1,7 +1,16 @@
+from flask import flash
+
+from app import mode
+
+
 class NonUniqueNotationDate(Exception):
     """Ошибка возникающая, если при импортировании файла с записями находится запись с датой,
     которая уже существует в дневнике сна/базе данных"""
     pass
+
+
+def display_unknown_error(err):
+    return flash(err.args[0] if mode else 'Неизвестная ошибка')
 
 
 Errors = {
