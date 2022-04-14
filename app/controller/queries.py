@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime, date
 
 from flask_login import current_user
 
@@ -46,7 +46,7 @@ def get_all_notations_of_user():
     return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
 
 
-def get_notation_by_date(notation_date: str):
+def get_notation_by_date(notation_date):
     """Проверяет существует ли запись пользователя с получаемой датой"""
     return db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=notation_date).one()
 

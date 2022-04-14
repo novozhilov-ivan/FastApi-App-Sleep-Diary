@@ -9,16 +9,11 @@ from .get_and_transform_data import (
 )
 from .editing import (
     update_notation, export_diary, import_diary, delete_diary,
-    delete_notation
 )
-from .check import sleep_time_check, wake_up_time_check, sleep_duration_less_time_in_bed
 from .manager import DiaryEntryManager
 
 
 __all__ = [
-    'wake_up_time_check',
-    'sleep_time_check',
-    'sleep_duration_less_time_in_bed',
     'delete_all_notations',
     'get_amount_notations_of_user',
     'delete_notation_and_commit',
@@ -32,7 +27,6 @@ __all__ = [
     'get_all_notations_of_user',
     'add_all_and_commit',
     'export_diary',
-    'delete_notation',
     'add_and_commit',
     'get_timedelta',
     'time_display',

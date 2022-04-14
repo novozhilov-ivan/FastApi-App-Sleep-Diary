@@ -110,46 +110,32 @@ def delete_diary():
     try:
         delete_all_notations()
         flash("Все записи из дневника сна удалены.")
-        return redirect(url_for('edit_diary'))
     except (NameError, TypeError):
         flash("При удалении записей из базы данных произошла ошибка SQLAlchemy.")
-        return redirect(url_for('edit_diary'))
-    except (Exception,):
-        flash("При удалении записей из базы данных произошла ошибка: Прочая ошибка.")
+    except Exception as err:
+        display_unknown_error(err)
+    finally:
         return redirect(url_for('edit_diary'))
 
 
 def update_notation(notation: Notation):
     """Обновление одной записи пользователя в дневнике сна/базе данных"""
-    notation.bedtime = str_to_time(request.form['bedtime'][:5])
-    notation.asleep = str_to_time(request.form['asleep'][:5])
-    notation.awake = str_to_time(request.form['awake'][:5])
-    notation.rise = str_to_time(request.form['rise'][:5])
-    without_sleep = str_to_time(request.form['without_sleep'])
-    notation.without_sleep = without_sleep.hour * 60 + without_sleep.minute
-    sleep_duration = get_timedelta(notation.calendar_date, notation.awake, notation.asleep)
-    time_in_bed = get_timedelta(notation.calendar_date, notation.rise, notation.bedtime)
-    notation.sleep_duration = sleep_duration.seconds / 60 - notation.without_sleep
-    notation.time_in_bed = time_in_bed.seconds / 60
     try:
-        if notation.time_in_bed < notation.sleep_duration:
-            raise TimeInBedLessSleepError
+        notation.bedtime = str_to_time(request.form['bedtime'][:5])
+        notation.asleep = str_to_time(request.form['asleep'][:5])
+        notation.awake = str_to_time(request.form['awake'][:5])
+        notation.rise = str_to_time(request.form['rise'][:5])
+        notation.without_sleep = str_to_time(request.form['without_sleep'][:5])
+        # todo Сделать добавление(обновление) через Менеджера
+        # todo Сделать проверку времени
+
         db.session.commit()
         flash(f'Запись {notation.calendar_date} обновлена.')
-    except TimeInBedLessSleepError:
-        flash('Ошибка данных. Время проведенное в кровати не может быть меньше времени сна.')
-    except (Exception,):
-        flash('При обновлении записи произошла ошибка.')
+    except ValueError as err:
+        display_unknown_error(err)
+    except Exception as err:
+        display_unknown_error(err)
     finally:
-        return redirect(f'/sleep/update/{notation.calendar_date}')
+        return redirect(f'/sleep/update/<{notation.calendar_date}>')
 
 
-def delete_notation(notation: Notation):
-    """Удаление одной записи пользователя из дневника сна/базы данных"""
-    try:
-        delete_notation_and_commit(notation)
-        flash(f'Запись {notation.calendar_date} удалена.')
-        return redirect(url_for('get_sleep_diary_entries'))
-    except (Exception,):
-        flash(f'При удалении записи {notation.calendar_date} произошла ошибка.')
-        return redirect(url_for(f'/sleep/update/<{notation.calendar_date}>'))
