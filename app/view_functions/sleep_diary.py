@@ -33,7 +33,7 @@ def render_sleep_diary_page():
     try:
         # logger
         diary_entries = DiaryEntryManager().diary_entries()
-        statistics = DiaryEntryManager().statistics(diary_entries)
+        statistics = DiaryEntryManager().weekly_statistics(diary_entries)
         return render_template(
             "sleep.html",
             today_date=datetime.date(datetime.today()),

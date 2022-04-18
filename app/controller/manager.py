@@ -1,4 +1,3 @@
-import math
 from datetime import datetime, time, date, timedelta
 from typing import Optional
 
@@ -64,10 +63,6 @@ class DiaryEntryManager:
         self._without_sleep = without_sleep
         self.__check_timings()
 
-        # self.__sleep_duration = None
-        # self.__in_bed_duration = None
-        # self.__sleep_efficiency = None
-
         self.__average_sleep_duration_per_week = average_sleep_duration_per_week
         self.__average_time_in_bed_per_week = average_time_in_bed_per_week
         self.__average_sleep_efficiency_per_week = average_sleep_efficiency_per_week
@@ -125,15 +120,19 @@ class DiaryEntryManager:
         if time_in_bed < sleep_duration:
             raise ValueError('Время проведенное в кровати не может быть меньше времени сна.')
 
-    def create_entry(self):
-        self.calendar_date = request.form['calendar_date']
-        self.bedtime = request.form['bedtime']
-        self.asleep = request.form['asleep']
-        self.awake = request.form['awake']
-        self.rise = request.form['rise']
-        self.without_sleep = request.form['without_sleep']
+    def __get_form_data(self):
+        self.calendar_date = request.form.get('calendar_date')
+        if request.form.get('calendar_date') is None:
+            self.calendar_date = request.url.split('/')[-1]
+        self.bedtime = request.form['bedtime'][:5]
+        self.asleep = request.form['asleep'][:5]
+        self.awake = request.form['awake'][:5]
+        self.rise = request.form['rise'][:5]
+        self.without_sleep = request.form['without_sleep'][:5]
         self.__check_timings()
 
+    def create_entry(self):
+        self.__get_form_data()
         notation = Notation(
             calendar_date=self._calendar_date,
             bedtime=self._bedtime,
@@ -145,12 +144,22 @@ class DiaryEntryManager:
         )
         return notation
 
+    def update_entry(self, notation):
+        self.__get_form_data()
+
+        notation.bedtime = self._bedtime
+        notation.asleep = self._asleep
+        notation.awake = self._awake
+        notation.rise = self._rise
+        notation.without_sleep = self._without_sleep
+        return notation
+
     @staticmethod
     def diary_entries():
         notations = get_all_notations_of_user()
         list_of_instances = []
         for notation in notations:
-            get_diary_entry = DiaryEntryManager(
+            diary_entry = DiaryEntryManager(
                 notation.calendar_date,
                 notation.bedtime,
                 notation.asleep,
@@ -158,10 +167,10 @@ class DiaryEntryManager:
                 notation.rise,
                 notation.without_sleep
             )
-            list_of_instances.append(get_diary_entry)
+            list_of_instances.append(diary_entry)
         return list_of_instances
 
-    def statistics(self, instances):
+    def weekly_statistics(self, instances: list[Notation]):
         average_values_per_week = []
         amount_of_days = len(instances)
         first_day_of_week = 0
@@ -208,22 +217,19 @@ class DiaryEntryManager:
     def sleep_duration(self):
         if self.calendar_date is None:
             return None
-        else:
-            return time_display(self._get_sleep_duration())
+        return time_display(self._get_sleep_duration())
 
     @property
     def in_bed_duration(self):
         if self.calendar_date is None:
             return None
-        else:
-            return time_display(self._get_time_in_bed())
+        return time_display(self._get_time_in_bed())
 
     @property
     def sleep_efficiency(self):
         if self.calendar_date is None:
             return None
-        else:
-            return self._get_sleep_efficiency()
+        return self._get_sleep_efficiency()
 
     @property
     def average_sleep_duration_per_week(self):

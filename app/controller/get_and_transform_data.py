@@ -59,9 +59,6 @@ def get_duplicate_dates(all_calendar_dates: list[date]) -> list[Optional[str]]:
 #     return int(sum_of_minutes / week_length)
 
 
-
-
-
 def today_date() -> date:
     """Возвращает текущую дату в формате 'YYYY-MM-DD'"""
     return datetime.date(datetime.today())

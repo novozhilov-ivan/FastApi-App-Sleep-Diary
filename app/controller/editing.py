@@ -118,24 +118,15 @@ def delete_diary():
         return redirect(url_for('edit_diary'))
 
 
-def update_notation(notation: Notation):
-    """Обновление одной записи пользователя в дневнике сна/базе данных"""
-    try:
-        notation.bedtime = str_to_time(request.form['bedtime'][:5])
-        notation.asleep = str_to_time(request.form['asleep'][:5])
-        notation.awake = str_to_time(request.form['awake'][:5])
-        notation.rise = str_to_time(request.form['rise'][:5])
-        notation.without_sleep = str_to_time(request.form['without_sleep'][:5])
-        # todo Сделать добавление(обновление) через Менеджера
-        # todo Сделать проверку времени
+# def update_notation(notation: Notation):
+#     """Обновление одной записи пользователя в дневнике сна/базе данных"""
+#     notation.bedtime = str_to_time(request.form['bedtime'][:5])
+#     notation.asleep = str_to_time(request.form['asleep'][:5])
+#     notation.awake = str_to_time(request.form['awake'][:5])
+#     notation.rise = str_to_time(request.form['rise'][:5])
+#     notation.without_sleep = str_to_time(request.form['without_sleep'][:5])
+#     db.session.commit()
 
-        db.session.commit()
-        flash(f'Запись {notation.calendar_date} обновлена.')
-    except ValueError as err:
-        display_unknown_error(err)
-    except Exception as err:
-        display_unknown_error(err)
-    finally:
-        return redirect(f'/sleep/update/<{notation.calendar_date}>')
+
 
 
