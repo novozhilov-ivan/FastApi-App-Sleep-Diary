@@ -43,7 +43,6 @@ def check_user(login: str):
 
 
 def get_all_dates_of_user():
-    # return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
     return db.session.query(
         Notation.calendar_date
     ).filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()

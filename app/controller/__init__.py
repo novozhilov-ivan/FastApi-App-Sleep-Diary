@@ -6,7 +6,7 @@ from .queries import (
 )
 from .get_and_transform_data import (
     date_and_time_display, time_display, today_date,
-    get_timedelta, str_to_time, get_duplicate_dates, str_to_date
+    get_timedelta, str_to_time, str_to_date
 )
 from .editing import export_diary, import_diary, delete_diary, find_duplicate_dates_in_file
 from .manager import DiaryEntryManager
@@ -20,7 +20,6 @@ __all__ = [
     'date_and_time_display',
     'get_notation_by_date',
     'DiaryEntryManager',
-    'get_duplicate_dates',
     'import_diary',
     'get_all_dates_of_user',
     'find_duplicate_dates_in_file',

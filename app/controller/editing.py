@@ -43,26 +43,19 @@ def import_diary(src):
     """
     Импортирует записи из csv-файла в базу данных.
     Возвращает список экземпляров класса, по который были созданы новые записи дневника.
-
     """
     notations_for_adding = []
     with open(src, "r", encoding='utf-8') as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:
-            calendar_date = str_to_date(row[0])
-            bedtime = str_to_time(row[1])
-            asleep = str_to_time(row[2])
-            awake = str_to_time(row[3])
-            rise = str_to_time(row[4])
-            without_sleep = str_to_time(row[5])
             notation = Notation(
-                calendar_date=calendar_date,
-                bedtime=bedtime,
-                asleep=asleep,
-                awake=awake,
-                rise=rise,
-                without_sleep=without_sleep,
+                calendar_date=str_to_date(row[0]),
+                bedtime=str_to_time(row[1]),
+                asleep=str_to_time(row[2]),
+                awake=str_to_time(row[3]),
+                rise=str_to_time(row[4]),
+                without_sleep=str_to_time(row[5]),
                 user_id=current_user.id
             )
             notations_for_adding.append(notation)

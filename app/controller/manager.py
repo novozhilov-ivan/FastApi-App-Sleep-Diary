@@ -28,9 +28,9 @@ class Descriptor:
             setattr(instance, self.name, None)
         elif isinstance(value, time):
             setattr(instance, self.name, value)
-        elif isinstance(value, str) and len(value) <= 7:
+        elif isinstance(value, str) and len(value) == 5:
             setattr(instance, self.name, str_to_time(value))
-        elif isinstance(value, str) and len(value) > 8:
+        elif isinstance(value, str) and len(value) == 10:
             setattr(instance, self.name, str_to_date(value))
         elif isinstance(value, date):
             setattr(instance, self.name, value)
@@ -132,6 +132,13 @@ class DiaryEntryManager:
         self.without_sleep = request.form['without_sleep'][:5]
         self.__check_timings()
 
+# todo Попробовать сделать в функции create_entry - добавление одной записи или множества записей из списка
+# todo __get_form_data сделать отдельно от create_entry
+# todo Вызывать их по-очереди при создание записи из данных приходящих из форм
+# todo Создать метод создающий экземпляры менеджера из csv-файла, проверяющий тайминги и проверяющий дубликаты
+# todo Создать метод для экспорта данных в csv-файл
+# todo Создать метод для удаления всех записей мб
+
     def create_entry(self):
         self.__get_form_data()
         notation = Notation(
@@ -156,7 +163,6 @@ class DiaryEntryManager:
         notation.without_sleep = self._without_sleep
         db.session.commit()
         # notation.save_one()
-
 
     @staticmethod
     def delete_entry(notation_date):

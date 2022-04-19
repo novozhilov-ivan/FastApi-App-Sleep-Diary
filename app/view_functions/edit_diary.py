@@ -58,9 +58,9 @@ def diary_editing_actions():
         flash('Выберите csv-файл для импорта записей в дневник сна.')
     except Exception as err:
         display_unknown_error(err)
-    else:
-        if request.form.get('import') == 'Импортировать дневник':
-            return redirect(url_for('get_edit_diary_page'))
+    # else:
+    #     if request.form.get('import') == 'Импортировать дневник':
+    #         return redirect(url_for('get_edit_diary_page'))
     finally:
         if os.path.isfile(src):
             os.remove(src)
