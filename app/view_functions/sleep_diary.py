@@ -6,7 +6,6 @@ from flask_login import login_required
 
 from app.controller import *
 from app.exception import *
-# todo добавить логирование и занести в try/finally
 
 
 @login_required

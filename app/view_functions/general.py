@@ -25,7 +25,7 @@ def load_user(user_id):
         # logger
         return get_user(user_id)
     except sqlalchemy.exc.ProgrammingError as err:
-        return flash('Таблица "User" - не создана.'), flash(err.args[0])
+        return flash('Таблица с пользователями не создана.'), flash(err.args[0])
     except Exception as err:
         return display_unknown_error(err)
     # finally:
@@ -38,6 +38,6 @@ def render_main_page():
         # logger
         return render_template('main.html')
     except Exception as err:
-        flash(f'Прочая ошибка. {err.args[0]}')
+        return display_unknown_error(err)
     # finally:
 #         logger

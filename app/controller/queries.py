@@ -8,10 +8,11 @@ from app.config import db
 
 def add_all_and_commit(list_of_notations: list):
     """Добавляет и сохраняет в бд все записи из получаемого списка"""
-    return db.session.add_all(list_of_notations), db.session.commit()
+    db.session.add_all(list_of_notations)
+    db.session.commit()
 
 
-def check_notation_availability(new_date: datetime.date):
+def check_notation_availability(new_date):
     """Ищет запись в дневнике сна с получаемой датой"""
     return db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=new_date).first()
 
@@ -39,6 +40,13 @@ def get_amount_notations_of_user():
 def check_user(login: str):
     """Проверяет существует ли такой пользователь по получаемому логину"""
     return db.session.query(User).filter_by(login=login).first()
+
+
+def get_all_dates_of_user():
+    # return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
+    return db.session.query(
+        Notation.calendar_date
+    ).filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
 
 
 def get_all_notations_of_user():

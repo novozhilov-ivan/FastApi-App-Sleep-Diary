@@ -4,6 +4,7 @@ from typing import Optional
 from flask import request
 from flask_login import current_user
 
+from app import db
 from app.controller import *
 from app.model import *
 
@@ -142,17 +143,26 @@ class DiaryEntryManager:
             without_sleep=self._without_sleep,
             user_id=current_user.id
         )
+        # notation.save_one()
         return notation
 
-    def update_entry(self, notation):
+    def update_entry(self, notation_date):
+        notation = get_notation_by_date(notation_date)
         self.__get_form_data()
-
         notation.bedtime = self._bedtime
         notation.asleep = self._asleep
         notation.awake = self._awake
         notation.rise = self._rise
         notation.without_sleep = self._without_sleep
-        return notation
+        db.session.commit()
+        # notation.save_one()
+
+
+    @staticmethod
+    def delete_entry(notation_date):
+        notation = get_notation_by_date(notation_date)
+        # notation.delete_one()
+        delete_notation_and_commit(notation)
 
     @staticmethod
     def diary_entries():

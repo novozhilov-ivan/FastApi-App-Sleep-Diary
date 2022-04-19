@@ -15,8 +15,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
 app.config['SQLALCHEMY_ECHO'] = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 mode = True if os.getenv('FLASK_ENV') == 'development' else False
 db = SQLAlchemy(app)
+
 
 # Необходимо для создания базы данных и/или таблиц в ней
 # from app.model import Notation, User

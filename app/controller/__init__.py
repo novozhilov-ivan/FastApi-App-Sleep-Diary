@@ -1,15 +1,14 @@
 from .queries import (
     get_amount_notations_of_user, get_notation_by_date, check_user,
     get_all_notations_of_user, add_all_and_commit, delete_all_notations,
-    add_and_commit, get_user, delete_notation_and_commit, check_notation_availability
+    add_and_commit, get_user, delete_notation_and_commit, check_notation_availability,
+    get_all_dates_of_user
 )
 from .get_and_transform_data import (
     date_and_time_display, time_display, today_date,
     get_timedelta, str_to_time, get_duplicate_dates, str_to_date
 )
-from .editing import (
-    update_notation, export_diary, import_diary, delete_diary,
-)
+from .editing import export_diary, import_diary, delete_diary, find_duplicate_dates_in_file
 from .manager import DiaryEntryManager
 
 
@@ -19,11 +18,12 @@ __all__ = [
     'delete_notation_and_commit',
     'check_notation_availability',
     'date_and_time_display',
-    'update_notation',
     'get_notation_by_date',
     'DiaryEntryManager',
     'get_duplicate_dates',
     'import_diary',
+    'get_all_dates_of_user',
+    'find_duplicate_dates_in_file',
     'get_all_notations_of_user',
     'add_all_and_commit',
     'export_diary',

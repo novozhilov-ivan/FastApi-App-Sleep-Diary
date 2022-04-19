@@ -37,7 +37,7 @@
                     </div>
                 </div>
                     <input type="submit"  class="btn btn-success mt-4 mx-2 w-50" name="update_save" id="update_save" value="Сохранить изменения">
-                    {% if request_delete_notation %}
+                    {% if confirm_delete_notation %}
                     <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_2" id="delete_notation_2" value="Да, удалить запись из дневника">
                     {% else %}
                     <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_1" id="delete_notation_1" value="Удалить запись">
