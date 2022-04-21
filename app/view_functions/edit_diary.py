@@ -16,7 +16,7 @@ def diary_editing_actions():
     try:
         # logger
         if request.form.get('export') == 'Экспортировать дневник':
-            export_diary(src)
+            generate_export_file(src)
             return send_file(src)
         elif request.form.get('import') == 'Импортировать дневник':
             import_file = request.files['importfile']
@@ -29,17 +29,12 @@ def diary_editing_actions():
                 )
             added_entries = import_diary(src)
             flash(f'Успешно импортировано {len(added_entries)} записей.')
-
+            return redirect(url_for('get_edit_diary_page'))
         elif request.form.get('delete_diary_1') == 'Удалить дневник':
             flash('Вы действительно хотите удалить все записи из дневника сна?')
-            return render_template(
-                "edit_diary.html",
-                confirm_delete_all_notations=True
-            )
-
         elif request.form.get('delete_diary_2') == 'Да, удалить все записи из дневника':
-            return delete_diary()
-
+            delete_all_notations()
+            flash("Все записи из дневника сна удалены.")
     except sqlalchemy.exc.IntegrityError:
         flash('Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными.')
     except NonUniqueNotationDate as err:
@@ -58,13 +53,20 @@ def diary_editing_actions():
         flash('Выберите csv-файл для импорта записей в дневник сна.')
     except Exception as err:
         display_unknown_error(err)
-    # else:
-    #     if request.form.get('import') == 'Импортировать дневник':
-    #         return redirect(url_for('get_edit_diary_page'))
+    else:
+        if request.form.get('export') == 'Экспортировать дневник':
+            return redirect(url_for('get_edit_diary_page'))
     finally:
         if os.path.isfile(src):
             os.remove(src)
         if request.form.get('import') == 'Импортировать дневник':
+            return redirect(url_for('get_edit_diary_page'))
+        elif request.form.get('delete_diary_1') == 'Удалить дневник':
+            return render_template(
+                "edit_diary.html",
+                confirm_delete_all_notations=True
+            )
+        elif request.form.get('delete_diary_2') == 'Да, удалить все записи из дневника':
             return redirect(url_for('get_edit_diary_page'))
         # logger
 

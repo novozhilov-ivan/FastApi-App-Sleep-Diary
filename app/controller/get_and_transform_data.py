@@ -22,17 +22,17 @@ def date_and_time_display(date_and_time: datetime) -> str:
     return date_and_time.strftime('%Y-%m-%d %H:%M')
 
 
-def time_display(time_point: Union[int, float, time]) -> Union[str, time]:
+def time_display(time_point: Union[int, float, time]) -> str:
     """Конвертирует время из типа данных int или time в str в формате 'HH:MM'"""
     if isinstance(time_point, int) or isinstance(time_point, float):
         time_point = int(time_point)
         if time_point == 0:
             return '00:00'
         elif time_point % 60 < 10:
-            return str(time_point // 60) + ':0' + str(time_point % 60)
-        return str(time_point // 60) + ':' + str(time_point % 60)
+            return f"{time_point // 60}:0{time_point % 60}"
+        return f"{time_point // 60}:{time_point % 60}"
     elif isinstance(time_point, time):
-        return time_point.strftime('%H:%M')
+        return f"{time_point:%H:%M}"
     else:
         raise TypeError('Ошибка типа данных времени.')
 
