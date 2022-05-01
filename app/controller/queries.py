@@ -1,5 +1,3 @@
-from datetime import datetime, date
-
 from flask_login import current_user
 
 from app.model import *
@@ -19,12 +17,14 @@ def check_notation_availability(new_date):
 
 def delete_notation_and_commit(notation):
     """Удаляет одну запись из дневника и сохраняет состояние"""
-    return db.session.delete(notation), db.session.commit()
+    db.session.delete(notation)
+    db.session.commit()
 
 
 def delete_all_notations():
     """Удаляет все записи из дневника и сохраняет состояние"""
-    return db.session.query(Notation).filter_by(user_id=current_user.id).delete(), db.session.commit()
+    db.session.query(Notation).filter_by(user_id=current_user.id).delete()
+    db.session.commit()
 
 
 def get_user(user_id: str):
@@ -60,4 +60,5 @@ def get_notation_by_date(notation_date):
 
 def add_and_commit(obj):
     """Добавляет одну запись в дневник и сохраняет состояние"""
-    return db.session.add(obj), db.session.commit()
+    db.session.add(obj)
+    db.session.commit()
