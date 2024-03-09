@@ -5,9 +5,8 @@ WORKDIR /sleep_diary
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip -r  requirements.txt
+RUN pip install --upgrade pip -r requirements.txt
 
-COPY run.py .
-COPY app ./app
+COPY . /sleep_diary
 
-ENTRYPOINT ["python", "run.py"]
+CMD ["bash"]
