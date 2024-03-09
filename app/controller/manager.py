@@ -96,7 +96,7 @@ class DiaryEntryManager:
                 self._asleep
             )
             if self._bedtime.hour == self._asleep.hour and self._bedtime.minute > self._asleep.minute:
-                raise ValueError("Не можешь в рамках часа уснуть раньше чем лег на кровать!")
+                raise ValueError("Не можешь в рамках часа уснуть раньше чем лег в кровать!")
             elif datetime_asleep - datetime_bedtime > timedelta(hours=12):
                 raise ValueError("Время отхода ко сну не может быть позже времени засыпания!\n"
                                  "Или время между этими событиями не может быть более 12 часов!")

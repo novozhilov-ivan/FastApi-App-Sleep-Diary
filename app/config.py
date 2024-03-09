@@ -8,13 +8,19 @@ from flask_sqlalchemy import SQLAlchemy
 load_dotenv()
 
 
-app = Flask('Sleep diary', template_folder='app/templates', static_folder='app/static')
+app = Flask(
+    'Sleep diary',
+    template_folder='app/templates',
+    static_folder='app/static'
+)
 # app.config['SQLALCHEMY_DATABASE_URI'] = f"postgresql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}" \
 #                                         f"@{os.getenv('DB_HOST')}:{os.getenv('DB_PORT')}/{os.getenv('DB_NAME')}"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///test.db'
 app.config['SECRET_KEY'] = os.getenv('SECRET_KEY')
+app.config['SERVER_NAME'] = os.getenv('SERVER_NAME')
 app.config['SQLALCHEMY_ECHO'] = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
+app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 app.config['MAX_CONTENT_LENGTH'] = 1024 * 1024
 mode = True if os.getenv('FLASK_ENV') == 'development' else False
 db = SQLAlchemy(app)
@@ -22,6 +28,7 @@ db = SQLAlchemy(app)
 
 # Необходимо для создания базы данных и/или таблиц в ней
 # from app.model import Notation, User
+# from app.config import db
 # db.create_all()
 
 

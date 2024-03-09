@@ -1,0 +1,34 @@
+.dockerignore
+docker-compose.yaml
+Dockerfile
+
+.gitignore
+.idea
+.git
+.env
+
+*.db
+*.sqlite3
+
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+README.md
+LICENSE
+Procfile
+
+
+*/__pycache__/
+*/*/__pycache__/
+
+

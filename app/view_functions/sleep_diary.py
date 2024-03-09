@@ -8,6 +8,8 @@ from app.controller import *
 from app.exception import *
 
 
+# request
+
 @login_required
 def create_and_save_entry():
     try:
@@ -45,4 +47,4 @@ def render_sleep_diary_page():
         display_unknown_error(err)
         return redirect(url_for('get_main_page'))
     # finally:
-        # logger
+    # logger

@@ -50,7 +50,10 @@
                 </div>
                 {# Тело аккордиона с неделями #}
                 <div id="week{{ week_number }}"
-                     class="accordion-collapse collapse {% if week_number == 1 %}show{% endif %}"
+                     {# Делает аккордион для недели show, если это первая неделя #}
+{#                     class="accordion-collapse collapse {% if week_number == 1 %}show{% endif %}"#}
+                    {# Делает аккордион для недели show, если он меньше 7 записей #}
+                     class="accordion-collapse collapse {% if stats.week_length < 7 %}show{% endif %}"
                      data-bs-parent="#week-menu">  {# Дни show #}
                     <div class="accordion-body row justify-content-center">
                         <div class="col-12 col-md-8">

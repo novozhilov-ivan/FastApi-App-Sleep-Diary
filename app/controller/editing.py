@@ -53,6 +53,7 @@ def import_diary(src):
         reader = csv.reader(file)
         next(reader)
         for row in reader:
+            # Поч выделяет ошибку? Импорт работает
             notation = Notation(
                 calendar_date=str_to_date(row[0]),
                 bedtime=str_to_time(row[1]),

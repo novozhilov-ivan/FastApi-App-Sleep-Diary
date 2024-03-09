@@ -28,7 +28,10 @@ def authorize():
         flash('Пожалуйста заполните поля логин и пароль')
         return render_template("login.html")
     except Exception as err:
-        return flash(f'Ошибка при проверке пользователя в базе данных. Прочая ошибка. {err.args[0]}')
+        flash(f'Ошибка при проверке пользователя в базе данных. Прочая ошибка. {err.args[0]}')
+        return render_template("login.html")
+    # except:
+    #TODO сделать проверку на наличие пользователя в бд. Добавить соответсвующий флеш при отсутствии пользователя.
     # finally:
         # logger
 

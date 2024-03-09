@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 .idea/
 =======
 # Byte-compiled / optimized / DLL files
@@ -105,7 +104,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-app/.env
+.env
 .venv
 env/
 venv/
@@ -130,4 +129,6 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
->>>>>>> 6da96eeb8af1e22331b03f728b74a2f68eda8195
+
+*.db
+.db
