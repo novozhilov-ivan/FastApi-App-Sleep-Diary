@@ -64,7 +64,8 @@
     {% block edit_diary %}{% endblock %}
     {% block user %}{% endblock %}
     {% block login %}{% endblock %}
-    <h6 class="text-danger text-center">{{ mode }}</h6>
+    <h6 class="text-danger text-center">{{ flask_env }}</h6>
+    <h6 class="text-danger text-center">{{ flask_debug }}</h6>
 </div>
 <script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
 </body>

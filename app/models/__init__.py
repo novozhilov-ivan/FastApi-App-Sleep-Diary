@@ -1,4 +1,4 @@
-from .models import User, Notation
+from .schemas import User, Notation
 
 __all__ = [
     'User',

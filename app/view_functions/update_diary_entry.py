@@ -3,7 +3,7 @@ from flask import flash, request, render_template, redirect, url_for
 from flask_login import login_required
 
 from app.controller import *
-from app.exception import display_unknown_error
+from app.exceptions.exception import display_unknown_error
 
 
 @login_required

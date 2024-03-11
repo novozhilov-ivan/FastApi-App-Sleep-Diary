@@ -1,11 +1,11 @@
 import sqlalchemy.exc
-from flask import render_template, request, redirect, url_for, flash
+from flask import render_template, request, redirect, url_for
 from flask_login import login_user, login_required, logout_user, current_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.exception import *
+from app.exceptions.exception import *
 from app.controller import *
-from app.model import *
+from app.models import *
 
 
 def authorize():

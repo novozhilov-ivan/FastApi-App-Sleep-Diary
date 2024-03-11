@@ -3,7 +3,7 @@ from datetime import datetime
 from flask_login import UserMixin
 from sqlalchemy import UniqueConstraint
 
-from app.config import db
+from app import db
 
 
 class Notation(db.Model):

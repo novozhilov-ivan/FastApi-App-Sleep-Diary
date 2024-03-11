@@ -1,6 +1,4 @@
-from flask import flash
-
-from app import mode
+from flask import flash, g
 
 
 class NonUniqueNotationDate(Exception):
@@ -10,7 +8,9 @@ class NonUniqueNotationDate(Exception):
 
 
 def display_unknown_error(err):
-    return flash(err.args[0] if mode else 'Неизвестная ошибка')
+    return flash(
+        err.args[0] if g.get('flask_debug') != '1' else 'Неизвестная ошибка'
+    )
 
 
 Errors = {

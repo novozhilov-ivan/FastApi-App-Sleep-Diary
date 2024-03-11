@@ -1,7 +1,7 @@
 from flask_login import current_user
 
-from app.model import *
-from app.config import db
+from app.models import *
+from app import db
 
 
 def add_all_and_commit(list_of_notations: list):

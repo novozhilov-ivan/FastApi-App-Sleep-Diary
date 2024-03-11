@@ -5,7 +5,7 @@ from flask import request, render_template, redirect, url_for, send_file
 from flask_login import login_required
 
 from app.controller import *
-from app.exception import *
+from app.exceptions.exception import *
 
 
 # todo добавить нотации к ошибкам при плохом импортируемом файле

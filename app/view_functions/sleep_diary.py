@@ -1,11 +1,11 @@
 from datetime import datetime
 
 import sqlalchemy.exc
-from flask import render_template, redirect, url_for, flash
+from flask import render_template, redirect, url_for
 from flask_login import login_required
 
 from app.controller import *
-from app.exception import *
+from app.exceptions.exception import *
 
 
 # request

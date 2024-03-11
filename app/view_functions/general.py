@@ -1,22 +1,25 @@
-import os
-
 import sqlalchemy.exc
-from flask import g, render_template, flash
+from flask import g, render_template
 
-from app import app
-from app.config import login_manager
+from app import app, login_manager
 from app.controller import *
-from app.exception import *
+from app.exceptions.exception import *
 
 
 @app.context_processor
 def get_mode():
-    """Выводит в конце страницы 'development', если включен debug и FLASK_ENV=development;
-    Если FLASK_ENV=production, то выводит пустую строку"""
-    g.mode = ''
-    if os.getenv('FLASK_ENV') != "production":
-        g.mode = os.getenv('FLASK_ENV')
-    return dict(mode=g.mode)
+    """
+    Выводит в конце страницы информацию об окружении,
+    если FLASK_DEBUG=1 и FLASK_ENV=development;
+    Если FLASK_ENV=production и FLASK_DEBUG != 1, то выводит пустую строку"""
+    g.flask_env, g.flask_debug = '', ''
+    if app.config['FLASK_ENV'] != "production" or app.config['FLASK_DEBUG'] == '1':
+        g.flask_env = f"Environment: {app.config['FLASK_ENV']}"
+        g.flask_debug = f"Debug mode: {app.config['FLASK_DEBUG']}"
+    return dict(
+        flask_env=g.flask_env,
+        flask_debug=g.flask_debug
+    )
 
 
 @login_manager.user_loader
