@@ -5,7 +5,7 @@ WORKDIR /sleep_diary
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip -r requirements.txt
+RUN pip install --upgrade pip --no-cache-dir -r requirements.txt
 
 COPY . /sleep_diary
 
