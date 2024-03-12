@@ -3,7 +3,7 @@ import csv
 from flask_login import current_user
 
 from app.controller import *
-from app.models import *
+from app.Models import *
 
 
 def generate_export_file(src):

@@ -1,7 +1,7 @@
 from app import app
 from app.view_functions import *
 
-# todo из .queries переметить все в .models
+# todo из .queries переметить все в .Models
 # todo переместить все проверки, изменение формата и создание записи в дневнике -
 #  в класс Notation (например сделать  Notation.add_notation(*args))
 
@@ -65,6 +65,7 @@ def get_login_page():
     return render_login_page()
 
 
+
 @app.route('/registration', methods=['POST'])
 def registration():
     """Регистрация нового пользователя"""
@@ -74,10 +75,3 @@ def registration():
 @app.route('/registration', methods=['GET'])
 def get_registration_page():
     return render_registration_page()
-
-
-@app.route('/')
-@app.route('/main')
-def get_main_page():
-    """Отображает сформированную основную страницу"""
-    return render_main_page()

@@ -16,7 +16,7 @@ db = SQLAlchemy(app)
 
 # Необходимо для создания базы данных и/или таблиц в ней
 # Если указать в начале файла, то возникает ошибка циклического импорта
-from app import models
+from app import Models
 
 db.create_all()
 
@@ -24,4 +24,4 @@ login_manager = LoginManager(app)
 login_manager.login_view = 'sign_in'
 login_manager.login_message = "Дневник сна доступен только авторизованным пользователям"
 
-from app import routes, exceptions
+from app import Routes, exceptions

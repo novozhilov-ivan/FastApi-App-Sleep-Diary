@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 from app.exceptions.exception import *
 from app.controller import *
-from app.models import *
+from app.Models import *
 
 
 def authorize():

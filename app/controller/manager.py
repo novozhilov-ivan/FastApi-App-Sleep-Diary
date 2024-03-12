@@ -6,7 +6,7 @@ from flask_login import current_user
 
 from app import db
 from app.controller import *
-from app.models import *
+from app.Models import *
 
 
 class Descriptor:
