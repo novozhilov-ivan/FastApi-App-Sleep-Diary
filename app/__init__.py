@@ -14,11 +14,10 @@ app = Flask(
 app.config.from_object(Config)
 db = SQLAlchemy(app)
 
-# Необходимо для создания базы данных и/или таблиц в ней
-# Если указать в начале файла, то возникает ошибка циклического импорта
 from app import Models
 
-db.create_all()
+with app.app_context():
+    db.create_all()
 
 login_manager = LoginManager(app)
 login_manager.login_view = 'sign_in'
