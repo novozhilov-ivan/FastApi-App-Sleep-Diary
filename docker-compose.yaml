@@ -5,11 +5,37 @@ volumes:
   db:
     driver: local
 services:
-  sleep_diary:
+#  sleep_diary:
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+#    image: sleep_diary:0.1
+#    restart: always
+#    networks:
+#      - my_net
+#    depends_on:
+#      - postgres
+#    ports:
+#      - "8080:8080"
+#    env_file:
+#      - .env
+#    environment:
+#      DB_DRIVER: postgresql
+#      DB_EXTEND_DRIVER: psycopg2
+#      DB_USER: postgres
+#      DB_PASSWORD: postgres
+#      DB_HOST: postgres
+#      DB_PORT: 5432
+#      DB_NAME: postgres
+#    volumes:
+#      - ./app:/sleep_diary/app
+##      - ./test.db:/sleep_diary/test.db
+#    command: python run.pysleep_diary:
+  sleep_diary_api:
     build:
-      context: .
-      dockerfile: Dockerfile
-    image: sleep_diary:0.1
+      context: sleep_diary_api
+      dockerfile: Dockerfile_api
+    image: sleep_diary_api:0.2
     restart: always
     networks:
       - my_net
@@ -18,7 +44,7 @@ services:
     ports:
       - "8080:8080"
     env_file:
-      - .env
+      - ./sleep_diary_api/.env
     environment:
       DB_DRIVER: postgresql
       DB_EXTEND_DRIVER: psycopg2
@@ -28,10 +54,10 @@ services:
       DB_PORT: 5432
       DB_NAME: postgres
     volumes:
-      - ./app:/sleep_diary/app
+      - ./sleep_diary_api:/sleep_diary_api
 #      - ./test.db:/sleep_diary/test.db
-    command: python run.py
-#    command: ls -la
+    command: flask run -h 0.0.0.0 -p 8080 --reload
+
 
   postgres:
     image: postgres:16

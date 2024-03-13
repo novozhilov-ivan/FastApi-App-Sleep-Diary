@@ -2,9 +2,9 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
-from sleep_diary_api.extension import api, db
-from sleep_diary_api.config import Config
-from sleep_diary_api.Routes import main_page_info
+from .extension import api, db
+from .config import Config
+from .Routes import main_page_info
 
 
 # flask -e .env -A app run -h 0.0.0.0 -p 8080 --reload
