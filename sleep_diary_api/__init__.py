@@ -7,19 +7,20 @@ from .config import Config
 from .Routes import main_page_info
 
 
-# flask -e .env -A app run -h 0.0.0.0 -p 8080 --reload
+# flask -e sleep_diary_api/.env -A sleep_diary_api run -h 0.0.0.0 -p 8080 --reload
 
 def create_app():
     app = Flask(
         'sleep_diary_api',
         static_folder='static'
     )
-
     app.config.from_object(Config)
-    api.init_app(app)
+
     db.init_app(app)
     with app.app_context():
         db.create_all()
+
+    api.init_app(app)
     api.add_namespace(
         main_page_info
     )

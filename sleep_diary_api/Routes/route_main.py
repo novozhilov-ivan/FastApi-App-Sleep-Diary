@@ -16,6 +16,7 @@ main_page_info = Namespace(
 )
 
 
+@main_page_info.route("/")
 @main_page_info.route("/main")
 class MainPageInfo(Resource):
     def get(self):
