@@ -1,4 +1,5 @@
 aniso8601==9.0.1
+annotated-types==0.6.0
 attrs==23.2.0
 blinker==1.7.0
 click==8.1.7
@@ -22,6 +23,8 @@ packaging==24.0
 pluggy==1.4.0
 psycopg-binary==3.1.18
 psycopg2-binary==2.9.9
+pydantic==2.6.4
+pydantic_core==2.16.3
 pytest==8.1.1
 python-dotenv==1.0.1
 pytz==2024.1

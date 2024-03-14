@@ -1,0 +1,48 @@
+from typing import Type
+
+from werkzeug.test import TestResponse
+from pydantic import BaseModel
+
+
+class Response:
+    def __init__(
+            self,
+            response: TestResponse,
+            route: str
+    ):
+        self.response: TestResponse = response
+        self.response_json: dict | list[dict] = response.json
+        self.response_status: int | list[int] = response.status_code
+        self.requested_url: str = route
+
+    def validate(
+            self,
+            schema: Type[BaseModel]
+    ) -> None:
+        if isinstance(self.response_json, list):
+            for item in self.response_json:
+                schema.model_validate(item)
+        else:
+            schema.model_validate(self.response_json)
+
+    def assert_status_code(
+            self,
+            status_code: int | list[int]
+    ):
+        if isinstance(status_code, list):
+            assert self.response_status in status_code, self
+        else:
+            assert self.response_status == status_code, self
+        return self
+
+    def assert_data(self, expectations):
+        assert self.response_json == expectations, self
+        return self
+
+    def __str__(self):
+        error_message = (
+            f"\nStatus code: {self.response_status}\n"
+            f"Requested url: {self.requested_url}\n"
+            f"Response body: {self.response_json}\n"
+        )
+        return error_message

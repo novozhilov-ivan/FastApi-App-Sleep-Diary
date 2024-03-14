@@ -1,5 +1,3 @@
-import json
-
 import pytest
 from sleep_diary_api import create_app, db
 
@@ -25,5 +23,3 @@ def client(app):
 @pytest.fixture()
 def runner(app):
     return app.test_cli_runner()
-
-
