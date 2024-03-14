@@ -8,7 +8,7 @@ from src.pydantic_schemas.main_info import MainPageInfoSchema
 from src.baseclasses.response import Response
 
 
-def main_page_info(client):
+def main_page(client):
     static_dir = client.application.static_folder
     with open(f"{static_dir}/content/main.json", "r") as f:
         return json.load(f)
@@ -32,7 +32,7 @@ def main_page_info(client):
         ('/ma', 404, None, {}),
     ]
 )
-def test_main_page_info(
+def test_main_page(
         route: str,
         status_code: int,
         expectation: dict,
@@ -43,7 +43,7 @@ def test_main_page_info(
     response = Response(response, route)
 
     if status_code == 200:
-        expectation = main_page_info(client)
+        expectation = main_page(client)
         response.validate(
             schema=MainPageInfoSchema
         )

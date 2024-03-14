@@ -1,2 +1,3 @@
-from .route_main import main_page_info
+from sleep_diary_api.Routes.route_main import main_page
+from sleep_diary_api.Routes.route_sleep import sleep_page
 

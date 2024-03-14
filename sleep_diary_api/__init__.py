@@ -1,10 +1,9 @@
 from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 from flask_login import LoginManager
 
 from .extension import api, db
 from .config import Config
-from .Routes import main_page_info
+from .Routes import main_page, sleep_page
 
 
 # flask -e sleep_diary_api/.env -A sleep_diary_api run -h 0.0.0.0 -p 8080 --reload
@@ -21,9 +20,9 @@ def create_app():
         db.create_all()
 
     api.init_app(app)
-    api.add_namespace(
-        main_page_info
-    )
+    api.add_namespace(main_page)
+    api.add_namespace(sleep_page)
+
     return app
 
 # login_manager = LoginManager(app)
