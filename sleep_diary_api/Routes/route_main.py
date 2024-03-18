@@ -13,7 +13,11 @@ model_main_page_response = api.schema_model(
 
 
 @main_page.route("/", "/main")
-@main_page.response(code=200, description='Информация на главной странице.', model=model_main_page_response)
+@main_page.response(
+    code=200,
+    description='Информация на главной странице.',
+    model=model_main_page_response
+)
 class MainPageInfo(Resource):
     def get(self):
         response = send_from_directory(

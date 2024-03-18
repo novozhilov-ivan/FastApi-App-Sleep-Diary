@@ -1,8 +1,9 @@
 import pytest
+
 from sleep_diary_api import create_app, db
 
 
-@pytest.fixture()
+@pytest.fixture
 def app():
     app = create_app()
     with app.app_context():
@@ -15,11 +16,11 @@ def app():
     yield app
 
 
-@pytest.fixture()
+@pytest.fixture
 def client(app):
     return app.test_client()
 
 
-@pytest.fixture()
+@pytest.fixture
 def runner(app):
     return app.test_cli_runner()

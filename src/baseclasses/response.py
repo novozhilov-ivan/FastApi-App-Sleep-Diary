@@ -8,7 +8,7 @@ class Response:
     def __init__(
             self,
             response: TestResponse,
-            route: str
+            route: str,
     ):
         self.response: TestResponse = response
         self.response_json: dict | list[dict] = response.json
@@ -35,14 +35,15 @@ class Response:
             assert self.response_status == status_code, self
         return self
 
-    def assert_data(self, expectations):
-        assert self.response_json == expectations, self
+    def assert_data(self, expectation):
+        assert self.response_json == expectation, self
         return self
 
     def __str__(self):
         error_message = (
             f"\nStatus code: {self.response_status}\n"
             f"Requested url: {self.requested_url}\n"
+            f"Response type: {type(self.response_json)}\n"
             f"Response body: {self.response_json}\n"
         )
         return error_message

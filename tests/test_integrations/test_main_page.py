@@ -1,17 +1,10 @@
-import json
-
 import pytest
 from flask.testing import FlaskClient
 
 from tests.conftest import client
+from tests.test_integrations.conftest import main_page_info
 from src.pydantic_schemas.main_info import MainPageInfoSchema
 from src.baseclasses.response import Response
-
-
-def main_page(client):
-    static_dir = client.application.static_folder
-    with open(f"{static_dir}/content/main.json", "r") as f:
-        return json.load(f)
 
 
 @pytest.mark.parametrize(
@@ -35,15 +28,16 @@ def main_page(client):
 def test_main_page(
         route: str,
         status_code: int,
-        expectation: dict,
+        expectation: dict | None,
         follow_redirects: dict,
+        main_page_info,
         client: FlaskClient,
 ):
     response = client.get(route, **follow_redirects)
     response = Response(response, route)
 
     if status_code == 200:
-        expectation = main_page(client)
+        expectation = main_page_info
         response.validate(
             schema=MainPageInfoSchema
         )
