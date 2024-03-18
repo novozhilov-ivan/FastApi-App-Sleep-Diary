@@ -3,7 +3,7 @@ from flask_login import LoginManager
 
 from .extension import api, db
 from .config import Config
-from .Routes import main_page, sleep_page
+from .Routes import ns_main, ns_sleep
 
 
 # flask -e sleep_diary_api/.env -A sleep_diary_api run -h 0.0.0.0 -p 8080 --reload
@@ -19,9 +19,12 @@ def create_app():
     with app.app_context():
         db.create_all()
 
-    api.init_app(app)
-    api.add_namespace(main_page)
-    api.add_namespace(sleep_page)
+    api.init_app(
+        app,
+        title="API для дневника сна.",
+    )
+    api.add_namespace(ns_main)
+    api.add_namespace(ns_sleep)
 
     return app
 

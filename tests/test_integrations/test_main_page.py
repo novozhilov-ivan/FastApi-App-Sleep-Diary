@@ -3,7 +3,7 @@ from flask.testing import FlaskClient
 
 from tests.conftest import client
 from tests.test_integrations.conftest import main_page_info
-from src.pydantic_schemas.main_info import MainPageInfoSchema
+from src.pydantic_schemas.main_info import MainPage
 from src.baseclasses.response import Response
 
 
@@ -39,7 +39,7 @@ def test_main_page(
     if status_code == 200:
         expectation = main_page_info
         response.validate(
-            schema=MainPageInfoSchema
+            schema=MainPage
         )
 
     response.assert_status_code(status_code)

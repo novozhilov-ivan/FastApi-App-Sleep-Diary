@@ -2,21 +2,21 @@ from flask import send_from_directory
 from flask_restx import Resource, Namespace
 
 from sleep_diary_api.extension import api
-from src.pydantic_schemas.main_info import MainPageInfoSchema
+from src.pydantic_schemas.main_info import MainPage
 
-main_page = Namespace('api')
+ns_main = Namespace('api')
 
-model_main_page_response = api.schema_model(
+main_page_response_model = ns_main.schema_model(
     'Main page info schema',
-    MainPageInfoSchema.model_json_schema()
+    MainPage.model_json_schema()
 )
 
 
-@main_page.route("/", "/main")
-@main_page.response(
+@ns_main.route("/", "/main")
+@ns_main.response(
     code=200,
     description='Информация на главной странице.',
-    model=model_main_page_response
+    model=main_page_response_model
 )
 class MainPageInfo(Resource):
     def get(self):
