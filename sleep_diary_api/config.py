@@ -26,6 +26,7 @@ class Config:
         DB_PORT,
         DB_NAME,
     )
+    DB_URL = SQLALCHEMY_DATABASE_URI
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     SECRET_KEY = os.getenv('SECRET_KEY')
     SQLALCHEMY_ECHO = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
