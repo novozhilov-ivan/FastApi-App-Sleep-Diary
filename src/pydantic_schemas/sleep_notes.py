@@ -3,8 +3,7 @@ from datetime import date, time
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class SleepNoteBase(BaseModel):
-    id: int
+class SleepNoteDateTimes(BaseModel):
     calendar_date: date | str
     bedtime: time | str
     asleep: time | str
@@ -13,7 +12,15 @@ class SleepNoteBase(BaseModel):
     time_of_night_awakenings: time | str = Field(
         alias='without_sleep'
     )
+
     model_config = ConfigDict(from_attributes=True)
+
+
+class SleepNoteBase(SleepNoteDateTimes):
+    id: int
+    user_id: int
+
+
 
 
 class WeeklySleepDiaryStatistics(BaseModel):
