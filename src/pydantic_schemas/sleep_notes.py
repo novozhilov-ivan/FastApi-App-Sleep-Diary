@@ -1,6 +1,6 @@
 from datetime import date, time
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field, AliasChoices
 
 
 class SleepNoteDateTimes(BaseModel):
@@ -10,10 +10,14 @@ class SleepNoteDateTimes(BaseModel):
     awake: time | str
     rise: time | str
     time_of_night_awakenings: time | str = Field(
-        alias='without_sleep'
+        validation_alias=AliasChoices(
+            "time_of_night_awakenings",
+            "without_sleep"
+        ),
     )
-
-    model_config = ConfigDict(from_attributes=True)
+    model_config = ConfigDict(
+        from_attributes=True
+    )
 
 
 class SleepNote(SleepNoteDateTimes):

@@ -11,14 +11,15 @@ from src.pydantic_schemas.sleep_notes import (
     SleepNote,
     WeeksSleepDiary
 )
-from src.pydantic_schemas.user import User
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
 
 ns_sleep = Namespace('api')
+
+# Get
 all_sleep_notes_response_model = flask_restx_schema(ns_sleep, SleepDiaryEntries)
 
+# Post
 new_note_request = flask_restx_schema(ns_sleep, SleepNoteDateTimes)
-
 get_created_note_response_model = flask_restx_schema(ns_sleep, SleepNote)
 
 
@@ -35,7 +36,12 @@ class SleepPage(Resource):
     )
     def get(self):
         parser = RequestParser()
-        parser.add_argument('user_id', type=int)
+        parser.add_argument(
+            name='user_id',
+            type=int,
+            required=True,
+            location='values'
+        )
         args = parser.parse_args()
         user_id = args['user_id']
 
@@ -82,18 +88,23 @@ class SleepPage(Resource):
     def post(self):
         user_id = 1
         parser = RequestParser()
-        arguments = list(SleepNoteDateTimes.model_fields.keys())
-        parser.add_argument(
-            *arguments,
-            location='body'
-        )
-        # print(arguments)
+        fields = list(SleepNoteDateTimes.model_fields.keys())
+        for field in fields:
+            parser.add_argument(
+                name=field,
+                type=str,
+                # required=True,
+                location='json',
+            )
 
         args = parser.parse_args()
-
-        print(args)
-
-        return Response(
-            f"{args=}"
-            f"{arguments}"
+        new_sleep_note = SleepNote(
+            id=0,
+            user_id=user_id,
+            **args
         )
+        response = new_sleep_note.model_dump_json(
+            indent=4,
+            by_alias=True
+        )
+        return Response(response)
