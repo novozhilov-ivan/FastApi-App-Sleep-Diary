@@ -1,44 +1,55 @@
-from os import path, environ
+from pydantic_settings import BaseSettings, SettingsConfigDict
+from dotenv import load_dotenv, find_dotenv
 
-from dotenv import load_dotenv
-
-basedir = path.abspath(path.dirname(__file__))
-load_dotenv(path.join(basedir, '.env'))
-
-load_dotenv()
-
-# DB
-DB_DRIVER = environ.get('DB_DRIVER')
-DB_EXTEND_DRIVER = environ.get('DB_EXTEND_DRIVER')
-DB_USER = environ.get('DB_USER')
-DB_PASSWORD = environ.get('DB_PASSWORD')
-DB_HOST = environ.get('DB_HOST')
-DB_PORT = environ.get('DB_PORT')
-DB_NAME = environ.get('DB_NAME')
-DB_EXTEND_DRIVER = f"+{DB_EXTEND_DRIVER}" if DB_EXTEND_DRIVER else ''
+find_env = load_dotenv(find_dotenv())
 
 
-class Config:
-    # General Config
-    SECRET_KEY = environ.get('SECRET_KEY')
-    FLASK_DEBUG = environ.get('FLASK_DEBUG')
-    FLASK_ENV = environ.get('FLASK_ENV')
-    FLASK_APP = environ.get('FLASK_APP')
+class Config(BaseSettings):
+    # Flask| General Config
+    FLASK_APP: str
+    FLASK_ENV: str
+    FLASK_DEBUG: bool
+    SECRET_KEY: str
+    # SERVER_NAME = environ.get('SERVER_NAME') Нужна доп настройка чтобы работало из контейнера
+    MAX_CONTENT_LENGTH: int = 1024 * 1024
 
-    # Database
+    # Database values
+    DB_DRIVER: str
+    DB_EXTEND_DRIVER: str
+    DB_USER: str
+    DB_PASSWORD: str
+    DB_HOST: str
+    DB_PORT: str
+    DB_NAME: str
+
+    def db_url(self):
+        self.SQLALCHEMY_DATABASE_URI = "{}{}{}://{}:{}@{}:{}/{}".format(
+            self.DB_DRIVER,
+            "+" if self.DB_EXTEND_DRIVER else '',
+            self.DB_EXTEND_DRIVER,
+            self.DB_USER,
+            self.DB_PASSWORD,
+            self.DB_HOST,
+            self.DB_PORT,
+            self.DB_NAME,
+        )
+
+    # Database | Sqlalchemy Config
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
-    SQLALCHEMY_DATABASE_URI = "{}{}://{}:{}@{}:{}/{}".format(
-        DB_DRIVER,
-        DB_EXTEND_DRIVER,
-        DB_USER,
-        DB_PASSWORD,
-        DB_HOST,
-        DB_PORT,
-        DB_NAME,
-    )
-    SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SQLALCHEMY_ECHO = False
+    SQLALCHEMY_DATABASE_URI: str | None = None
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: bool = False
+
+    # Flask | Static Assets
+    STATIC_FOLDER: str = 'static'
+    TEMPLATES_FOLDER: str = 'templates'
 
     # etc
-    MAX_CONTENT_LENGTH = 1024 * 1024
-    DB_URL = SQLALCHEMY_DATABASE_URI
+    FLASK_HOST: str | None = None
+    FLASK_PORT: str | None = None
+
+    model_config = SettingsConfigDict(env_file=".dev.env")
+
+
+configuration = Config()
+configuration.db_url()
