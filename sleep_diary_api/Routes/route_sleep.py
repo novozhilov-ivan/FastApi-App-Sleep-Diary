@@ -8,7 +8,7 @@ from sleep_diary_api.Utils.flask_api_models import flask_restx_schema
 from src.pydantic_schemas.sleep_notes import (
     SleepDiaryEntries,
     SleepNoteDateTimes,
-    SleepNoteBase,
+    SleepNote,
     WeeksSleepDiary
 )
 from src.pydantic_schemas.user import User
@@ -19,7 +19,7 @@ all_sleep_notes_response_model = flask_restx_schema(ns_sleep, SleepDiaryEntries)
 
 new_note_request = flask_restx_schema(ns_sleep, SleepNoteDateTimes)
 
-get_created_note_response_model = flask_restx_schema(ns_sleep, SleepNoteBase)
+get_created_note_response_model = flask_restx_schema(ns_sleep, SleepNote)
 
 
 @ns_sleep.route("/sleep", endpoint='sleep')
@@ -41,7 +41,7 @@ class SleepPage(Resource):
 
         all_notes = get_all_notations_of_user(user_id)
 
-        type_adapter = TypeAdapter(list[SleepNoteBase])
+        type_adapter = TypeAdapter(list[SleepNote])
         all_validate_notes = type_adapter.validate_python(all_notes, from_attributes=True)
 
         notes_count = len(all_validate_notes)

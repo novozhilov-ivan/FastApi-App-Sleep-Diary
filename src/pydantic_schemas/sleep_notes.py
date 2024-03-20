@@ -16,11 +16,9 @@ class SleepNoteDateTimes(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepNoteBase(SleepNoteDateTimes):
+class SleepNote(SleepNoteDateTimes):
     id: int
     user_id: int
-
-
 
 
 class WeeklySleepDiaryStatistics(BaseModel):
@@ -31,7 +29,7 @@ class WeeklySleepDiaryStatistics(BaseModel):
 
 class WeeksSleepDiary(BaseModel):
     weekly_statistics: WeeklySleepDiaryStatistics | None
-    days: list[SleepNoteBase] = Field(
+    days: list[SleepNote] = Field(
         max_length=7
     )
 

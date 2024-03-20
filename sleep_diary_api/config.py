@@ -1,21 +1,31 @@
-import os
+from os import path, environ
 
 from dotenv import load_dotenv
+
+basedir = path.abspath(path.dirname(__file__))
+load_dotenv(path.join(basedir, '.env'))
 
 load_dotenv()
 
 # DB
-DB_DRIVER = os.getenv('DB_DRIVER')
-DB_EXTEND_DRIVER = os.getenv('DB_EXTEND_DRIVER')
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-DB_HOST = os.getenv('DB_HOST')
-DB_PORT = os.getenv('DB_PORT')
-DB_NAME = os.getenv('DB_NAME')
+DB_DRIVER = environ.get('DB_DRIVER')
+DB_EXTEND_DRIVER = environ.get('DB_EXTEND_DRIVER')
+DB_USER = environ.get('DB_USER')
+DB_PASSWORD = environ.get('DB_PASSWORD')
+DB_HOST = environ.get('DB_HOST')
+DB_PORT = environ.get('DB_PORT')
+DB_NAME = environ.get('DB_NAME')
 DB_EXTEND_DRIVER = f"+{DB_EXTEND_DRIVER}" if DB_EXTEND_DRIVER else ''
 
 
 class Config:
+    # General Config
+    SECRET_KEY = environ.get('SECRET_KEY')
+    FLASK_DEBUG = environ.get('FLASK_DEBUG')
+    FLASK_ENV = environ.get('FLASK_ENV')
+    FLASK_APP = environ.get('FLASK_APP')
+
+    # Database
     # SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
     SQLALCHEMY_DATABASE_URI = "{}{}://{}:{}@{}:{}/{}".format(
         DB_DRIVER,
@@ -26,12 +36,9 @@ class Config:
         DB_PORT,
         DB_NAME,
     )
-    DB_URL = SQLALCHEMY_DATABASE_URI
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    SECRET_KEY = os.getenv('SECRET_KEY')
-    SQLALCHEMY_ECHO = True if os.getenv('SQLALCHEMY_ECHO') == 'True' else None
-    MAX_CONTENT_LENGTH = 1024 * 1024
-    
-    FLASK_ENV = os.getenv('FLASK_ENV')
-    FLASK_DEBUG = os.getenv('FLASK_DEBUG')
+    SQLALCHEMY_ECHO = False
 
+    # etc
+    MAX_CONTENT_LENGTH = 1024 * 1024
+    DB_URL = SQLALCHEMY_DATABASE_URI
