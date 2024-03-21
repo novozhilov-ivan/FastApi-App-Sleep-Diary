@@ -5,8 +5,8 @@ from flask_restx.reqparse import RequestParser
 from pydantic import TypeAdapter
 
 from sleep_diary_api.Utils.flask_api_models import flask_restx_schema
+from src.pydantic_schemas.sleep_notes_diary import SleepDiaryEntriesModel, SleepDiaryEntriesComputeStatistic
 from src.pydantic_schemas.sleep_notes import (
-    SleepDiaryEntries,
     SleepNoteDateTimes,
     SleepNote,
     WeeksSleepDiary
@@ -16,7 +16,7 @@ from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
 ns_sleep = Namespace('api')
 
 # Get
-all_sleep_notes_response_model = flask_restx_schema(ns_sleep, SleepDiaryEntries)
+all_sleep_notes_response_model = flask_restx_schema(ns_sleep, SleepDiaryEntriesModel)
 
 # Post
 new_note_request = flask_restx_schema(ns_sleep, SleepNoteDateTimes)
@@ -67,17 +67,11 @@ class SleepPage(Resource):
             )
             weeks.append(week)
 
-        sleep_diary = SleepDiaryEntries(
-            notes_count=notes_count,
-            weeks_count=weeks_count,
-            weeks=weeks
-        )
+        sleep_diary_with_compute_statistic = SleepDiaryEntriesComputeStatistic(weeks=weeks).model_dump()
 
-        response = sleep_diary.model_dump_json(
-            indent=4,
-            by_alias=True
-        )
-        return Response(response)
+        response_model = SleepDiaryEntriesModel(**sleep_diary_with_compute_statistic)
+
+        return Response(response_model.model_dump_json(indent=2))
 
     @ns_sleep.response(
         code=200,

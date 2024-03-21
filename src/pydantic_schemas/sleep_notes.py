@@ -1,6 +1,7 @@
 from datetime import date, time
+from functools import reduce
 
-from pydantic import BaseModel, ConfigDict, Field, AliasChoices
+from pydantic import BaseModel, ConfigDict, Field, AliasChoices, conlist, computed_field
 
 
 class SleepNoteDateTimes(BaseModel):
@@ -32,15 +33,18 @@ class WeeklySleepDiaryStatistics(BaseModel):
 
 
 class WeeksSleepDiary(BaseModel):
-    weekly_statistics: WeeklySleepDiaryStatistics | None
-    days: list[SleepNote] = Field(
+    @computed_field
+    @property
+    def weekly_statistics(self) -> WeeklySleepDiaryStatistics | None:
+        return None
+
+    days: conlist(
+        SleepNote,
+        min_length=1,
         max_length=7
     )
 
 
-class SleepDiaryEntries(BaseModel):
-    notes_count: int | None
-    weeks_count: int | None
-    weeks: list[WeeksSleepDiary]
 
-    model_config = ConfigDict(from_attributes=True)
+
+
