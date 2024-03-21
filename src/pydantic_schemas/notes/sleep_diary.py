@@ -1,6 +1,6 @@
 from pydantic import BaseModel, ConfigDict, computed_field
 
-from src.pydantic_schemas.sleep_notes import WeeksSleepDiary
+from src.pydantic_schemas.notes.all import WeeksSleepDiary
 
 
 class SleepDiaryEntriesStats(BaseModel):

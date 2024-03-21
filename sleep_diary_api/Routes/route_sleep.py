@@ -1,26 +1,15 @@
 from flask import Response
-from flask_restx import Resource, Namespace
+from flask_restx import Resource
 from flask_restx.reqparse import RequestParser
 
 from pydantic import TypeAdapter
 
-from sleep_diary_api.Utils.flask_api_models import flask_restx_schema
-from src.pydantic_schemas.sleep_notes_diary import SleepDiaryEntriesModel, SleepDiaryEntriesComputeStatistic
-from src.pydantic_schemas.sleep_notes import (
-    SleepNoteDateTimes,
-    SleepNote,
-    WeeksSleepDiary
-)
+from ..Routes import ns_sleep
+from sleep_diary_api import Api_schema_models
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesComputeStatistic
+from src.pydantic_schemas.notes.sleep_notes import SleepNoteMain, SleepNoteModel
+from src.pydantic_schemas.notes.all import WeeksSleepDiary
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
-
-ns_sleep = Namespace('api')
-
-# Get
-all_sleep_notes_response_model = flask_restx_schema(ns_sleep, SleepDiaryEntriesModel)
-
-# Post
-new_note_request = flask_restx_schema(ns_sleep, SleepNoteDateTimes)
-get_created_note_response_model = flask_restx_schema(ns_sleep, SleepNote)
 
 
 @ns_sleep.route("/sleep", endpoint='sleep')
@@ -28,7 +17,7 @@ class SleepPage(Resource):
     @ns_sleep.response(
         code=200,
         description='Получение всех записей и статистики пользователя по записям из дневника сна.',
-        model=all_sleep_notes_response_model
+        model=Api_schema_models.sleep_get_all
     )
     @ns_sleep.doc(
         shortcut='Все записи пользователя из дневника сна.',
@@ -47,7 +36,7 @@ class SleepPage(Resource):
 
         all_notes = get_all_notations_of_user(user_id)
 
-        type_adapter = TypeAdapter(list[SleepNote])
+        type_adapter = TypeAdapter(list[SleepNoteModel])
         all_validate_notes = type_adapter.validate_python(all_notes, from_attributes=True)
 
         notes_count = len(all_validate_notes)
@@ -76,23 +65,23 @@ class SleepPage(Resource):
     @ns_sleep.response(
         code=200,
         description='Получение новой созданной записи.',
-        model=get_created_note_response_model
+        model=Api_schema_models.sleep_post_created
     )
-    @ns_sleep.expect(new_note_request)
+    @ns_sleep.expect(Api_schema_models.sleep_post_requested)
     def post(self):
         user_id = 1
         parser = RequestParser()
-        fields = list(SleepNoteDateTimes.model_fields.keys())
+        fields = list(SleepNoteMain.model_fields.keys())
         for field in fields:
             parser.add_argument(
                 name=field,
                 type=str,
-                # required=True,
+                required=True,
                 location='json',
             )
 
         args = parser.parse_args()
-        new_sleep_note = SleepNote(
+        new_sleep_note = SleepNoteModel(
             id=0,
             user_id=user_id,
             **args

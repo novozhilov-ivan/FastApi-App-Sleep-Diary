@@ -20,11 +20,12 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from . import Routes
+        from .Routes.route_main import ns_main
+        from .Routes.route_sleep import ns_sleep
 
         api.init_app(app, title="API для дневника сна")
-        api.add_namespace(Routes.ns_main)
-        api.add_namespace(Routes.ns_sleep)
+        api.add_namespace(ns_main)
+        api.add_namespace(ns_sleep)
 
         # Create Database Models
         db.create_all()
