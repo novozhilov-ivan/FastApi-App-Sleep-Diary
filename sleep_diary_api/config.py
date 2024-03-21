@@ -1,3 +1,4 @@
+from pydantic import computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 from dotenv import load_dotenv, find_dotenv
 
@@ -5,12 +6,14 @@ find_env = load_dotenv(find_dotenv())
 
 
 class Config(BaseSettings):
-    # Flask| General Config
+    model_config = SettingsConfigDict(env_file=".dev.env")
+
+    # Flask | General Config
     FLASK_APP: str
     FLASK_ENV: str
     FLASK_DEBUG: bool
     SECRET_KEY: str
-    # SERVER_NAME = environ.get('SERVER_NAME') Нужна доп настройка чтобы работало из контейнера
+    # SERVER_NAME: str = environ.get('SERVER_NAME') Нужна доп настройка чтобы работало из контейнера
     MAX_CONTENT_LENGTH: int = 1024 * 1024
 
     # Database values
@@ -22,8 +25,12 @@ class Config(BaseSettings):
     DB_PORT: str
     DB_NAME: str
 
-    def db_url(self):
-        self.SQLALCHEMY_DATABASE_URI = "{}{}{}://{}:{}@{}:{}/{}".format(
+    # Database | Sqlalchemy Config
+    # SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
+    @computed_field
+    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> str:
+        return "{}{}{}://{}:{}@{}:{}/{}".format(
             self.DB_DRIVER,
             "+" if self.DB_EXTEND_DRIVER else '',
             self.DB_EXTEND_DRIVER,
@@ -34,9 +41,6 @@ class Config(BaseSettings):
             self.DB_NAME,
         )
 
-    # Database | Sqlalchemy Config
-    # SQLALCHEMY_DATABASE_URI = 'sqlite:///test.db'
-    SQLALCHEMY_DATABASE_URI: str | None = None
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
 
@@ -48,8 +52,5 @@ class Config(BaseSettings):
     FLASK_HOST: str | None = None
     FLASK_PORT: str | None = None
 
-    model_config = SettingsConfigDict(env_file=".dev.env")
-
 
 configuration = Config()
-configuration.db_url()

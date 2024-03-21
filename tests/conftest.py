@@ -6,15 +6,22 @@ from sleep_diary_api.config import Config
 
 
 class TestConfig(Config):
+    model_config = SettingsConfigDict(
+        env_file=".test.env",
+        extra="allow"
+    )
+
+    # Flask Testing Config
     TESTING: bool
-    model_config = SettingsConfigDict(env_file=".test.env")
 
 
 test_configuration = TestConfig()
-test_configuration.db_url()
 
 
-@pytest.fixture
+@pytest.fixture(
+    scope="function",
+    autouse=True
+)
 def app():
     assert test_configuration.TESTING is True
     assert test_configuration.DB_NAME == "test_db"
@@ -26,8 +33,8 @@ def app():
     # other setup can go here
     yield app
     # clean up / reset resources here
-    # with app.app_context():
-    #     db.drop_all()
+    with app.app_context():
+        db.drop_all()
 
 
 @pytest.fixture
