@@ -8,7 +8,7 @@ from pydantic import TypeAdapter
 from sleep_diary_api.Models import Notation
 from sleep_diary_api.Routes import ns_sleep
 from sleep_diary_api import Api_schema_models
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesStatisticCompute
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesCompute
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel, SleepNoteCompute
 from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekCompute
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
@@ -57,14 +57,12 @@ class SleepPage(Resource):
 
         db_notes = get_all_notations_of_user(user_id)
 
-        sleep_diary = SleepDiaryEntriesStatisticCompute()
-
         pd_notes = convert_notes(db_notes)
         pd_weeks = slice_on_week(pd_notes)
 
-        sleep_diary.weeks.extend(pd_weeks)
+        sleep_diary = SleepDiaryEntriesCompute(weeks=pd_weeks)
 
-        response_model = SleepDiaryEntriesModel(**sleep_diary.model_dump())
+        response_model = SleepDiaryEntriesModel.model_validate(sleep_diary)
         return Response(response_model.model_dump_json(indent=2))
 
     @ns_sleep.response(

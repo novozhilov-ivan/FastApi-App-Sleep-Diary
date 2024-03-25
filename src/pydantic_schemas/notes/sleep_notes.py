@@ -4,12 +4,12 @@ from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
 
 
 class SleepNote(BaseModel):
-    calendar_date: date | str
-    bedtime: time | str
-    asleep: time | str
-    awake: time | str
-    rise: time | str
-    time_of_night_awakenings: time | str = Field(
+    calendar_date: date
+    bedtime: time
+    asleep: time
+    awake: time
+    rise: time
+    time_of_night_awakenings: time = Field(
         validation_alias=AliasChoices(
             "time_of_night_awakenings",
             "without_sleep"
@@ -19,9 +19,9 @@ class SleepNote(BaseModel):
 
 
 class SleepNoteStatistics(SleepNote):
-    sleep_duration: time | None = None
-    time_spent_in_bed: time | None = None
-    sleep_efficiency: float = 0
+    sleep_duration: time
+    time_spent_in_bed: time
+    sleep_efficiency: float
 
 
 class SleepNoteMeta(BaseModel):
@@ -37,34 +37,41 @@ class SleepNoteModel(
 
 
 class SleepNoteCompute(SleepNote, SleepNoteMeta):
-    @computed_field
-    @property
-    def sleep_duration(self) -> time | None:
-        awake = self.awake.hour * 60 + self.awake.minute
-        asleep = self.asleep.hour * 60 + self.asleep.minute
-        time_without_sleep = self.time_of_night_awakenings.hour * 60 + self.time_of_night_awakenings.minute
-        sleep_duration = awake - asleep - time_without_sleep
+    @staticmethod
+    def time_to_minutes(time_point: time) -> int:
+        return time_point.hour * 60 + time_point.minute
+
+    @staticmethod
+    def time_diff(subtractor: time, subtrahend: time) -> int:
+        diff = SleepNoteCompute.time_to_minutes(subtractor)
+        diff -= SleepNoteCompute.time_to_minutes(subtrahend)
+        return diff
+
+    @staticmethod
+    def minutes_to_time(minutes: int) -> time:
         return time(
-            hour=sleep_duration // 60,
-            minute=sleep_duration % 60
+            hour=minutes // 60,
+            minute=minutes % 60
         )
 
     @computed_field
     @property
-    def time_spent_in_bed(self) -> time | None:
-        rise = self.rise.hour * 60 + self.rise.minute
-        bedtime = self.bedtime.hour * 60 + self.bedtime.minute
-        in_bed_duration = rise - bedtime
-        return time(
-            hour=in_bed_duration // 60,
-            minute=in_bed_duration % 60
-        )
+    def sleep_duration(self) -> time:
+        minutes_of_sleep = self.time_diff(self.awake, self.asleep)
+        minutes_of_sleep -= self.time_to_minutes(self.time_of_night_awakenings)
+        return self.minutes_to_time(minutes_of_sleep)
+
+    @computed_field
+    @property
+    def time_spent_in_bed(self) -> time:
+        minutes_in_bed = self.time_diff(self.rise, self.bedtime)
+        return self.minutes_to_time(minutes_in_bed)
 
     @computed_field
     @property
     def sleep_efficiency(self) -> float:
-        sleep_duration = self.sleep_duration.hour * 60 + self.sleep_duration.minute
-        time_spent_in_bed = self.time_spent_in_bed.hour * 60 + self.time_spent_in_bed.minute
-        if sleep_duration == 0:
+        minutes_of_sleep = self.time_to_minutes(self.sleep_duration)
+        minutes_in_bed = self.time_to_minutes(self.time_spent_in_bed)
+        if minutes_of_sleep == 0:
             return 0
-        return round(sleep_duration / time_spent_in_bed * 100, 2)
+        return round(minutes_of_sleep / minutes_in_bed * 100, 2)

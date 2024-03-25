@@ -5,7 +5,7 @@ from pydantic import BaseModel, ConfigDict, computed_field, Field
 from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekModel, SleepDiaryWeekCompute
 
 
-class SleepDiaryEntriesStats(BaseModel):
+class SleepDiaryEntriesStatisticModel(BaseModel):
     notes_count: int
     weeks_count: int
 
@@ -14,24 +14,15 @@ class SleepDiaryEntriesDataModel(BaseModel):
     weeks: list[SleepDiaryWeekModel]
 
 
-class SleepDiaryEntriesModel(
-    SleepDiaryEntriesDataModel,
-    SleepDiaryEntriesStats,
-):
+class SleepDiaryEntriesModel(SleepDiaryEntriesDataModel, SleepDiaryEntriesStatisticModel):
     model_config = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryEntriesData(BaseModel):
-    weeks: Annotated[
-        list[SleepDiaryWeekCompute],
-        Field(
-            default=[],
-            min_length=1
-        )
-    ]
+    weeks: Annotated[list[SleepDiaryWeekCompute], Field(min_length=0)]
 
 
-class SleepDiaryEntriesStatisticCompute(SleepDiaryEntriesData):
+class SleepDiaryEntriesCompute(SleepDiaryEntriesData):
     @computed_field
     @property
     def notes_count(self) -> int:
