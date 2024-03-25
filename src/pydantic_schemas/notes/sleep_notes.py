@@ -36,7 +36,7 @@ class SleepNoteModel(
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepNoteStatisticCompute(SleepNote):
+class SleepNoteStatisticCompute(SleepNote, SleepNoteMeta):
     @computed_field
     @property
     def sleep_duration(self) -> time | None:

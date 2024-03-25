@@ -4,7 +4,6 @@ from sleep_diary_api.Routes import ns_sleep
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
 
-
 # Get
 sleep_get_all = flask_restx_schema(ns_sleep, SleepDiaryEntriesModel)
 

@@ -13,22 +13,26 @@ class SleepDiaryWeeklyStatistic(BaseModel):
     average_sleep_efficiency: float
 
 
+class SleepDiaryWeeklyNotesModel(BaseModel):
+    notes: list[SleepNoteModel]
+
+
+class SleepDiaryWeekModel(
+    SleepDiaryWeeklyNotesModel,
+    SleepDiaryWeeklyStatistic,
+):
+    model_config = ConfigDict(from_attributes=True)
+
+
 class SleepDiaryWeeklyNotes(BaseModel):
     notes: Annotated[
-        list[SleepNoteStatisticCompute | SleepNoteModel],
+        list[SleepNoteStatisticCompute],
         Field(
             default=[],
             min_length=1,
             max_length=7
         )
     ]
-
-
-class WeekSleepDiaryModel(
-    SleepDiaryWeeklyNotes,
-    SleepDiaryWeeklyStatistic,
-):
-    model_config = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):

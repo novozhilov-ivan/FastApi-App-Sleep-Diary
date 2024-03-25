@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, computed_field, Field
 
-from src.pydantic_schemas.notes.sleep_diary_week import WeekSleepDiaryModel, SleepDiaryWeekCompute
+from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekModel, SleepDiaryWeekCompute
 
 
 class SleepDiaryEntriesStats(BaseModel):
@@ -10,21 +10,25 @@ class SleepDiaryEntriesStats(BaseModel):
     weeks_count: int
 
 
+class SleepDiaryEntriesDataModel(BaseModel):
+    weeks: list[SleepDiaryWeekModel]
+
+
+class SleepDiaryEntriesModel(
+    SleepDiaryEntriesDataModel,
+    SleepDiaryEntriesStats,
+):
+    model_config = ConfigDict(from_attributes=True)
+
+
 class SleepDiaryEntriesData(BaseModel):
     weeks: Annotated[
-        list[WeekSleepDiaryModel | SleepDiaryWeekCompute],
+        list[SleepDiaryWeekCompute],
         Field(
             default=[],
             min_length=1
         )
     ]
-
-
-class SleepDiaryEntriesModel(
-    SleepDiaryEntriesData,
-    SleepDiaryEntriesStats,
-):
-    model_config = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryEntriesStatisticCompute(SleepDiaryEntriesData):
