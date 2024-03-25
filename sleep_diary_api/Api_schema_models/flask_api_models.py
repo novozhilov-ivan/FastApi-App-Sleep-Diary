@@ -1,3 +1,4 @@
+import json
 from copy import deepcopy
 from typing import Type
 
@@ -8,10 +9,6 @@ from pydantic import BaseModel
 
 def flask_restx_schema(ns: Namespace, pydantic_model: Type[BaseModel]):
     schema = pydantic_model.model_json_schema()
-    schema = str(schema).replace(
-        "'", '"'
-    ).replace(
-        "None", "null"
-    )
+    schema = json.dumps(schema)
     json_schema = deepcopy(jsonref.loads(schema))
     return ns.schema_model(pydantic_model.__name__, json_schema)
