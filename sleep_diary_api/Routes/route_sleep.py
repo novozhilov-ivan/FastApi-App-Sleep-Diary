@@ -3,34 +3,13 @@ from typing import Sequence
 from flask import Response
 from flask_restx import Resource
 from flask_restx.reqparse import RequestParser
-from pydantic import TypeAdapter
 
-from sleep_diary_api.Models import Notation
 from sleep_diary_api.Routes import ns_sleep
 from sleep_diary_api import Api_schema_models
+from sleep_diary_api.Utils.manage_notes import convert_notes, slice_on_week
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesCompute
-from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel, SleepNoteCompute
-from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekCompute
+from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
-
-
-def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
-    weeks = []
-    days_count = len(days)
-    step = 7
-    for f_day in range(0, days_count, step):
-        l_day = f_day + step
-        if l_day > days_count:
-            l_day = days_count
-        week = days[f_day:l_day]
-        pd_compute_week = SleepDiaryWeekCompute(notes=week)
-        weeks.append(pd_compute_week)
-    return weeks
-
-
-def convert_notes(db_notes: Sequence[Notation]) -> list[SleepNoteCompute]:
-    type_adapter = TypeAdapter(list[SleepNoteCompute])
-    return type_adapter.validate_python(db_notes, from_attributes=True)
 
 
 @ns_sleep.route("/sleep", endpoint='sleep')
