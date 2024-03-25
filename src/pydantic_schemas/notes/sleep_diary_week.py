@@ -3,7 +3,7 @@ from typing_extensions import Annotated
 
 from pydantic import BaseModel, computed_field, Field, ConfigDict
 
-from src.pydantic_schemas.notes.sleep_notes import SleepNoteModel, SleepNoteStatisticCompute
+from src.pydantic_schemas.notes.sleep_notes import SleepNoteModel, SleepNoteCompute
 
 
 class SleepDiaryWeeklyStatistic(BaseModel):
@@ -26,7 +26,7 @@ class SleepDiaryWeekModel(
 
 class SleepDiaryWeeklyNotes(BaseModel):
     notes: Annotated[
-        list[SleepNoteStatisticCompute],
+        list[SleepNoteCompute],
         Field(
             default=[],
             min_length=1,

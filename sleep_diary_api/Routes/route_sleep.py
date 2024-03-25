@@ -1,15 +1,36 @@
+from typing import Sequence
+
 from flask import Response
 from flask_restx import Resource
 from flask_restx.reqparse import RequestParser
-
 from pydantic import TypeAdapter
 
-from ..Routes import ns_sleep
+from sleep_diary_api.Models import Notation
+from sleep_diary_api.Routes import ns_sleep
 from sleep_diary_api import Api_schema_models
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesStatisticCompute
-from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel, SleepNoteStatisticCompute
+from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel, SleepNoteCompute
 from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekCompute
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
+
+
+def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
+    weeks = []
+    days_count = len(days)
+    step = 7
+    for f_day in range(0, days_count, step):
+        l_day = f_day + step
+        if l_day > days_count:
+            l_day = days_count
+        week = days[f_day:l_day]
+        pd_compute_week = SleepDiaryWeekCompute(notes=week)
+        weeks.append(pd_compute_week)
+    return weeks
+
+
+def convert_notes(db_notes: Sequence[Notation]) -> list[SleepNoteCompute]:
+    type_adapter = TypeAdapter(list[SleepNoteCompute])
+    return type_adapter.validate_python(db_notes, from_attributes=True)
 
 
 @ns_sleep.route("/sleep", endpoint='sleep')
@@ -34,18 +55,14 @@ class SleepPage(Resource):
         args = parser.parse_args()
         user_id = args['user_id']
 
-        notes = get_all_notations_of_user(user_id)
-
-        type_adapter = TypeAdapter(list[SleepNoteStatisticCompute])
-        notes = type_adapter.validate_python(notes, from_attributes=True)
+        db_notes = get_all_notations_of_user(user_id)
 
         sleep_diary = SleepDiaryEntriesStatisticCompute()
 
-        week_1 = SleepDiaryWeekCompute(notes=notes[:7])
-        week_2 = SleepDiaryWeekCompute(notes=notes[7:])
-        weeks = [week_1, week_2]
+        pd_notes = convert_notes(db_notes)
+        pd_weeks = slice_on_week(pd_notes)
 
-        sleep_diary.weeks.extend(weeks)
+        sleep_diary.weeks.extend(pd_weeks)
 
         response_model = SleepDiaryEntriesModel(**sleep_diary.model_dump())
         return Response(response_model.model_dump_json(indent=2))

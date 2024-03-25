@@ -36,13 +36,14 @@ class SleepNoteModel(
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepNoteStatisticCompute(SleepNote, SleepNoteMeta):
+class SleepNoteCompute(SleepNote, SleepNoteMeta):
     @computed_field
     @property
     def sleep_duration(self) -> time | None:
         awake = self.awake.hour * 60 + self.awake.minute
         asleep = self.asleep.hour * 60 + self.asleep.minute
-        sleep_duration = awake - asleep
+        time_without_sleep = self.time_of_night_awakenings.hour * 60 + self.time_of_night_awakenings.minute
+        sleep_duration = awake - asleep - time_without_sleep
         return time(
             hour=sleep_duration // 60,
             minute=sleep_duration % 60
