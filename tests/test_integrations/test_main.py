@@ -7,35 +7,35 @@ from src.pydantic_schemas.main_info import MainPage
 from src.baseclasses.response import Response
 
 
+@pytest.mark.main
 @pytest.mark.parametrize(
     [
         'route',
         'status_code',
-        'expectation',
         'follow_redirects'
     ],
     [
-        ('/api/', 200, None, {}),
-        ('/api/main', 200, None, {}),
-        ('/api', 200, None, {'follow_redirects': True}),
-        ('/api', 308, None, {'follow_redirects': False}),
-        ('/api/main/', 404, None, {}),
-        ('/api/mai', 404, None, {}),
-        ('/ap', 404, None, {}),
-        ('/ma', 404, None, {}),
+        ('/api/', 200, {}),
+        ('/api/main', 200, {}),
+        ('/api', 200, {'follow_redirects': True}),
+        ('/api', 308, {'follow_redirects': False}),
+        ('/api/main/', 404, {}),
+        ('/api/mai', 404, {}),
+        ('/ap', 404, {}),
+        ('/ma', 404, {}),
     ]
 )
 def test_main_page(
         route: str,
         status_code: int,
-        expectation: dict | None,
         follow_redirects: dict,
         main_info,
         client: FlaskClient,
 ):
     response = client.get(route, **follow_redirects)
-    response = Response(response, route)
+    response = Response(response)
 
+    expectation = None
     if status_code == 200:
         expectation = main_info
         response.validate(schema=MainPage)

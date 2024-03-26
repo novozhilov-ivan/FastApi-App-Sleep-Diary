@@ -10,6 +10,7 @@ class SleepNote(BaseModel):
     awake: time
     rise: time
     time_of_night_awakenings: time = Field(
+        alias='without_sleep',
         validation_alias=AliasChoices(
             "time_of_night_awakenings",
             "without_sleep"

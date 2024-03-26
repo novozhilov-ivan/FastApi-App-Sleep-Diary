@@ -1,5 +1,3 @@
-from typing import Sequence
-
 from flask import Response
 from flask_restx import Resource
 from flask_restx.reqparse import RequestParser
@@ -21,7 +19,7 @@ class SleepPage(Resource):
     )
     @ns_sleep.doc(
         shortcut='Все записи пользователя из дневника сна.',
-        params={'user_id': 'Id пользователя для получения его записей.'}
+        params={'user_id': 'Id пользователя дневника сна.'}
     )
     def get(self):
         parser = RequestParser()
@@ -42,7 +40,12 @@ class SleepPage(Resource):
         sleep_diary = SleepDiaryEntriesCompute(weeks=pd_weeks)
 
         response_model = SleepDiaryEntriesModel.model_validate(sleep_diary)
-        return Response(response_model.model_dump_json(indent=2))
+
+        return Response(
+            response=response_model.model_dump_json(),
+            status=200 if sleep_diary.weeks else 404,
+            content_type='application/json',
+        )
 
     @ns_sleep.response(
         code=200,

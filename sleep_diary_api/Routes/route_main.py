@@ -1,7 +1,6 @@
 from flask import send_from_directory
 from flask_restx import Resource, Namespace
 
-from sleep_diary_api.extension import api
 from src.pydantic_schemas.main_info import MainPage
 
 ns_main = Namespace('api')
@@ -18,7 +17,7 @@ main_page_response_model = ns_main.schema_model(
     description='Информация на главной странице.',
     model=main_page_response_model
 )
-class MainPageInfo(Resource):
+class MainInfo(Resource):
     def get(self):
         response = send_from_directory(
             directory="static/content/",
