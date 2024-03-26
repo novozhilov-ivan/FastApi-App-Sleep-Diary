@@ -19,7 +19,7 @@ class SleepDiaryEntriesModel(SleepDiaryEntriesDataModel, SleepDiaryEntriesStatis
 
 
 class SleepDiaryEntriesData(BaseModel):
-    weeks: Annotated[list[SleepDiaryWeekCompute], Field(min_length=0)]
+    weeks: list[SleepDiaryWeekCompute]
 
 
 class SleepDiaryEntriesCompute(SleepDiaryEntriesData):
