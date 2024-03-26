@@ -2,7 +2,7 @@ import pytest
 from flask.testing import FlaskClient
 
 from tests.conftest import client
-from tests.test_integrations.conftest import main_page_info
+from tests.test_integrations.conftest import main_info
 from src.pydantic_schemas.main_info import MainPage
 from src.baseclasses.response import Response
 
@@ -30,17 +30,15 @@ def test_main_page(
         status_code: int,
         expectation: dict | None,
         follow_redirects: dict,
-        main_page_info,
+        main_info,
         client: FlaskClient,
 ):
     response = client.get(route, **follow_redirects)
     response = Response(response, route)
 
     if status_code == 200:
-        expectation = main_page_info
-        response.validate(
-            schema=MainPage
-        )
+        expectation = main_info
+        response.validate(schema=MainPage)
 
     response.assert_status_code(status_code)
     response.assert_data(expectation)
