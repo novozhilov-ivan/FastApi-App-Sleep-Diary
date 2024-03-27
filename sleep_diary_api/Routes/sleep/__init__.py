@@ -1,11 +1,12 @@
 from flask_restx import Namespace
 
-from sleep_diary_api.Api_schemas.flask_api_models import response_schema
+from sleep_diary_api.Api_schemas.flask_api_models import response_schema, flask_restx_schema
+from sleep_diary_api.Api_schemas.payload import create_payload
 from sleep_diary_api.Routes import general_path_prefix
 
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
-
+from src.pydantic_schemas.user import User
 
 ns_sleep = Namespace(
     name='sleep',
@@ -13,27 +14,22 @@ ns_sleep = Namespace(
     path=general_path_prefix
 )
 
-# /sleep
 # Get
 get_all_notes_response_model_200 = response_schema(
-    200,
-    'Получение всех записей пользователя из дневника сна',
-    ns_sleep,
-    SleepDiaryModel
+    code=200,
+    ns=ns_sleep,
+    model=SleepDiaryModel,
+    description='Модель всех записей дневника сна пользователя',
 )
+get_all_notes_param = create_payload('args', ns_sleep, User)
 
 # Post
-post_new_note_expect_payload_model = response_schema(
-    200,
-    'Схема создания новой записи в дневник сна',
-    ns_sleep,
-    SleepNote
-)
-post_new_note_response_model_200 = response_schema(
-    201,
-    'Успешно созданная запись в дневнике сна',
-    ns_sleep,
-    SleepNoteModel
+new_note_expect_payload_model = flask_restx_schema(ns_sleep, SleepNote)
+post_new_note_response_model_201 = response_schema(
+    code=201,
+    ns=ns_sleep,
+    model=SleepNoteModel,
+    description='Модель успешно созданной записи в дневнике сна',
 )
 
 from sleep_diary_api.Routes.sleep.route_sleep import SleepRoute

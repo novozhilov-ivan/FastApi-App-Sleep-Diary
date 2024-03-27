@@ -11,14 +11,14 @@ from src.baseclasses.response import Response
 @pytest.mark.parametrize(
     ['params', 'status_code'],
     [
-        ({'user_id': 1}, 200),
-        ({'user_id': 0}, 404),
-        ({'user_id': "0"}, 404),
-        ({'user_id': "str_not_int"}, 400),
+        ({'id': 1}, 200),
+        ({'id': 0}, 404),
+        ({'id': "0"}, 404),
+        ({'id': "str_not_int"}, 400),
         ({}, 400),
-        ({'not_user_id': 0}, 400),
-        ({'not_user_id': "0"}, 400),
-        ({'not_user_id': "str_not_int"}, 400),
+        ({'not_id': 0}, 400),
+        ({'not_id': "0"}, 400),
+        ({'not_id': "str_not_int"}, 400),
     ]
 )
 def test_get_all_sleep_notes_by_user_id(

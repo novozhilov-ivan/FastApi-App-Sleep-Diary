@@ -3,11 +3,16 @@ from copy import deepcopy
 from typing import Type
 
 import jsonref
-from flask_restx import Namespace
+from flask_restx import Namespace, SchemaModel
 from pydantic import BaseModel
 
 
-def response_schema(code: int, description: str, ns: Namespace, model: Type[BaseModel]):
+def response_schema(
+        code: int,
+        description: str,
+        ns: Namespace,
+        model: Type[BaseModel]
+) -> dict:
     return {
         "code": code,
         "description": description,
@@ -15,7 +20,10 @@ def response_schema(code: int, description: str, ns: Namespace, model: Type[Base
     }
 
 
-def flask_restx_schema(ns: Namespace, pydantic_model: Type[BaseModel]):
+def flask_restx_schema(
+        ns: Namespace,
+        pydantic_model: Type[BaseModel]
+) -> SchemaModel:
     schema = pydantic_model.model_json_schema()
     schema = json.dumps(schema)
     json_schema = deepcopy(jsonref.loads(schema))
