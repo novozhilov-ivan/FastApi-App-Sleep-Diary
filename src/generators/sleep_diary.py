@@ -28,9 +28,9 @@ class SleepDiaryGenerator:
     ) -> list[SleepNoteCompute]:
         notes = []
         new_date = datetime.now(timezone.utc).timestamp()
-
+        seconds_in_day = 60 * 60 * 24
         for i in range(notes_count):
-            new_date += 60 * 60 * 24
+            new_date += seconds_in_day
             generate_time = SleepDiaryGenerator.rand_time
             rand_bedtime = generate_time()
             rand_asleep = generate_time(start_h=rand_bedtime.hour, start_m=rand_bedtime.minute)
