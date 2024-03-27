@@ -8,7 +8,7 @@ from sleep_diary_api import create_app, db
 from sleep_diary_api.Models import Notation, User
 from sleep_diary_api.config import Config
 from src.generators.sleep_diary import SleepDiaryGenerator
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
 from src.pydantic_schemas.notes.sleep_notes import SleepNoteCompute
 
 
@@ -55,7 +55,7 @@ def random_notes() -> list[SleepNoteCompute]:
 
 
 @pytest.fixture(scope='session', autouse=True)
-def random_sleep_diary(random_notes: list[SleepNoteCompute]) -> SleepDiaryEntriesModel:
+def random_sleep_diary(random_notes: list[SleepNoteCompute]) -> SleepDiaryModel:
     return SleepDiaryGenerator.build(notes=random_notes)
 
 

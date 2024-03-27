@@ -3,7 +3,7 @@ from random import randrange
 from datetime import date, time, timezone, datetime
 
 from sleep_diary_api.Utils.manage_notes import slice_on_week
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesCompute, SleepDiaryEntriesModel
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryCompute, SleepDiaryModel
 from src.pydantic_schemas.notes.sleep_notes import SleepNoteCompute
 
 
@@ -58,10 +58,10 @@ class SleepDiaryGenerator:
             user_id: int = 1,
             notes_count: int = 7,
             notes: list[SleepNoteCompute] | None = None,
-    ) -> SleepDiaryEntriesModel:
+    ) -> SleepDiaryModel:
         if notes is None:
             notes = SleepDiaryGenerator.create_notes(user_id, notes_count)
 
         pd_weeks = slice_on_week(notes)
-        sleep_diary = SleepDiaryEntriesCompute(weeks=pd_weeks)
-        return SleepDiaryEntriesModel.model_validate(sleep_diary)
+        sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
+        return SleepDiaryModel.model_validate(sleep_diary)

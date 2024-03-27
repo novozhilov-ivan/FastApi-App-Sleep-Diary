@@ -7,6 +7,14 @@ from flask_restx import Namespace
 from pydantic import BaseModel
 
 
+def response_schema(code: int, description: str, ns: Namespace, model: Type[BaseModel]):
+    return {
+        "code": code,
+        "description": description,
+        "model": flask_restx_schema(ns, model)
+    }
+
+
 def flask_restx_schema(ns: Namespace, pydantic_model: Type[BaseModel]):
     schema = pydantic_model.model_json_schema()
     schema = json.dumps(schema)

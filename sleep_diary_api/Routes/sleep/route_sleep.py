@@ -2,21 +2,20 @@ from flask import Response
 from flask_restx import Resource
 from flask_restx.reqparse import RequestParser
 
-from sleep_diary_api.Routes import ns_sleep
-from sleep_diary_api import Api_schema_models
+from sleep_diary_api.Routes.sleep import (
+    ns_sleep,
+    get_all_notes_response_model_200,
+    post_new_note_response_model_200,
+    post_new_note_expect_payload_model,
+)
 from sleep_diary_api.Utils.manage_notes import convert_notes, slice_on_week
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryEntriesModel, SleepDiaryEntriesCompute
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryCompute
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
 
 
-@ns_sleep.route("/sleep", endpoint='sleep')
-class SleepPage(Resource):
-    @ns_sleep.response(
-        code=200,
-        description='Получение всех записей и статистики пользователя по записям из дневника сна.',
-        model=Api_schema_models.sleep_get_all
-    )
+class SleepRoute(Resource):
+    @ns_sleep.response(**get_all_notes_response_model_200)
     @ns_sleep.doc(
         shortcut='Все записи пользователя из дневника сна.',
         params={'user_id': 'Id пользователя дневника сна.'}
@@ -37,9 +36,9 @@ class SleepPage(Resource):
         pd_notes = convert_notes(db_notes)
         pd_weeks = slice_on_week(pd_notes)
 
-        sleep_diary = SleepDiaryEntriesCompute(weeks=pd_weeks)
+        sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
 
-        response_model = SleepDiaryEntriesModel.model_validate(sleep_diary)
+        response_model = SleepDiaryModel.model_validate(sleep_diary)
 
         return Response(
             response=response_model.model_dump_json(),
@@ -47,12 +46,9 @@ class SleepPage(Resource):
             content_type='application/json',
         )
 
-    @ns_sleep.response(
-        code=200,
-        description='Получение новой созданной записи.',
-        model=Api_schema_models.sleep_post_created
-    )
-    @ns_sleep.expect(Api_schema_models.sleep_post_requested)
+    @ns_sleep.response(**post_new_note_response_model_200)
+    # не работает
+    @ns_sleep.expect(post_new_note_expect_payload_model)
     def post(self):
         user_id = 1
         parser = RequestParser()

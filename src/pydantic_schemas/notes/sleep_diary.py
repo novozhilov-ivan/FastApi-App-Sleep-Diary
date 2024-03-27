@@ -5,24 +5,24 @@ from pydantic import BaseModel, ConfigDict, computed_field, Field
 from src.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekModel, SleepDiaryWeekCompute
 
 
-class SleepDiaryEntriesStatisticModel(BaseModel):
+class SleepDiaryStatisticModel(BaseModel):
     notes_count: int
     weeks_count: int
 
 
-class SleepDiaryEntriesDataModel(BaseModel):
+class SleepDiaryDataModel(BaseModel):
     weeks: list[SleepDiaryWeekModel]
 
 
-class SleepDiaryEntriesModel(SleepDiaryEntriesDataModel, SleepDiaryEntriesStatisticModel):
+class SleepDiaryModel(SleepDiaryDataModel, SleepDiaryStatisticModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepDiaryEntriesData(BaseModel):
+class SleepDiaryDataCompute(BaseModel):
     weeks: list[SleepDiaryWeekCompute]
 
 
-class SleepDiaryEntriesCompute(SleepDiaryEntriesData):
+class SleepDiaryCompute(SleepDiaryDataCompute):
     @computed_field
     @property
     def notes_count(self) -> int:
