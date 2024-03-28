@@ -3,7 +3,7 @@ from flask_restx import Namespace
 from sleep_diary_api.Api_schemas.flask_api_models import response_schema, flask_restx_schema
 from sleep_diary_api.Api_schemas.payload import create_payload
 
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
+from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
 from src.pydantic_schemas.user import User
 
@@ -20,6 +20,12 @@ get_all_notes_response_model_200 = response_schema(
     ns=ns_sleep,
     model=SleepDiaryModel,
     description='Модель всех записей дневника сна пользователя',
+)
+get_all_notes_response_model_404 = response_schema(
+    code=404,
+    ns=ns_sleep,
+    model=SleepDiaryModelEmpty,
+    description='Записи в дневнике сна не найдены',
 )
 get_all_notes_param = create_payload('args', ns_sleep, User)
 

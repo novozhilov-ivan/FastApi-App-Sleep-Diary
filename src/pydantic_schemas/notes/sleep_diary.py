@@ -18,6 +18,12 @@ class SleepDiaryModel(SleepDiaryDataModel, SleepDiaryStatisticModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class SleepDiaryModelEmpty(SleepDiaryModel):
+    notes_count: int = 0
+    weeks_count: int = 0
+    weeks: list = []
+
+
 class SleepDiaryDataCompute(BaseModel):
     weeks: list[SleepDiaryWeekCompute]
 
