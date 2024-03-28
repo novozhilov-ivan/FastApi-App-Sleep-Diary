@@ -26,11 +26,11 @@ from src.baseclasses.response import Response
     ]
 )
 def test_main_page(
+        main_info,
+        client: FlaskClient,
         route: str,
         status_code: int,
         follow_redirects: dict,
-        main_info,
-        client: FlaskClient,
 ):
     response = client.get(route, **follow_redirects)
     response = Response(response)

@@ -7,5 +7,8 @@ class Base(DeclarativeBase):
     pass
 
 
-api = Api()
+api = Api(
+    prefix='/api',
+    doc='/doc/'
+)
 db = SQLAlchemy(model_class=Base)

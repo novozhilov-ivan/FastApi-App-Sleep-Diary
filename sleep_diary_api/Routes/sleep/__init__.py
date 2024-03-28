@@ -2,7 +2,6 @@ from flask_restx import Namespace
 
 from sleep_diary_api.Api_schemas.flask_api_models import response_schema, flask_restx_schema
 from sleep_diary_api.Api_schemas.payload import create_payload
-from sleep_diary_api.Routes import api_prefix
 
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
 from src.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
@@ -11,7 +10,7 @@ from src.pydantic_schemas.user import User
 ns_sleep = Namespace(
     name='sleep',
     description='Описание sleep page',
-    path=api_prefix,
+    path='/',
     validate=True
 )
 
