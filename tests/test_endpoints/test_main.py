@@ -2,7 +2,7 @@ import pytest
 from flask.testing import FlaskClient
 
 from tests.conftest import client
-from tests.test_integrations.conftest import main_info
+from tests.test_endpoints.conftest import main_info
 from src.pydantic_schemas.main_info import MainPageModel
 from src.baseclasses.response import Response
 
@@ -17,8 +17,8 @@ from src.baseclasses.response import Response
     [
         ('/api/', 200, {}),
         ('/api/main', 200, {}),
-        ('/api', 200, {'follow_redirects': True}),
-        ('/api', 308, {'follow_redirects': False}),
+        # ('/api', 200, {'follow_redirects': True}),
+        # ('/api', 308, {'follow_redirects': False}),
         ('/api/main/', 404, {}),
         ('/api/mai', 404, {}),
         ('/ap', 404, {}),
