@@ -57,7 +57,13 @@ def create_db_user(app) -> int:
     yield new_user.id
 
 
-@pytest.fixture(params=(1, 5, 7, 8, 11, 14, 16, 21, 27, 30))
+notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
+
+
+@pytest.fixture(
+    params=notes_count_for_db,
+    ids=[f"{i} notes in db " for i in notes_count_for_db]
+)
 def generate_notes(request, db_user_id) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(db_user_id, notes_count)
@@ -68,13 +74,13 @@ def add_notes_to_db(app, generate_notes: SleepDiaryGenerator):
     new_notes = []
     for note in generate_notes.notes:
         note_model_dump = note.model_dump(
-                by_alias=True,
-                exclude={
-                    "sleep_duration",
-                    "time_spent_in_bed",
-                    "sleep_efficiency"
-                }
-            )
+            by_alias=True,
+            exclude={
+                "sleep_duration",
+                "time_spent_in_bed",
+                "sleep_efficiency"
+            }
+        )
         new_notes.append(Notation(**note_model_dump))
     with app.app_context():
         db.session.add_all(new_notes)

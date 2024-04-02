@@ -1,5 +1,6 @@
-from flask import Response
+from flask import Response, request
 from flask_restx import Resource
+from pydantic import ValidationError
 
 from sleep_diary_api.Routes.sleep import (
     ns_sleep,
@@ -11,6 +12,7 @@ from sleep_diary_api.Routes.sleep import (
 from sleep_diary_api.Utils.manage_notes import convert_notes, slice_on_week
 from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryCompute
 from src.pydantic_schemas.notes.sleep_notes import SleepNoteModel
+from src.pydantic_schemas.user import User
 from sleep_diary_api.CRUD.notation_queries import get_all_notations_of_user
 
 
@@ -20,20 +22,34 @@ class SleepRoute(Resource):
     @ns_sleep.response(**get_all_notes_response_model_200)
     @ns_sleep.response(**get_all_notes_response_model_404)
     def get(self):
-        args = get_all_notes_param.parse_args()
-        user_id = args['user_id']
-        db_notes = get_all_notations_of_user(user_id)
-        pd_notes = convert_notes(db_notes)
-        pd_weeks = slice_on_week(pd_notes)
-        sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
-        response = SleepDiaryModel.model_validate(sleep_diary)
-
-        status = 400
-        if db_notes:
-            status = 200
-        elif not db_notes:
-            status = 404
-        return Response(response.model_dump_json(), status, content_type='application/json')
+        args = request.args.to_dict()
+        try:
+            user = User(**args)
+        except ValidationError as e:
+            e: ValidationError
+            return Response(
+                e.json(
+                    indent=4,
+                    include_url=False,
+                    include_context=False,
+                    include_input=False
+                ),
+                400,
+                content_type='application/json'
+            )
+        else:
+            user_id = user.id
+            db_notes = get_all_notations_of_user(user_id)
+            pd_notes = convert_notes(db_notes)
+            pd_weeks = slice_on_week(pd_notes)
+            sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
+            response = SleepDiaryModel.model_validate(sleep_diary)
+            status = 400
+            if db_notes:
+                status = 200
+            elif not db_notes:
+                status = 404
+            return Response(response.model_dump_json(), status, content_type='application/json')
 
     @ns_sleep.doc(description='Добавление новой записи в дневник сна')
     @ns_sleep.param('payload', 'Новая запись в дневник сна', _in='body')

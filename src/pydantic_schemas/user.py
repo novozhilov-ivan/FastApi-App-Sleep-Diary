@@ -1,13 +1,18 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Field, AliasChoices
 
 
 class User(BaseModel):
     id: int = Field(
         title="User id",
         description='id пользователя для получения его записей.',
-        alias='user_id'
+        ge=0,
+        alias='user_id',
+        validation_alias=AliasChoices(
+            "id",
+            "user_id"
+        ),
     )
 
 

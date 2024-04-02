@@ -16,8 +16,7 @@ def create_payload(
     payload = ns.parser()
     for field_key, field_value in model.model_fields.items():
         payload.add_argument(
-            name=field_key,
-            dest=field_value.alias,
+            name=field_value.alias,
             type=field_value.annotation,
             required=field_value.is_required(),
             help=field_value.description,

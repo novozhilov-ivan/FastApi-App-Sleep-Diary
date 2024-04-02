@@ -1,7 +1,7 @@
 from typing import Type
 
 from werkzeug.test import TestResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, ValidationError
 
 
 class Response:
@@ -10,7 +10,15 @@ class Response:
         self.response_json: dict | list[dict] = response.json
         self.response_status: int | list[int] = response.status_code
 
-    def validate(self, schema: Type[BaseModel]) -> None:
+    def validate(self, schema: Type[BaseModel] | ValidationError) -> None:
+        if issubclass(schema, BaseModel):
+            self._validate(schema)
+        elif issubclass(schema, Exception):
+            assert issubclass(schema, ValidationError)
+        else:
+            assert schema is False, 'unknown schema'
+
+    def _validate(self, schema: Type[BaseModel]) -> None:
         if isinstance(self.response_json, list):
             for item in self.response_json:
                 schema.model_validate(item)
