@@ -87,5 +87,5 @@ def add_notes_to_db(app, generate_notes: SleepDiaryGenerator):
 
 
 @pytest.fixture
-def random_sleep_diary(generate_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
+def sleep_diary(generate_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
     return generate_notes.diary

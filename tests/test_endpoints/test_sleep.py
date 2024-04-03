@@ -1,52 +1,103 @@
-from typing import Type
-
 import pytest
 from flask.testing import FlaskClient
-from pydantic import BaseModel, ValidationError
+from pydantic import ValidationError
 
 from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.baseclasses.response import Response
+from common.pydantic_schemas.user import User
 from tests.conftest import client
 
 
 @pytest.mark.sleep
 class TestSleepNotes:
     ROUTE = "/api/sleep"
+
     STATUS_CODE_OK = 200
     STATUS_CODE_NOT_FOUND = 404
     STATUS_CODE_BAD_REQUEST = 400
-    ARGS_NAMES = ['name', 'value', 'status_code', 'expected_schema']
-    GET_ALL_NOTES_BY_USER_ID_ARGS = [
-        ('id', 1, 200, SleepDiaryModel),
-        ('user_id', 1, 200, SleepDiaryModel),
-        ('user_id', "1", 200, SleepDiaryModel),
-        ('id', 0, 404, SleepDiaryModelEmpty),
-        ('id', "0", 404, SleepDiaryModelEmpty),
-        ('id', "str_not_int", 400, ValidationError),
-        ('not_id', 0, 400, ValidationError),
-        ('not_id', "0", 400, ValidationError),
-        ('not_id', "str_not_int", 400, ValidationError),
-        ("", "", 400, ValidationError),
-    ]
 
+    RESPONSE_MODEL_200 = SleepDiaryModel
+    RESPONSE_MODEL_404 = SleepDiaryModelEmpty
+
+    EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
+    SLEEP_PARAMS_NAMES = ['name', 'value']
+
+    @pytest.mark.sleep_200
     @pytest.mark.parametrize(
-        ARGS_NAMES,
-        GET_ALL_NOTES_BY_USER_ID_ARGS,
-        ids=[f" {arg[0]}|{arg[1]}|{arg[2]}" for arg in GET_ALL_NOTES_BY_USER_ID_ARGS]
+        SLEEP_PARAMS_NAMES,
+        [
+            ('id', 1),
+            ('id', "1"),
+            ('user_id', 1),
+            ('user_id', "1")
+        ]
     )
-    def test_get_all_sleep_notes_by_user_id(
+    def test_get_all_sleep_notes_by_user_id_200(
             self,
             name: str,
             value: str | int,
-            status_code: int,
-            expected_schema: Type[BaseModel] | ValidationError,
             client: FlaskClient,
-            random_sleep_diary: SleepDiaryModel
+            sleep_diary: SleepDiaryModel
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        if status_code == self.STATUS_CODE_OK:
-            expectation = random_sleep_diary.model_dump(mode='json')
-            response.assert_data(expectation)
-        response.validate(expected_schema)
-        response.assert_status_code(status_code)
+        expectation = sleep_diary
+
+        response.assert_status_code(self.STATUS_CODE_OK)
+        response.validate(self.RESPONSE_MODEL_200)
+        response.assert_data(expectation)
+
+    @pytest.mark.sleep_404
+    @pytest.mark.parametrize(
+        SLEEP_PARAMS_NAMES,
+        [
+            ('id', 0),
+            ('user_id', 0),
+            ('id', "0"),
+            ('user_id', "0")
+        ]
+    )
+    def test_get_all_sleep_notes_by_user_id_404(
+            self,
+            name: str,
+            value: str | int,
+            client: FlaskClient
+    ):
+        response = client.get(self.ROUTE, query_string={name: value})
+        response = Response(response)
+        response.assert_status_code(self.STATUS_CODE_NOT_FOUND)
+        response.validate(self.RESPONSE_MODEL_404)
+        response.assert_data(self.EMPTY_SLEEP_DIARY)
+
+    @pytest.mark.sleep_400
+    @pytest.mark.parametrize(
+        SLEEP_PARAMS_NAMES,
+        [
+            ('id', "str_not_int"),
+            ('user_id', "str_not_int"),
+            ('not_id', 1),
+            ('not_id', 0),
+            ('not_id', "1"),
+            ('not_id', "0"),
+            ('not_id', "str_not_int"),
+            ("", "")
+        ]
+    )
+    def test_get_all_sleep_notes_by_user_id_400(
+            self,
+            name: str,
+            value: str | int,
+            client: FlaskClient
+    ):
+        params = {name: value}
+        response = client.get(self.ROUTE, query_string=params)
+        response = Response(response)
+        with pytest.raises(ValidationError) as exception_info:
+            User(**params)
+        errors = exception_info.value.errors(
+            include_url=False,
+            include_context=False,
+            include_input=False
+        )
+        response.assert_status_code(self.STATUS_CODE_BAD_REQUEST)
+        response.assert_error_data(errors)

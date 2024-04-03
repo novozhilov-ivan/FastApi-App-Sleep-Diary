@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from pydantic import BaseModel, Field, AliasChoices
+from pydantic import BaseModel, Field, AliasChoices, ConfigDict
 
 
 class User(BaseModel):
@@ -14,6 +14,7 @@ class User(BaseModel):
             "user_id"
         ),
     )
+    model_config = ConfigDict(from_attributes=True)
 
 
 class UserExtend(User):
