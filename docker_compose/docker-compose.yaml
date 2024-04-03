@@ -1,0 +1,59 @@
+version: "3.8"
+
+services:
+  api:
+    build:
+      context: ..
+      dockerfile: docker_compose/Dockerfile_api
+    image: sleep_diary:api
+    container_name: api
+    restart: always
+    networks:
+      - my_net
+    depends_on:
+      - postgres_server
+    ports:
+      - "8000:8000"
+    working_dir: /sleep_diary
+    env_file:
+      - ../.docker.env
+    volumes:
+      - ../api/:/sleep_diary/api/
+      - ../common/:/sleep_diary/common/
+      - ../tests/:/sleep_diary/tests/
+      - ../pytest.ini:/sleep_diary/pytest.ini
+    command: flask -A api:create_app run --reload -h 0.0.0.0 -p 8000
+
+
+  postgres_server:
+    image: postgres:16
+    restart: always
+    networks:
+      - my_net
+    ports:
+      - "54321:5432"
+    env_file:
+      - ../.dev.env
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin_server:
+    image: dpage/pgadmin4:8.4
+    restart: always
+    networks:
+      - my_net
+    depends_on:
+      - postgres_server
+    ports:
+      - "5050:80"
+    env_file:
+      - ../.dev.env
+
+networks:
+  my_net:
+volumes:
+  db:
+    driver: local
+
+
+

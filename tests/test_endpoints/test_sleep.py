@@ -4,8 +4,8 @@ import pytest
 from flask.testing import FlaskClient
 from pydantic import BaseModel, ValidationError
 
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
-from src.baseclasses.response import Response
+from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
+from common.baseclasses.response import Response
 from tests.conftest import client
 
 

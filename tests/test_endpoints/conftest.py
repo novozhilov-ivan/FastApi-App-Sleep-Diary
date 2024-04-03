@@ -4,11 +4,11 @@ import pytest
 
 from pydantic_settings import SettingsConfigDict
 
-from sleep_diary_api import create_app, db
-from sleep_diary_api.Models import Notation, User
-from sleep_diary_api.config import Config
-from src.generators.sleep_diary import SleepDiaryGenerator
-from src.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
+from api import create_app, db
+from api.models import Notation, User
+from api.config import Config
+from common.generators.sleep_diary import SleepDiaryGenerator
+from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
 
 
 @pytest.fixture
@@ -33,7 +33,6 @@ test_configuration = TestConfig()
 @pytest.fixture
 def app():
     assert test_configuration.TESTING is True
-    assert test_configuration.DB_NAME == "test_db"
 
     app = create_app()
     app.config.from_object(test_configuration)

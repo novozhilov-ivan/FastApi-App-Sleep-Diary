@@ -1,7 +1,7 @@
 from app import app
 from app.view_functions import *
 
-# todo из .queries переметить все в .Models
+# todo из .queries переметить все в .models
 # todo переместить все проверки, изменение формата и создание записи в дневнике -
 #  в класс Notation (например сделать  Notation.add_notation(*args))
 

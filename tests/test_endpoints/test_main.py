@@ -3,8 +3,8 @@ from flask.testing import FlaskClient
 
 from tests.conftest import client
 from tests.test_endpoints.conftest import main_info
-from src.pydantic_schemas.main_info import MainPageModel
-from src.baseclasses.response import Response
+from common.pydantic_schemas.main_info import MainPageModel
+from common.baseclasses.response import Response
 
 
 @pytest.mark.main
