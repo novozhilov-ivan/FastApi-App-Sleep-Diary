@@ -17,11 +17,8 @@ class Response:
         else:
             schema.model_validate(self.response_json)
 
-    def assert_status_code(self, status_code: int | list[int]):
-        if isinstance(status_code, list):
-            assert self.response_status in status_code, self
-        else:
-            assert self.response_status == status_code, self
+    def assert_status_code(self, status_code: int):
+        assert self.response_status == status_code, self
         return self
 
     def assert_error_data(self, errors: dict | list[dict]):
