@@ -20,17 +20,29 @@ class TestSleepNotes:
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
 
     EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
+
     SLEEP_PARAMS_NAMES = ['name', 'value']
+    CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
+        ('id', 1),
+        ('id', "1"),
+        ('user_id', 1),
+        ('user_id', "1")
+    ]
+    INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID = [
+        ('id', "str_not_int"),
+        ('user_id', "str_not_int"),
+        ('not_id', 1),
+        ('not_id', 0),
+        ('not_id', "1"),
+        ('not_id', "0"),
+        ('not_id', "str_not_int"),
+        ("", "")
+    ]
 
     @pytest.mark.sleep_200
     @pytest.mark.parametrize(
         SLEEP_PARAMS_NAMES,
-        [
-            ('id', 1),
-            ('id', "1"),
-            ('user_id', 1),
-            ('user_id', "1")
-        ]
+        CORRECT_PARAMS_GET_NOTES_BY_USER_ID
     )
     def test_get_all_sleep_notes_by_user_id_200(
             self,
@@ -50,12 +62,7 @@ class TestSleepNotes:
     @pytest.mark.sleep_404
     @pytest.mark.parametrize(
         SLEEP_PARAMS_NAMES,
-        [
-            ('id', 0),
-            ('user_id', 0),
-            ('id', "0"),
-            ('user_id', "0")
-        ]
+        CORRECT_PARAMS_GET_NOTES_BY_USER_ID
     )
     def test_get_all_sleep_notes_by_user_id_404(
             self,
@@ -72,16 +79,7 @@ class TestSleepNotes:
     @pytest.mark.sleep_400
     @pytest.mark.parametrize(
         SLEEP_PARAMS_NAMES,
-        [
-            ('id', "str_not_int"),
-            ('user_id', "str_not_int"),
-            ('not_id', 1),
-            ('not_id', 0),
-            ('not_id', "1"),
-            ('not_id', "0"),
-            ('not_id', "str_not_int"),
-            ("", "")
-        ]
+        INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID
     )
     def test_get_all_sleep_notes_by_user_id_400(
             self,
