@@ -66,6 +66,6 @@ class SleepRoute(Resource):
             )
         else:
             response = SleepNoteCompute(**new_db_note.dict())
-            response = response.model_dump_json(indent=4, by_alias=True)
+            response = response.model_dump_json(indent=4)
             status = 201
         return Response(response, status, content_type='application/json')

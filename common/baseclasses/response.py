@@ -26,11 +26,11 @@ class Response:
             errors[0]['loc'] = list(errors[0]['loc'])
         self.assert_data(errors)
 
-    def assert_data(self, expectation: BaseModel | list):
+    def assert_data(self, expectation: BaseModel | dict | list[dict, BaseModel]):
         if isinstance(expectation, BaseModel):
             expectation = expectation.model_dump(mode='json')
         assert self.response_json == expectation, self
-        return self
+        return self, expectation
 
     def __str__(self):
         error_message = (

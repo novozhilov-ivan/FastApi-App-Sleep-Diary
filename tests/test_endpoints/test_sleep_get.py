@@ -9,18 +9,15 @@ from tests.conftest import client
 
 
 @pytest.mark.sleep
-class TestSleepNotes:
+@pytest.mark.sleep_get
+class TestSleepNotesGET:
     ROUTE = "/api/sleep"
-
     STATUS_CODE_OK = 200
     STATUS_CODE_NOT_FOUND = 404
     STATUS_CODE_BAD_REQUEST = 400
-
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
-
     EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
-
     SLEEP_PARAMS_NAMES = ['name', 'value']
     CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
         ('id', 1),
@@ -54,7 +51,6 @@ class TestSleepNotes:
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = sleep_diary
-
         response.assert_status_code(self.STATUS_CODE_OK)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)

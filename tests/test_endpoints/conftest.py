@@ -33,7 +33,6 @@ test_configuration = TestConfig()
 @pytest.fixture
 def app():
     assert test_configuration.TESTING is True
-
     app = create_app()
     app.config.from_object(test_configuration)
     with app.app_context():
@@ -49,6 +48,7 @@ def create_db_user(app) -> int:
     new_user.id = 1
     new_user.login = 'login'
     new_user.password = '123'
+    app = app
     with app.app_context():
         db.session.add(new_user)
         db.session.commit()
@@ -63,29 +63,23 @@ notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
     params=notes_count_for_db,
     ids=[f"{i} notes in db " for i in notes_count_for_db]
 )
-def generate_notes(request, db_user_id) -> SleepDiaryGenerator:
+def generated_notes(request, db_user_id, app) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(db_user_id, notes_count)
 
 
 @pytest.fixture
-def add_notes_to_db(app, generate_notes: SleepDiaryGenerator):
-    new_notes = []
-    for note in generate_notes.notes:
-        note_model_dump = note.model_dump(
-            by_alias=True,
-            exclude={
-                "sleep_duration",
-                "time_spent_in_bed",
-                "sleep_efficiency"
-            }
-        )
-        new_notes.append(Notation(**note_model_dump))
+def add_notes_to_db(app, db_user_id, generated_notes: SleepDiaryGenerator):
+    new_notes = generated_notes.convert_model(
+        Notation,
+        by_alias=True,
+        exclude={"sleep_duration", "time_spent_in_bed", "sleep_efficiency"}
+    )
     with app.app_context():
         db.session.add_all(new_notes)
         db.session.commit()
 
 
 @pytest.fixture
-def sleep_diary(generate_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
-    return generate_notes.diary
+def sleep_diary(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
+    return generated_notes.diary
