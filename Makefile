@@ -1,9 +1,10 @@
 DC = docker compose
 EXEC = docker exec -it
 LOGS = docker logs
-ENV = --env-file .dev.env
+ENV = --env-file .docker.env
 API_FILE = docker_compose/docker-compose.yaml
 API_CONTAINER = api
+PGADMIN_CONTAINER = pgadmin
 
 
 .PHONY: api
@@ -17,6 +18,10 @@ down:
 .PHONY: logs
 logs:
 	${LOGS} ${API_CONTAINER} -f
+
+.PHONY: logs_pgadmin
+logs_pgadmin:
+	${LOGS} ${PGADMIN_CONTAINER} -f
 
 .PHONY: sh
 sh:

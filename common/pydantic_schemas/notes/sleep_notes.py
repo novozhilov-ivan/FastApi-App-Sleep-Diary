@@ -30,10 +30,7 @@ class SleepNoteMeta(BaseModel):
     user_id: int
 
 
-class SleepNoteModel(
-    SleepNoteStatistics,
-    SleepNoteMeta
-):
+class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -50,6 +47,8 @@ class SleepNoteCompute(SleepNote, SleepNoteMeta):
 
     @staticmethod
     def minutes_to_time(minutes: int) -> time:
+        if minutes < 0:
+            minutes = 0
         return time(
             hour=minutes // 60,
             minute=minutes % 60

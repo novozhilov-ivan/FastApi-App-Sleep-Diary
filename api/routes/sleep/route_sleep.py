@@ -2,6 +2,7 @@ from flask import Response, request
 from flask_restx import Resource
 from pydantic import ValidationError
 
+from api.models import Notation
 from api.routes.sleep import (
     ns_sleep,
     get_all_notes_response_model_200,
@@ -11,9 +12,9 @@ from api.routes.sleep import (
 )
 from api.utils.manage_notes import convert_notes, slice_on_week
 from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryCompute
-from common.pydantic_schemas.notes.sleep_notes import SleepNoteModel
+from common.pydantic_schemas.notes.sleep_notes import SleepNoteCompute, SleepNote
 from common.pydantic_schemas.user import User
-from api.CRUD.notation_queries import get_all_notations_of_user
+from api.CRUD.notation_queries import get_all_notations_of_user, post_new_note
 
 
 class SleepRoute(Resource):
@@ -26,16 +27,12 @@ class SleepRoute(Resource):
         try:
             user = User(**args)
         except ValidationError as e:
-            e: ValidationError
-            return Response(
-                e.json(
+            status = 400
+            response = e.json(
                     indent=4,
                     include_url=False,
                     include_context=False,
                     include_input=False
-                ),
-                400,
-                content_type='application/json'
             )
         else:
             user_id = user.id
@@ -44,23 +41,31 @@ class SleepRoute(Resource):
             pd_weeks = slice_on_week(pd_notes)
             sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
             response = SleepDiaryModel.model_validate(sleep_diary)
-            status = 400
+            status = 404
             if db_notes:
                 status = 200
-            elif not db_notes:
-                status = 404
-            return Response(response.model_dump_json(), status, content_type='application/json')
+            response = response.model_dump_json()
+        return Response(response, status, content_type='application/json')
 
     @ns_sleep.doc(description='Добавление новой записи в дневник сна')
-    @ns_sleep.param('payload', 'Новая запись в дневник сна', _in='body')
     @ns_sleep.expect(new_note_expect_payload_model)
+    @ns_sleep.param('payload', 'Новая запись в дневник сна', _in='body')
     @ns_sleep.response(**post_new_note_response_model_201)
     def post(self):
-        user_id = 1
-        new_sleep_note = SleepNoteModel(
-            id=0,
-            user_id=user_id,
-            **ns_sleep.payload
-        )
-        response = new_sleep_note.model_dump_json(indent=4, by_alias=True)
-        return Response(response)
+        status = 400
+        try:
+            new_note = SleepNote(**ns_sleep.payload)
+            new_db_note = Notation(user_id=1, **new_note.model_dump(by_alias=True))
+            new_db_note = post_new_note(new_db_note)
+        except ValidationError as e:
+            response = e.json(
+                indent=4,
+                include_url=False,
+                include_context=False,
+                include_input=False
+            )
+        else:
+            response = SleepNoteCompute(**new_db_note.dict())
+            response = response.model_dump_json(indent=4, by_alias=True)
+            status = 201
+        return Response(response, status, content_type='application/json')

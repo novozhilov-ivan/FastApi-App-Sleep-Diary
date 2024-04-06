@@ -27,18 +27,20 @@ services:
 
   postgres_server:
     image: postgres:16
+    container_name: postgres
     restart: always
     networks:
       - my_net
     ports:
       - "54321:5432"
     env_file:
-      - ../.dev.env
+      - ../.docker.env
     volumes:
       - db:/var/lib/postgresql/data
 
   pgadmin_server:
     image: dpage/pgadmin4:8.4
+    container_name: pgadmin
     restart: always
     networks:
       - my_net
@@ -47,7 +49,7 @@ services:
     ports:
       - "5050:80"
     env_file:
-      - ../.dev.env
+      - ../.docker.env
 
 networks:
   my_net:
