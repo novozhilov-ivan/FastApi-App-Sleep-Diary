@@ -4,6 +4,7 @@ from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
 
 
 class SleepNote(BaseModel):
+    """Запись в дневнике сна"""
     calendar_date: date = Field(
         title='Дата',
         examples=['2021-12-13', '2021-12-14', '2021-12-15', '2021-12-16']
@@ -48,6 +49,7 @@ class SleepNoteMeta(BaseModel):
 
 
 class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
+    """Запись в дневнике сна со статистикой и идентификаторами пользователя и записи."""
     model_config = ConfigDict(from_attributes=True)
 
 

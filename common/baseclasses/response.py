@@ -21,11 +21,6 @@ class Response:
         assert self.response_status == status_code, self
         return self
 
-    def assert_error_data(self, errors: dict | list[dict]):
-        for error in errors['message']:
-            error['loc'] = list(error['loc'])
-        self.assert_data(errors)
-
     def assert_data(self, expectation: BaseModel | dict | list[dict, BaseModel]):
         if isinstance(expectation, BaseModel):
             expectation = expectation.model_dump(mode='json')

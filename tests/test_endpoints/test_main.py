@@ -22,7 +22,7 @@ class TestMainPage(HTTPStatusCodes):
     ):
         response = client.get(route)
         response = Response(response)
-        response.assert_status_code(self.STATUS_OK)
+        response.assert_status_code(self.STATUS_OK_200)
         expected = main_info
         response.validate(expected)
         response.assert_data(expected)
@@ -31,4 +31,4 @@ class TestMainPage(HTTPStatusCodes):
     def test_main_page_404(self, route: str, client: FlaskClient):
         response = client.get(route)
         response = Response(response)
-        response.assert_status_code(self.STATUS_NOT_FOUND)
+        response.assert_status_code(self.STATUS_NOT_FOUND_404)

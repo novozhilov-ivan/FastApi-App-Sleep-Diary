@@ -1,17 +1,26 @@
 from pydantic import ValidationError
 
 from api import api
+from common.pydantic_schemas.errors.message import ErrorResponse
 
 
 @api.errorhandler(ValidationError)
-def handler_bad_request(error: ValidationError):
+def handler_bad_request_400(error: ValidationError):
     status = 400
-    response = {
-        'errors_count': error.error_count(),
-        'message': error.errors(
-            include_input=False,
-            include_context=False,
-            include_url=False
-        )
-    }
+    response = ErrorResponse(
+        errors_count=error.error_count(),
+        message=error.errors()
+    )
+    response = response.model_dump()
+    return response, status
+
+
+@api.errorhandler(ValidationError)
+def handler_unprocessable_entity_422(error):
+    status = 422
+    response = ErrorResponse(
+        errors_count=error.error_count(),
+        message=error.errors()
+    )
+    response = response.model_dump()
     return response, status

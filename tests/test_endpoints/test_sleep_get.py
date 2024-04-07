@@ -2,6 +2,7 @@ import pytest
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
+from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTPStatusCodes
@@ -15,6 +16,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
     ROUTE = "/api/sleep"
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
+    RESPONSE_MODEL_422 = ErrorResponse
     EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
     SLEEP_PARAMS_NAMES = ['name', 'value']
     CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
@@ -49,7 +51,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = sleep_diary
-        response.assert_status_code(self.STATUS_OK)
+        response.assert_status_code(self.STATUS_OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
 
@@ -66,11 +68,11 @@ class TestSleepNotesGET(HTTPStatusCodes):
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        response.assert_status_code(self.STATUS_NOT_FOUND)
+        response.assert_status_code(self.STATUS_NOT_FOUND_404)
         response.validate(self.RESPONSE_MODEL_404)
         response.assert_data(self.EMPTY_SLEEP_DIARY)
 
-    @pytest.mark.sleep_400
+    @pytest.mark.sleep_get_422
     @pytest.mark.parametrize(
         SLEEP_PARAMS_NAMES,
         INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID
@@ -86,13 +88,10 @@ class TestSleepNotesGET(HTTPStatusCodes):
         response = Response(response)
         with pytest.raises(ValidationError) as exc_info:
             User(**params)
-        errors = {
-            'errors_count': exc_info.value.error_count(),
-            'message': exc_info.value.errors(
-                include_url=False,
-                include_context=False,
-                include_input=False
-            )
-        }
-        response.assert_status_code(self.STATUS_BAD_REQUEST)
-        response.assert_error_data(errors)
+        errors = self.RESPONSE_MODEL_422(
+            errors_count=exc_info.value.error_count(),
+            message=exc_info.value.errors()
+        )
+        response.assert_status_code(self.STATUS_UNPROCESSABLE_ENTITY_422)
+        response.validate(self.RESPONSE_MODEL_422)
+        response.assert_data(errors)

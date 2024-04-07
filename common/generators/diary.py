@@ -10,7 +10,7 @@ from common.pydantic_schemas.sleep.notes import SleepNoteCompute
 
 
 class SleepDiaryGenerator:
-    def __init__(self, user_id: int, notes_count: int = 1):
+    def __init__(self, user_id: int = 1, notes_count: int = 1):
         self.user_id: int = user_id
         self.notes_count: int = notes_count
         self.notes: list[SleepNoteCompute] = self._create_notes()

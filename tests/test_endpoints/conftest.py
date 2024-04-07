@@ -5,7 +5,7 @@ from pydantic_settings import SettingsConfigDict
 from api import create_app, db
 from api.models import Notation, User
 from api.config import Config
-from common.generators.sleep_diary import SleepDiaryGenerator
+from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel
 from common.pydantic_schemas.main import MainPageModel
 

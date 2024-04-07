@@ -16,7 +16,6 @@ main_page_response_model_200 = response_schema(
     code=200,
     ns=ns_main,
     model=MainPageModel,
-    description=MainPageModel.model_fields.get('main_info').description,
 )
 
 from api.routes.main.route_main import MainRoute

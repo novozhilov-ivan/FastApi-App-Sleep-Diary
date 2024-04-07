@@ -8,14 +8,13 @@ from pydantic import BaseModel
 
 
 def response_schema(
-        code: int,
-        description: str,
         ns: Namespace,
+        code: int,
         model: Type[BaseModel]
 ) -> dict:
     return {
         "code": code,
-        "description": description,
+        "description": model.model_json_schema().get('description'),
         "model": flask_restx_schema(ns, model)
     }
 
