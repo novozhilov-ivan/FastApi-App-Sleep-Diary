@@ -72,7 +72,6 @@ def generated_notes(request, db_user_id, app) -> SleepDiaryGenerator:
 def add_notes_to_db(app, db_user_id, generated_notes: SleepDiaryGenerator):
     new_notes = generated_notes.convert_model(
         Notation,
-        by_alias=True,
         exclude={"sleep_duration", "time_spent_in_bed", "sleep_efficiency"}
     )
     with app.app_context():
