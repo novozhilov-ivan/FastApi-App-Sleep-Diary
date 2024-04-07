@@ -3,8 +3,8 @@ from flask_restx import Namespace
 from api.schemas.flask_api_models import response_schema, flask_restx_schema
 from api.schemas.payload import create_payload
 
-from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
-from common.pydantic_schemas.notes.sleep_notes import SleepNote, SleepNoteModel
+from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
+from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteModel
 from common.pydantic_schemas.user import User
 
 ns_sleep = Namespace(

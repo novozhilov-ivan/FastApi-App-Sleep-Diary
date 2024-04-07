@@ -4,12 +4,29 @@ from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
 
 
 class SleepNote(BaseModel):
-    calendar_date: date
-    bedtime: time
-    asleep: time
-    awake: time
-    rise: time
+    calendar_date: date = Field(
+        title='Дата',
+        examples=['2021-12-13', '2021-12-14', '2021-12-15', '2021-12-16']
+    )
+    bedtime: time = Field(
+        title='Лег',
+        examples=['05:11', '01:55', '01:10', '04:10'],
+    )
+    asleep: time = Field(
+        title='Уснул',
+        examples=['05:30', '02:20', '01:30', '04:20'],
+    )
+    awake: time = Field(
+        title='Проснулся',
+        examples=['12:00', '07:57', '10:00', '11:50'],
+    )
+    rise: time = Field(
+        title='Встал',
+        examples=['12:15', '08:07', '10:30', '12:15'],
+    )
     time_of_night_awakenings: time = Field(
+        title='Не спал',
+        examples=['00:19', '00:32', '00:06', '01:20'],
         alias='without_sleep',
         validation_alias=AliasChoices(
             "time_of_night_awakenings",

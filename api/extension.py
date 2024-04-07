@@ -9,6 +9,6 @@ class Base(DeclarativeBase):
 
 api = Api(
     prefix='/api',
-    doc='/doc/'
+    doc='/doc'
 )
 db = SQLAlchemy(model_class=Base)

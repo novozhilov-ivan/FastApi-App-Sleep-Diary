@@ -1,0 +1,7 @@
+
+class HTTPStatusCodes:
+    STATUS_OK = 200
+    STATUS_CREATED = 201
+
+    STATUS_NOT_FOUND = 404
+    STATUS_BAD_REQUEST = 400

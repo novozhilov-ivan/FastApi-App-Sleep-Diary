@@ -11,8 +11,8 @@ from api.routes.sleep import (
     get_all_notes_param, get_all_notes_response_model_404,
 )
 from api.utils.manage_notes import convert_notes, slice_on_week
-from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryCompute
-from common.pydantic_schemas.notes.sleep_notes import SleepNoteCompute, SleepNote
+from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 from common.pydantic_schemas.user import User
 from api.CRUD.notation_queries import get_all_notations_of_user, post_new_note
 
@@ -66,6 +66,6 @@ class SleepRoute(Resource):
             )
         else:
             response = SleepNoteCompute(**new_db_note.dict())
-            response = response.model_dump_json(indent=4)
+            response = response.model_dump_json()
             status = 201
         return Response(response, status, content_type='application/json')

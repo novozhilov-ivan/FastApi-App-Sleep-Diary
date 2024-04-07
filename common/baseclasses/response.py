@@ -10,7 +10,7 @@ class Response:
         self.response_json: dict | list[dict] = response.json
         self.response_status: int | list[int] = response.status_code
 
-    def validate(self, schema: Type[BaseModel]) -> None:
+    def validate(self, schema: BaseModel | Type[BaseModel]) -> None:
         if isinstance(self.response_json, list):
             for item in self.response_json:
                 schema.model_validate(item)

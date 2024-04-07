@@ -2,8 +2,8 @@ from pydantic import TypeAdapter
 from sqlalchemy import Sequence
 
 from api.models import Notation
-from common.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekCompute
-from common.pydantic_schemas.notes.sleep_notes import SleepNoteCompute
+from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute
 
 
 def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:

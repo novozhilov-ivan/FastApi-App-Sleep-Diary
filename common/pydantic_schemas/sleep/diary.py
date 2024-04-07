@@ -2,7 +2,7 @@ from typing import Annotated
 
 from pydantic import BaseModel, ConfigDict, computed_field, Field
 
-from common.pydantic_schemas.notes.sleep_diary_week import SleepDiaryWeekModel, SleepDiaryWeekCompute
+from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekModel, SleepDiaryWeekCompute
 
 
 class SleepDiaryStatisticModel(BaseModel):

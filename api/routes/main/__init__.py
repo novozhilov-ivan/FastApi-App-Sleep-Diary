@@ -2,7 +2,7 @@ from flask_restx import Namespace
 
 from api.schemas.flask_api_models import response_schema
 
-from common.pydantic_schemas.main_info import MainPageModel
+from common.pydantic_schemas.main import MainPageModel
 
 
 ns_main = Namespace(
@@ -16,7 +16,7 @@ main_page_response_model_200 = response_schema(
     code=200,
     ns=ns_main,
     model=MainPageModel,
-    description='Информация на главной странице.',
+    description=MainPageModel.model_fields.get('main_info').description,
 )
 
 from api.routes.main.route_main import MainRoute

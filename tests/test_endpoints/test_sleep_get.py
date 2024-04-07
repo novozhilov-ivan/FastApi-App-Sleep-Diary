@@ -2,19 +2,17 @@ import pytest
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
-from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel, SleepDiaryModelEmpty
+from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.baseclasses.response import Response
+from common.baseclasses.status_codes import HTTPStatusCodes
 from common.pydantic_schemas.user import User
 from tests.conftest import client
 
 
 @pytest.mark.sleep
 @pytest.mark.sleep_get
-class TestSleepNotesGET:
+class TestSleepNotesGET(HTTPStatusCodes):
     ROUTE = "/api/sleep"
-    STATUS_CODE_OK = 200
-    STATUS_CODE_NOT_FOUND = 404
-    STATUS_CODE_BAD_REQUEST = 400
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
     EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
@@ -51,7 +49,7 @@ class TestSleepNotesGET:
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = sleep_diary
-        response.assert_status_code(self.STATUS_CODE_OK)
+        response.assert_status_code(self.STATUS_OK)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
 
@@ -68,7 +66,7 @@ class TestSleepNotesGET:
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        response.assert_status_code(self.STATUS_CODE_NOT_FOUND)
+        response.assert_status_code(self.STATUS_NOT_FOUND)
         response.validate(self.RESPONSE_MODEL_404)
         response.assert_data(self.EMPTY_SLEEP_DIARY)
 
@@ -93,5 +91,5 @@ class TestSleepNotesGET:
             include_context=False,
             include_input=False
         )
-        response.assert_status_code(self.STATUS_CODE_BAD_REQUEST)
+        response.assert_status_code(self.STATUS_BAD_REQUEST)
         response.assert_error_data(errors)

@@ -1,5 +1,3 @@
-import json
-
 import pytest
 
 from pydantic_settings import SettingsConfigDict
@@ -8,14 +6,13 @@ from api import create_app, db
 from api.models import Notation, User
 from api.config import Config
 from common.generators.sleep_diary import SleepDiaryGenerator
-from common.pydantic_schemas.notes.sleep_diary import SleepDiaryModel
+from common.pydantic_schemas.sleep.diary import SleepDiaryModel
+from common.pydantic_schemas.main import MainPageModel
 
 
 @pytest.fixture
 def main_info(client):
-    static_dir = client.application.static_folder
-    with open(f"{static_dir}/content/main.json", "r") as f:
-        return json.load(f)
+    return MainPageModel()
 
 
 class TestConfig(Config):

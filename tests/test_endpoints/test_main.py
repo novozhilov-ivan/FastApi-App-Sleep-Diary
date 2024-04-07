@@ -2,43 +2,33 @@ import pytest
 from flask.testing import FlaskClient
 
 from tests.conftest import client
-from tests.test_endpoints.conftest import main_info
-from common.pydantic_schemas.main_info import MainPageModel
+from common.pydantic_schemas.main import MainPageModel
 from common.baseclasses.response import Response
+from common.baseclasses.status_codes import HTTPStatusCodes
 
 
 @pytest.mark.main
-@pytest.mark.parametrize(
-    [
-        'route',
-        'status_code',
-        'follow_redirects'
-    ],
-    [
-        ('/api/', 200, {}),
-        ('/api/main', 200, {}),
-        # ('/api', 200, {'follow_redirects': True}),
-        # ('/api', 308, {'follow_redirects': False}),
-        ('/api/main/', 404, {}),
-        ('/api/mai', 404, {}),
-        ('/ap', 404, {}),
-        ('/ma', 404, {}),
-    ]
-)
-def test_main_page(
-        main_info,
-        client: FlaskClient,
-        route: str,
-        status_code: int,
-        follow_redirects: dict,
-):
-    response = client.get(route, **follow_redirects)
-    response = Response(response)
+class TestMainPage(HTTPStatusCodes):
+    PARAMS = 'route'
+    ROUTES_200 = ['/api/', '/api/main']
+    ROUTES_404 = ['/api', '/api/main/', '/api/mai', '/main', '/ap']
 
-    expectation = None
-    if status_code == 200:
-        expectation = main_info
-        response.validate(schema=MainPageModel)
+    @pytest.mark.parametrize(PARAMS, ROUTES_200)
+    def test_main_page_200(
+            self,
+            route: str,
+            main_info: MainPageModel,
+            client: FlaskClient,
+    ):
+        response = client.get(route)
+        response = Response(response)
+        response.assert_status_code(self.STATUS_OK)
+        expected = main_info
+        response.validate(expected)
+        response.assert_data(expected)
 
-    response.assert_status_code(status_code)
-    response.assert_data(expectation)
+    @pytest.mark.parametrize(PARAMS, ROUTES_404)
+    def test_main_page_404(self, route: str, client: FlaskClient):
+        response = client.get(route)
+        response = Response(response)
+        response.assert_status_code(self.STATUS_NOT_FOUND)

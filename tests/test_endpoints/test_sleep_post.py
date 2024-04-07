@@ -2,15 +2,15 @@ import pytest
 from flask.testing import FlaskClient
 
 from common.baseclasses.response import Response
+from common.baseclasses.status_codes import HTTPStatusCodes
 from common.generators.sleep_diary import SleepDiaryGenerator
-from common.pydantic_schemas.notes.sleep_notes import SleepNoteModel
+from common.pydantic_schemas.sleep.notes import SleepNoteModel
 
 
 @pytest.mark.sleep
 @pytest.mark.sleep_post
-class TestSleepNotesPost:
+class TestSleepNotesPost(HTTPStatusCodes):
     ROUTE = "/api/sleep"
-    STATUS_CODE_CREATED = 201
     RESPONSE_MODEL_201 = SleepNoteModel
 
     @pytest.mark.sleep_201
@@ -22,6 +22,6 @@ class TestSleepNotesPost:
         json_body = note_to_added.model_dump(mode='json')
         response = client.post(self.ROUTE, json=json_body)
         response = Response(response)
-        response.assert_status_code(self.STATUS_CODE_CREATED)
+        response.assert_status_code(self.STATUS_CREATED)
         response.validate(self.RESPONSE_MODEL_201)
         response.assert_data(created_note)

@@ -5,8 +5,8 @@ from typing import Type
 
 
 from api.utils.manage_notes import slice_on_week
-from common.pydantic_schemas.notes.sleep_diary import SleepDiaryCompute, SleepDiaryModel
-from common.pydantic_schemas.notes.sleep_notes import SleepNoteCompute
+from common.pydantic_schemas.sleep.diary import SleepDiaryCompute, SleepDiaryModel
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute
 
 
 class SleepDiaryGenerator:
