@@ -17,6 +17,10 @@ class Config(BaseSettings):
     FLASK_DEBUG: bool
     SECRET_KEY: str
     MAX_CONTENT_LENGTH: int = 1024 * 1024
+    # Flask | Static Assets
+    STATIC_FOLDER: str = 'static'
+    TEMPLATES_FOLDER: str = 'templates'
+    # Flask RestX | Config
 
     # Database values
     DB_DRIVER: str
@@ -44,10 +48,6 @@ class Config(BaseSettings):
 
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: bool = False
-
-    # Flask | Static Assets
-    STATIC_FOLDER: str = 'static'
-    TEMPLATES_FOLDER: str = 'templates'
 
 
 configuration = Config()

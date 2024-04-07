@@ -25,3 +25,7 @@ class TestSleepNotesPost(HTTPStatusCodes):
         response.assert_status_code(self.STATUS_CREATED)
         response.validate(self.RESPONSE_MODEL_201)
         response.assert_data(created_note)
+
+    @pytest.mark.sleep_400
+    def test_create_new_sleep_note_400(self):
+        ...

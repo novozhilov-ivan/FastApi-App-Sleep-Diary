@@ -2,6 +2,7 @@ from flask_restx import Namespace
 
 from api.schemas.flask_api_models import response_schema, flask_restx_schema
 from api.schemas.payload import create_payload
+from api.exceptions.handler_400 import handler_bad_request
 
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteModel
@@ -13,6 +14,7 @@ ns_sleep = Namespace(
     path='/',
     validate=True
 )
+ns_sleep.default_error_handler = handler_bad_request
 
 # Get
 get_all_notes_response_model_200 = response_schema(
@@ -38,5 +40,14 @@ post_new_note_response_model_201 = response_schema(
     description='Модель успешно созданной записи в дневнике сна',
 )
 
+# post_new_note_response_model_400 = response_schema(
+#     code=400,
+#     ns=ns_sleep,
+#     model=SleepNoteModel,
+#     description='Модель успешно созданной записи в дневнике сна',
+# )
+
+
 from api.routes.sleep.route_sleep import SleepRoute
+
 ns_sleep.add_resource(SleepRoute, '/sleep')

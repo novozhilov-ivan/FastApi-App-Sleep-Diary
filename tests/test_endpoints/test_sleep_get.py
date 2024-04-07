@@ -84,12 +84,15 @@ class TestSleepNotesGET(HTTPStatusCodes):
         params = {name: value}
         response = client.get(self.ROUTE, query_string=params)
         response = Response(response)
-        with pytest.raises(ValidationError) as exception_info:
+        with pytest.raises(ValidationError) as exc_info:
             User(**params)
-        errors = exception_info.value.errors(
-            include_url=False,
-            include_context=False,
-            include_input=False
-        )
+        errors = {
+            'errors_count': exc_info.value.error_count(),
+            'message': exc_info.value.errors(
+                include_url=False,
+                include_context=False,
+                include_input=False
+            )
+        }
         response.assert_status_code(self.STATUS_BAD_REQUEST)
         response.assert_error_data(errors)

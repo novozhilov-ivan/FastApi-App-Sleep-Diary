@@ -22,8 +22,8 @@ class Response:
         return self
 
     def assert_error_data(self, errors: dict | list[dict]):
-        if isinstance(errors, list):
-            errors[0]['loc'] = list(errors[0]['loc'])
+        for error in errors['message']:
+            error['loc'] = list(error['loc'])
         self.assert_data(errors)
 
     def assert_data(self, expectation: BaseModel | dict | list[dict, BaseModel]):
