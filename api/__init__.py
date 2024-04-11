@@ -17,8 +17,7 @@ def create_app():
     db.init_app(app)
 
     with app.app_context():
-        from .routes import ns_main
-        from .routes import ns_sleep
+        from .routes import ns_main, ns_sleep, ns_edit
 
         api.init_app(
             app,
@@ -27,6 +26,7 @@ def create_app():
         )
         api.add_namespace(ns_main)
         api.add_namespace(ns_sleep)
+        api.add_namespace(ns_edit)
 
         # Create Database models
         db.create_all()
