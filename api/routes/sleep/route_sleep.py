@@ -9,7 +9,7 @@ from api.routes.sleep import (
     post_new_note_response_model_201,
     # Payloads
     new_note_expect_payload_model,
-    get_all_notes_param,
+    user_id_params,
     # Errors
     get_all_notes_response_model_404,
     response_model_422,
@@ -25,8 +25,8 @@ from api.CRUD.notation_queries import get_all_notations_of_user, post_new_note
 @ns_sleep.response(**response_model_422)
 @ns_sleep.response(**response_model_400)
 class SleepRoute(Resource):
-    @ns_sleep.doc(description='Получение всех записей дневника сна по id пользователя')
-    @ns_sleep.expect(get_all_notes_param)
+    @ns_sleep.doc(description='Получение всех записей дневника сна')
+    @ns_sleep.expect(user_id_params)
     @ns_sleep.response(**get_all_notes_response_model_200)
     @ns_sleep.response(**get_all_notes_response_model_404)
     def get(self):

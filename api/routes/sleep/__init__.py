@@ -19,7 +19,7 @@ ns_sleep = Namespace(
 ns_sleep.default_error_handler = handler_bad_request_400
 ns_sleep.errorhandler(handler_unprocessable_entity_422)
 
-# Get
+# Get models
 get_all_notes_response_model_200 = response_schema(
     code=200,
     ns=ns_sleep,
@@ -30,7 +30,7 @@ get_all_notes_response_model_404 = response_schema(
     ns=ns_sleep,
     model=SleepDiaryModelEmpty,
 )
-get_all_notes_param = create_payload('args', ns_sleep, User)
+user_id_params = create_payload('args', User)
 
 # Post
 new_note_expect_payload_model = flask_restx_schema(ns_sleep, SleepNote)

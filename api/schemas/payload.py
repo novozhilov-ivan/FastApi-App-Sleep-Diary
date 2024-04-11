@@ -1,25 +1,20 @@
-from typing import Type
+from typing import Type, Literal
 
-from flask_restx import Namespace
 from flask_restx.reqparse import RequestParser
 from pydantic import BaseModel
 
 
 def create_payload(
-        location: str,
-        ns: Namespace,
+        location: Literal['json', 'args'],
         model: Type[BaseModel]
 ) -> RequestParser:
-    if location not in ('json', 'args'):
-        raise ValueError
-
-    payload = ns.parser()
-    for field_key, field_value in model.model_fields.items():
+    payload = RequestParser()
+    for value in model.model_fields.values():
         payload.add_argument(
-            name=field_value.alias,
-            type=field_value.annotation,
-            required=field_value.is_required(),
-            help=field_value.description,
+            name=value.alias,
+            type=value.annotation,
+            required=value.is_required(),
+            help=value.description,
             location=location,
         )
     return payload

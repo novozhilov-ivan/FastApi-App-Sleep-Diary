@@ -1,6 +1,4 @@
-from typing import Annotated
-
-from pydantic import BaseModel, ConfigDict, computed_field, Field
+from pydantic import BaseModel, ConfigDict, computed_field
 
 from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekModel, SleepDiaryWeekCompute
 

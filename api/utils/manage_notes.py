@@ -1,9 +1,11 @@
+from typing import Type
+
 from pydantic import TypeAdapter
 from sqlalchemy import Sequence
 
 from api.models import Notation
 from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 
 
 def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
@@ -20,6 +22,9 @@ def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
     return weeks
 
 
-def convert_notes(db_notes: Sequence[Notation]) -> list[SleepNoteCompute]:
-    type_adapter = TypeAdapter(list[SleepNoteCompute])
+def convert_notes(
+        db_notes: Sequence[Notation],
+        model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute
+) -> list[SleepNoteCompute | SleepNote]:
+    type_adapter = TypeAdapter(list[model])
     return type_adapter.validate_python(db_notes, from_attributes=True)

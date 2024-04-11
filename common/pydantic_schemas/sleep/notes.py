@@ -1,9 +1,28 @@
+import csv
+
 from datetime import time, date
+from typing import TextIO
 
 from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
 
 
-class SleepNote(BaseModel):
+class WriteData:
+    @staticmethod
+    def to_file(data: list[BaseModel] | BaseModel) -> TextIO:
+        model = data
+        if isinstance(data, list):
+            model = data[0]
+        with open('api/static/sleep_diary.csv', 'w') as csv_file:
+            writer = csv.writer(csv_file)
+            titles = (field.title for field in model.model_fields.values())
+            writer.writerow(titles)
+            data = (note.model_dump(mode='json') for note in data)
+            data = (note.values() for note in data)
+            writer.writerows(data)
+            return csv_file
+
+
+class SleepNote(BaseModel, WriteData):
     """Запись в дневнике сна"""
     calendar_date: date = Field(
         title='Дата',
@@ -44,8 +63,8 @@ class SleepNoteStatistics(SleepNote):
 
 
 class SleepNoteMeta(BaseModel):
-    id: int
-    user_id: int
+    id: int = Field(title='Идентификатор записи дневника сна')
+    user_id: int = Field(title='Идентификатор пользователя дневника сна')
 
 
 class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
