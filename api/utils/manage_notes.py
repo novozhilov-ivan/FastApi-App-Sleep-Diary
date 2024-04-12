@@ -1,6 +1,6 @@
 from typing import Type
 
-from pydantic import TypeAdapter
+from pydantic import TypeAdapter, BaseModel
 from sqlalchemy import Sequence
 
 from api.models import Notation
@@ -28,3 +28,22 @@ def convert_notes(
 ) -> list[SleepNoteCompute | SleepNote]:
     type_adapter = TypeAdapter(list[model])
     return type_adapter.validate_python(db_notes, from_attributes=True)
+
+
+class WriteData:
+    def __init__(
+            self,
+            data: list[BaseModel],
+            model: SleepNote | Type[BaseModel] = SleepNote
+    ):
+        self.data: list[BaseModel] = data
+        self.model: SleepNote | Type[BaseModel] = model
+
+    def to_csv_str(self) -> str:
+        titles_row = (field.title for field in self.model.model_fields.values())
+        data = (note.model_dump(mode='json') for note in self.data)
+        rows_rows = (note.values() for note in data)
+        rows_rows = (','.join(row) for row in rows_rows)
+        delimiter = '\n'
+        result = f"{','.join(titles_row)}\n{delimiter.join(rows_rows)}"
+        return result
