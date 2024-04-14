@@ -40,10 +40,16 @@ class WriteData:
         self.model: SleepNote | Type[BaseModel] = model
 
     def to_csv_str(self) -> str:
-        titles_row = (field.title for field in self.model.model_fields.values())
-        data = (note.model_dump(mode='json') for note in self.data)
-        rows_rows = (note.values() for note in data)
-        rows_rows = (','.join(row) for row in rows_rows)
-        delimiter = '\n'
-        result = f"{','.join(titles_row)}\n{delimiter.join(rows_rows)}"
-        return result
+        rows_delimiter = '\n'
+        columns_delimiter = ','
+        titles = (field.title for field in self.model.model_fields.values())
+        data = (note.model_dump() for note in self.data)
+        data = (self.model(**note) for note in data)
+        data = (note.model_dump(mode='json') for note in data)
+        data = (note.values() for note in data)
+        data = (columns_delimiter.join(row) for row in data)
+        return (
+            f"{columns_delimiter.join(titles)}"
+            f"\n"
+            f"{rows_delimiter.join(data)}"
+        )

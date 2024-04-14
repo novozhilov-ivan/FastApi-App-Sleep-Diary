@@ -8,6 +8,7 @@ from api.config import Config
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel
 from common.pydantic_schemas.main import MainPageModel
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute
 
 
 @pytest.fixture
@@ -20,7 +21,6 @@ class TestConfig(Config):
         env_file=".test.env",
         extra="allow"
     )
-    # Flask Testing Config
     TESTING: bool
 
 
@@ -66,7 +66,7 @@ def generated_notes(request, db_user_id, app) -> SleepDiaryGenerator:
 
 
 @pytest.fixture
-def add_notes_to_db(app, db_user_id, generated_notes: SleepDiaryGenerator):
+def add_notes_to_db(app, generated_notes: SleepDiaryGenerator):
     new_notes = generated_notes.convert_model(
         Notation,
         exclude={"sleep_duration", "time_spent_in_bed", "sleep_efficiency"}
@@ -79,3 +79,9 @@ def add_notes_to_db(app, db_user_id, generated_notes: SleepDiaryGenerator):
 @pytest.fixture
 def sleep_diary(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
     return generated_notes.diary
+
+
+@pytest.fixture
+def sleep_diary_notes(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> list[SleepNoteCompute]:
+    return generated_notes.notes
+
