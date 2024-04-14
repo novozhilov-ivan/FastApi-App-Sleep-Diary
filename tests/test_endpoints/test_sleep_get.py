@@ -2,6 +2,7 @@ import pytest
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
+from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.baseclasses.response import Response
@@ -46,11 +47,11 @@ class TestSleepNotesGET(HTTPStatusCodes):
             name: str,
             value: str | int,
             client: FlaskClient,
-            sleep_diary: SleepDiaryModel
+            fake_diary: SleepDiaryGenerator
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        expectation = sleep_diary
+        expectation = fake_diary.diary
         response.assert_status_code(self.STATUS_OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)

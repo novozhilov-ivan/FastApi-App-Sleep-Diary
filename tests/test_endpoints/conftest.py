@@ -6,9 +6,7 @@ from api import create_app, db
 from api.models import Notation, User
 from api.config import Config
 from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.diary import SleepDiaryModel
 from common.pydantic_schemas.main import MainPageModel
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute
 
 
 @pytest.fixture
@@ -77,11 +75,5 @@ def add_notes_to_db(app, generated_notes: SleepDiaryGenerator):
 
 
 @pytest.fixture
-def sleep_diary(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryModel:
-    return generated_notes.diary
-
-
-@pytest.fixture
-def sleep_diary_notes(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> list[SleepNoteCompute]:
-    return generated_notes.notes
-
+def fake_diary(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryGenerator:
+    return generated_notes

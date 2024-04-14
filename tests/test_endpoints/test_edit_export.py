@@ -4,7 +4,8 @@ from flask.testing import FlaskClient
 from api.utils.manage_notes import WriteData
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTPStatusCodes
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
+from common.generators.diary import SleepDiaryGenerator
+from common.pydantic_schemas.sleep.notes import SleepNote
 
 
 @pytest.mark.edit
@@ -12,6 +13,7 @@ from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 class TestExportNotes(HTTPStatusCodes):
     ROUTE = "/api/edit/export"
     SLEEP_PARAMS_NAMES = ['name', 'value']
+    RESPONSE_MODEL_200 = SleepNote
     CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
         ('id', 1),
         ('id', "1"),
@@ -29,12 +31,12 @@ class TestExportNotes(HTTPStatusCodes):
             name: str,
             value: str | int,
             client: FlaskClient,
-            sleep_diary_notes: list[SleepNoteCompute]
+            fake_diary: SleepDiaryGenerator
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        expectation = sleep_diary_notes
+        expectation = fake_diary.notes
         expectation = WriteData(expectation).to_csv_str()
         response.assert_status_code(self.STATUS_OK_200)
-        response.validate(SleepNote)
+        response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
