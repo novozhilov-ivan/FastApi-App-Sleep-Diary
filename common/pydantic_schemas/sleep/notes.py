@@ -37,6 +37,10 @@ class SleepNote(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class ListWithSleepNotes(BaseModel):
+    notes: list[SleepNote]
+
+
 class SleepNoteStatistics(SleepNote):
     sleep_duration: time
     time_spent_in_bed: time

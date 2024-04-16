@@ -4,17 +4,38 @@ from flask_restx.reqparse import RequestParser
 from pydantic import BaseModel
 
 
-def create_payload(
-        location: Literal['json', 'args'],
+def create_payload_from_model(
+        location: Literal['json', 'args', 'files'],
         model: Type[BaseModel]
 ) -> RequestParser:
     payload = RequestParser()
-    for value in model.model_fields.values():
-        payload.add_argument(
-            name=value.alias,
-            type=value.annotation,
-            required=value.is_required(),
-            help=value.description,
-            location=location,
+    for field, field_info in model.model_fields.items():
+        create_payload(
+            field,
+            field_info.annotation,
+            field_info.is_required(),
+            field_info.description,
+            location,
+            payload=payload
         )
+    return payload
+
+
+def create_payload(
+        name: str,
+        type_: str | None,
+        required: bool,
+        description: str,
+        location: Literal['json', 'args', 'files'],
+        payload: RequestParser | None = None
+) -> RequestParser:
+    if payload is None:
+        payload = RequestParser()
+    payload.add_argument(
+        name=name,
+        type=type_,
+        required=required,
+        help=description,
+        location=location,
+    )
     return payload

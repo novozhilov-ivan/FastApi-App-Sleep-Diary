@@ -8,7 +8,7 @@ from api.routes.sleep import (
     get_all_notes_response_model_200,
     post_new_note_response_model_201,
     # Payloads
-    new_note_expect_payload_model,
+    new_note_payload,
     user_id_params,
     # Errors
     get_all_notes_response_model_404,
@@ -32,8 +32,7 @@ class SleepRoute(Resource):
     def get(self):
         args = request.args.to_dict()
         user = User(**args)
-        user_id = user.id
-        db_notes = get_all_notations_of_user(user_id)
+        db_notes = get_all_notations_of_user(user.id)
         pd_notes = convert_notes(db_notes)
         pd_weeks = slice_on_week(pd_notes)
         sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
@@ -45,12 +44,14 @@ class SleepRoute(Resource):
         return Response(response, status, content_type='application/json')
 
     @ns_sleep.doc(description='Добавление новой записи в дневник сна')
-    @ns_sleep.expect(new_note_expect_payload_model)
+    @ns_sleep.expect(user_id_params, new_note_payload)
     @ns_sleep.param('payload', 'Новая запись в дневник сна', _in='body')
     @ns_sleep.response(**post_new_note_response_model_201)
     def post(self):
         new_note = SleepNote(**ns_sleep.payload)
-        new_db_note = Notation(user_id=1, **new_note.model_dump(by_alias=True))
+        args = request.args.to_dict()
+        user = User(**args)
+        new_db_note = Notation(user_id=user.id, **new_note.model_dump(by_alias=True))
         new_db_note = post_new_note(new_db_note)
         response = SleepNoteCompute(**new_db_note.dict())
         response = response.model_dump_json()

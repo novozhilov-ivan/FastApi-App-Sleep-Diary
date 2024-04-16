@@ -1,7 +1,7 @@
 from flask_restx import Namespace
 
-from api.schemas.flask_api_models import response_schema, flask_restx_schema
-from api.schemas.payload import create_payload
+from api.schemas.flask_api_models import response_schema
+from api.schemas.payload import create_payload_from_model
 from api.exceptions.handler_400 import handler_bad_request_400, handler_unprocessable_entity_422
 from common.pydantic_schemas.errors.message import ErrorResponse
 
@@ -30,10 +30,10 @@ get_all_notes_response_model_404 = response_schema(
     ns=ns_sleep,
     model=SleepDiaryModelEmpty,
 )
-user_id_params = create_payload('args', User)
+user_id_params = create_payload_from_model('args', User)
 
 # Post
-new_note_expect_payload_model = flask_restx_schema(ns_sleep, SleepNote)
+new_note_payload = create_payload_from_model('json', SleepNote)
 post_new_note_response_model_201 = response_schema(
     code=201,
     ns=ns_sleep,

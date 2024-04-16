@@ -26,7 +26,7 @@ class EditRouteExport(Resource):
         file_str: str = WriteData(notes).to_csv_str()
         response = make_response(file_str)
         response.status_code = 200
-        response.mimetype = 'text/csv'
+        response.mimetype = 'text/plain'
         response.headers.set(
             'Content-Disposition',
             'attachment',

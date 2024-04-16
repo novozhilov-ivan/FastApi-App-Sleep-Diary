@@ -3,10 +3,9 @@ from random import randrange
 from datetime import date, time, timezone, datetime
 from typing import Type
 
-
 from api.utils.manage_notes import slice_on_week
 from common.pydantic_schemas.sleep.diary import SleepDiaryCompute, SleepDiaryModel
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 
 
 class SleepDiaryGenerator:
@@ -38,8 +37,11 @@ class SleepDiaryGenerator:
     def create_note(
             self,
             note_id: int = 1,
-            date_of_note: float = datetime.now(timezone.utc).timestamp(),
-    ) -> SleepNoteCompute:
+            date_of_note: float | None = None,
+            as_model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute
+    ) -> SleepNoteCompute | SleepNote:
+        if date_of_note is None:
+            date_of_note = datetime.now(timezone.utc).timestamp()
         rand_bedtime = self._rand_time()
         rand_asleep = self._rand_time(start_h=rand_bedtime.hour, start_m=rand_bedtime.minute)
         rand_awake = self._rand_time(start_h=rand_asleep.hour, start_m=rand_asleep.minute)
@@ -48,7 +50,7 @@ class SleepDiaryGenerator:
             stop_h=rand_awake.hour - rand_asleep.hour,
             stop_m=rand_awake.minute - rand_asleep.minute
         )
-        return SleepNoteCompute(
+        return as_model(
             id=note_id,
             user_id=self.user_id,
             calendar_date=date.fromtimestamp(date_of_note),
