@@ -1,5 +1,6 @@
 from typing import Type
 
+from more_itertools import batched
 from pydantic import TypeAdapter, BaseModel
 from sqlalchemy import Sequence
 
@@ -10,15 +11,10 @@ from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 
 def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
     weeks = []
-    days_count = len(days)
-    step = 7
-    for f_day in range(0, days_count, step):
-        l_day = f_day + step
-        if l_day > days_count:
-            l_day = days_count
-        week = days[f_day:l_day]
-        pd_compute_week = SleepDiaryWeekCompute(notes=week)
-        weeks.append(pd_compute_week)
+    week_len = 7
+    for notes_batch in batched(days, week_len):
+        week = SleepDiaryWeekCompute(notes=[*notes_batch])
+        weeks.append(week)
     return weeks
 
 
