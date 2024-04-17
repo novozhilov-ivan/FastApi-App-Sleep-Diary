@@ -17,6 +17,7 @@ class Config(BaseSettings):
     FLASK_DEBUG: bool
     SECRET_KEY: str
     MAX_CONTENT_LENGTH: int = 1024 * 1024
+    ERROR_INCLUDE_MESSAGE: bool = False
     # Flask | Static Assets
     STATIC_FOLDER: str = 'static'
     TEMPLATES_FOLDER: str = 'templates'

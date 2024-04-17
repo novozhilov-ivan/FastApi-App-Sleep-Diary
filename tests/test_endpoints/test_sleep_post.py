@@ -38,10 +38,7 @@ class TestSleepNotesPost(HTTPStatusCodes):
 
         with pytest.raises(ValidationError) as exc_info:
             SleepNote(**random_note_wrong_values)
-        errors = self.RESPONSE_MODEL_422(
-            errors_count=exc_info.value.error_count(),
-            message=exc_info.value.errors()
-        )
+        errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
         response.assert_status_code(self.STATUS_UNPROCESSABLE_ENTITY_422)
         response.validate(self.RESPONSE_MODEL_422)
         response.assert_data(errors)

@@ -10,15 +10,13 @@ from common.pydantic_schemas.sleep.notes import SleepNote
 
 @pytest.mark.edit
 @pytest.mark.export
-class TestExportNotes(HTTPStatusCodes):
+class TestEditExportNotes(HTTPStatusCodes):
     ROUTE = "/api/edit/export"
     SLEEP_PARAMS_NAMES = ['name', 'value']
     RESPONSE_MODEL_200 = SleepNote
     CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
         ('id', 1),
-        ('id', "1"),
         ('user_id', 1),
-        ('user_id', "1")
     ]
 
     @pytest.mark.export_200

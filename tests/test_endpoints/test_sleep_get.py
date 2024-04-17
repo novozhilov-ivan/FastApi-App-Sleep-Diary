@@ -78,7 +78,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
         SLEEP_PARAMS_NAMES,
         INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID
     )
-    def test_get_all_sleep_notes_by_user_id_400(
+    def test_get_all_sleep_notes_by_user_id_422(
             self,
             name: str,
             value: str | int,
@@ -89,10 +89,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
         response = Response(response)
         with pytest.raises(ValidationError) as exc_info:
             User(**params)
-        errors = self.RESPONSE_MODEL_422(
-            errors_count=exc_info.value.error_count(),
-            message=exc_info.value.errors()
-        )
+        errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
         response.assert_status_code(self.STATUS_UNPROCESSABLE_ENTITY_422)
         response.validate(self.RESPONSE_MODEL_422)
         response.assert_data(errors)

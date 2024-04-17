@@ -1,8 +1,8 @@
 from flask_restx import Namespace
 
+from api.exceptions.handlers import handler_unprocessable_entity_422
 from api.schemas.flask_api_models import response_schema
 from api.schemas.payload import create_payload_from_model
-from api.exceptions.handler_400 import handler_bad_request_400, handler_unprocessable_entity_422
 from common.pydantic_schemas.errors.message import ErrorResponse
 
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
@@ -15,8 +15,6 @@ ns_sleep = Namespace(
     path='/',
     validate=True
 )
-# Errors
-ns_sleep.default_error_handler = handler_bad_request_400
 ns_sleep.errorhandler(handler_unprocessable_entity_422)
 
 # Get models
