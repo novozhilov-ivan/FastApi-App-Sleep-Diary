@@ -17,24 +17,24 @@ ns_edit.errorhandler(handler_not_found_404)
 # Get export file
 export_response_model_200 = {
     "code": HTTPStatusCodes.STATUS_OK_200,
-    "description": 'Файл sleep_diary.csv со всеми записями дневника',
+    "description": 'Файл со всеми записями дневника сна',
 }
 export_response_model_404 = response_schema(
     ns_edit,
     HTTPStatusCodes.STATUS_NOT_FOUND_404,
     ErrorResponse
 )
-
-csv_file_payload = create_payload(
-    name='CSV файл',
+file_ext_allowed = ('csv',)
+import_file_payload = create_payload(
+    name='file',
     type_='file',
     required=True,
-    description='CSV файл с записями дневника сна',
+    description=f'Файл формата {", ".join(file_ext_allowed)} с записями дневника сна',
     location='files'
 )
 
-import_response_model_200 = response_schema(
-    code=HTTPStatusCodes.STATUS_OK_200,
+import_response_model_201 = response_schema(
+    code=HTTPStatusCodes.STATUS_CREATED_201,
     ns=ns_edit,
     model=ListWithSleepNotes,
     description='Успешно импортированные в дневник записи'

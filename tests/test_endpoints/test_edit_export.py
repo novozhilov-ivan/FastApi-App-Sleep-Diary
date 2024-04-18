@@ -1,7 +1,7 @@
 import pytest
 from flask.testing import FlaskClient
 
-from api.utils.manage_notes import WriteData
+from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTPStatusCodes
 from common.generators.diary import SleepDiaryGenerator
@@ -34,7 +34,7 @@ class TestEditExportNotes(HTTPStatusCodes):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = fake_diary.notes
-        expectation = WriteData(expectation).to_csv_str()
+        expectation = FileDataConverter(expectation).to_csv_str()
         response.assert_status_code(self.STATUS_OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)

@@ -15,11 +15,11 @@ from api.routes.sleep import (
     response_model_422,
     response_model_400,
 )
-from api.utils.manage_notes import convert_notes, slice_on_week
+from api.utils.manage_notes import convert_db_notes_to_pydantic_model_notes, slice_on_week
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryCompute
 from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 from common.pydantic_schemas.user import User
-from api.CRUD.notation_queries import get_all_notations_of_user, post_new_note
+from api.CRUD.notation_queries import read_all_notations_of_user, create_one_note
 
 
 @ns_sleep.response(**response_model_422)
@@ -32,8 +32,8 @@ class SleepRoute(Resource):
     def get(self):
         args = request.args.to_dict()
         user = User(**args)
-        db_notes = get_all_notations_of_user(user.id)
-        pd_notes = convert_notes(db_notes)
+        db_notes = read_all_notations_of_user(user.id)
+        pd_notes = convert_db_notes_to_pydantic_model_notes(db_notes)
         pd_weeks = slice_on_week(pd_notes)
         sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
         response = SleepDiaryModel.model_validate(sleep_diary)
@@ -52,7 +52,7 @@ class SleepRoute(Resource):
         args = request.args.to_dict()
         user = User(**args)
         new_db_note = Notation(user_id=user.id, **new_note.model_dump(by_alias=True))
-        new_db_note = post_new_note(new_db_note)
+        new_db_note = create_one_note(new_db_note)
         response = SleepNoteCompute(**new_db_note.dict())
         response = response.model_dump_json()
         status = 201

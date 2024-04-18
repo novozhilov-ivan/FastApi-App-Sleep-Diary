@@ -1,4 +1,3 @@
-import csv
 from typing import Type
 
 from more_itertools import batched
@@ -20,7 +19,7 @@ def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
     return weeks
 
 
-def convert_notes(
+def convert_db_notes_to_pydantic_model_notes(
         db_notes: Sequence[Notation],
         model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute
 ) -> list[SleepNoteCompute | SleepNote]:
@@ -28,14 +27,14 @@ def convert_notes(
     return type_adapter.validate_python(db_notes, from_attributes=True)
 
 
-class WriteData:
+class FileDataConverter:
     def __init__(
             self,
             data: list[BaseModel] | None = None,
             file: FileStorage | None = None,
             model: SleepNote | Type[BaseModel] = SleepNote
     ):
-        self.data: list[BaseModel] | None = data
+        self.data: list | None = data
         self.model: SleepNote | Type[BaseModel] = model
         self._file: FileStorage | None = file
 
@@ -54,10 +53,17 @@ class WriteData:
             f"{rows_delimiter.join(data)}"
         )
 
-    def to_model(self) -> None:
-        data = self._file.stream.readlines()
-        reader = csv.reader(data, delimiter='\n')
-        for row in reader:
-            print(row)
-        # reader = csv.reader(csv_file, delimiter=',')
-        # print(reader)
+    def to_model(self, as_model: SleepNote | type = SleepNote, **kwargs) -> None:
+        with self._file.stream as file:
+            reader: str = file.read().decode()
+
+        lines = (line for line in reader.splitlines())
+        lines_split = (line.split(',') for line in lines)
+        next(lines_split)
+        fields_names = [
+            field[1].alias if getattr(field[1], 'alias') else field[0] for field in self.model.model_fields.items()
+        ]
+        data_zips = (zip(fields_names, line) for line in lines_split)
+        data_dicts = (dict(zipped_data) for zipped_data in data_zips)
+        notes = (as_model(**data_dict, **kwargs) for data_dict in data_dicts)
+        self.data = list(notes)
