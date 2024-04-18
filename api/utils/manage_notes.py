@@ -1,8 +1,10 @@
+import csv
 from typing import Type
 
 from more_itertools import batched
 from pydantic import TypeAdapter, BaseModel
 from sqlalchemy import Sequence
+from werkzeug.datastructures import FileStorage
 
 from api.models import Notation
 from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
@@ -29,11 +31,13 @@ def convert_notes(
 class WriteData:
     def __init__(
             self,
-            data: list[BaseModel],
+            data: list[BaseModel] | None = None,
+            file: FileStorage | None = None,
             model: SleepNote | Type[BaseModel] = SleepNote
     ):
-        self.data: list[BaseModel] = data
+        self.data: list[BaseModel] | None = data
         self.model: SleepNote | Type[BaseModel] = model
+        self._file: FileStorage | None = file
 
     def to_csv_str(self) -> str:
         rows_delimiter = '\n'
@@ -49,3 +53,11 @@ class WriteData:
             f"\n"
             f"{rows_delimiter.join(data)}"
         )
+
+    def to_model(self) -> None:
+        data = self._file.stream.readlines()
+        reader = csv.reader(data, delimiter='\n')
+        for row in reader:
+            print(row)
+        # reader = csv.reader(csv_file, delimiter=',')
+        # print(reader)

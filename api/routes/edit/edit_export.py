@@ -18,8 +18,7 @@ class EditRouteExport(Resource):
     def get(self):
         args = request.args.to_dict()
         user = User(**args)
-        user_id = user.id
-        db_notes = get_all_notations_of_user(user_id)
+        db_notes = get_all_notations_of_user(user.id)
         if not db_notes:
             raise NotFoundError
         notes: list[SleepNote] = convert_notes(db_notes, SleepNote)
