@@ -11,11 +11,11 @@ def create_payload_from_model(
     payload = RequestParser()
     for field, field_info in model.model_fields.items():
         create_payload(
-            field,
-            field_info.annotation,
-            field_info.is_required(),
-            field_info.description,
-            location,
+            name=field,
+            type_=field_info.annotation,
+            required=field_info.is_required(),
+            description=field_info.description,
+            location=location,
             payload=payload
         )
     return payload

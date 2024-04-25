@@ -1,6 +1,6 @@
 from typing import Sequence
 
-from sqlalchemy import select
+from sqlalchemy import select, delete
 
 from api.models import Notation
 from api.extension import db
@@ -28,6 +28,17 @@ def create_one_note(note: Notation) -> Notation:
     return note
 
 
-def create_many_notes(notes: list[Notation]):
+def create_many_notes(notes: list[Notation]) -> None:
     db.session.add_all(notes)
+    db.session.commit()
+
+
+def delete_all_user_notes(user_id: int) -> None:
+    db.session.execute(
+        delete(
+            Notation
+        ).where(
+            Notation.user_id == user_id
+        )
+    )
     db.session.commit()
