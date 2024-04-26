@@ -29,6 +29,11 @@ import_response_model_409 = {
     "code": HTTP.CONFLICT_409,
     "description": import_response_conflict_409,
 }
+import_response_content_too_large_413 = "Content length too large"
+import_response_model_413 = {
+    "code": HTTP.CONTENT_TOO_LARGE_413,
+    "description": import_response_content_too_large_413,
+}
 
 from api.routes.edit.import_file.edit_import import EditRouteImport, ns_edit
 

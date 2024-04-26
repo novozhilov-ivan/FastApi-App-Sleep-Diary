@@ -4,15 +4,11 @@ from api.schemas.flask_api_models import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
 
+export_response_created_200 = 'Файл со всеми записями дневника сна'
 export_response_model_200 = {
     "code": HTTP.OK_200,
-    "description": 'Файл со всеми записями дневника сна',
+    "description": export_response_created_200,
 }
-export_response_model_404 = response_schema(
-    ns_edit,
-    HTTP.NOT_FOUND_404,
-    ErrorResponse
-)
 
 from api.routes.edit.export_file.edit_export import EditRouteExport
 

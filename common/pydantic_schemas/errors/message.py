@@ -8,7 +8,7 @@ class ErrorDescription(BaseModel):
 
 
 class ErrorResponse(BaseModel):
-    """Ответ с информацией об ошибках."""
+    """Ответ с информацией об ошибках"""
     message: list[ErrorDescription] | str
 
     @computed_field
