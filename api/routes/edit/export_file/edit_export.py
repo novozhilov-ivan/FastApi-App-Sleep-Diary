@@ -7,6 +7,7 @@ from api.routes.edit import ns_edit
 from api.routes.edit.export_file import export_response_model_200, export_response_model_404
 from api.routes.sleep import user_id_params
 from api.utils.manage_notes import convert_db_notes_to_pydantic_model_notes, FileDataConverter
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNote
 from common.pydantic_schemas.user import User
 
@@ -25,7 +26,7 @@ class EditRouteExport(Resource):
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(db_notes, SleepNote)
         file_str: str = FileDataConverter(notes).to_csv_str()
         response = make_response(file_str)
-        response.status_code = 200
+        response.status_code = HTTP.OK_200
         response.mimetype = 'text/plain'
         response.headers.set(
             'Content-Disposition',

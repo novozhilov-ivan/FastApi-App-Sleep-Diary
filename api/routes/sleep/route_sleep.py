@@ -16,6 +16,7 @@ from api.routes.sleep import (
     response_model_400,
 )
 from api.utils.manage_notes import convert_db_notes_to_pydantic_model_notes, slice_on_week
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryCompute
 from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 from common.pydantic_schemas.user import User
@@ -37,9 +38,9 @@ class SleepRoute(Resource):
         pd_weeks = slice_on_week(pd_notes)
         sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
         response = SleepDiaryModel.model_validate(sleep_diary)
-        status = 404
+        status = HTTP.NOT_FOUND_404
         if db_notes:
-            status = 200
+            status = HTTP.OK_200
         response = response.model_dump_json()
         return Response(response, status, content_type='application/json')
 
@@ -55,5 +56,4 @@ class SleepRoute(Resource):
         new_db_note = create_one_note(new_db_note)
         response = SleepNoteCompute(**new_db_note.dict())
         response = response.model_dump_json()
-        status = 201
-        return Response(response, status, content_type='application/json')
+        return Response(response, HTTP.CREATED_201, content_type='application/json')
