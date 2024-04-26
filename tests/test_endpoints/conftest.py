@@ -1,4 +1,5 @@
 import pytest
+from flask import Flask
 
 from pydantic_settings import SettingsConfigDict
 
@@ -26,7 +27,7 @@ test_configuration = TestConfig()
 
 
 @pytest.fixture
-def app():
+def app() -> Flask:
     assert test_configuration.TESTING is True
     app = create_app()
     app.config.from_object(test_configuration)

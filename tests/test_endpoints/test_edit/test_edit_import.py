@@ -1,6 +1,7 @@
 import io
 
 import pytest
+from flask import Flask
 from flask.testing import FlaskClient
 
 from api.routes.edit.import_file import import_success_response
@@ -30,7 +31,7 @@ class TestEditImportNotes(HTTPStatusCodes):
             self,
             name: str,
             value: str | int,
-            app,
+            app: Flask,
             client: FlaskClient,
             db_user_id: int,
     ):

@@ -5,7 +5,7 @@ from .extension import api, db
 from .config import configuration
 
 
-def create_app():
+def create_app() -> Flask:
     app = Flask(
         import_name="api",
         instance_relative_config=False
@@ -31,7 +31,6 @@ def create_app():
         # Create Database models
         db.create_all()
         return app
-
 
 # login_manager = LoginManager(app)
 # login_manager.login_view = 'sign_in'
