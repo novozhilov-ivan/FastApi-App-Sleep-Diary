@@ -10,31 +10,19 @@ from common.pydantic_schemas.sleep.notes import SleepNote
 
 @pytest.mark.edit
 @pytest.mark.export
-class TestEditExportNotes(HTTP):
+class TestEditExportNotes:
     ROUTE = "/api/edit/export"
-    SLEEP_PARAMS_NAMES = ['name', 'value']
-    RESPONSE_MODEL_200 = SleepNote
-    CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
-        ('id', 1),
-        ('user_id', 1),
-    ]
 
     @pytest.mark.export_200
-    @pytest.mark.parametrize(
-        SLEEP_PARAMS_NAMES,
-        CORRECT_PARAMS_GET_NOTES_BY_USER_ID
-    )
     def test_export_notes_200(
             self,
-            name: str,
-            value: str | int,
             client: FlaskClient,
+            db_user_id: int,
             saved_diary: SleepDiaryGenerator
     ):
-        response = client.get(self.ROUTE, query_string={name: value})
+        response = client.get(self.ROUTE, query_string={'id': db_user_id})
         response = Response(response)
-        expectation = saved_diary.notes
-        expectation = FileDataConverter(expectation).to_csv_str()
-        response.assert_status_code(self.OK_200)
-        response.validate(self.RESPONSE_MODEL_200)
-        response.assert_data(expectation)
+        str_file = FileDataConverter(saved_diary.notes).to_csv_str()
+        response.assert_status_code(HTTP.OK_200)
+        response.validate(SleepNote)
+        response.assert_data(str_file)

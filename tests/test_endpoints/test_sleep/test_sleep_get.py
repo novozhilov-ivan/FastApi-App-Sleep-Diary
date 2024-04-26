@@ -13,7 +13,7 @@ from tests.conftest import client
 
 @pytest.mark.sleep
 @pytest.mark.sleep_get
-class TestSleepNotesGET(HTTP):
+class TestSleepNotesGET:
     ROUTE = "/api/sleep"
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
@@ -52,7 +52,7 @@ class TestSleepNotesGET(HTTP):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = saved_diary.diary
-        response.assert_status_code(self.OK_200)
+        response.assert_status_code(HTTP.OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
 
@@ -69,7 +69,7 @@ class TestSleepNotesGET(HTTP):
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        response.assert_status_code(self.NOT_FOUND_404_422)
+        response.assert_status_code(HTTP.NOT_FOUND_404)
         response.validate(self.RESPONSE_MODEL_404)
         response.assert_data(self.EMPTY_SLEEP_DIARY)
 
@@ -90,6 +90,6 @@ class TestSleepNotesGET(HTTP):
         with pytest.raises(ValidationError) as exc_info:
             User(**params)
         errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
-        response.assert_status_code(self.UNPROCESSABLE_ENTITY_422)
+        response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(self.RESPONSE_MODEL_422)
         response.assert_data(errors)

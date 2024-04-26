@@ -8,12 +8,6 @@ from api import create_app, db
 from api.models import Notation, User
 from api.config import Config
 from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.main import MainPageModel
-
-
-@pytest.fixture
-def main_info(client):
-    return MainPageModel()
 
 
 class TestConfig(Config):

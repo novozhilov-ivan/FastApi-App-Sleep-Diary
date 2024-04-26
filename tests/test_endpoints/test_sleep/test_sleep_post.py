@@ -12,7 +12,7 @@ from common.pydantic_schemas.sleep.notes import SleepNoteModel, SleepNote, Sleep
 
 @pytest.mark.sleep
 @pytest.mark.sleep_post
-class TestSleepNotesPost(HTTP):
+class TestSleepNotesPost:
     ROUTE = "/api/sleep"
     RESPONSE_MODEL_201 = SleepNoteModel
     RESPONSE_MODEL_422 = ErrorResponse
@@ -25,7 +25,7 @@ class TestSleepNotesPost(HTTP):
         json_body: dict = created_note.model_dump(mode='json', by_alias=True, exclude={'user_id', 'id'})
         response = client.post(self.ROUTE, json=json_body, query_string={'user_id': db_user_id})
         response = Response(response)
-        response.assert_status_code(self.CREATED_201)
+        response.assert_status_code(HTTP.CREATED_201)
         response.validate(self.RESPONSE_MODEL_201)
         response.assert_data(created_note)
 
@@ -39,6 +39,6 @@ class TestSleepNotesPost(HTTP):
         with pytest.raises(ValidationError) as exc_info:
             SleepNote(**random_note_wrong_values)
         errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
-        response.assert_status_code(self.UNPROCESSABLE_ENTITY_422)
+        response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(self.RESPONSE_MODEL_422)
         response.assert_data(errors)

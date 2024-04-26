@@ -10,7 +10,7 @@ export_response_model_200 = {
 }
 export_response_model_404 = response_schema(
     ns_edit,
-    HTTP.NOT_FOUND_404_422,
+    HTTP.NOT_FOUND_404,
     ErrorResponse
 )
 
