@@ -1,16 +1,16 @@
 from api.routes import ns_edit
 
 from api.schemas.flask_api_models import response_schema
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
 
 export_response_model_200 = {
-    "code": HTTPStatusCodes.STATUS_OK_200,
+    "code": HTTP.OK_200,
     "description": 'Файл со всеми записями дневника сна',
 }
 export_response_model_404 = response_schema(
     ns_edit,
-    HTTPStatusCodes.STATUS_NOT_FOUND_404,
+    HTTP.NOT_FOUND_404_422,
     ErrorResponse
 )
 

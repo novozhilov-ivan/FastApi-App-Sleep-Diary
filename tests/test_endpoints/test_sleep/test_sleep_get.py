@@ -6,14 +6,14 @@ from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User
 from tests.conftest import client
 
 
 @pytest.mark.sleep
 @pytest.mark.sleep_get
-class TestSleepNotesGET(HTTPStatusCodes):
+class TestSleepNotesGET(HTTP):
     ROUTE = "/api/sleep"
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
@@ -52,7 +52,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
         expectation = fake_diary.diary
-        response.assert_status_code(self.STATUS_OK_200)
+        response.assert_status_code(self.OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
 
@@ -69,7 +69,7 @@ class TestSleepNotesGET(HTTPStatusCodes):
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        response.assert_status_code(self.STATUS_NOT_FOUND_404)
+        response.assert_status_code(self.NOT_FOUND_404_422)
         response.validate(self.RESPONSE_MODEL_404)
         response.assert_data(self.EMPTY_SLEEP_DIARY)
 
@@ -90,6 +90,6 @@ class TestSleepNotesGET(HTTPStatusCodes):
         with pytest.raises(ValidationError) as exc_info:
             User(**params)
         errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
-        response.assert_status_code(self.STATUS_UNPROCESSABLE_ENTITY_422)
+        response.assert_status_code(self.UNPROCESSABLE_ENTITY_422)
         response.validate(self.RESPONSE_MODEL_422)
         response.assert_data(errors)

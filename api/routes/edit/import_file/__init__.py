@@ -1,6 +1,6 @@
 # from api.routes import ns_edit
 from api.schemas.payload import create_payload
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 
 allowed_file_extensions = ('csv',)
 import_file_payload = create_payload(
@@ -12,7 +12,7 @@ import_file_payload = create_payload(
 )
 import_success_response = "Все импортированные записи созданы"
 import_response_model_201 = {
-    "code": HTTPStatusCodes.STATUS_CREATED_201,
+    "code": HTTP.CREATED_201,
     "description": import_success_response,
 }
 

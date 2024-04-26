@@ -7,13 +7,13 @@ from flask.testing import FlaskClient
 from api.routes.edit.import_file import import_success_response
 from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 
 
 @pytest.mark.edit
 @pytest.mark.import_notes
-class TestEditImportNotes(HTTPStatusCodes):
+class TestEditImportNotes(HTTP):
     ROUTE = "/api/edit/import"
     SLEEP_PARAMS_NAMES = ['name', 'value']
     RESPONSE_MODEL_201 = import_success_response
@@ -46,6 +46,6 @@ class TestEditImportNotes(HTTPStatusCodes):
             content_type='multipart/form-data'
         )
         response = Response(response)
-        response.assert_status_code(self.STATUS_CREATED_201)
+        response.assert_status_code(self.CREATED_201)
         response.validate(self.RESPONSE_MODEL_201)
         response.assert_data(import_success_response)

@@ -5,7 +5,7 @@ from api.CRUD.notation_queries import delete_all_user_notes
 from api.routes.edit import ns_edit
 from api.routes.edit.delete_diary import delete_success_response, delete_response_model_200
 from api.routes.sleep import user_id_params
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User
 
 
@@ -18,4 +18,4 @@ class EditRouteDelete(Resource):
         user_id = User(**args).id
         delete_all_user_notes(user_id)
         response = delete_success_response
-        return Response(response, HTTPStatusCodes.STATUS_OK_200)
+        return Response(response, HTTP.OK_200)

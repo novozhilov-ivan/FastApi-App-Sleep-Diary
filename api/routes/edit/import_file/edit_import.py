@@ -10,7 +10,7 @@ from api.routes.edit.import_file import import_file_payload, import_response_mod
     import_success_response
 from api.routes.sleep import user_id_params
 from api.utils.manage_notes import FileDataConverter
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User
 
 
@@ -27,10 +27,10 @@ class EditRouteImport(Resource):
 
         # if MAX_CONTENT_LENGTH > 1024 * 1024: raise http 413 file too large
         if file is None or not args:
-            return Response('Not payload', HTTPStatusCodes.STATUS_BAD_REQUEST_400)
+            return Response('Not payload', HTTP.BAD_REQUEST_400)
         *_, file_extension = file.filename.split('.')
         if file_extension not in allowed_file_extensions:
-            return Response('File extension not allowed', HTTPStatusCodes.UNSUPPORTED_MEDIA_TYPE_415)
+            return Response('File extension not allowed', HTTP.UNSUPPORTED_MEDIA_TYPE_415)
 
         user = User(**args)
         new_notes = FileDataConverter(file=file)
@@ -41,7 +41,7 @@ class EditRouteImport(Resource):
             create_many_notes(new_notes)
         except sqlalchemy.exc.IntegrityError:
             response = 'Some sleep notes in file already exists. Date of note must be unique!'
-            return Response(response, HTTPStatusCodes.CONFLICT_409)
+            return Response(response, HTTP.CONFLICT_409)
 
         response = import_success_response
-        return Response(response, HTTPStatusCodes.STATUS_CREATED_201)
+        return Response(response, HTTP.CREATED_201)

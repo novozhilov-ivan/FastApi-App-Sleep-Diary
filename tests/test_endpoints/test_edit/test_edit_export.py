@@ -3,14 +3,14 @@ from flask.testing import FlaskClient
 
 from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTPStatusCodes
+from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.notes import SleepNote
 
 
 @pytest.mark.edit
 @pytest.mark.export
-class TestEditExportNotes(HTTPStatusCodes):
+class TestEditExportNotes(HTTP):
     ROUTE = "/api/edit/export"
     SLEEP_PARAMS_NAMES = ['name', 'value']
     RESPONSE_MODEL_200 = SleepNote
@@ -35,6 +35,6 @@ class TestEditExportNotes(HTTPStatusCodes):
         response = Response(response)
         expectation = fake_diary.notes
         expectation = FileDataConverter(expectation).to_csv_str()
-        response.assert_status_code(self.STATUS_OK_200)
+        response.assert_status_code(self.OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
