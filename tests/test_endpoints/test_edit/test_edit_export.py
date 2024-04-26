@@ -29,11 +29,11 @@ class TestEditExportNotes(HTTP):
             name: str,
             value: str | int,
             client: FlaskClient,
-            fake_diary: SleepDiaryGenerator
+            saved_diary: SleepDiaryGenerator
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        expectation = fake_diary.notes
+        expectation = saved_diary.notes
         expectation = FileDataConverter(expectation).to_csv_str()
         response.assert_status_code(self.OK_200)
         response.validate(self.RESPONSE_MODEL_200)

@@ -19,7 +19,7 @@ class TestSleepNotesPost(HTTP):
 
     @pytest.mark.sleep_201
     @pytest.mark.repeat(10)
-    def test_create_new_sleep_note_201(self, app, db_user_id: int, client: FlaskClient):
+    def test_create_new_sleep_note_201(self, db_user_id: int, client: FlaskClient):
         new_note = SleepDiaryGenerator(db_user_id)
         created_note: SleepNoteCompute = new_note.create_note()
         json_body: dict = created_note.model_dump(mode='json', by_alias=True, exclude={'user_id', 'id'})
@@ -31,7 +31,7 @@ class TestSleepNotesPost(HTTP):
 
     @pytest.mark.sleep_post_422
     @pytest.mark.repeat(10)
-    def test_create_new_sleep_note_422(self, app, db_user_id, client: FlaskClient):
+    def test_create_new_sleep_note_422(self, client: FlaskClient):
         random_note_wrong_values = SleepNoteGenerator().wrong_note(mode='json')
         response = client.post(self.ROUTE, json=random_note_wrong_values)
         response = Response(response)

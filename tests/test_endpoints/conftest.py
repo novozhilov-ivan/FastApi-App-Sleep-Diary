@@ -1,4 +1,5 @@
 import pytest
+from _pytest.fixtures import FixtureRequest
 from flask import Flask
 
 from pydantic_settings import SettingsConfigDict
@@ -39,7 +40,7 @@ def app() -> Flask:
 
 
 @pytest.fixture(name='db_user_id')
-def create_db_user(app) -> int:
+def create_db_user(app: Flask) -> int:
     new_user = User()
     new_user.id = 1
     new_user.login = 'login'
@@ -59,14 +60,18 @@ notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
     params=notes_count_for_db,
     ids=[f"{i} notes in db " for i in notes_count_for_db]
 )
-def generated_notes(request, db_user_id, app) -> SleepDiaryGenerator:
+def generated_diary(
+        request: FixtureRequest,
+        db_user_id: int,
+        app: Flask
+) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(db_user_id, notes_count)
 
 
 @pytest.fixture
-def add_notes_to_db(app, generated_notes: SleepDiaryGenerator):
-    new_notes = generated_notes.convert_model(
+def add_notes_to_db(app: Flask, generated_diary: SleepDiaryGenerator) -> None:
+    new_notes = generated_diary.convert_model(
         Notation,
         exclude={"sleep_duration", "time_spent_in_bed", "sleep_efficiency"}
     )
@@ -76,5 +81,5 @@ def add_notes_to_db(app, generated_notes: SleepDiaryGenerator):
 
 
 @pytest.fixture
-def fake_diary(generated_notes: SleepDiaryGenerator, add_notes_to_db) -> SleepDiaryGenerator:
-    return generated_notes
+def saved_diary(generated_diary: SleepDiaryGenerator, add_notes_to_db: None) -> SleepDiaryGenerator:
+    return generated_diary

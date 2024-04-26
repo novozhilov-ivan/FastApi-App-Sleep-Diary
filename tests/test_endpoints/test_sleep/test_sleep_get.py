@@ -47,11 +47,11 @@ class TestSleepNotesGET(HTTP):
             name: str,
             value: str | int,
             client: FlaskClient,
-            fake_diary: SleepDiaryGenerator
+            saved_diary: SleepDiaryGenerator
     ):
         response = client.get(self.ROUTE, query_string={name: value})
         response = Response(response)
-        expectation = fake_diary.diary
+        expectation = saved_diary.diary
         response.assert_status_code(self.OK_200)
         response.validate(self.RESPONSE_MODEL_200)
         response.assert_data(expectation)
