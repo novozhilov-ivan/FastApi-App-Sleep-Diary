@@ -1,9 +1,8 @@
-from flask import request, make_response
+from flask import request, make_response, Response
 from flask_restx import Resource
 
 from api.CRUD.notation_queries import read_all_user_notes
-from api.exceptions.errors import NotFoundError
-from api.routes.edit import ns_edit, response_model_404, response_model_422
+from api.routes.edit import ns_edit, response_model_404, response_model_422, response_not_found_404
 from api.routes.edit.export_file import export_response_model_200
 from api.routes.sleep import user_id_params
 from api.utils.manage_notes import convert_db_notes_to_pydantic_model_notes, FileDataConverter
@@ -23,7 +22,7 @@ class EditRouteExport(Resource):
         user_id = User(**args).id
         db_notes = read_all_user_notes(user_id)
         if not db_notes:
-            raise NotFoundError
+            return Response(response_not_found_404, HTTP.NOT_FOUND_404)
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(db_notes, SleepNote)
         file_str: str = FileDataConverter(notes).to_csv_str()
         response = make_response(file_str)
