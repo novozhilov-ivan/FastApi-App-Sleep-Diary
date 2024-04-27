@@ -1,7 +1,7 @@
 from flask import request, make_response
 from flask_restx import Resource
 
-from api.CRUD.notation_queries import read_all_notations_of_user
+from api.CRUD.notation_queries import read_all_user_notes
 from api.exceptions.errors import NotFoundError
 from api.routes.edit import ns_edit, response_model_404, response_model_422
 from api.routes.edit.export_file import export_response_model_200
@@ -21,7 +21,7 @@ class EditRouteExport(Resource):
     def get(self):
         args = request.args.to_dict()
         user_id = User(**args).id
-        db_notes = read_all_notations_of_user(user_id)
+        db_notes = read_all_user_notes(user_id)
         if not db_notes:
             raise NotFoundError
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(db_notes, SleepNote)

@@ -1,8 +1,7 @@
-from typing import Type
+from typing import Type, Iterable
 
 from more_itertools import batched
 from pydantic import TypeAdapter, BaseModel
-from sqlalchemy import Sequence
 from werkzeug.datastructures import FileStorage
 
 from api.models import Notation
@@ -20,7 +19,7 @@ def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
 
 
 def convert_db_notes_to_pydantic_model_notes(
-        db_notes: Sequence[Notation],
+        db_notes: Iterable[Notation],
         model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute
 ) -> list[SleepNoteCompute | SleepNote]:
     type_adapter = TypeAdapter(list[model])

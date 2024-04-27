@@ -20,7 +20,7 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryCompute
 from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
 from common.pydantic_schemas.user import User
-from api.CRUD.notation_queries import read_all_notations_of_user, create_one_note
+from api.CRUD.notation_queries import read_all_user_notes, create_one_note
 
 
 @ns_sleep.response(**response_model_422)
@@ -33,7 +33,7 @@ class SleepRoute(Resource):
     def get(self):
         args = request.args.to_dict()
         user = User(**args)
-        db_notes = read_all_notations_of_user(user.id)
+        db_notes = read_all_user_notes(user.id)
         pd_notes = convert_db_notes_to_pydantic_model_notes(db_notes)
         pd_weeks = slice_on_week(pd_notes)
         sleep_diary = SleepDiaryCompute(weeks=pd_weeks)

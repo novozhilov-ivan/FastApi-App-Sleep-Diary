@@ -24,7 +24,7 @@ import_response_model_415 = {
     "code": HTTP.UNSUPPORTED_MEDIA_TYPE_415,
     "description": import_response_unsupported_media_type_415,
 }
-import_response_conflict_409 = 'Some sleep notes in file already exists. Date of note must be unique!'
+import_response_conflict_409 = 'Some sleep notes from file already exists. Date of note must be unique!'
 import_response_model_409 = {
     "code": HTTP.CONFLICT_409,
     "description": import_response_conflict_409,
