@@ -39,6 +39,7 @@ class TestEditImportNotes:
         }
 
     @pytest.mark.import_201
+    @pytest.mark.parametrize('generated_diary', (7, 10), indirect=True, )
     def test_import_notes_201(
             self,
             db_user_id: int,
@@ -101,11 +102,13 @@ class TestEditImportNotes:
         response.assert_data(import_response_unsupported_media_type_415)
 
     @pytest.mark.import_409
+    @pytest.mark.parametrize('generated_diary', (7, 10), indirect=True, )
     def test_import_notes_409(
             self,
+            client: FlaskClient,
             db_user_id: int,
             saved_diary: SleepDiaryGenerator,
-            client: FlaskClient
+            generated_diary: SleepDiaryGenerator,
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
         response = client.post(
