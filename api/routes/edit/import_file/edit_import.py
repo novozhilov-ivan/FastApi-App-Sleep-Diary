@@ -1,9 +1,9 @@
 import sqlalchemy
-from flask import request, Response, Flask
+from flask import request, Response
 from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
-from api import configuration
+from api import config
 from api.CRUD.notation_queries import create_many_notes
 from api.models import Notation
 from api.routes.edit import ns_edit, response_model_422
@@ -44,7 +44,7 @@ class EditRouteImport(Resource):
         file = request.files.get(payload_arg.name)
         if file is None or not args:
             return Response(import_response_bad_request_400, HTTP.BAD_REQUEST_400)
-        if file.content_length > configuration.MAX_CONTENT_LENGTH:
+        if file.content_length > config.MAX_CONTENT_LENGTH:
             return Response(import_response_content_too_large_413, HTTP.CONTENT_TOO_LARGE_413)
         *_, file_extension = file.filename.split('.')
         if file_extension not in allowed_file_extensions:

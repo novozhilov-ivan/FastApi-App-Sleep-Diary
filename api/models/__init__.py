@@ -1,6 +1,1 @@
-from .models import User, Notation
-
-__all__ = [
-    'User',
-    'Notation'
-]
+from api.models.models import User, Notation

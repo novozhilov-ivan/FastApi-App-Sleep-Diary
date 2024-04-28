@@ -51,4 +51,4 @@ class Config(BaseSettings):
     SQLALCHEMY_ECHO: bool = False
 
 
-configuration = Config()
+config = Config()
