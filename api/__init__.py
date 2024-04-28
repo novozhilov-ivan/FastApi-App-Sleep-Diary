@@ -20,6 +20,7 @@ def create_app() -> Flask:
 
     # Create Database models
     with app.app_context():
+        from api.models import Notation, User
         db.create_all()
 
     # Register Namespaces
