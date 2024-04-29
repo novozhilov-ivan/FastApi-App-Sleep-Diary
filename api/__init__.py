@@ -1,6 +1,6 @@
 from flask import Flask
 
-from api.extension import api, db, login_manager
+from api.extension import api, db, jwt
 from api.config import config
 
 
@@ -16,7 +16,7 @@ def create_app() -> Flask:
         title="API для дневника сна",
         description='Описание дневника сна'
     )
-    # login_manager.init_app(app)
+    jwt.init_app(app)
 
     # Create Database models
     with app.app_context():

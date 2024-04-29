@@ -1,6 +1,5 @@
 from datetime import datetime
 
-from flask_login import UserMixin
 from sqlalchemy import (
     UniqueConstraint,
     ForeignKey,
@@ -53,7 +52,7 @@ class Notation(db.Model):
         }
 
 
-class User(db.Model, UserMixin):
+class User(db.Model):
     __tablename__ = 'user'
     id = Column(Integer, primary_key=True)
     login = Column(String(128), nullable=False, unique=True)

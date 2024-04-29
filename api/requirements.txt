@@ -8,7 +8,7 @@ exceptiongroup==1.2.0
 execnet==2.0.2
 Faker==24.7.1
 Flask==3.0.2
-Flask-Login==0.6.3
+Flask-JWT-Extended==4.6.0
 flask-restx==1.3.0
 Flask-SQLAlchemy==3.1.1
 greenlet==3.0.3
@@ -33,6 +33,7 @@ psycopg2-binary==2.9.9
 pydantic==2.6.4
 pydantic-settings==2.2.1
 pydantic_core==2.16.3
+PyJWT==2.8.0
 pytest==8.1.1
 pytest-cov==5.0.0
 pytest-dotenv==0.5.2

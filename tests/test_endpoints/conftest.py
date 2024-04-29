@@ -28,7 +28,6 @@ def app() -> Flask:
     app.config.from_object(test_configuration)
     with app.app_context():
         db.drop_all()
-    with app.app_context():
         db.create_all()
     yield app
 
