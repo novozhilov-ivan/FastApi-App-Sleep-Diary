@@ -2,14 +2,12 @@ from flask_restx import Namespace
 
 from api.schemas.flask_api_models import response_schema
 from common.baseclasses.status_codes import HTTP
-
 from common.pydantic_schemas.main import MainPageModel
 
 ns_main = Namespace(
-    name='main',
-    description='Описание main page',
-    path='/',
-    validate=True
+    name="main",
+    description="Описание main page",
+    path="/",
 )
 
 main_page_response_model_200 = response_schema(
@@ -20,4 +18,4 @@ main_page_response_model_200 = response_schema(
 
 from api.routes.main.route_main import MainRoute
 
-ns_main.add_resource(MainRoute, '/', '/main')
+ns_main.add_resource(MainRoute, "/", "/main")

@@ -1,30 +1,29 @@
 from flask import Flask
 
-from api.extension import api, db, jwt
 from api.config import config
+from api.extension import api, db
 
 
 def create_app() -> Flask:
-    # Initialize flask app
+    # Initialize Flask App
     app = Flask(import_name="api", instance_relative_config=False)
     app.config.from_object(config)
 
     # Initialize Plugins
     db.init_app(app)
     api.init_app(
-        app=app,
-        title="API для дневника сна",
-        description='Описание дневника сна'
+        app=app, title="API для дневника сна", description="Описание дневника сна"
     )
-    jwt.init_app(app)
 
-    # Create Database models
+    # Create DataBase Tables
     with app.app_context():
         from api.models import Notation, User
+
         db.create_all()
 
     # Register Namespaces
     from api.routes import ns_main, ns_sleep, ns_edit
+
     api.add_namespace(ns_main)
     api.add_namespace(ns_sleep)
     api.add_namespace(ns_edit)

@@ -12,9 +12,9 @@ faker = Faker()
 
 class SleepNoteGenerator:
     def __init__(
-            self,
-            note_id: int = 1,
-            date_of_note: float = datetime.now(timezone.utc).timestamp()
+        self,
+        note_id: int = 1,
+        date_of_note: float = datetime.now(timezone.utc).timestamp(),
     ):
         self.note = self.create_note()
         self.note_id: int = note_id
@@ -22,8 +22,10 @@ class SleepNoteGenerator:
 
     @staticmethod
     def _rand_time(
-            start_h: int = 0, stop_h: int = 23,
-            start_m: int = 0, stop_m: int = 59,
+        start_h: int = 0,
+        stop_h: int = 23,
+        start_m: int = 0,
+        stop_m: int = 59,
     ) -> time:
         hour, minute = 0, 0
         if start_h or stop_h:
@@ -33,19 +35,25 @@ class SleepNoteGenerator:
         return time(hour, minute)
 
     def create_note(
-            self,
-            note_id: int = 1,
-            user_id: int = 1,
-            date_of_note: float = datetime.now(timezone.utc).timestamp(),
-            model: Type = SleepNoteCompute
+        self,
+        note_id: int = 1,
+        user_id: int = 1,
+        date_of_note: float = datetime.now(timezone.utc).timestamp(),
+        model: Type = SleepNoteCompute,
     ) -> SleepNoteCompute:
         rand_bedtime = self._rand_time()
-        rand_asleep = self._rand_time(start_h=rand_bedtime.hour, start_m=rand_bedtime.minute)
-        rand_awake = self._rand_time(start_h=rand_asleep.hour, start_m=rand_asleep.minute)
-        rand_rise = self._rand_time(start_h=rand_awake.hour, start_m=rand_awake.minute)
+        rand_asleep = self._rand_time(
+            start_h=rand_bedtime.hour, start_m=rand_bedtime.minute
+        )
+        rand_awake = self._rand_time(
+            start_h=rand_asleep.hour, start_m=rand_asleep.minute
+        )
+        rand_rise = self._rand_time(
+            start_h=rand_awake.hour, start_m=rand_awake.minute
+        )
         rand_time_of_night_awakenings = self._rand_time(
             stop_h=rand_awake.hour - rand_asleep.hour,
-            stop_m=rand_awake.minute - rand_asleep.minute
+            stop_m=rand_awake.minute - rand_asleep.minute,
         )
         return model(
             id=note_id,
@@ -59,10 +67,10 @@ class SleepNoteGenerator:
         )
 
     def wrong_note(
-            self,
-            errors_count: int | None = None,
-            model: Type = SleepNote,
-            mode: Literal['json', 'python'] | str = 'python'
+        self,
+        errors_count: int | None = None,
+        model: Type = SleepNote,
+        mode: Literal["json", "python"] | str = "python",
     ) -> dict:
         if not errors_count:
             errors_count = random.randint(1, 5)

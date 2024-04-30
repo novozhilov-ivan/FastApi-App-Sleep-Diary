@@ -8,24 +8,32 @@ from pydantic import BaseModel
 
 
 def response_schema(
-        ns: Namespace,
-        code: int,
-        model: Type[BaseModel],
-        description: str | None = None
+    ns: Namespace,
+    code: int,
+    model: Type[BaseModel] | None = None,
+    description: str = "No response schema description yet",
 ) -> dict:
-    if description is None:
-        description = model.model_json_schema().get('description')
-    return {
+    schema = {
         "code": code,
-        "description": description,
-        "model": flask_restx_schema(ns, model)
     }
 
+    if model is not None:
+        schema.update(
+            {
+                "description": model.model_json_schema().get("description"),
+                "model": flask_restx_schema(ns, model),
+            }
+        )
+    if schema.get("description") is None:
+        schema.update(
+            {
+                "description": description,
+            }
+        )
+    return schema
 
-def flask_restx_schema(
-        ns: Namespace,
-        model: Type[BaseModel]
-) -> SchemaModel:
+
+def flask_restx_schema(ns: Namespace, model: Type[BaseModel]) -> SchemaModel:
     schema = model.model_json_schema()
     schema = json.dumps(schema)
     json_schema = deepcopy(jsonref.loads(schema))

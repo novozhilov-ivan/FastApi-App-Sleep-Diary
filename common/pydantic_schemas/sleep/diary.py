@@ -1,6 +1,9 @@
 from pydantic import BaseModel, ConfigDict, computed_field
 
-from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekModel, SleepDiaryWeekCompute
+from common.pydantic_schemas.sleep.weeks import (
+    SleepDiaryWeekModel,
+    SleepDiaryWeekCompute,
+)
 
 
 class SleepDiaryStatisticModel(BaseModel):
@@ -14,11 +17,13 @@ class SleepDiaryDataModel(BaseModel):
 
 class SleepDiaryModel(SleepDiaryDataModel, SleepDiaryStatisticModel):
     """Дневника сна пользователя с записями и информацией о количестве записей"""
+
     model_config = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryModelEmpty(SleepDiaryModel):
     """Дневника сна без записей"""
+
     notes_count: int = 0
     weeks_count: int = 0
     weeks: list = []

@@ -9,15 +9,15 @@ from common.baseclasses.status_codes import HTTP
 
 @pytest.mark.main
 class TestMainPage:
-    PARAM = 'route'
-    ROUTES_200 = ['/api/', '/api/main']
-    ROUTES_404 = ['/api', '/api/main/', '/api/mai', '/main', '/ap']
+    PARAM = "route"
+    ROUTES_200 = ["/api/", "/api/main"]
+    ROUTES_404 = ["/api", "/api/main/", "/api/mai", "/main", "/ap"]
 
     @pytest.mark.parametrize(PARAM, ROUTES_200)
     def test_main_page_200(
-            self,
-            route: str,
-            client: FlaskClient,
+        self,
+        route: str,
+        client: FlaskClient,
     ):
         response = client.get(route)
         response = Response(response)

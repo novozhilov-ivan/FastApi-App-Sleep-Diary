@@ -1,16 +1,11 @@
-from flask_sqlalchemy import SQLAlchemy
 from flask_restx import Api
+from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from flask_jwt_extended import JWTManager
 
 
 class Base(DeclarativeBase):
     pass
 
 
-api = Api(
-    prefix='/api',
-    doc='/doc'
-)
+api = Api(prefix="/api", doc="/doc", ordered=True, validate=True)
 db = SQLAlchemy(model_class=Base)
-jwt = JWTManager()

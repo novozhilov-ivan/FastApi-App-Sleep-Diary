@@ -10,13 +10,14 @@ from app.exceptions.exception import *
 
 # request
 
+
 @login_required
 def create_and_save_entry():
     try:
         # logger
         new_entry = DiaryEntryManager().create_entry()
         add_and_commit(new_entry)
-        flash('Новая запись добавлена в дневник сна')
+        flash("Новая запись добавлена в дневник сна")
     except sqlalchemy.exc.IntegrityError as err:
         flash(f'Запись с датой "{err.params[0]}" уже существует.')
     except ValueError as err:
@@ -25,7 +26,7 @@ def create_and_save_entry():
         display_unknown_error(err)
     finally:
         # logger
-        return redirect(url_for('get_sleep_diary_entries'))
+        return redirect(url_for("get_sleep_diary_entries"))
 
 
 @login_required
@@ -41,10 +42,10 @@ def render_sleep_diary_page():
             enumerate=enumerate,
             diary_entries=diary_entries,
             amount_diary_entries=len(diary_entries),
-            statistics=statistics
+            statistics=statistics,
         )
     except Exception as err:
         display_unknown_error(err)
-        return redirect(url_for('get_main_page'))
+        return redirect(url_for("get_main_page"))
     # finally:
     # logger

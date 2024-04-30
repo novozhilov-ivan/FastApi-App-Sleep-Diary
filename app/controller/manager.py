@@ -17,11 +17,11 @@ class Descriptor:
         if getattr(instance, self.name) is None:
             return getattr(instance, self.name)
         elif isinstance(getattr(instance, self.name), date):
-            return f'{getattr(instance, self.name):%Y-%m-%d}'
+            return f"{getattr(instance, self.name):%Y-%m-%d}"
         elif isinstance(getattr(instance, self.name), time):
-            return f'{getattr(instance, self.name):%H:%M}'
+            return f"{getattr(instance, self.name):%H:%M}"
         else:
-            raise TypeError('Неверный тип данных при попытке получить значение.')
+            raise TypeError("Неверный тип данных при попытке получить значение.")
 
     def __set__(self, instance, value):
         if value is None:
@@ -35,13 +35,15 @@ class Descriptor:
         elif isinstance(value, date):
             setattr(instance, self.name, value)
         else:
-            raise TypeError('Неверный тип данных при попытке присвоить значение.')
+            raise TypeError("Неверный тип данных при попытке присвоить значение.")
 
 
 class DiaryEntryManager:
     def __repr__(self):
-        return f"\nЗаготовка для записи: [Дата: {self._calendar_date}, Лег: {self._bedtime}, Уснул: " \
-               f"{self._asleep}, Проснулся: {self._awake}, Встал: {self._rise}, Не спал: {self._without_sleep}]\n"
+        return (
+            f"\nЗаготовка для записи: [Дата: {self._calendar_date}, Лег: {self._bedtime}, Уснул: "
+            f"{self._asleep}, Проснулся: {self._awake}, Встал: {self._rise}, Не спал: {self._without_sleep}]\n"
+        )
 
     calendar_date = Descriptor()
     bedtime = Descriptor()
@@ -51,9 +53,17 @@ class DiaryEntryManager:
     without_sleep = Descriptor()
 
     def __init__(
-            self, calendar_date=None, bedtime=None, asleep=None, awake=None, rise=None, without_sleep=None,
-            average_sleep_duration_per_week=None, average_time_in_bed_per_week=None, week_length=None,
-            average_sleep_efficiency_per_week=None
+        self,
+        calendar_date=None,
+        bedtime=None,
+        asleep=None,
+        awake=None,
+        rise=None,
+        without_sleep=None,
+        average_sleep_duration_per_week=None,
+        average_time_in_bed_per_week=None,
+        week_length=None,
+        average_sleep_efficiency_per_week=None,
     ):
 
         self._calendar_date = calendar_date
@@ -71,12 +81,18 @@ class DiaryEntryManager:
 
     def _get_sleep_duration(self) -> int:
         without_sleep = self._without_sleep.hour * 60 + self._without_sleep.minute
-        sleep_timing = get_timedelta(self._calendar_date, self._awake, self._asleep).seconds / 60
+        sleep_timing = (
+            get_timedelta(self._calendar_date, self._awake, self._asleep).seconds
+            / 60
+        )
         minutes_amount = int(sleep_timing - without_sleep)
         return minutes_amount
 
     def _get_time_in_bed(self) -> int:
-        return int(get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds / 60)
+        return int(
+            get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds
+            / 60
+        )
 
     def _get_sleep_efficiency(self) -> float:
         sleep_duration = self._get_sleep_duration()
@@ -86,58 +102,96 @@ class DiaryEntryManager:
         return round((sleep_duration / in_bed_duration) * 100, 2)
 
     def __check_timings(self) -> Optional:
-        if (self._calendar_date or self._bedtime or self._asleep or self._awake or self._rise) is None:
+        if (
+            self._calendar_date
+            or self._bedtime
+            or self._asleep
+            or self._awake
+            or self._rise
+        ) is None:
             return
 
         if self._bedtime > self._asleep:
             datetime_bedtime = datetime.combine(self._calendar_date, self._bedtime)
             datetime_asleep = datetime.combine(
-                date(self._calendar_date.year, self._calendar_date.month, self._calendar_date.day + 1),
-                self._asleep
+                date(
+                    self._calendar_date.year,
+                    self._calendar_date.month,
+                    self._calendar_date.day + 1,
+                ),
+                self._asleep,
             )
-            if self._bedtime.hour == self._asleep.hour and self._bedtime.minute > self._asleep.minute:
-                raise ValueError("Не можешь в рамках часа уснуть раньше чем лег в кровать!")
+            if (
+                self._bedtime.hour == self._asleep.hour
+                and self._bedtime.minute > self._asleep.minute
+            ):
+                raise ValueError(
+                    "Не можешь в рамках часа уснуть раньше чем лег в кровать!"
+                )
             elif datetime_asleep - datetime_bedtime > timedelta(hours=12):
-                raise ValueError("Время отхода ко сну не может быть позже времени засыпания!\n"
-                                 "Или время между этими событиями не может быть более 12 часов!")
+                raise ValueError(
+                    "Время отхода ко сну не может быть позже времени засыпания!\n"
+                    "Или время между этими событиями не может быть более 12 часов!"
+                )
 
         if self._awake > self._rise:
             datetime_awake = datetime.combine(self._calendar_date, self._awake)
             datetime_rise = datetime.combine(
-                date(self._calendar_date.year, self._calendar_date.month, self._calendar_date.day + 1),
-                self._rise
+                date(
+                    self._calendar_date.year,
+                    self._calendar_date.month,
+                    self._calendar_date.day + 1,
+                ),
+                self._rise,
             )
-            if self._awake.hour == self._rise.hour and self._awake.minute > self._rise.minute:
-                raise ValueError("Не можешь в рамках часа проснуться позже чем встал с кровати!")
+            if (
+                self._awake.hour == self._rise.hour
+                and self._awake.minute > self._rise.minute
+            ):
+                raise ValueError(
+                    "Не можешь в рамках часа проснуться позже чем встал с кровати!"
+                )
             elif datetime_rise - datetime_awake > timedelta(hours=12):
-                raise ValueError("Время пробуждения не может быть позже времени подъема с кровати!\n"
-                                 "Или время между этими событиями не может быть более 12 часов!")
+                raise ValueError(
+                    "Время пробуждения не может быть позже времени подъема с кровати!\n"
+                    "Или время между этими событиями не может быть более 12 часов!"
+                )
 
         without_sleep = self._without_sleep.hour * 60 + self._without_sleep.minute
-        sleep_duration = get_timedelta(self._calendar_date, self._awake, self._asleep).seconds / 60
-        time_in_bed = get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds / 60
+        sleep_duration = (
+            get_timedelta(self._calendar_date, self._awake, self._asleep).seconds
+            / 60
+        )
+        time_in_bed = (
+            get_timedelta(self._calendar_date, self._rise, self._bedtime).seconds
+            / 60
+        )
         if sleep_duration < without_sleep:
-            raise ValueError('Время проведенное без сна не может быть больше времени сна')
+            raise ValueError(
+                "Время проведенное без сна не может быть больше времени сна"
+            )
         if time_in_bed < sleep_duration:
-            raise ValueError('Время проведенное в кровати не может быть меньше времени сна.')
+            raise ValueError(
+                "Время проведенное в кровати не может быть меньше времени сна."
+            )
 
     def __get_form_data(self):
-        self.calendar_date = request.form.get('calendar_date')
-        if request.form.get('calendar_date') is None:
-            self.calendar_date = request.url.split('/')[-1]
-        self.bedtime = request.form['bedtime'][:5]
-        self.asleep = request.form['asleep'][:5]
-        self.awake = request.form['awake'][:5]
-        self.rise = request.form['rise'][:5]
-        self.without_sleep = request.form['without_sleep'][:5]
+        self.calendar_date = request.form.get("calendar_date")
+        if request.form.get("calendar_date") is None:
+            self.calendar_date = request.url.split("/")[-1]
+        self.bedtime = request.form["bedtime"][:5]
+        self.asleep = request.form["asleep"][:5]
+        self.awake = request.form["awake"][:5]
+        self.rise = request.form["rise"][:5]
+        self.without_sleep = request.form["without_sleep"][:5]
         self.__check_timings()
 
-# todo Попробовать сделать в функции create_entry - добавление одной записи или множества записей из списка
-# todo __get_form_data сделать отдельно от create_entry
-# todo Вызывать их по-очереди при создание записи из данных приходящих из форм
-# todo Создать метод создающий экземпляры менеджера из csv-файла, проверяющий тайминги и проверяющий дубликаты
-# todo Создать метод для экспорта данных в csv-файл
-# todo Создать метод для удаления всех записей мб
+    # todo Попробовать сделать в функции create_entry - добавление одной записи или множества записей из списка
+    # todo __get_form_data сделать отдельно от create_entry
+    # todo Вызывать их по-очереди при создание записи из данных приходящих из форм
+    # todo Создать метод создающий экземпляры менеджера из csv-файла, проверяющий тайминги и проверяющий дубликаты
+    # todo Создать метод для экспорта данных в csv-файл
+    # todo Создать метод для удаления всех записей мб
 
     def create_entry(self):
         self.__get_form_data()
@@ -148,7 +202,7 @@ class DiaryEntryManager:
             awake=self._awake,
             rise=self._rise,
             without_sleep=self._without_sleep,
-            user_id=current_user.id
+            user_id=current_user.id,
         )
         # notation.save_one()
         return notation
@@ -181,7 +235,7 @@ class DiaryEntryManager:
                 notation.asleep,
                 notation.awake,
                 notation.rise,
-                notation.without_sleep
+                notation.without_sleep,
             )
             list_of_instances.append(diary_entry)
         return list_of_instances
@@ -193,7 +247,15 @@ class DiaryEntryManager:
         last_day_of_week = 7
 
         while amount_of_days > 0:
-            sleep_duration_per_week, time_in_bed_per_week, sleep_efficiency_per_week = 0, 0, 0
+            (
+                sleep_duration_per_week,
+                time_in_bed_per_week,
+                sleep_efficiency_per_week,
+            ) = (
+                0,
+                0,
+                0,
+            )
 
             if amount_of_days >= 7:
                 week_length = 7
@@ -220,10 +282,13 @@ class DiaryEntryManager:
             last_day_of_week += 7
 
             average_values = DiaryEntryManager(
-                average_sleep_duration_per_week=int(sleep_duration_per_week / week_length),
+                average_sleep_duration_per_week=int(
+                    sleep_duration_per_week / week_length
+                ),
                 average_time_in_bed_per_week=int(time_in_bed_per_week / week_length),
-                average_sleep_efficiency_per_week=sleep_efficiency_per_week / week_length,
-                week_length=week_length
+                average_sleep_efficiency_per_week=sleep_efficiency_per_week
+                / week_length,
+                week_length=week_length,
             )
             average_values_per_week.append(average_values)
 

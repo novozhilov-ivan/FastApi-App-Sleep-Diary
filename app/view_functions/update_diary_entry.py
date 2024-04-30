@@ -10,12 +10,16 @@ from app.exceptions.exception import display_unknown_error
 def update_one_diary_entry(notation_date):
     try:
         # logger
-        if request.form.get('update_save') == 'Сохранить изменения':
+        if request.form.get("update_save") == "Сохранить изменения":
             DiaryEntryManager().update_entry(notation_date)
             flash(f'Запись "{notation_date}" обновлена.')
-        elif request.form.get('delete_notation_1') == 'Удалить запись':
-            flash(f'Вы действительно хотите удалить запись {notation_date} из дневника?')
-        elif request.form.get('delete_notation_2') == 'Да, удалить запись из дневника':
+        elif request.form.get("delete_notation_1") == "Удалить запись":
+            flash(
+                f"Вы действительно хотите удалить запись {notation_date} из дневника?"
+            )
+        elif (
+            request.form.get("delete_notation_2") == "Да, удалить запись из дневника"
+        ):
             DiaryEntryManager().delete_entry(notation_date)
             flash(f'Запись "{notation_date}" удалена.')
     except KeyError as err:
@@ -26,17 +30,20 @@ def update_one_diary_entry(notation_date):
         display_unknown_error(err)
     finally:
         # logger
-        if request.form.get('delete_notation_1') == 'Удалить запись':
+        if request.form.get("delete_notation_1") == "Удалить запись":
             return render_template(
                 "edit_notation.html",
                 confirm_delete_notation=True,
-                notation=get_notation_by_date(notation_date)
+                notation=get_notation_by_date(notation_date),
             )
-        elif (request.form.get('update_save') == 'Сохранить изменения' or
-              request.form.get('delete_notation_2') == 'Да, удалить запись из дневника'):
-            return redirect(url_for('get_sleep_diary_entries'))
+        elif (
+            request.form.get("update_save") == "Сохранить изменения"
+            or request.form.get("delete_notation_2")
+            == "Да, удалить запись из дневника"
+        ):
+            return redirect(url_for("get_sleep_diary_entries"))
         else:
-            return redirect(f'/sleep/update/{notation_date}')
+            return redirect(f"/sleep/update/{notation_date}")
 
 
 @login_required
@@ -46,14 +53,11 @@ def render_diary_entry_update_page(notation_date):
         notation = get_notation_by_date(notation_date)
     except sqlalchemy.exc.NoResultFound:
         flash(f'Записи с датой "{notation_date}" не существует.')
-        return redirect(url_for('get_sleep_diary_entries'))
+        return redirect(url_for("get_sleep_diary_entries"))
     except Exception as err:
         display_unknown_error(err)
-        return redirect(url_for('get_sleep_diary_entries'))
+        return redirect(url_for("get_sleep_diary_entries"))
     else:
-        return render_template(
-            "edit_notation.html",
-            notation=notation
-        )
+        return render_template("edit_notation.html", notation=notation)
     # finally:
-        # logger
+    # logger

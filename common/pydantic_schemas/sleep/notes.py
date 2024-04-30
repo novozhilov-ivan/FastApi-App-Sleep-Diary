@@ -5,34 +5,32 @@ from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
 
 class SleepNote(BaseModel):
     """Запись в дневнике сна"""
+
     calendar_date: date = Field(
-        title='Дата',
-        examples=['2021-12-13', '2021-12-14', '2021-12-15', '2021-12-16']
+        title="Дата",
+        examples=["2021-12-13", "2021-12-14", "2021-12-15", "2021-12-16"],
     )
     bedtime: time = Field(
-        title='Лег',
-        examples=['05:11', '01:55', '01:10', '04:10'],
+        title="Лег",
+        examples=["05:11", "01:55", "01:10", "04:10"],
     )
     asleep: time = Field(
-        title='Уснул',
-        examples=['05:30', '02:20', '01:30', '04:20'],
+        title="Уснул",
+        examples=["05:30", "02:20", "01:30", "04:20"],
     )
     awake: time = Field(
-        title='Проснулся',
-        examples=['12:00', '07:57', '10:00', '11:50'],
+        title="Проснулся",
+        examples=["12:00", "07:57", "10:00", "11:50"],
     )
     rise: time = Field(
-        title='Встал',
-        examples=['12:15', '08:07', '10:30', '12:15'],
+        title="Встал",
+        examples=["12:15", "08:07", "10:30", "12:15"],
     )
     time_of_night_awakenings: time = Field(
-        title='Не спал',
-        examples=['00:19', '00:32', '00:06', '01:20'],
-        alias='without_sleep',
-        validation_alias=AliasChoices(
-            "time_of_night_awakenings",
-            "without_sleep"
-        ),
+        title="Не спал",
+        examples=["00:19", "00:32", "00:06", "01:20"],
+        alias="without_sleep",
+        validation_alias=AliasChoices("time_of_night_awakenings", "without_sleep"),
     )
     model_config = ConfigDict(from_attributes=True)
 
@@ -48,12 +46,13 @@ class SleepNoteStatistics(SleepNote):
 
 
 class SleepNoteMeta(BaseModel):
-    id: int = Field(title='Идентификатор записи дневника сна')
-    user_id: int = Field(title='Идентификатор пользователя дневника сна')
+    id: int = Field(title="Идентификатор записи дневника сна")
+    user_id: int = Field(title="Идентификатор пользователя дневника сна")
 
 
 class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
     """Запись в дневнике сна со статистикой и идентификаторами пользователя и записи."""
+
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -72,10 +71,7 @@ class SleepNoteCompute(SleepNote, SleepNoteMeta):
     def minutes_to_time(minutes: int) -> time:
         if minutes < 0:
             minutes = 0
-        return time(
-            hour=minutes // 60,
-            minute=minutes % 60
-        )
+        return time(hour=minutes // 60, minute=minutes % 60)
 
     @computed_field
     @property

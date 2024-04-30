@@ -10,4 +10,4 @@ delete_response_model_200 = {
 
 from api.routes.edit.delete_diary.edit_delete import EditRouteDelete
 
-ns_edit.add_resource(EditRouteDelete, '/delete')
+ns_edit.add_resource(EditRouteDelete, "/delete")

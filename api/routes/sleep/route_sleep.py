@@ -15,7 +15,10 @@ from api.routes.sleep import (
     response_model_422,
     response_model_400,
 )
-from api.utils.manage_notes import convert_db_notes_to_pydantic_model_notes, slice_on_week
+from api.utils.manage_notes import (
+    convert_db_notes_to_pydantic_model_notes,
+    slice_on_week,
+)
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryCompute
 from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
@@ -26,7 +29,7 @@ from api.CRUD.notation_queries import read_all_user_notes, create_one_note
 @ns_sleep.response(**response_model_422)
 @ns_sleep.response(**response_model_400)
 class SleepRoute(Resource):
-    @ns_sleep.doc(description='Получение всех записей дневника сна')
+    @ns_sleep.doc(description="Получение всех записей дневника сна")
     @ns_sleep.expect(user_id_params)
     @ns_sleep.response(**get_all_notes_response_model_200)
     @ns_sleep.response(**get_all_notes_response_model_404)
@@ -42,11 +45,11 @@ class SleepRoute(Resource):
         if db_notes:
             status = HTTP.OK_200
         response = response.model_dump_json()
-        return Response(response, status, content_type='application/json')
+        return Response(response, status, content_type="application/json")
 
-    @ns_sleep.doc(description='Добавление новой записи в дневник сна')
+    @ns_sleep.doc(description="Добавление новой записи в дневник сна")
     @ns_sleep.expect(user_id_params, new_note_payload)
-    @ns_sleep.param('payload', 'Новая запись в дневник сна', _in='body')
+    @ns_sleep.param("payload", "Новая запись в дневник сна", _in="body")
     @ns_sleep.response(**post_new_note_response_model_201)
     def post(self):
         new_note = SleepNote(**ns_sleep.payload)
@@ -56,4 +59,4 @@ class SleepRoute(Resource):
         new_db_note = create_one_note(new_db_note)
         response = SleepNoteCompute(**new_db_note.dict())
         response = response.model_dump_json()
-        return Response(response, HTTP.CREATED_201, content_type='application/json')
+        return Response(response, HTTP.CREATED_201, content_type="application/json")

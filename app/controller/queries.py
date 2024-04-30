@@ -12,7 +12,11 @@ def add_all_and_commit(list_of_notations: list):
 
 def check_notation_availability(new_date):
     """Ищет запись в дневнике сна с получаемой датой"""
-    return db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=new_date).first()
+    return (
+        db.session.query(Notation)
+        .filter_by(user_id=current_user.id, calendar_date=new_date)
+        .first()
+    )
 
 
 def delete_notation_and_commit(notation):
@@ -43,19 +47,30 @@ def check_user(login: str):
 
 
 def get_all_dates_of_user():
-    return db.session.query(
-        Notation.calendar_date
-    ).filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
+    return (
+        db.session.query(Notation.calendar_date)
+        .filter_by(user_id=current_user.id)
+        .order_by(Notation.calendar_date)
+        .all()
+    )
 
 
 def get_all_notations_of_user():
     """Получает все записи пользователя и сортирует их по дате"""
-    return Notation.query.filter_by(user_id=current_user.id).order_by(Notation.calendar_date).all()
+    return (
+        Notation.query.filter_by(user_id=current_user.id)
+        .order_by(Notation.calendar_date)
+        .all()
+    )
 
 
 def get_notation_by_date(notation_date):
     """Проверяет существует ли запись пользователя с получаемой датой"""
-    return db.session.query(Notation).filter_by(user_id=current_user.id, calendar_date=notation_date).one()
+    return (
+        db.session.query(Notation)
+        .filter_by(user_id=current_user.id, calendar_date=notation_date)
+        .one()
+    )
 
 
 def add_and_commit(obj):

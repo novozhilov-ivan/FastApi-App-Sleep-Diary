@@ -1,1 +1,1 @@
-from api.models.models import User, Notation
+from api.models.models import Notation, User
