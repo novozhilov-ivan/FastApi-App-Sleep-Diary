@@ -1,13 +1,15 @@
 from api.routes import ns_edit
+from api.schemas.flask_api_models import response_schema
 
 from common.baseclasses.status_codes import HTTP
 
-export_response_created_200 = "Файл со всеми записями дневника сна"
-export_response_model_200 = {
-    "code": HTTP.OK_200,
-    "description": export_response_created_200,
-}
+response_ok_200 = "Файл со всеми записями дневника сна"
+response_model_200 = response_schema(
+    ns=ns_edit,
+    code=HTTP.OK_200,
+    description=response_ok_200,
+)
 
-from api.routes.edit.export_file.edit_export import EditRouteExport
+from api.routes.edit.export_file.edit_export import EditRouteExport  # noqa
 
 ns_edit.add_resource(EditRouteExport, "/export")

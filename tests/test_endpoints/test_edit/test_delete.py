@@ -5,7 +5,7 @@ from sqlalchemy import select
 
 from api import db
 from api.models import Notation
-from api.routes.edit.delete_diary import delete_response_ok_200
+from api.routes.edit.delete_diary import response_no_content_204
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
@@ -35,8 +35,8 @@ class TestEditDeleteAllNotes:
             query_string={"id": db_user_id},
         )
         response = Response(response)
-        response.assert_status_code(HTTP.OK_200)
-        response.assert_data(delete_response_ok_200)
+        response.assert_status_code(HTTP.NO_CONTENT_204)
+        response.assert_data(response_no_content_204)
         with app.app_context():
             notes_is_exist = db.session.execute(
                 select(Notation).where(Notation.user_id == db_user_id)

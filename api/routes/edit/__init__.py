@@ -10,10 +10,13 @@ ns_edit = Namespace(
     path="/edit",
 )
 response_not_found_404 = "User or sleep notes not found"
-response_model_404 = {
-    "code": HTTP.NOT_FOUND_404,
-    "description": response_not_found_404,
-}
+response_model_404 = response_schema(
+    ns=ns_edit,
+    code=HTTP.NOT_FOUND_404,
+    description=response_not_found_404,
+)
 response_model_422 = response_schema(
-    ns_edit, HTTP.UNPROCESSABLE_ENTITY_422, ErrorResponse
+    ns=ns_edit,
+    code=HTTP.UNPROCESSABLE_ENTITY_422,
+    model=ErrorResponse,
 )

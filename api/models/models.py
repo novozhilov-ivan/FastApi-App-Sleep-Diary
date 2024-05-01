@@ -34,9 +34,6 @@ class Notation(db.Model):
     )
 
     # Todo прописать on_delete действие. При удалении пользователя - что происходит с записями дневника?
-    # that should be
-    # formatted by Black
-
     def __repr__(self):
         return (
             f"Запись в дневнике: [ID: {self.id}, ДАТА: {self.calendar_date}, ID"

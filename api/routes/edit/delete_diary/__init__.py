@@ -1,13 +1,16 @@
 from api.routes import ns_edit
+from api.schemas.flask_api_models import response_schema
 
 from common.baseclasses.status_codes import HTTP
 
-delete_response_ok_200 = "Все записи из дневника сна удалены"
-delete_response_model_200 = {
-    "code": HTTP.OK_200,
-    "description": delete_response_ok_200,
-}
+response_no_content_204 = "Все записи из дневника сна удалены"
+response_model_204 = response_schema(
+    ns=ns_edit,
+    code=HTTP.NO_CONTENT_204,
+    description=response_no_content_204,
+)
 
-from api.routes.edit.delete_diary.edit_delete import EditRouteDelete
+
+from api.routes.edit.delete_diary.edit_delete import EditRouteDelete  # noqa
 
 ns_edit.add_resource(EditRouteDelete, "/delete")

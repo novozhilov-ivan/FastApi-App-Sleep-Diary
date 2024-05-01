@@ -1,11 +1,11 @@
-from flask import Response, request
+from flask import request
 from flask_restx import Resource
 
 from api.CRUD.notation_queries import delete_all_user_notes
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.delete_diary import (
-    delete_response_model_200,
-    delete_response_ok_200,
+    response_model_204,
+    response_no_content_204,
 )
 from api.routes.sleep import user_id_params
 from common.baseclasses.status_codes import HTTP
@@ -15,15 +15,12 @@ from common.pydantic_schemas.user import User
 class EditRouteDelete(Resource):
     """Удаление всех записей их дневник сна"""
 
-    @ns_edit.doc(
-        description=__doc__,
-        security="jsonWebToken",
-    )
+    @ns_edit.doc(description=__doc__)
     @ns_edit.expect(user_id_params)
-    @ns_edit.response(**delete_response_model_200)
+    @ns_edit.response(**response_model_204)
     @ns_edit.response(**response_model_422)
     def delete(self):
         args = request.args.to_dict()
         user_id = User(**args).id
         delete_all_user_notes(user_id)
-        return Response(delete_response_ok_200, HTTP.OK_200)
+        return response_no_content_204, HTTP.NO_CONTENT_204

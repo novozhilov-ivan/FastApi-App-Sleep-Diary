@@ -1,12 +1,13 @@
 import pytest
+from flask import Flask, url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
+from common.baseclasses.response import Response
+from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User
 from tests.conftest import client
 
@@ -14,7 +15,7 @@ from tests.conftest import client
 @pytest.mark.sleep
 @pytest.mark.sleep_get
 class TestSleepNotesGET:
-    ROUTE = "/api/sleep"
+    ROUTE = "/diary"
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
     RESPONSE_MODEL_422 = ErrorResponse
@@ -43,10 +44,13 @@ class TestSleepNotesGET:
         self,
         name: str,
         value: str | int,
+        app: Flask,
         client: FlaskClient,
         saved_diary: SleepDiaryGenerator,
     ):
-        response = client.get(self.ROUTE, query_string={name: value})
+        with app.app_context():
+            route = url_for("DiaryRoute")
+        response = client.get(route, query_string={name: value})
         response = Response(response)
         expectation = saved_diary.diary
         response.assert_status_code(HTTP.OK_200)

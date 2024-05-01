@@ -1,13 +1,16 @@
 import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
-
 from pydantic_settings import SettingsConfigDict
 
 from api import create_app, db
-from api.models import Notation, User
 from api.config import Config
+from api.models import Notation, User
 from common.generators.diary import SleepDiaryGenerator
+
+
+# TODO Починить тесты
+# TODO сделать получение url через url_for
 
 
 class TestConfig(Config):

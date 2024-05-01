@@ -1,10 +1,10 @@
-from datetime import time, date
+from datetime import date, time
 
-from pydantic import AliasChoices, BaseModel, Field, ConfigDict, computed_field
+from pydantic import AliasChoices, BaseModel, ConfigDict, Field, computed_field
 
 
 class SleepNote(BaseModel):
-    """Запись в дневнике сна"""
+    """Запись в дневник сна"""
 
     calendar_date: date = Field(
         title="Дата",

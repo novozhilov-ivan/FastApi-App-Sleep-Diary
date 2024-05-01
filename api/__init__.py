@@ -22,10 +22,11 @@ def create_app() -> Flask:
         db.create_all()
 
     # Register Namespaces
-    from api.routes import ns_main, ns_sleep, ns_edit
+    from api.routes import ns_main, ns_sleep, ns_edit, ns_auth
 
     api.add_namespace(ns_main)
     api.add_namespace(ns_sleep)
     api.add_namespace(ns_edit)
+    api.add_namespace(ns_auth)
 
     return app

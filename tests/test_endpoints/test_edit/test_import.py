@@ -4,14 +4,14 @@ import pytest
 from flask.testing import FlaskClient
 
 from api.routes.edit.import_file import (
-    import_response_created_201,
-    import_response_bad_request_400,
-    import_response_unsupported_media_type_415,
-    import_response_conflict_409,
-    import_response_model_201,
-    import_response_model_400,
-    import_response_model_409,
-    import_response_model_415,
+    response_bad_request_400,
+    response_conflict_409,
+    response_created_201,
+    response_model_201,
+    response_model_400,
+    response_model_409,
+    response_model_415,
+    response_unsupported_media_type_415,
 )
 from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.response import Response
@@ -58,8 +58,8 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
-        response.validate(import_response_model_201)
-        response.assert_data(import_response_created_201)
+        response.validate(response_model_201)
+        response.assert_data(response_created_201)
 
     @pytest.mark.import_400
     @pytest.mark.import_wo_args_400
@@ -73,8 +73,8 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
-        response.validate(import_response_model_400)
-        response.assert_data(import_response_bad_request_400)
+        response.validate(response_model_400)
+        response.assert_data(response_bad_request_400)
 
     @pytest.mark.import_400
     @pytest.mark.import_wo_payload_400
@@ -82,8 +82,8 @@ class TestEditImportNotes:
         response = client.post(self.ROUTE, query_string={"id": db_user_id})
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
-        response.validate(import_response_model_400)
-        response.assert_data(import_response_bad_request_400)
+        response.validate(response_model_400)
+        response.assert_data(response_bad_request_400)
 
     @pytest.mark.import_415
     @pytest.mark.parametrize("extension", ("json", "xml", "pdf"))
@@ -100,8 +100,8 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNSUPPORTED_MEDIA_TYPE_415)
-        response.validate(import_response_model_415)
-        response.assert_data(import_response_unsupported_media_type_415)
+        response.validate(response_model_415)
+        response.assert_data(response_unsupported_media_type_415)
 
     @pytest.mark.import_409
     @pytest.mark.parametrize(
@@ -125,5 +125,5 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.CONFLICT_409)
-        response.validate(import_response_model_409)
-        response.assert_data(import_response_conflict_409)
+        response.validate(response_model_409)
+        response.assert_data(response_conflict_409)
