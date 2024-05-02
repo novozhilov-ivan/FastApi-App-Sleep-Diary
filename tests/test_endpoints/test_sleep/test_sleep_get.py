@@ -1,8 +1,9 @@
 import pytest
-from flask import Flask, url_for
+from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
+from api.routes.sleep.diary import diary_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
@@ -15,7 +16,6 @@ from tests.conftest import client
 @pytest.mark.sleep
 @pytest.mark.sleep_get
 class TestSleepNotesGET:
-    ROUTE = "/diary"
     RESPONSE_MODEL_200 = SleepDiaryModel
     RESPONSE_MODEL_404 = SleepDiaryModelEmpty
     RESPONSE_MODEL_422 = ErrorResponse
@@ -39,18 +39,21 @@ class TestSleepNotesGET:
     ]
 
     @pytest.mark.sleep_200
-    @pytest.mark.parametrize(SLEEP_PARAMS_NAMES, CORRECT_PARAMS_GET_NOTES_BY_USER_ID)
+    @pytest.mark.parametrize(
+        SLEEP_PARAMS_NAMES,
+        CORRECT_PARAMS_GET_NOTES_BY_USER_ID,
+    )
     def test_get_all_sleep_notes_by_user_id_200(
         self,
         name: str,
         value: str | int,
-        app: Flask,
         client: FlaskClient,
         saved_diary: SleepDiaryGenerator,
     ):
-        with app.app_context():
-            route = url_for("DiaryRoute")
-        response = client.get(route, query_string={name: value})
+        response = client.get(
+            url_for(diary_endpoint),
+            query_string={name: value},
+        )
         response = Response(response)
         expectation = saved_diary.diary
         response.assert_status_code(HTTP.OK_200)
@@ -58,11 +61,17 @@ class TestSleepNotesGET:
         response.assert_data(expectation)
 
     @pytest.mark.sleep_404
-    @pytest.mark.parametrize(SLEEP_PARAMS_NAMES, CORRECT_PARAMS_GET_NOTES_BY_USER_ID)
+    @pytest.mark.parametrize(
+        SLEEP_PARAMS_NAMES,
+        CORRECT_PARAMS_GET_NOTES_BY_USER_ID,
+    )
     def test_get_all_sleep_notes_by_user_id_404(
         self, name: str, value: str | int, client: FlaskClient
     ):
-        response = client.get(self.ROUTE, query_string={name: value})
+        response = client.get(
+            url_for(diary_endpoint),
+            query_string={name: value},
+        )
         response = Response(response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.validate(self.RESPONSE_MODEL_404)
@@ -76,7 +85,10 @@ class TestSleepNotesGET:
         self, name: str, value: str | int, client: FlaskClient
     ):
         params = {name: value}
-        response = client.get(self.ROUTE, query_string=params)
+        response = client.get(
+            url_for(diary_endpoint),
+            query_string=params,
+        )
         response = Response(response)
         with pytest.raises(ValidationError) as exc_info:
             User(**params)

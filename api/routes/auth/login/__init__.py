@@ -13,4 +13,5 @@ login_params = create_payload_from_model("json", UserLogIn)
 
 from api.routes.auth.login.login import LogInRoute  # noqa
 
-ns_auth.add_resource(LogInRoute, "/login")
+login_endpoint = "login"
+ns_auth.add_resource(LogInRoute, "/login", endpoint=login_endpoint)

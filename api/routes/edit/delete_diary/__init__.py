@@ -13,4 +13,5 @@ response_model_204 = response_schema(
 
 from api.routes.edit.delete_diary.edit_delete import EditRouteDelete  # noqa
 
-ns_edit.add_resource(EditRouteDelete, "/delete")
+delete_notes_endpoint = "delete_notes"
+ns_edit.add_resource(EditRouteDelete, "/delete", endpoint=delete_notes_endpoint)

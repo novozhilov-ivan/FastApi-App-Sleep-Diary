@@ -1,23 +1,24 @@
 import pytest
+from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
+from api.routes.sleep.add_note import add_note_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 from common.generators.note import SleepNoteGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.notes import (
-    SleepNoteModel,
     SleepNote,
     SleepNoteCompute,
+    SleepNoteModel,
 )
 
 
 @pytest.mark.sleep
 @pytest.mark.sleep_post
 class TestSleepNotesPost:
-    ROUTE = "/api/sleep"
     RESPONSE_MODEL_201 = SleepNoteModel
     RESPONSE_MODEL_422 = ErrorResponse
 
@@ -27,10 +28,14 @@ class TestSleepNotesPost:
         new_note = SleepDiaryGenerator(db_user_id)
         created_note: SleepNoteCompute = new_note.create_note()
         json_body: dict = created_note.model_dump(
-            mode="json", by_alias=True, exclude={"user_id", "id"}
+            mode="json",
+            by_alias=True,
+            exclude={"user_id", "id"},
         )
         response = client.post(
-            self.ROUTE, json=json_body, query_string={"user_id": db_user_id}
+            url_for(add_note_endpoint),
+            json=json_body,
+            query_string={"user_id": db_user_id},
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
@@ -41,7 +46,10 @@ class TestSleepNotesPost:
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(self, client: FlaskClient):
         random_note_wrong_values = SleepNoteGenerator().wrong_note(mode="json")
-        response = client.post(self.ROUTE, json=random_note_wrong_values)
+        response = client.post(
+            url_for(add_note_endpoint),
+            json=random_note_wrong_values,
+        )
         response = Response(response)
 
         with pytest.raises(ValidationError) as exc_info:

@@ -1,9 +1,11 @@
 import io
 
 import pytest
+from flask import url_for
 from flask.testing import FlaskClient
 
 from api.routes.edit.import_file import (
+    import_notes_endpoint,
     response_bad_request_400,
     response_conflict_409,
     response_created_201,
@@ -22,8 +24,6 @@ from common.generators.diary import SleepDiaryGenerator
 @pytest.mark.edit
 @pytest.mark.import_notes
 class TestEditImportNotes:
-    ROUTE = "/api/edit/import"
-
     @staticmethod
     def import_file(
         str_file, file_name: str = "sleep_diary", file_extension: str = "csv"
@@ -51,7 +51,7 @@ class TestEditImportNotes:
     ):
         str_file = FileDataConverter(data=generated_diary.notes).to_csv_str()
         response = client.post(
-            self.ROUTE,
+            url_for(import_notes_endpoint),
             query_string={"id": db_user_id},
             data=self.import_file(str_file),
             content_type="multipart/form-data",
@@ -67,7 +67,7 @@ class TestEditImportNotes:
         random_notes = SleepDiaryGenerator().notes
         str_file = FileDataConverter(data=random_notes).to_csv_str()
         response = client.post(
-            self.ROUTE,
+            url_for(import_notes_endpoint),
             data=self.import_file(str_file),
             content_type="multipart/form-data",
         )
@@ -79,7 +79,10 @@ class TestEditImportNotes:
     @pytest.mark.import_400
     @pytest.mark.import_wo_payload_400
     def test_import_notes_wo_payload_400(self, db_user_id: int, client: FlaskClient):
-        response = client.post(self.ROUTE, query_string={"id": db_user_id})
+        response = client.post(
+            url_for(import_notes_endpoint),
+            query_string={"id": db_user_id},
+        )
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
         response.validate(response_model_400)
@@ -93,9 +96,12 @@ class TestEditImportNotes:
         random_notes = SleepDiaryGenerator(user_id=db_user_id).notes
         str_file = FileDataConverter(data=random_notes).to_csv_str()
         response = client.post(
-            self.ROUTE,
+            url_for(import_notes_endpoint),
             query_string={"id": db_user_id},
-            data=self.import_file(str_file, file_extension=extension),
+            data=self.import_file(
+                str_file,
+                file_extension=extension,
+            ),
             content_type="multipart/form-data",
         )
         response = Response(response)
@@ -118,7 +124,7 @@ class TestEditImportNotes:
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
         response = client.post(
-            self.ROUTE,
+            url_for(import_notes_endpoint),
             query_string={"id": db_user_id},
             data=self.import_file(str_file),
             content_type="multipart/form-data",

@@ -47,4 +47,5 @@ response_model_413 = response_schema(
 
 from api.routes.edit.import_file.edit_import import EditRouteImport  # noqa
 
-ns_edit.add_resource(EditRouteImport, "/import")
+import_notes_endpoint = "import-notes"
+ns_edit.add_resource(EditRouteImport, "/import", endpoint=import_notes_endpoint)
