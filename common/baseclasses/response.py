@@ -1,7 +1,7 @@
-from typing import Type, Generator
+from typing import Generator, Type
 
-from werkzeug.test import TestResponse
 from pydantic import BaseModel
+from werkzeug.test import TestResponse
 
 
 class Response:
@@ -44,8 +44,10 @@ class Response:
         return self
 
     def assert_data(self, expectation: BaseModel | str):
-        if isinstance(expectation, BaseModel):
-            expectation = expectation.model_dump(mode="json")
+        if isinstance(
+            expectation := expectation.model_dump(mode="json"),
+            BaseModel,
+        ):
             assert self.response_json == expectation, self
         elif isinstance(expectation, str):
             assert self.response_str == expectation, self

@@ -50,10 +50,7 @@ class TestSleepNotesGET:
         client: FlaskClient,
         saved_diary: SleepDiaryGenerator,
     ):
-        response = client.get(
-            url_for(diary_endpoint),
-            query_string={name: value},
-        )
+        response = client.get(url_for(diary_endpoint, **{name: value}))
         response = Response(response)
         expectation = saved_diary.diary
         response.assert_status_code(HTTP.OK_200)
