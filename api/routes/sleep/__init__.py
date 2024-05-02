@@ -1,8 +1,8 @@
 from flask_restx import Namespace
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
-from api.schemas.flask_api_models import response_schema
-from api.schemas.payload import create_payload_from_model
+from api.utils.payload import create_payload_from_model
+from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel

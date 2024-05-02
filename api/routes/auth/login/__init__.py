@@ -1,6 +1,6 @@
 from api.routes.auth import ns_auth
-from api.schemas.flask_api_models import response_schema
-from api.schemas.payload import create_payload_from_model
+from api.utils.payload import create_payload_from_model
+from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserLogIn
 

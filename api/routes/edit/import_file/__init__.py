@@ -1,6 +1,6 @@
 from api.routes import ns_edit
-from api.schemas.flask_api_models import response_schema
-from api.schemas.payload import create_payload
+from api.utils.payload import create_payload
+from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 
 allowed_file_extensions = ("csv",)

@@ -1,5 +1,5 @@
 from api.routes import ns_sleep
-from api.schemas.flask_api_models import response_schema
+from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 
