@@ -12,7 +12,7 @@ import_file_payload = create_payload(
     f"записями дневника сна",
     location="files",
 )
-response_created_201 = "Все импортированные записи созданы"
+response_created_201 = "All imported notes have been created"
 response_model_201 = response_schema(
     ns=ns_edit,
     code=HTTP.CREATED_201,

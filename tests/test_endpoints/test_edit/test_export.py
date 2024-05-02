@@ -27,12 +27,15 @@ class TestEditExportNotes:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
+        query = {"id": db_user_id}
         response = client.get(
-            url_for(export_notes_endpoint),
-            query_string={"id": db_user_id},
+            url_for(
+                export_notes_endpoint,
+                **query,
+            )
         )
-        response = Response(response)
         str_file = FileDataConverter(saved_diary.notes).to_csv_str()
+        response = Response(response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
         response.assert_data(str_file)
@@ -44,9 +47,12 @@ class TestEditExportNotes:
         client: FlaskClient,
     ):
         dont_exist_user_id = 999
+        query = {"id": dont_exist_user_id}
         response = client.get(
-            url_for(export_notes_endpoint),
-            query_string={"id": dont_exist_user_id},
+            url_for(
+                export_notes_endpoint,
+                **query,
+            )
         )
         response = Response(response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
@@ -59,8 +65,12 @@ class TestEditExportNotes:
         client: FlaskClient,
         db_user_id: int,
     ):
+        query = {"id": db_user_id}
         response = client.get(
-            url_for(export_notes_endpoint), query_string={"id": db_user_id}
+            url_for(
+                export_notes_endpoint,
+                **query,
+            )
         )
         response = Response(response)
         response.assert_status_code(HTTP.NOT_FOUND_404)

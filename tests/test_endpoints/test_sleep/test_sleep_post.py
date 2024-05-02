@@ -43,8 +43,7 @@ class TestSleepNotesPost:
         response.assert_data(created_note)
 
     @pytest.mark.sleep_post_422
-    @pytest.mark.repeat(1)
-    # @pytest.mark.repeat(10)
+    @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(self, db_user_id: int, client: FlaskClient):
         random_note_wrong_values = SleepNoteGenerator().wrong_note(mode="json")
         response = client.post(

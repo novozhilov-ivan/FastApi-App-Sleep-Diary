@@ -3,10 +3,7 @@ from flask_restx import Resource
 
 from api.CRUD.notation_queries import delete_all_user_notes
 from api.routes.edit import ns_edit, response_model_422
-from api.routes.edit.delete_diary import (
-    response_model_204,
-    response_no_content_204,
-)
+from api.routes.edit.delete_diary import response_model_204
 from api.routes.sleep import user_id_params
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User
@@ -23,4 +20,4 @@ class EditRouteDelete(Resource):
         args = request.args.to_dict()
         user_id = User(**args).id
         delete_all_user_notes(user_id)
-        return response_no_content_204, HTTP.NO_CONTENT_204
+        return None, HTTP.NO_CONTENT_204

@@ -7,20 +7,23 @@ from werkzeug.test import TestResponse
 class Response:
     def __init__(self, response: TestResponse):
         self.response: TestResponse = response
-        self.response_json: dict | list[dict] | Generator[dict] = response.json
-        self.response_str: str = response.get_data(as_text=True)
+        self.response_json: str | dict | list | Generator[dict] = response.get_json(
+            silent=True
+        )
+        self.response_data: str = response.data.decode()
         self.response_status: int | list[int] = response.status_code
+        self.mimetype = response.mimetype
 
     def validate(self, schema: Type[BaseModel]) -> None:
-        if self.response.mimetype == "application/json":
+        if self.mimetype == "application/json":
             self.validate_json(schema)
-        elif self.response.mimetype == "text/csv":
+        elif self.mimetype == "text/csv":
             self.validate_str_csv(schema)
 
     def validate_str_csv(self, schema: Type[BaseModel]):
         rows_delimiter: str = "\n"
         columns_delimiter: str = ","
-        titles, data = self.response_str.split(rows_delimiter, maxsplit=1)
+        titles, data = self.response_json.split(rows_delimiter, maxsplit=1)
         fields_title = (field.title for field in schema.model_fields.values())
         assert list(fields_title) == titles.split(columns_delimiter)
         rows = (
@@ -43,14 +46,14 @@ class Response:
         assert self.response_status == status_code, self
         return self
 
-    def assert_data(self, expectation: BaseModel | str):
-        if isinstance(
-            expectation := expectation.model_dump(mode="json"),
-            BaseModel,
-        ):
+    def assert_data(self, expectation: BaseModel | str | None):
+        if isinstance(expectation, BaseModel):
+            expectation = expectation.model_dump(mode="json")
+
+        if self.mimetype == "application/json":
             assert self.response_json == expectation, self
-        elif isinstance(expectation, str):
-            assert self.response_str == expectation, self
+        else:
+            assert self.response_data == expectation, self
         return self, expectation
 
     def __str__(self):

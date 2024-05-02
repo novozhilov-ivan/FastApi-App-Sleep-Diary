@@ -9,10 +9,6 @@ from api.routes.edit.import_file import (
     response_bad_request_400,
     response_conflict_409,
     response_created_201,
-    response_model_201,
-    response_model_400,
-    response_model_409,
-    response_model_415,
     response_unsupported_media_type_415,
 )
 from api.utils.manage_notes import FileDataConverter
@@ -50,15 +46,17 @@ class TestEditImportNotes:
         client: FlaskClient,
     ):
         str_file = FileDataConverter(data=generated_diary.notes).to_csv_str()
+        query = {"id": db_user_id}
         response = client.post(
-            url_for(import_notes_endpoint),
-            query_string={"id": db_user_id},
+            url_for(
+                import_notes_endpoint,
+                **query,
+            ),
             data=self.import_file(str_file),
             content_type="multipart/form-data",
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
-        response.validate(response_model_201)
         response.assert_data(response_created_201)
 
     @pytest.mark.import_400
@@ -73,19 +71,20 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
-        response.validate(response_model_400)
         response.assert_data(response_bad_request_400)
 
     @pytest.mark.import_400
     @pytest.mark.import_wo_payload_400
     def test_import_notes_wo_payload_400(self, db_user_id: int, client: FlaskClient):
+        query = {"id": db_user_id}
         response = client.post(
-            url_for(import_notes_endpoint),
-            query_string={"id": db_user_id},
+            url_for(
+                import_notes_endpoint,
+                **query,
+            )
         )
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
-        response.validate(response_model_400)
         response.assert_data(response_bad_request_400)
 
     @pytest.mark.import_415
@@ -95,9 +94,12 @@ class TestEditImportNotes:
     ):
         random_notes = SleepDiaryGenerator(user_id=db_user_id).notes
         str_file = FileDataConverter(data=random_notes).to_csv_str()
+        query = {"id": db_user_id}
         response = client.post(
-            url_for(import_notes_endpoint),
-            query_string={"id": db_user_id},
+            url_for(
+                import_notes_endpoint,
+                **query,
+            ),
             data=self.import_file(
                 str_file,
                 file_extension=extension,
@@ -106,7 +108,6 @@ class TestEditImportNotes:
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNSUPPORTED_MEDIA_TYPE_415)
-        response.validate(response_model_415)
         response.assert_data(response_unsupported_media_type_415)
 
     @pytest.mark.import_409
@@ -123,13 +124,15 @@ class TestEditImportNotes:
         generated_diary: SleepDiaryGenerator,
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
+        query = {"id": db_user_id}
         response = client.post(
-            url_for(import_notes_endpoint),
-            query_string={"id": db_user_id},
+            url_for(
+                import_notes_endpoint,
+                **query,
+            ),
             data=self.import_file(str_file),
             content_type="multipart/form-data",
         )
         response = Response(response)
         response.assert_status_code(HTTP.CONFLICT_409)
-        response.validate(response_model_409)
         response.assert_data(response_conflict_409)
