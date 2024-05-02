@@ -17,7 +17,6 @@ class EditRouteDelete(Resource):
     @ns_edit.response(**response_model_204)
     @ns_edit.response(**response_model_422)
     def delete(self):
-        args = request.args.to_dict()
-        user_id = User(**args).id
-        delete_all_user_notes(user_id)
+        user = User(**request.args)
+        delete_all_user_notes(user.id)
         return None, HTTP.NO_CONTENT_204

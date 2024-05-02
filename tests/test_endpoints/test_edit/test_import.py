@@ -60,22 +60,7 @@ class TestEditImportNotes:
         response.assert_data(response_created_201)
 
     @pytest.mark.import_400
-    @pytest.mark.import_wo_args_400
-    def test_import_notes_wo_args_400(self, client: FlaskClient):
-        random_notes = SleepDiaryGenerator().notes
-        str_file = FileDataConverter(data=random_notes).to_csv_str()
-        response = client.post(
-            url_for(import_notes_endpoint),
-            data=self.import_file(str_file),
-            content_type="multipart/form-data",
-        )
-        response = Response(response)
-        response.assert_status_code(HTTP.BAD_REQUEST_400)
-        response.assert_data(response_bad_request_400)
-
-    @pytest.mark.import_400
-    @pytest.mark.import_wo_payload_400
-    def test_import_notes_wo_payload_400(self, db_user_id: int, client: FlaskClient):
+    def test_import_notes_400(self, db_user_id: int, client: FlaskClient):
         query = {"id": db_user_id}
         response = client.post(
             url_for(

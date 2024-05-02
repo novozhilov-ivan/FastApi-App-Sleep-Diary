@@ -39,13 +39,11 @@ class EditRouteImport(Resource):
     @ns_edit.response(**response_model_415)
     @ns_edit.response(**response_model_422)
     def post(self):
-
+        user = User(**request.args)
         payload_arg: Argument
-        arg: Argument
         payload_arg, *_ = import_file_payload.args
-        args = request.args.to_dict()
         file = request.files.get(payload_arg.name)
-        if file is None or not args:
+        if file is None:
             return response_bad_request_400, HTTP.BAD_REQUEST_400
         if file.content_length > config.MAX_CONTENT_LENGTH:
             return response_content_too_large_413, HTTP.CONTENT_TOO_LARGE_413
@@ -55,8 +53,6 @@ class EditRouteImport(Resource):
                 response_unsupported_media_type_415,
                 HTTP.UNSUPPORTED_MEDIA_TYPE_415,
             )
-
-        user = User(**args)
         new_notes = FileDataConverter(file=file)
         new_notes.to_model(Notation, **user.model_dump(by_alias=True))
         new_notes = new_notes.data
@@ -65,5 +61,4 @@ class EditRouteImport(Resource):
             create_many_notes(new_notes)
         except sqlalchemy.exc.IntegrityError:
             return response_conflict_409, HTTP.CONFLICT_409
-
         return response_created_201, HTTP.CREATED_201

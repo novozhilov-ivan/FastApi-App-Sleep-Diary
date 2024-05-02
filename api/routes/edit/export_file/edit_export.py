@@ -28,9 +28,8 @@ class EditRouteExport(Resource):
     @ns_edit.response(**response_model_404)
     @ns_edit.response(**response_model_422)
     def get(self):
-        args = request.args.to_dict()
-        user_id = User(**args).id
-        db_notes = read_all_user_notes(user_id)
+        user = User(**request.args)
+        db_notes = read_all_user_notes(user.id)
         if not db_notes:
             return response_not_found_404, HTTP.NOT_FOUND_404
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(
