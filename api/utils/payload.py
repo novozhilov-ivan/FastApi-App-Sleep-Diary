@@ -5,7 +5,8 @@ from pydantic import BaseModel
 
 
 def create_payload_from_model(
-    location: Literal["json", "args", "files"], model: Type[BaseModel]
+    location: Literal["json", "args", "files", "form"],
+    model: Type[BaseModel],
 ) -> RequestParser:
     payload = RequestParser()
     for field, field_info in model.model_fields.items():
@@ -25,7 +26,7 @@ def create_payload(
     type_: str | None,
     required: bool,
     description: str,
-    location: Literal["json", "args", "files"],
+    location: Literal["json", "args", "files", "form"],
     payload: RequestParser | None = None,
 ) -> RequestParser:
 

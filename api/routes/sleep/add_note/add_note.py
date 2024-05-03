@@ -28,5 +28,5 @@ class AddNoteRoute(Resource):
             **new_note.model_dump(by_alias=True),
         )
         new_db_note = create_one_note(new_db_note)
-        created_note = SleepNoteCompute(**new_db_note.dict())
+        created_note = SleepNoteCompute.model_validate(new_db_note)
         return created_note.model_dump(mode="json"), HTTP.CREATED_201

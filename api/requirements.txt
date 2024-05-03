@@ -1,6 +1,7 @@
 aniso8601==9.0.1
 annotated-types==0.6.0
 attrs==23.2.0
+bcrypt==4.1.2
 black==24.4.2
 blinker==1.7.0
 cffi==1.16.0

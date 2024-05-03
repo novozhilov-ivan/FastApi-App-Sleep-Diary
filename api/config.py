@@ -1,8 +1,10 @@
-from dotenv import find_dotenv, load_dotenv
-from pydantic import computed_field
+from pathlib import Path
+
+from pydantic import BaseModel, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-find_env = load_dotenv(find_dotenv())
+# find_env = load_dotenv(find_dotenv())
+BASE_DIR = Path(__file__).parent.parent
 
 
 class FlaskConfig(BaseSettings):
@@ -17,6 +19,13 @@ class FlaskConfig(BaseSettings):
 
 class FlaskRestxConfig(BaseSettings):
     ERROR_INCLUDE_MESSAGE: bool = False
+
+
+class AuthJWT(BaseModel):
+    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
+    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+    algorithm: str = "RS256"
+    access_token_expire_minutes: int = 1
 
 
 class DBConfig(BaseSettings):
@@ -47,6 +56,7 @@ class DBConfig(BaseSettings):
 
 
 class Config(FlaskConfig, FlaskRestxConfig, DBConfig):
+    auth_jwt: AuthJWT = AuthJWT()
     model_config = SettingsConfigDict(
         extra="allow",
         env_file=".dev.env",

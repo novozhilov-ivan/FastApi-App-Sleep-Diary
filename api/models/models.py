@@ -40,18 +40,6 @@ class Notation(db.Model):
             f" ВЛАДЕЛЬЦА: {self.user_id}]"
         )
 
-    def dict(self):
-        return {
-            "id": self.id,
-            "calendar_date": self.calendar_date,
-            "bedtime": self.bedtime,
-            "asleep": self.asleep,
-            "awake": self.awake,
-            "rise": self.rise,
-            "without_sleep": self.without_sleep,
-            "user_id": self.user_id,
-        }
-
 
 class User(db.Model):
     __tablename__ = "user"
