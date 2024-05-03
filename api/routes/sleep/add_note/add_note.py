@@ -16,7 +16,7 @@ class AddNoteRoute(Resource):
 
     @ns_sleep.doc(description=__doc__)
     @ns_sleep.expect(user_id_params, add_note_payload)
-    @ns_sleep.param("payload", SleepNote.__doc__, _in="body")
+    @ns_sleep.param("payload", description=SleepNote.__doc__, _in="body")
     @ns_sleep.response(**response_model_201)
     @ns_sleep.response(**response_model_400)
     @ns_sleep.response(**response_model_422)

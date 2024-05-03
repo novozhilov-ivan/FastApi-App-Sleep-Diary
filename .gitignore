@@ -3,6 +3,7 @@ __pycache__/
 .idea/
 
 *.env
+*.pem
 
 # Coverage
 coverage_re/

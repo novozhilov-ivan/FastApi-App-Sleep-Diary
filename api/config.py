@@ -5,25 +5,24 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 find_env = load_dotenv(find_dotenv())
 
 
-class Config(BaseSettings):
-    # TODO Разбить на settings'ы для каждого плагина. ДБ, ФЛАСК, жвт
-    model_config = SettingsConfigDict(env_file=".dev.env", extra="allow")
-
-    # Flask | General Config
+class FlaskConfig(BaseSettings):
     FLASK_APP: str
     FLASK_ENV: str
     FLASK_DEBUG: bool
     SECRET_KEY: str
     MAX_CONTENT_LENGTH: int = 1024 * 1024
-    # Flask | Static Assets
     STATIC_FOLDER: str = "static"
     TEMPLATES_FOLDER: str = "templates"
-    # Flask RestX | Config
-    ERROR_INCLUDE_MESSAGE: bool = False
-    # PyJWT | Config
-    JWT_SECRET_KEY: str
 
-    # Database values
+
+class FlaskRestxConfig(BaseSettings):
+    ERROR_INCLUDE_MESSAGE: bool = False
+
+
+class DBConfig(BaseSettings):
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: bool = False
+
     DB_DRIVER: str
     DB_EXTEND_DRIVER: str
     DB_USER: str
@@ -32,7 +31,6 @@ class Config(BaseSettings):
     DB_PORT: str
     DB_NAME: str
 
-    # SQLAlchemy | Config
     @computed_field
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:  # noqa
@@ -47,8 +45,12 @@ class Config(BaseSettings):
             self.DB_NAME,
         )
 
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ECHO: bool = False
+
+class Config(FlaskConfig, FlaskRestxConfig, DBConfig):
+    model_config = SettingsConfigDict(
+        extra="allow",
+        env_file=".dev.env",
+    )
 
 
 config = Config()

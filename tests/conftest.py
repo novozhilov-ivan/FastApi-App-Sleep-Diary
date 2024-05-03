@@ -8,7 +8,10 @@ from api.config import Config
 
 
 class TestConfig(Config):
-    model_config = SettingsConfigDict(env_file=".test.env", extra="allow")
+    model_config = SettingsConfigDict(
+        extra="allow",
+        env_file=".test.env",
+    )
     TESTING: bool
 
 
