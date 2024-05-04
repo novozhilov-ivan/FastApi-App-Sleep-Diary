@@ -24,9 +24,9 @@ def create_payload_from_model(
 def create_payload(
     name: str,
     type_: str | None,
-    required: bool,
     description: str,
-    location: Literal["json", "args", "files", "form"],
+    location: Literal["json", "args", "files", "form", "headers"],
+    required: bool = True,
     payload: RequestParser | None = None,
 ) -> RequestParser:
 

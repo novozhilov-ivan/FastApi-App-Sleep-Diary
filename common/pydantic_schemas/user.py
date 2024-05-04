@@ -33,6 +33,20 @@ class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserSchema(User, CreateUserCredentials):
+class UserValidate(User, CreateUserCredentials):
+    model_config = ConfigDict(from_attributes=True)
+
+
+class UserInfo(BaseModel):
+    """Информация о пользователе"""
+    username: str = Field(
+        title="Логин",
+        description="Логин пользователя",
+        min_length=4,
+        max_length=10,
+        alias="login",
+        validation_alias=AliasChoices("username", "login"),
+    )
     date_of_registration: datetime
     model_config = ConfigDict(from_attributes=True)
+

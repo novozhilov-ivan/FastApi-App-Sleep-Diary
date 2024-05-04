@@ -3,7 +3,7 @@ from api.models import User
 from api.routes.auth.login import response_unauthorized_401
 from api.utils.jwt import validate_password
 from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import UserSchema
+from common.pydantic_schemas.user import UserValidate
 
 
 def validate_auth_user(
@@ -17,7 +17,7 @@ def validate_auth_user(
     db_user: User = read_user_by_username(username)
     if not db_user:
         return unauthorized_exc
-    user = UserSchema.model_validate(db_user)
+    user = UserValidate.model_validate(db_user)
     if not validate_password(
         password=password,
         hashed_password=user.password,

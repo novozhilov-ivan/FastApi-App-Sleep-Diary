@@ -16,7 +16,7 @@ response_model_401 = response_schema(
 )
 login_params = create_payload_from_model("form", CreateUserCredentials)
 
-from api.routes.auth.login.login import LogInRoute  # noqa
+from api.routes.auth.login.login import AuthUserIssueJWTRoute  # noqa
 
 login_endpoint = "login"
-ns_auth.add_resource(LogInRoute, "/login", endpoint=login_endpoint)
+ns_auth.add_resource(AuthUserIssueJWTRoute, "/login", endpoint=login_endpoint)

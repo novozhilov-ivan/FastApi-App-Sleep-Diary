@@ -1,9 +1,9 @@
 from pathlib import Path
+from typing import Literal
 
 from pydantic import BaseModel, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-# find_env = load_dotenv(find_dotenv())
 BASE_DIR = Path(__file__).parent.parent
 
 
@@ -19,6 +19,7 @@ class FlaskConfig(BaseSettings):
 
 class FlaskRestxConfig(BaseSettings):
     ERROR_INCLUDE_MESSAGE: bool = False
+    SWAGGER_UI_DOC_EXPANSION: Literal["none", "list", "full"] = "list"
 
 
 class AuthJWT(BaseModel):
