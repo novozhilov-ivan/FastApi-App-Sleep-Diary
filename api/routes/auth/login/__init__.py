@@ -10,9 +10,11 @@ response_model_200 = response_schema(
     ns=ns_auth,
     model=TokenInfo,
 )
-response_unauthorized_401 = "invalid username or password"
+response_invalid_user_or_password_401 = "invalid username or password"
 response_model_401 = response_schema(
-    ns=ns_auth, description=response_unauthorized_401, code=HTTP.UNAUTHORIZED_401
+    ns=ns_auth,
+    description=response_invalid_user_or_password_401,
+    code=HTTP.UNAUTHORIZED_401,
 )
 login_params = create_payload_from_model("form", CreateUserCredentials)
 

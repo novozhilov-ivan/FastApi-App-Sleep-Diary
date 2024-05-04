@@ -1,6 +1,7 @@
-from flask import request
+from flask import jsonify, request
 from flask_restx import Resource
 
+from api.extension import bearer
 from api.routes.auth import ns_auth
 from api.routes.auth.login import (
     login_params,
@@ -21,7 +22,10 @@ from common.pydantic_schemas.user import CreateUserCredentials
 class AuthUserIssueJWTRoute(Resource):
     """Авторизация в приложении по логину и паролю"""
 
-    @ns_auth.doc(description=__doc__)
+    @ns_auth.doc(
+        description=__doc__,
+        security=None,
+    )
     @ns_auth.expect(login_params)
     def post(self):
         user_credentials = CreateUserCredentials(**request.form)
@@ -33,6 +37,10 @@ class AuthUserIssueJWTRoute(Resource):
         token = encode_jwt(jwt_payload)
         token = TokenInfo(
             access_token=token,
-            token_type="Bearer",
+            token_type=bearer,
         )
-        return token.model_dump(), HTTP.OK_200
+        response = jsonify(token.model_dump())
+        response.headers["Cache-Control"] = "no-store"
+        response.headers["Pragma"] = "no-cache"
+        response.status_code = HTTP.OK_200
+        return response

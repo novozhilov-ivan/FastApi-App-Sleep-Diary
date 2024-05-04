@@ -2,13 +2,20 @@ from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
-http_bearer = "Bearer"
-auth_bearer = {
-    "HTTPBearer": {
+bearer = "Bearer"
+oauth2 = "oauth2"
+authorizations = {
+    bearer: {
         "type": "apiKey",
         "in": "header",
-        "name": "Bearer Token Authentication",
-    }
+        "name": "Authorization",
+    },
+    oauth2: {
+        "type": "oauth2",
+        "flow": "password",
+        "tokenUrl": "api/login",
+        "authorizationUrl": "api/login",
+    },
 }
 
 
@@ -22,7 +29,10 @@ api = Api(
     ordered=True,
     validate=True,
     default_mediatype="application/json",
-    authorizations=auth_bearer,
-    security=[],
+    authorizations=authorizations,
+    security=[
+        bearer,
+        oauth2,
+    ],
 )
 db = SQLAlchemy(model_class=Base)

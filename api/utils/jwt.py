@@ -2,8 +2,11 @@ from datetime import datetime, timedelta
 
 import bcrypt
 import jwt
+from flask_restx import abort
+from jwt.exceptions import InvalidTokenError
 
 from api import config
+from common.baseclasses.status_codes import HTTP
 
 
 def encode_jwt(
@@ -31,15 +34,21 @@ def encode_jwt(
 
 
 def decode_jwt(
-    payload: str | bytes,
+    token: str | bytes,
     public_key: str = config.auth_jwt.public_key_path.read_text(),
     algorithm: str = config.auth_jwt.algorithm,
 ):
-    return jwt.decode(
-        payload,
-        public_key,
-        algorithms=[algorithm],
-    )
+    try:
+        return jwt.decode(
+            token,
+            public_key,
+            algorithms=[algorithm],
+        )
+    except InvalidTokenError:
+        abort(
+            code=HTTP.UNAUTHORIZED_401,
+            message=f"invalid token error",
+        )
 
 
 def hash_password(

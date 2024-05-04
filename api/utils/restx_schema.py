@@ -11,25 +11,21 @@ def response_schema(
     ns: Namespace,
     code: int,
     model: Type[BaseModel] | None = None,
+    headers: dict | None = None,
     description: str = "No response schema description yet",
 ) -> dict:
     schema = {
         "code": code,
     }
-
     if model is not None:
         schema.update(
-            {
-                "description": model.model_json_schema().get("description"),
-                "model": flask_restx_schema(ns, model),
-            }
+            description=model.model_json_schema().get("description"),
+            model=flask_restx_schema(ns, model),
         )
     if schema.get("description") is None:
-        schema.update(
-            {
-                "description": description,
-            }
-        )
+        schema.update(description=description)
+    if headers is not None:
+        schema.update(headers=headers)
     return schema
 
 

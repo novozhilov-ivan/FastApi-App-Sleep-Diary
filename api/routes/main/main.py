@@ -8,7 +8,10 @@ from common.pydantic_schemas.main import MainPageModel
 class MainRoute(Resource):
     """Главная страница с описанием приложения"""
 
-    @ns_main.doc(description=__doc__)
+    @ns_main.doc(
+        description=__doc__,
+        security=[],
+    )
     @ns_main.response(**response_model_200)
     def get(self):
         return MainPageModel().model_dump(), HTTP.OK_200

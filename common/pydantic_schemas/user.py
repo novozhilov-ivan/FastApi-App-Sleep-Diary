@@ -39,6 +39,7 @@ class UserValidate(User, CreateUserCredentials):
 
 class UserInfo(BaseModel):
     """Информация о пользователе"""
+
     username: str = Field(
         title="Логин",
         description="Логин пользователя",
@@ -49,4 +50,3 @@ class UserInfo(BaseModel):
     )
     date_of_registration: datetime
     model_config = ConfigDict(from_attributes=True)
-

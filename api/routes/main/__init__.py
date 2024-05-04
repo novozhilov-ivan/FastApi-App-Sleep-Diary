@@ -19,4 +19,9 @@ response_model_200 = response_schema(
 from api.routes.main.main import MainRoute  # noqa
 
 main_endpoint = "main"
-ns_main.add_resource(MainRoute, "/", "/main", endpoint=main_endpoint)
+ns_main.add_resource(
+    MainRoute,
+    "/",
+    "/main",
+    endpoint=main_endpoint,
+)
