@@ -6,5 +6,6 @@ ns_auth = Namespace(
     name="auth",
     description="Описание auth",
     path="/",
+    decorators=[],
 )
 ns_auth.errorhandler(handler_unprocessable_entity_422)

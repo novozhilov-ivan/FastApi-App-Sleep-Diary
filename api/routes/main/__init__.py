@@ -8,6 +8,7 @@ ns_main = Namespace(
     name="main",
     description="Описание main page",
     path="/",
+    decorators=[],
 )
 
 response_model_200 = response_schema(

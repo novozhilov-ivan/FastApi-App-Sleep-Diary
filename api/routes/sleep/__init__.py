@@ -1,6 +1,7 @@
 from flask_restx import Namespace
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
+from api.utils.auth import validate_auth_token
 from api.utils.payload import create_payload_from_model
 from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
@@ -12,6 +13,9 @@ ns_sleep = Namespace(
     name="sleep",
     description="Описание sleep page",
     path="/sleep",
+    decorators=[
+        validate_auth_token,
+    ],
 )
 ns_sleep.errorhandler(handler_unprocessable_entity_422)
 

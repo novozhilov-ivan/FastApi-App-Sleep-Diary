@@ -1,7 +1,7 @@
 from flask import make_response, request
 from flask_restx import Resource
 
-from api.CRUD.notation_queries import read_all_user_notes
+from api.CRUD.notations import read_all_user_notes
 from api.routes.edit import (
     ns_edit,
     response_model_404,

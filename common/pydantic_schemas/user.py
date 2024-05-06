@@ -25,7 +25,7 @@ class CreateUserCredentials(BaseModel):
 class User(BaseModel):
     id: int = Field(
         title="User id",
-        description="id пользователя для получения его записей",
+        description="Идентификатор пользователя",
         ge=0,
         alias="user_id",
         validation_alias=AliasChoices("id", "user_id"),

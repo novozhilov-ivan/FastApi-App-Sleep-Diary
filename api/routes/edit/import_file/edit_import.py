@@ -4,7 +4,7 @@ from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
 from api import config
-from api.CRUD.notation_queries import create_many_notes
+from api.CRUD.notations import create_many_notes
 from api.models import Notation
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (

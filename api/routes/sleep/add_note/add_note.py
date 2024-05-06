@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Resource
 
-from api.CRUD.notation_queries import create_one_note
+from api.CRUD.notations import create_one_note
 from api.models import Notation
 from api.routes import ns_sleep
 from api.routes.sleep import response_model_400, response_model_422, user_id_params

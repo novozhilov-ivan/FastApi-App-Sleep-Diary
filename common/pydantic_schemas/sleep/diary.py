@@ -1,8 +1,8 @@
-from pydantic import BaseModel, ConfigDict, computed_field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 from common.pydantic_schemas.sleep.weeks import (
-    SleepDiaryWeekModel,
     SleepDiaryWeekCompute,
+    SleepDiaryWeekModel,
 )
 
 
@@ -26,7 +26,7 @@ class SleepDiaryModelEmpty(SleepDiaryModel):
 
     notes_count: int = 0
     weeks_count: int = 0
-    weeks: list = []
+    weeks: list = Field(default_factory=list)
 
 
 class SleepDiaryDataCompute(BaseModel):

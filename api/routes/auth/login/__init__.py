@@ -10,15 +10,10 @@ response_model_200 = response_schema(
     ns=ns_auth,
     model=TokenInfo,
 )
-response_invalid_user_or_password_401 = "invalid username or password"
-response_model_401 = response_schema(
-    ns=ns_auth,
-    description=response_invalid_user_or_password_401,
-    code=HTTP.UNAUTHORIZED_401,
-)
+
 login_params = create_payload_from_model("form", CreateUserCredentials)
 
-from api.routes.auth.login.login import AuthUserIssueJWTRoute  # noqa
+from api.routes.auth.login.login import AuthUserRoute  # noqa
 
 login_endpoint = "login"
-ns_auth.add_resource(AuthUserIssueJWTRoute, "/login", endpoint=login_endpoint)
+ns_auth.add_resource(AuthUserRoute, "/login", endpoint=login_endpoint)

@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Resource
 
-from api.CRUD.notation_queries import read_all_user_notes
+from api.CRUD.notations import read_all_user_notes
 from api.routes import ns_sleep
 from api.routes.sleep import (
     response_model_200,

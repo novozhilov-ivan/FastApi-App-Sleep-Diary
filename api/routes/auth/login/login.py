@@ -6,7 +6,6 @@ from api.routes.auth import ns_auth
 from api.routes.auth.login import (
     login_params,
     response_model_200,
-    response_model_401,
 )
 from api.routes.edit import response_model_422
 from api.utils.auth import validate_auth_user
@@ -17,9 +16,8 @@ from common.pydantic_schemas.user import CreateUserCredentials
 
 
 @ns_auth.response(**response_model_200)
-@ns_auth.response(**response_model_401)
 @ns_auth.response(**response_model_422)
-class AuthUserIssueJWTRoute(Resource):
+class AuthUserRoute(Resource):
     """Авторизация в приложении по логину и паролю"""
 
     @ns_auth.doc(
@@ -34,12 +32,12 @@ class AuthUserIssueJWTRoute(Resource):
             "sub": user.id,
             "username": user.username,
         }
-        token = encode_jwt(jwt_payload)
-        token = TokenInfo(
-            access_token=token,
+        encoded_jwt = encode_jwt(jwt_payload)
+        jwt_token = TokenInfo(
+            access_token=encoded_jwt,
             token_type=bearer,
         )
-        response = jsonify(token.model_dump())
+        response = jsonify(jwt_token.model_dump())
         response.headers["Cache-Control"] = "no-store"
         response.headers["Pragma"] = "no-cache"
         response.status_code = HTTP.OK_200

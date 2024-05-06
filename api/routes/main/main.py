@@ -10,7 +10,7 @@ class MainRoute(Resource):
 
     @ns_main.doc(
         description=__doc__,
-        security=[],
+        security=None,
     )
     @ns_main.response(**response_model_200)
     def get(self):

@@ -2,6 +2,13 @@ from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
+
+class Base(DeclarativeBase):
+    pass
+
+
+db = SQLAlchemy(model_class=Base)
+
 bearer = "Bearer"
 oauth2 = "oauth2"
 authorizations = {
@@ -18,11 +25,6 @@ authorizations = {
     },
 }
 
-
-class Base(DeclarativeBase):
-    pass
-
-
 api = Api(
     prefix="/api",
     doc="/doc",
@@ -35,4 +37,3 @@ api = Api(
         oauth2,
     ],
 )
-db = SQLAlchemy(model_class=Base)

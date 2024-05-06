@@ -31,9 +31,8 @@ def create_app() -> Flask:
     )
 
     api.add_namespace(ns_main)
-    api.add_namespace(ns_sleep)
-    api.add_namespace(ns_edit)
     api.add_namespace(ns_auth)
     api.add_namespace(ns_account)
-
+    api.add_namespace(ns_sleep)
+    api.add_namespace(ns_edit)
     return app
