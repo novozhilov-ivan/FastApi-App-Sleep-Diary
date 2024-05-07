@@ -11,9 +11,9 @@ response_model_200 = response_schema(
     model=TokenInfo,
 )
 
-login_params = create_payload_from_model("form", CreateUserCredentials)
+signin_params = create_payload_from_model("form", CreateUserCredentials)
 
-from api.routes.auth.login.login import AuthUserRoute  # noqa
+from api.routes.auth.sign_in.login import AuthUserRoute  # noqa
 
-login_endpoint = "login"
-ns_auth.add_resource(AuthUserRoute, "/login", endpoint=login_endpoint)
+signin_endpoint = "signin"
+ns_auth.add_resource(AuthUserRoute, f"/{signin_endpoint}", endpoint=signin_endpoint)

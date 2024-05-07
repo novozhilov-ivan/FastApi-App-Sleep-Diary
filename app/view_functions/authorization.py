@@ -1,17 +1,17 @@
 import sqlalchemy.exc
-from flask import render_template, request, redirect, url_for
-from flask_login import login_user, login_required, logout_user, current_user
+from app.Models import *
+from app.exceptions.exception import *
+from flask import redirect, render_template, request, url_for
+from flask_login import current_user, login_required, login_user, logout_user
 from werkzeug.security import check_password_hash, generate_password_hash
 
-from app.exceptions.exception import *
 from app.controller import *
-from app.Models import *
 
 
 def authorize():
     try:
         # logger
-        login = request.form.get("login")
+        login = request.form.get("sign_in")
         password = request.form.get("password")
         if login and password:
             user = check_user(login)
@@ -26,14 +26,16 @@ def authorize():
             flash("Неверное имя пользователя или пароль")
             return redirect(url_for("render_login_page"))
         flash("Пожалуйста заполните поля логин и пароль")
-        return render_template("login.html")
+        return render_template("sign_in.html")
     except Exception as err:
         flash(
-            f"Ошибка при проверке пользователя в базе данных. Прочая ошибка. {err.args[0]}"
+            f"Ошибка при проверке пользователя в базе данных. Прочая ошибка. "
+            f"{err.args[0]}"
         )
-        return render_template("login.html")
+        return render_template("sign_in.html")
     # except:
-    # TODO сделать проверку на наличие пользователя в бд. Добавить соответсвующий флеш при отсутствии пользователя.
+    # TODO сделать проверку на наличие пользователя в бд. Добавить соответсвующий
+    #  флеш при отсутствии пользователя.
     # finally:
     # logger
 
@@ -46,7 +48,8 @@ def deauthorize():
         return redirect(url_for("sign_in"))
     except Exception as err:
         flash(
-            f"Ошибка при проверке пользователя в базе данных. Прочая ошибка. {err.args[0]}"
+            f"Ошибка при проверке пользователя в базе данных. Прочая ошибка. "
+            f"{err.args[0]}"
         )
         return redirect(url_for("get_user_page"))
     # finally:
@@ -56,7 +59,7 @@ def deauthorize():
 def register():
     try:
         # logger
-        login = request.form.get("login")
+        login = request.form.get("sign_in")
         password1 = request.form.get("password1")
         password2 = request.form.get("password2")
         if not (login or password1 or password2):
@@ -67,14 +70,19 @@ def register():
             hash_password = generate_password_hash(password1)
             new_user = User()
             new_user.login, new_user.password = login, hash_password
-            # todo Этим try-except должен заняться менеджер при создании нового пользователя
-            # todo При ошибке - возбуждать исключение, а его текст будет отображаться уже в try-except здесь
-            # todo в первый обработчик ошибок ВНЕСТИ ВСЕ ТИПЫ, которые мне известны, а ниже неизвестные;
-            # todo неизвестные будут отображаться в prod как 'прочая ошибка', а в dev выводиться
+            # todo Этим try-except должен заняться менеджер при создании нового
+            #  пользователя
+            # todo При ошибке - возбуждать исключение, а его текст будет
+            #  отображаться уже в try-except здесь
+            # todo в первый обработчик ошибок ВНЕСТИ ВСЕ ТИПЫ, которые мне
+            #  известны, а ниже неизвестные;
+            # todo неизвестные будут отображаться в prod как 'прочая ошибка',
+            #  а в dev выводиться
             add_and_commit(new_user)
     except sqlalchemy.exc.IntegrityError as err:
         flash(
-            f'Имя пользователя "{err.params[0]}" уже занято. Придумайте уникальное имя пользователя.'
+            f'Имя пользователя "{err.params[0]}" уже занято. Придумайте уникальное '
+            f"имя пользователя."
         )
     except (ValueError,) as err:
         flash(err.args[0])
@@ -107,7 +115,7 @@ def render_login_page():
         # logger
         if current_user.is_authenticated:
             return redirect(url_for("get_user_page"))
-        return render_template("login.html")
+        return render_template("sign_in.html")
     except Exception as err:
         display_unknown_error(err)
     # finally:

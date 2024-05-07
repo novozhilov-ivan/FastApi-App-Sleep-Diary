@@ -1,6 +1,7 @@
 from app import app
 from app.view_functions import *
 
+
 # todo из .queries переметить все в .models
 # todo переместить все проверки, изменение формата и создание записи в дневнике -
 #  в класс Notation (например сделать  Notation.add_notation(*args))
@@ -18,7 +19,8 @@ def post_sleep_dairy_entry():
 
 @app.route("/sleep", methods=["GET"])
 def get_sleep_diary_entries():
-    """Получает страницу со всеми записями дневника сна и формирует статистику на основе записей"""
+    """Получает страницу со всеми записями дневника сна и формирует статистику на
+    основе записей"""
     return render_sleep_diary_page()
 
 
@@ -35,7 +37,8 @@ def get_diary_entry_update_page(notation_date):
 
 @app.route("/edit", methods=["POST"])
 def edit_diary():
-    """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех записей"""
+    """Вызов функций редактирование дневника сна: экспорт, импорт и удаление всех
+    записей"""
     return diary_editing_actions()
 
 
@@ -54,13 +57,13 @@ def get_user_page():
     return render_user_page()
 
 
-@app.route("/login", methods=["POST"])
+@app.route("/sign_in", methods=["POST"])
 def sign_in():
     """Форма авторизации пользователя"""
     return authorize()
 
 
-@app.route("/login", methods=["GET"])
+@app.route("/sign_in", methods=["GET"])
 def get_login_page():
     return render_login_page()
 

@@ -20,8 +20,8 @@ authorizations = {
     oauth2: {
         "type": "oauth2",
         "flow": "password",
-        "tokenUrl": "api/login",
-        "authorizationUrl": "api/login",
+        "tokenUrl": "api/signin",
+        "authorizationUrl": "api/signin",
     },
 }
 

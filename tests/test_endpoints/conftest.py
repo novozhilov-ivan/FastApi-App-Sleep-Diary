@@ -7,10 +7,6 @@ from api.models import Notation, User
 from common.generators.diary import SleepDiaryGenerator
 
 
-# TODO Починить тесты
-# TODO сделать получение url через url_for
-
-
 @pytest.fixture(name="db_user_id")
 def create_db_user(client: FlaskClient) -> int:
     new_user = User()

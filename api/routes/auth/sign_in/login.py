@@ -3,10 +3,7 @@ from flask_restx import Resource
 
 from api.extension import bearer
 from api.routes.auth import ns_auth
-from api.routes.auth.login import (
-    login_params,
-    response_model_200,
-)
+from api.routes.auth.sign_in import response_model_200, signin_params
 from api.routes.edit import response_model_422
 from api.utils.auth import validate_auth_user
 from api.utils.jwt import encode_jwt
@@ -24,7 +21,7 @@ class AuthUserRoute(Resource):
         description=__doc__,
         security=None,
     )
-    @ns_auth.expect(login_params)
+    @ns_auth.expect(signin_params)
     def post(self):
         user_credentials = CreateUserCredentials(**request.form)
         user = validate_auth_user(**user_credentials.model_dump())
