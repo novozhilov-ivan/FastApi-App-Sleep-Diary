@@ -6,13 +6,18 @@ from api.extension import api, db
 
 def create_app() -> Flask:
     # Initialize Flask App
-    app = Flask(import_name="api", instance_relative_config=False)
+    app = Flask(
+        import_name="api",
+        instance_relative_config=False,
+    )
     app.config.from_object(config)
 
     # Initialize Plugins
     db.init_app(app)
     api.init_app(
-        app=app, title="API для дневника сна", description="Описание дневника сна"
+        app=app,
+        title="API для дневника сна",
+        description="Описание дневника сна",
     )
 
     # Create DataBase Tables

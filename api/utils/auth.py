@@ -1,60 +1,80 @@
-from functools import wraps
+from typing import Callable, Literal
 
-from flask import request
+import bcrypt
 from flask_restx import abort
-from jwt import InvalidTokenError
 
-from api.CRUD.users import read_user_by_username
-from api.extension import bearer
+from api.CRUD.users import read_user_by_id, read_user_by_username
 from api.models import User
-from api.utils.jwt import decode_jwt, validate_password
+from api.utils.jwt import (
+    ACCESS_TOKEN_TYPE,
+    REFRESH_TOKEN_TYPE,
+    get_current_token_payload,
+    validate_token_type,
+)
 from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import UserValidate
 
-response_invalid_authorization_token_401 = "invalid authorization token"
 response_invalid_username_or_password_401 = "invalid username or password"
 
 
-def validate_auth_token(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        auth_header = request.headers.get("Authorization")
+def hash_password(
+    password: str,
+) -> bytes:
+    salt = bcrypt.gensalt()
+    pwd_bytes: bytes = password.encode()
+    return bcrypt.hashpw(pwd_bytes, salt)
 
-        if auth_header is None or bearer not in auth_header:
-            abort(
-                code=HTTP.UNAUTHORIZED_401,
-                message=response_invalid_authorization_token_401,
-            )
-        *_, token = auth_header.split(" ")
-        try:
-            decode_jwt(token=token)
-        except InvalidTokenError:
-            abort(
-                code=HTTP.UNAUTHORIZED_401,
-                message=response_invalid_authorization_token_401,
-            )
-        return f(*args, **kwargs)
 
-    return decorated
+def validate_password(
+    password: bytes,
+    hashed_password: bytes,
+) -> bool:
+    return bcrypt.checkpw(
+        password=password,
+        hashed_password=hashed_password,
+    )
 
 
 def validate_auth_user(
     username: str,
     password: bytes,
-) -> UserValidate:
+) -> User:
     db_user: User = read_user_by_username(username)
     if db_user is None:
         abort(
             code=HTTP.UNAUTHORIZED_401,
             message=response_invalid_username_or_password_401,
         )
-    user: UserValidate = UserValidate.model_validate(db_user)
     if not validate_password(
-        password=password,
-        hashed_password=user.password,
+            password=password,
+            hashed_password=db_user.password,
     ):
         abort(
             code=HTTP.UNAUTHORIZED_401,
             message=response_invalid_username_or_password_401,
         )
-    return user
+    return db_user
+
+
+def get_user_by_token_sub(payload: dict) -> User:
+    user_id = payload.get("sub")
+    return read_user_by_id(user_id)
+
+
+def get_auth_user_from_token_of_type(
+    token_type: str | Literal["access", "refresh"],
+) -> Callable:
+    def get_current_auth_user() -> User:
+        payload = get_current_token_payload()
+        validate_token_type(payload, token_type)
+        current_user: User = get_user_by_token_sub(payload)
+        return current_user
+
+    return get_current_auth_user
+
+
+get_current_auth_user_for_refresh = get_auth_user_from_token_of_type(
+    REFRESH_TOKEN_TYPE,
+)
+get_current_auth_user_for_access = get_auth_user_from_token_of_type(
+    ACCESS_TOKEN_TYPE,
+)

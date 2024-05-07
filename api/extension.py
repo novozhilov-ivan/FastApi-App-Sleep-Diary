@@ -16,6 +16,8 @@ authorizations = {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
+        "description": "Enter the token with the `Bearer: ` prefix, e.g. 'Bearer "
+        "abcde12345'.",
     },
     oauth2: {
         "type": "oauth2",

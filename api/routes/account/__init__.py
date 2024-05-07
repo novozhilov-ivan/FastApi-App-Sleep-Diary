@@ -1,7 +1,7 @@
 from flask_restx import Namespace
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
-from api.utils.auth import (
+from api.utils.jwt import (
     response_invalid_authorization_token_401,
     validate_auth_token,
 )

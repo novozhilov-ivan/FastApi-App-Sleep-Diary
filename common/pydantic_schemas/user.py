@@ -3,7 +3,7 @@ from datetime import datetime
 from pydantic import AliasChoices, BaseModel, ConfigDict, Field
 
 
-class CreateUserCredentials(BaseModel):
+class UserCredentials(BaseModel):
     """Данные пользователя для авторизации"""
 
     username: str = Field(
@@ -33,7 +33,7 @@ class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserValidate(User, CreateUserCredentials):
+class UserValidate(User, UserCredentials):
     model_config = ConfigDict(from_attributes=True)
 
 

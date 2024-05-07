@@ -1,6 +1,5 @@
 from flask_restx import Namespace
 
-from api.utils.auth import validate_auth_token
 from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
@@ -9,9 +8,9 @@ ns_edit = Namespace(
     name="edit",
     description="Описание edit sleep diary",
     path="/edit",
-    decorators=[
-        validate_auth_token,
-    ],
+    # decorators=[
+    #     validate_auth_token,
+    # ],
 )
 response_not_found_404 = "User or sleep notes not found"
 response_model_404 = response_schema(
