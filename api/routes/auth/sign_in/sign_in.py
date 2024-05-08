@@ -22,7 +22,7 @@ class AuthUserRoute(Resource):
     )
     @ns_auth.expect(signin_params)
     def post(self) -> tuple:
-        user_credentials = UserCredentials(**request.form)
+        user_credentials: UserCredentials = UserCredentials(**request.form)
         user = validate_auth_user(
             username=user_credentials.username,
             password=user_credentials.password,

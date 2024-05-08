@@ -12,16 +12,16 @@ from api.utils.jwt import (
     validate_token_type,
 )
 from common.baseclasses.status_codes import HTTP
+from common.pydantic_schemas.user import UserCredentials
 
 response_invalid_username_or_password_401 = "invalid username or password"
 
 
 def hash_password(
-    password: str,
-) -> bytes:
+    pwd_bytes: bytes,
+) -> str:
     salt = bcrypt.gensalt()
-    pwd_bytes: bytes = password.encode()
-    return bcrypt.hashpw(pwd_bytes, salt)
+    return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
 
 
 def validate_password(
@@ -44,10 +44,15 @@ def validate_auth_user(
             code=HTTP.UNAUTHORIZED_401,
             message=response_invalid_username_or_password_401,
         )
-    if not validate_password(
+    user = UserCredentials(
+        login=db_user.login,
+        password=db_user.password,
+    )
+    is_valid_password = validate_password(
         password=password,
-        hashed_password=db_user.password,
-    ):
+        hashed_password=user.password,
+    )
+    if not is_valid_password:
         abort(
             code=HTTP.UNAUTHORIZED_401,
             message=response_invalid_username_or_password_401,

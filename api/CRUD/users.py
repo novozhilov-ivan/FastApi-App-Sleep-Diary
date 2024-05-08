@@ -1,4 +1,5 @@
 from sqlalchemy import select
+from sqlalchemy.exc import SQLAlchemyError
 
 from api.extension import db
 from api.models import User
@@ -14,6 +15,7 @@ def read_user_by_username(username: str) -> User | None:
             User.login == username,
         )
     )
+    db.session.commit()
     return db_response.scalar_one_or_none()
 
 
@@ -27,4 +29,16 @@ def read_user_by_id(user_id: int) -> User | None:
             User.id == user_id,
         )
     )
+    db.session.commit()
     return db_response.scalar_one_or_none()
+
+
+def create_new_user_by_username(user: User) -> User | None:
+    try:
+        db.session.add(user)
+        db.session.commit()
+    except SQLAlchemyError:
+        return None
+    else:
+        db.session.refresh(user)
+        return user
