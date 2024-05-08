@@ -45,8 +45,8 @@ def validate_auth_user(
             message=response_invalid_username_or_password_401,
         )
     if not validate_password(
-            password=password,
-            hashed_password=db_user.password,
+        password=password,
+        hashed_password=db_user.password,
     ):
         abort(
             code=HTTP.UNAUTHORIZED_401,

@@ -13,11 +13,11 @@ response_model_200 = response_schema(
 
 signin_params = create_payload_from_model("form", UserCredentials)
 
-from api.routes.auth.sign_in.login import AuthUserAndCreateJWTRoute  # noqa
+from api.routes.auth.sign_in.sign_in import AuthUserRoute  # noqa
 
 signin_endpoint = "signin"
 ns_auth.add_resource(
-    AuthUserAndCreateJWTRoute,
+    AuthUserRoute,
     f"/{signin_endpoint}",
     endpoint=signin_endpoint,
 )

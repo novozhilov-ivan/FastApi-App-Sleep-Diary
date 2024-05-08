@@ -13,7 +13,7 @@ from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 @ns_auth.response(**response_model_200)
 @ns_auth.response(**response_model_422)
-class AuthUserAndCreateJWTRoute(Resource):
+class AuthUserRoute(Resource):
     """Авторизация в приложении по логину и паролю"""
 
     @ns_auth.doc(
