@@ -33,7 +33,8 @@ class Notation(db.Model):
         ),
     )
 
-    # Todo прописать on_delete действие. При удалении пользователя - что происходит с записями дневника?
+    # Todo прописать on_delete действие. При удалении пользователя - что
+    #  происходит с записями дневника?
     def __repr__(self):
         return (
             f"Запись в дневнике: [ID: {self.id}, ДАТА: {self.calendar_date}, ID"
@@ -49,4 +50,4 @@ class User(db.Model):
     date_of_registration = Column(DateTime, nullable=False, default=datetime.utcnow)
 
     def __repr__(self):
-        return f"Пользователь [ID: {self.login}, LOGIN: {self.login}]"
+        return f"Пользователь [ID: {self.id}, LOGIN: {self.login}]"

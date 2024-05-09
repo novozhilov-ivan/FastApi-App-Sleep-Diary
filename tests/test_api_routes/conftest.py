@@ -1,13 +1,15 @@
 import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
-from flask.testing import FlaskCliRunner, FlaskClient
+from flask.testing import FlaskClient
 from pydantic_settings import SettingsConfigDict
 
 from api import create_app, db
 from api.config import Config
 from api.models import Notation, User
+from api.utils.auth import hash_password
 from common.generators.diary import SleepDiaryGenerator
+from common.pydantic_schemas.user import UserCredentials
 
 
 class TestConfig(Config):
@@ -38,22 +40,46 @@ def client(app) -> FlaskClient:
         yield app.test_client()
 
 
-@pytest.fixture
-def runner(app) -> FlaskCliRunner:
-    return app.test_cli_runner()
+@pytest.fixture(name="user_credentials")
+def create_user_credentials() -> UserCredentials:
+    login = "test_login"
+    password = "test_password".encode()
+    yield UserCredentials(
+        login=login,
+        password=password,
+    )
 
 
-@pytest.fixture(name="db_user_id")
-def create_db_user(client: FlaskClient) -> int:
-    new_user = User()
-    new_user.id = 1
-    new_user.login = "login"
-    new_user.password = "123"
+user_password_is_hashed = False
+indirect_params = (user_password_is_hashed,)
+
+
+@pytest.fixture(
+    name="exist_db_user",
+    params=indirect_params,
+    ids=[
+        f"User pwd is {'' if prefix else 'UN'}hashed" for prefix in indirect_params
+    ],
+)
+def create_db_user(
+    request: FixtureRequest,
+    user_credentials: UserCredentials,
+    client: FlaskClient,
+) -> User:
+    pwd_is_hashed: bool = request.param
+    new_user = User(**user_credentials.model_dump(by_alias=True))
+    if pwd_is_hashed:
+        new_user.password = hash_password(user_credentials.password)
     with client.application.app_context():
         db.session.add(new_user)
         db.session.commit()
         db.session.refresh(new_user)
-    yield new_user.id
+    yield new_user
+
+
+@pytest.fixture(name="db_user_id")
+def read_id_of_exist_user(exist_db_user: User) -> int:
+    yield exist_db_user.id
 
 
 notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
