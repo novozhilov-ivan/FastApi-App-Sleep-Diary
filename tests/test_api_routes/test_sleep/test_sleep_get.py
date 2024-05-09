@@ -10,7 +10,6 @@ from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from common.pydantic_schemas.user import User
-from tests.conftest import client
 
 
 @pytest.mark.sleep

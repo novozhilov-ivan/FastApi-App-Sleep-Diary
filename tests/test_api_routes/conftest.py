@@ -1,10 +1,46 @@
 import pytest
 from _pytest.fixtures import FixtureRequest
-from flask.testing import FlaskClient
+from flask import Flask
+from flask.testing import FlaskCliRunner, FlaskClient
+from pydantic_settings import SettingsConfigDict
 
-from api import db
+from api import create_app, db
+from api.config import Config
 from api.models import Notation, User
 from common.generators.diary import SleepDiaryGenerator
+
+
+class TestConfig(Config):
+    model_config = SettingsConfigDict(
+        extra="allow",
+        env_file=".test.env",
+    )
+    TESTING: bool
+
+
+test_configuration = TestConfig()
+
+
+@pytest.fixture
+def app() -> Flask:
+    assert test_configuration.TESTING is True
+    app = create_app()
+    app.config.from_object(test_configuration)
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+    yield app
+
+
+@pytest.fixture
+def client(app) -> FlaskClient:
+    with app.test_request_context():
+        yield app.test_client()
+
+
+@pytest.fixture
+def runner(app) -> FlaskCliRunner:
+    return app.test_cli_runner()
 
 
 @pytest.fixture(name="db_user_id")

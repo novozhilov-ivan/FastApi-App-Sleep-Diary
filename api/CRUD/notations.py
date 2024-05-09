@@ -19,6 +19,7 @@ def read_all_user_notes(user_id: int) -> Iterable[Notation]:
             Notation.calendar_date,
         )
     )
+    db.session.commit()
     return db_response.scalars().all()
 
 

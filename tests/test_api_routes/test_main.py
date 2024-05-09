@@ -6,7 +6,6 @@ from api.routes.main import main_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.main import MainPageModel
-from tests.conftest import client
 
 
 @pytest.mark.main
