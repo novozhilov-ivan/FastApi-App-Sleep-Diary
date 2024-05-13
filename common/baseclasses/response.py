@@ -46,7 +46,7 @@ class Response:
         assert self.response_status == status_code, self
         return self
 
-    def assert_data(self, expectation: BaseModel | str | None):
+    def assert_data(self, expectation: BaseModel | str | dict | None):
         if isinstance(expectation, BaseModel):
             expectation = expectation.model_dump(mode="json")
 

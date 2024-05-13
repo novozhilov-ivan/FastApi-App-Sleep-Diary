@@ -2,7 +2,11 @@ from flask import request
 from flask_restx import Resource
 
 from api.routes.auth import ns_auth
-from api.routes.auth.sign_in import response_model_200, signin_params
+from api.routes.auth.sign_in import (
+    response_model_200,
+    response_model_401,
+    signin_params,
+)
 from api.routes.edit import response_model_422
 from api.utils.auth import validate_auth_user
 from api.utils.jwt import create_access_token, create_refresh_token
@@ -12,6 +16,7 @@ from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
 @ns_auth.response(**response_model_200)
+@ns_auth.response(**response_model_401)
 @ns_auth.response(**response_model_422)
 class AuthUserRoute(Resource):
     """Авторизация в приложении по логину и паролю"""
@@ -22,14 +27,14 @@ class AuthUserRoute(Resource):
     )
     @ns_auth.expect(signin_params)
     def post(self) -> tuple:
-        user_credentials: UserCredentials = UserCredentials(**request.form)
+        user_credentials = UserCredentials(**request.form)
         user = validate_auth_user(
             username=user_credentials.username,
             password=user_credentials.password,
         )
-        user: UserValidate = UserValidate.model_validate(user)
-        access_token = create_access_token(user)
-        refresh_token = create_refresh_token(user)
+        user = UserValidate.model_validate(user)
+        access_token: str = create_access_token(user)
+        refresh_token: str = create_refresh_token(user)
         jwt_token = TokenInfo(
             access_token=access_token,
             refresh_token=refresh_token,

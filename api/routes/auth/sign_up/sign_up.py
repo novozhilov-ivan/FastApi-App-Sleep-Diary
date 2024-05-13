@@ -29,12 +29,11 @@ class SignUpUserRoute(Resource):
     @ns_auth.expect(signup_params)
     def post(self) -> tuple:
         user_credentials = UserCredentials(**request.form)
-        new_user = create_new_user_by_username(
-            User(
-                login=user_credentials.username,
-                password=hash_password(user_credentials.password),
-            )
+        db_user = User(
+            login=user_credentials.username,
+            password=hash_password(user_credentials.password),
         )
+        new_user = create_new_user_by_username(db_user)
         if not new_user:
             return (
                 f"User with username {user_credentials.username!r} "
