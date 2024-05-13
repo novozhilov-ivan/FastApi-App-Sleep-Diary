@@ -51,14 +51,15 @@ def create_user_credentials() -> UserCredentials:
 
 
 user_password_is_hashed = False
-indirect_params = (user_password_is_hashed,)
+exist_db_user_indirect_params = (user_password_is_hashed,)
 
 
 @pytest.fixture(
     name="exist_db_user",
-    params=indirect_params,
+    params=exist_db_user_indirect_params,
     ids=[
-        f"User pwd is {'' if prefix else 'UN'}hashed" for prefix in indirect_params
+        f"User pwd is {'' if prefix else 'UN'}hashed"
+        for prefix in exist_db_user_indirect_params
     ],
 )
 def create_db_user(

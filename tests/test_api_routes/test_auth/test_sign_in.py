@@ -6,7 +6,12 @@ from api.extension import bearer
 from api.models import User
 from api.routes.auth.sign_in import signin_endpoint
 from api.utils.auth import response_invalid_username_or_password_401
-from api.utils.jwt import decode_jwt
+from api.utils.jwt import (
+    ACCESS_TOKEN_TYPE,
+    REFRESH_TOKEN_TYPE,
+    TOKEN_TYPE_FIELD,
+    decode_jwt,
+)
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.token import TokenInfo
@@ -17,18 +22,6 @@ from common.pydantic_schemas.user import UserCredentials
 @pytest.mark.sign_in
 class TestSignIn:
 
-    user_password_is_hashed = True
-    indirect_params = (True,)
-    user_password_is_hashed_info = [
-        f"User pwd is {'' if prefix else 'UN'}hashed" for prefix in indirect_params
-    ]
-
-    @pytest.mark.parametrize(
-        "exist_db_user",
-        indirect_params,
-        indirect=True,
-        ids=user_password_is_hashed_info,
-    )
     def test_sign_in_200(
         self,
         client: FlaskClient,
@@ -51,15 +44,9 @@ class TestSignIn:
         assert exist_db_user.id == decoded_access["sub"] == decoded_refresh["sub"]
         assert exist_db_user.login == decoded_access["username"]
         assert exist_db_user.login == decoded_refresh["username"]
-        assert "access" == decoded_access["type"]
-        assert "refresh" == decoded_refresh["type"]
+        assert ACCESS_TOKEN_TYPE == decoded_access[TOKEN_TYPE_FIELD]
+        assert REFRESH_TOKEN_TYPE == decoded_refresh[TOKEN_TYPE_FIELD]
 
-    @pytest.mark.parametrize(
-        "exist_db_user",
-        indirect_params,
-        indirect=True,
-        ids=user_password_is_hashed_info,
-    )
     @pytest.mark.parametrize(
         "wrong_credentials",
         (

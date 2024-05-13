@@ -2,7 +2,7 @@ from flask_restx import Resource
 
 from api.models import User
 from api.routes import ns_auth
-from api.routes.auth.refresh import response_model_200
+from api.routes.auth.refresh import response_model_200, response_model_401
 from api.routes.edit import response_model_422
 from api.utils.auth import get_current_auth_user_for_refresh
 from api.utils.jwt import create_access_token, validate_auth_token
@@ -12,6 +12,7 @@ from common.pydantic_schemas.user import UserValidate
 
 
 @ns_auth.response(**response_model_200)
+@ns_auth.response(**response_model_401)
 @ns_auth.response(**response_model_422)
 class AuthRefreshJWTRoute(Resource):
     """Обновление Access токена с помощью Refresh токена"""

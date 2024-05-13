@@ -18,6 +18,7 @@ ACCESS_TOKEN_TYPE = "access"
 REFRESH_TOKEN_TYPE = "refresh"
 
 response_invalid_authorization_token_401 = "invalid authorization token"
+response_invalid_token_type_401 = "invalid token type {} expected {}"
 
 
 def encode_jwt(
@@ -108,8 +109,10 @@ def validate_token_type(
     if current_token_type != token_type:
         abort(
             code=HTTP.UNAUTHORIZED_401,
-            message=f"invalid token type {current_token_type!r} "
-            f"expected {token_type!r}",
+            message=response_invalid_token_type_401.format(
+                f"{current_token_type!r}",
+                f"{token_type!r}",
+            ),
         )
 
 
