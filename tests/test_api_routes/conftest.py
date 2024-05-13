@@ -42,11 +42,9 @@ def client(app) -> FlaskClient:
 
 @pytest.fixture(name="user_credentials")
 def create_user_credentials() -> UserCredentials:
-    login = "test_login"
-    password = "test_password".encode()
     yield UserCredentials(
-        login=login,
-        password=password,
+        login="test_login",
+        password="test_password".encode(),
     )
 
 

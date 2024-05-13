@@ -22,7 +22,9 @@ from common.generators.diary import SleepDiaryGenerator
 class TestEditImportNotes:
     @staticmethod
     def import_file(
-        str_file, file_name: str = "sleep_diary", file_extension: str = "csv"
+        str_file,
+        file_name: str = "sleep_diary",
+        file_extension: str = "csv",
     ) -> dict:
         str_bytes = str_file.encode()
         return {

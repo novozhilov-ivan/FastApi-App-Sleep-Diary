@@ -21,6 +21,7 @@ from common.pydantic_schemas.user import UserCredentials
 @pytest.mark.auth
 @pytest.mark.sign_in
 class TestSignIn:
+    content_type = "application/x-www-form-urlencoded"
 
     def test_sign_in_200(
         self,
@@ -32,7 +33,7 @@ class TestSignIn:
         response = client.post(
             url_for(signin_endpoint),
             data=user.model_dump(),
-            content_type="application/x-www-form-urlencoded",
+            content_type=self.content_type,
         )
         response = Response(response)
         response.assert_status_code(HTTP.OK_200)
@@ -50,8 +51,8 @@ class TestSignIn:
     @pytest.mark.parametrize(
         "wrong_credentials",
         (
-            {"password": "wrong"},
-            {"login": "wrong"},
+            {"password": "wrong".encode()},
+            {"username": "wrong"},
         ),
     )
     def test_sign_in_401(
@@ -61,17 +62,15 @@ class TestSignIn:
         user_credentials: UserCredentials,
         exist_db_user: User,
     ):
-        user = UserCredentials(
-            login=wrong_credentials.get("login", user_credentials.username),
-            password=wrong_credentials.get("password", user_credentials.password),
-        )
+        user_credentials = user_credentials.model_dump()
+        user_credentials.update(wrong_credentials)
         expectation = {
             "message": response_invalid_username_or_password_401,
         }
         response = client.post(
             url_for(signin_endpoint),
-            data=user.model_dump(),
-            content_type="application/x-www-form-urlencoded",
+            data=user_credentials,
+            content_type=self.content_type,
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)

@@ -10,7 +10,12 @@ response_model_201 = response_schema(
     ns=ns_auth,
     description=response_created_201,
 )
-
+response_conflict_409 = "Username is already taken"
+response_model_409 = response_schema(
+    code=HTTP.CONFLICT_409,
+    ns=ns_auth,
+    description=response_conflict_409,
+)
 signup_params = create_payload_from_model("form", UserCredentials)
 
 from api.routes.auth.sign_up.sign_up import SignUpUserRoute  # noqa
