@@ -13,5 +13,9 @@ add_note_payload = create_payload_from_model("json", SleepNote)
 
 from api.routes.sleep.add_note.add_note import AddNoteRoute  # noqa
 
-add_note_endpoint = "add-note"
-ns_sleep.add_resource(AddNoteRoute, "/add-note", endpoint=add_note_endpoint)
+add_note_endpoint = "note/add"
+ns_sleep.add_resource(
+    AddNoteRoute,
+    f"/{add_note_endpoint}",
+    endpoint=add_note_endpoint,
+)

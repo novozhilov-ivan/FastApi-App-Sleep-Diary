@@ -17,4 +17,8 @@ response_model_404 = response_schema(
 from api.routes.sleep.diary.diary import DiaryRoute  # noqa
 
 diary_endpoint = "diary"
-ns_sleep.add_resource(DiaryRoute, "/diary", endpoint=diary_endpoint)
+ns_sleep.add_resource(
+    DiaryRoute,
+    f"/{diary_endpoint}",
+    endpoint=diary_endpoint,
+)

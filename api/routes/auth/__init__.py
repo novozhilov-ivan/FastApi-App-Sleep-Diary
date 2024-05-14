@@ -3,8 +3,9 @@ from flask_restx import Namespace
 from api.exceptions.handlers import handler_unprocessable_entity_422
 
 ns_auth = Namespace(
-    name="auth",
-    description="Описание auth",
+    name="Authentication",
+    description="Аутентификация, авторизация, регистрация, выпуск access и refresh "
+                "токенов, а также удаление токенов авторизации.",
     path="/",
     decorators=[],
 )

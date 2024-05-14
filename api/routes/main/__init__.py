@@ -5,8 +5,8 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.main import MainPageModel
 
 ns_main = Namespace(
-    name="main",
-    description="Описание main page",
+    name="Main",
+    description="Основная страница с описанием",
     path="/",
     decorators=[],
 )

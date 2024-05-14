@@ -5,8 +5,8 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
 
 ns_edit = Namespace(
-    name="edit",
-    description="Описание edit sleep diary",
+    name="Edit diary",
+    description="Изменения в дневнике сна",
     path="/edit",
     # decorators=[
     #     validate_auth_token,

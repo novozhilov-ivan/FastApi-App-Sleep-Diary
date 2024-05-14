@@ -10,8 +10,8 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserInfo
 
 ns_account = Namespace(
-    name="account",
-    description="Описание account",
+    name="User account info",
+    description="Информация об аккаунте пользователя",
     path="/",
     decorators=[
         validate_auth_token,

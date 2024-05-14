@@ -9,9 +9,9 @@ from common.pydantic_schemas.sleep.diary import SleepDiaryModel
 from common.pydantic_schemas.user import User
 
 ns_sleep = Namespace(
-    name="sleep",
-    description="Описание sleep page",
-    path="/sleep",
+    name="Sleep diary",
+    description="Дневник сна и записи дневника",
+    path="/",
     # decorators=[
     #     validate_auth_token,
     # ],
