@@ -50,15 +50,16 @@ def create_user_credentials() -> UserCredentials:
 
 user_password_is_hashed = False
 exist_db_user_indirect_params = (user_password_is_hashed,)
+user_password_is_hashed_description = [
+    f"User pwd is {'' if pwd_hashed else 'UN'}hashed"
+    for pwd_hashed in exist_db_user_indirect_params
+]
 
 
 @pytest.fixture(
     name="exist_db_user",
     params=exist_db_user_indirect_params,
-    ids=[
-        f"User pwd is {'' if prefix else 'UN'}hashed"
-        for prefix in exist_db_user_indirect_params
-    ],
+    ids=user_password_is_hashed_description,
 )
 def create_db_user(
     request: FixtureRequest,
@@ -86,7 +87,7 @@ notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
 
 @pytest.fixture(
     params=notes_count_for_db,
-    ids=[f"{i} notes in db " for i in notes_count_for_db],
+    ids=[f"{amount} notes in db " for amount in notes_count_for_db],
 )
 def generated_diary(
     request: FixtureRequest,

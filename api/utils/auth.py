@@ -9,6 +9,7 @@ from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
     get_current_token_payload,
+    response_invalid_authorization_token_401,
     validate_token_type,
 )
 from common.baseclasses.status_codes import HTTP
@@ -62,14 +63,20 @@ def validate_auth_user(
 
 def get_user_by_token_sub(payload: dict) -> User:
     user_id = payload.get("sub")
-    return read_user_by_id(user_id)
+    user = read_user_by_id(user_id)
+    if user:
+        return user
+    abort(
+        code=HTTP.UNAUTHORIZED_401,
+        message=response_invalid_authorization_token_401,
+    )
 
 
 def get_auth_user_from_token_of_type(
     token_type: str | Literal["access", "refresh"],
 ) -> Callable:
     def get_current_auth_user() -> User:
-        payload = get_current_token_payload()
+        payload: dict = get_current_token_payload()
         validate_token_type(payload, token_type)
         current_user: User = get_user_by_token_sub(payload)
         return current_user

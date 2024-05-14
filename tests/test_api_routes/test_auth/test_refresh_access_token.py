@@ -60,8 +60,8 @@ class TestRefreshAccessToken:
         )
         expectation = {
             "message": response_invalid_token_type_401.format(
-                f"{ACCESS_TOKEN_TYPE!r}",
-                f"{REFRESH_TOKEN_TYPE!r}",
+                ACCESS_TOKEN_TYPE.__repr__(),
+                REFRESH_TOKEN_TYPE.__repr__(),
             )
         }
         response = Response(response)
