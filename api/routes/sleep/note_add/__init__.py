@@ -11,11 +11,11 @@ response_model_201 = response_schema(
 )
 add_note_payload = create_payload_from_model("json", SleepNote)
 
-from api.routes.sleep.add_note.add_note import AddNoteRoute  # noqa
+from api.routes.sleep.note_add.note_add import AddNoteRoute  # noqa
 
-add_note_endpoint = "note/add"
+note_add_endpoint = "/note/add"
 ns_sleep.add_resource(
     AddNoteRoute,
-    f"/{add_note_endpoint}",
-    endpoint=add_note_endpoint,
+    note_add_endpoint,
+    endpoint=note_add_endpoint,
 )

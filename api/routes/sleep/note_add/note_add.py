@@ -5,7 +5,7 @@ from api.CRUD.notations import create_one_note
 from api.models import Notation
 from api.routes import ns_sleep
 from api.routes.sleep import response_model_400, response_model_422, user_id_params
-from api.routes.sleep.add_note import add_note_payload, response_model_201
+from api.routes.sleep.note_add import add_note_payload, response_model_201
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
 from common.pydantic_schemas.user import User

@@ -4,6 +4,9 @@ from api.config import config
 from api.extension import api, db
 
 
+# TODO add ruff[isort, etc] | linters | pre-commit
+
+
 def create_app() -> Flask:
     # Initialize Flask App
     app = Flask(
