@@ -8,6 +8,12 @@ response_model_200 = response_schema(
     ns=ns_sleep,
     model=SleepNote,
 )
+response_not_found_404 = "Note with that calendar date not found"
+response_model_404 = response_schema(
+    code=HTTP.NOT_FOUND_404,
+    ns=ns_sleep,
+    description=response_not_found_404,
+)
 
 from api.routes.sleep.note_read.note_read import NoteReadRoute  # noqa
 

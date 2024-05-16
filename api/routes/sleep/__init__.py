@@ -12,9 +12,9 @@ ns_sleep = Namespace(
     name="Sleep diary",
     description="Дневник сна и записи дневника",
     path="/",
-    # decorators=[
-    #     validate_auth_token,
-    # ],
+    decorators=[
+        # validate_auth_token,
+    ],
 )
 ns_sleep.errorhandler(handler_unprocessable_entity_422)
 

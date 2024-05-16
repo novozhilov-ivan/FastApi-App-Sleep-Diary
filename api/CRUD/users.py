@@ -19,7 +19,7 @@ def read_user_by_username(username: str) -> User | None:
     return db_response.scalar_one_or_none()
 
 
-def read_user_by_id(user_id: int) -> User | None:
+def find_user_by_id(user_id: int) -> User | None:
     """Получает пользователя по id"""
 
     db_response = db.session.execute(
@@ -29,7 +29,6 @@ def read_user_by_id(user_id: int) -> User | None:
             User.id == user_id,
         )
     )
-    db.session.commit()
     return db_response.scalar_one_or_none()
 
 

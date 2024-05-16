@@ -1,10 +1,11 @@
 from flask_restx import Resource
 
+from api.CRUD.users import find_user_by_id
 from api.models import User
 from api.routes import ns_auth
 from api.routes.auth.refresh import response_model_200, response_model_401
 from api.routes.edit import response_model_422
-from api.utils.auth import get_current_auth_user_for_refresh
+from api.utils.auth import get_current_auth_user_id_for_refresh
 from api.utils.jwt import create_access_token, validate_auth_token
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.token import AccessTokenInfo
@@ -20,8 +21,9 @@ class AuthRefreshJWTRoute(Resource):
     @validate_auth_token
     @ns_auth.doc(description=__doc__)
     def post(self) -> tuple:
-        current_user: User = get_current_auth_user_for_refresh()
-        user: UserValidate = UserValidate.model_validate(current_user)
+        current_user_id: int = get_current_auth_user_id_for_refresh()
+        db_user: User = find_user_by_id(current_user_id)
+        user: UserValidate = UserValidate.model_validate(db_user)
         access_token: str = create_access_token(user)
         jwt_token: AccessTokenInfo = AccessTokenInfo(access_token=access_token)
         return jwt_token.model_dump(), HTTP.OK_200

@@ -1,7 +1,7 @@
 from flask import make_response, request
 from flask_restx import Resource
 
-from api.CRUD.notations import read_all_user_notes
+from api.CRUD.notations import find_all_user_notes
 from api.routes.edit import (
     ns_edit,
     response_model_404,
@@ -29,7 +29,7 @@ class EditRouteExport(Resource):
     @ns_edit.response(**response_model_422)
     def get(self):
         user = User(**request.args)
-        db_notes = read_all_user_notes(user.id)
+        db_notes = find_all_user_notes(user.id)
         if not db_notes:
             return response_not_found_404, HTTP.NOT_FOUND_404
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(

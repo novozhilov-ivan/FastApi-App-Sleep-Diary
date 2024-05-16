@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Resource
 
-from api.CRUD.notations import read_all_user_notes
+from api.CRUD.notations import find_all_user_notes
 from api.routes import ns_sleep
 from api.routes.sleep import (
     response_model_200,
@@ -34,7 +34,7 @@ class DiaryRoute(Resource):
     @ns_sleep.response(**response_model_422)
     def get(self):
         user = User(**request.args)
-        db_notes = read_all_user_notes(user.id)
+        db_notes = find_all_user_notes(user.id)
         if not db_notes:
             return SleepDiaryModelEmpty().model_dump(), HTTP.NOT_FOUND_404
         pd_notes = convert_db_notes_to_pydantic_model_notes(db_notes)

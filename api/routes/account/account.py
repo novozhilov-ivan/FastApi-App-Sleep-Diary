@@ -1,8 +1,10 @@
-from flask_restx import Resource
+from flask_restx import Resource, abort
 
+from api.CRUD.users import find_user_by_id
 from api.models import User
 from api.routes.account import ns_account, response_model_200, response_model_401
-from api.utils.auth import get_current_auth_user_for_access
+from api.utils.auth import get_current_auth_user_id_for_access
+from api.utils.jwt import response_invalid_authorization_token_401
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserInfo
 
@@ -14,6 +16,12 @@ class UserAccountRoute(Resource):
 
     @ns_account.doc(description=__doc__)
     def get(self) -> tuple:
-        current_user: User = get_current_auth_user_for_access()
-        user: UserInfo = UserInfo.model_validate(current_user)
+        current_user_id: int = get_current_auth_user_id_for_access()
+        db_user: User | None = find_user_by_id(current_user_id)
+        if db_user is None:
+            abort(
+                code=HTTP.UNAUTHORIZED_401,
+                message=response_invalid_authorization_token_401,
+            )
+        user: UserInfo = UserInfo.model_validate(db_user)
         return user.model_dump(mode="json"), HTTP.OK_200

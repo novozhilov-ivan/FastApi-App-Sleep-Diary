@@ -77,9 +77,7 @@ class TestAccountInfo:
         response = client.get(url_for(account_endpoint))
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        expectation = {
-            "message": response_invalid_authorization_token_401,
-        }
+        expectation = {"message": response_invalid_authorization_token_401}
         response.assert_data(expectation)
 
     @pytest.mark.account_401
