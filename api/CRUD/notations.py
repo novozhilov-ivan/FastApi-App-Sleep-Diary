@@ -7,7 +7,7 @@ from api.extension import db
 from api.models import Notation
 
 
-def read_all_user_notes(user_id: int) -> Iterable[Notation]:
+def find_all_user_notes(user_id: int) -> Iterable[Notation]:
     """Получает все записи пользователя и сортирует их по дате"""
     db_response = db.session.execute(
         select(
@@ -37,6 +37,25 @@ def find_user_note_by_calendar_date(
         )
         .where(
             Notation.calendar_date == calendar_date,
+        )
+    )
+    return db_response.scalar_one_or_none()
+
+
+def find_user_note_by_note_id(
+    note_id: int | str,
+    user_id: int,
+) -> Notation | None:
+    """Поиск записи сна пользователя по id записи"""
+    db_response = db.session.execute(
+        select(
+            Notation,
+        )
+        .where(
+            Notation.user_id == user_id,
+        )
+        .where(
+            Notation.id == note_id,
         )
     )
     return db_response.scalar_one_or_none()

@@ -4,6 +4,8 @@ from pydantic import AliasChoices, BaseModel, ConfigDict, Field, computed_field
 
 
 class DateOfSleepNote(BaseModel):
+    """Дата записи в дневнике сна"""
+
     calendar_date: date
 
 
