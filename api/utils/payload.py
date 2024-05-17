@@ -4,6 +4,7 @@ from flask_restx.reqparse import RequestParser
 from pydantic import BaseModel
 
 
+#  TODO Переделать на создание словаря, как в /note/
 def create_payload_from_model(
     location: Literal["json", "args", "files", "form"],
     model: Type[BaseModel],

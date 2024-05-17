@@ -12,4 +12,5 @@ from api.routes.main import ns_main
 from api.routes.sleep import ns_sleep
 from api.routes.sleep.diary import ns_sleep
 from api.routes.sleep.note_add import ns_sleep
-from api.routes.sleep.note_read import ns_sleep
+from api.routes.sleep.note_read_by_date import ns_sleep
+from api.routes.sleep.note_read_by_id import ns_sleep

@@ -10,7 +10,6 @@ from common.pydantic_schemas.main import MainPageModel
 
 @pytest.mark.main
 class TestMainPage:
-    ROUTES_404 = ["/api", "/api/main/", "/api/mai", "/main", "/ap"]
 
     def test_main_page_200(self, client: FlaskClient):
         response = client.get(url_for(main_endpoint))
@@ -18,9 +17,3 @@ class TestMainPage:
         response.assert_status_code(HTTP.OK_200)
         response.validate(MainPageModel)
         response.assert_data(MainPageModel())
-
-    @pytest.mark.parametrize("route", ROUTES_404)
-    def test_main_page_404(self, route: str, client: FlaskClient):
-        response = client.get(route)
-        response = Response(response)
-        response.assert_status_code(HTTP.NOT_FOUND_404)

@@ -23,6 +23,21 @@ class TestConfig(Config):
 test_configuration = TestConfig()
 
 
+# TODO оптимизировать фикстуры,
+#  распределить фикстуры по файлам,
+#  оптимизировать scope'ы.
+# TODO оптимизировать тесты,
+#  поработать над вкл/выкл авторизации для тестируемых роутов,
+#  передавать пользователя через header в token'е.
+
+# @pytest.fixture(scope='module')
+# def test_client():
+#     app = create_app()
+#     with app.test_client() as testing_client:
+#         with app.app_context():
+#             yield testing_client
+
+
 @pytest.fixture
 def app() -> Flask:
     assert test_configuration.TESTING is True

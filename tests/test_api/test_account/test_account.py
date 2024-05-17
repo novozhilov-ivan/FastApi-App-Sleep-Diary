@@ -16,7 +16,7 @@ from api.utils.jwt import (
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserInfo, UserValidate
-from tests.test_api_routes.test_auth.conftest import (
+from tests.test_api.test_auth.conftest import (
     exist_db_user_indirect_params,
     user_password_is_hashed,
     user_password_is_hashed_description,
