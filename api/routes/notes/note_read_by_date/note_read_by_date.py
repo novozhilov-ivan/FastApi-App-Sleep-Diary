@@ -20,7 +20,7 @@ from common.pydantic_schemas.sleep.notes import DateOfSleepNote, SleepNote
 @ns_notes.response(**response_model_200)
 @ns_notes.response(**response_model_401)
 @ns_notes.response(**response_model_404)
-class NoteReadByDateRoute(Resource):
+class NoteFindByDate(Resource):
     """Чтение записи из дневника сна по дате"""
 
     @ns_notes.doc(

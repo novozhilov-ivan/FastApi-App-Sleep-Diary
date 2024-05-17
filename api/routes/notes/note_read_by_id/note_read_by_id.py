@@ -18,7 +18,7 @@ from common.pydantic_schemas.sleep.notes import SleepNote
 @ns_notes.response(**response_model_200)
 @ns_notes.response(**response_model_401)
 @ns_notes.response(**response_model_404)
-class NoteReadByIdRoute(Resource):
+class NoteFindById(Resource):
     """Чтение записи из дневника сна по id"""
 
     @ns_notes.doc(

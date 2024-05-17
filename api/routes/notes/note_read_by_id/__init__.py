@@ -25,15 +25,3 @@ path_params = {
         "example": "42",
     },
 }
-note_read_by_id_endpoint = "/note"
-
-from api.routes.notes.note_read_by_id.note_read_by_id import (
-    NoteReadByIdRoute,
-    # noqa
-)
-
-ns_notes.add_resource(
-    NoteReadByIdRoute,
-    f"{note_read_by_id_endpoint}/<int:note_id>",
-    endpoint=note_read_by_id_endpoint,
-)

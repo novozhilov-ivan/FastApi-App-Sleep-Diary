@@ -12,6 +12,3 @@ from api.routes.edit.export_file import ns_edit
 from api.routes.edit.import_file import ns_edit
 from api.routes.main import ns_main
 from api.routes.notes import ns_notes
-from api.routes.notes.note_add import ns_notes
-from api.routes.notes.note_read_by_date import ns_notes
-from api.routes.notes.note_read_by_id import ns_notes

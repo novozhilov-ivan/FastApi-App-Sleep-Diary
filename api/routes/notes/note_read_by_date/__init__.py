@@ -27,15 +27,3 @@ path_params = {
         "pattern": pattern_date,
     },
 }
-
-note_read_by_date_endpoint = "/note/date"
-
-from api.routes.notes.note_read_by_date.note_read_by_date import (
-    NoteReadByDateRoute,
-)  # noqa
-
-ns_notes.add_resource(
-    NoteReadByDateRoute,
-    f"{note_read_by_date_endpoint}/<string:calendar_date>",
-    endpoint=note_read_by_date_endpoint,
-)

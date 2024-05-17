@@ -1,5 +1,4 @@
 from flask import request
-from flask_restx import Resource
 
 from api.CRUD.notations import create_one_note
 from api.models import Notation
@@ -11,7 +10,7 @@ from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
 from common.pydantic_schemas.user import User
 
 
-class AddNoteRoute(Resource):
+class AddNote:
     """Добавление новой записи в дневник сна"""
 
     @ns_notes.doc(description=__doc__)

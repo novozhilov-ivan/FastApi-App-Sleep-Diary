@@ -3,7 +3,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
-from api.routes.notes.note_add import note_add_endpoint
+from api.routes.notes import note_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
@@ -33,7 +33,7 @@ class TestSleepNotesPost:
             exclude={"user_id", "id"},
         )
         response = client.post(
-            url_for(note_add_endpoint),
+            url_for(note_endpoint),
             json=json_body,
             query_string={"user_id": db_user_id},
         )
@@ -47,7 +47,10 @@ class TestSleepNotesPost:
     def test_create_new_sleep_note_422(self, db_user_id: int, client: FlaskClient):
         random_note_wrong_values = SleepNoteGenerator().wrong_note(mode="json")
         response = client.post(
-            url_for(note_add_endpoint, id=db_user_id),
+            url_for(
+                note_endpoint,
+                id=db_user_id,
+            ),
             json=random_note_wrong_values,
         )
         response = Response(response)
