@@ -2,14 +2,14 @@ from flask import request
 from flask_restx import Resource
 
 from api.CRUD.notations import find_all_user_notes
-from api.routes import ns_sleep
-from api.routes.sleep import (
+from api.routes.diary import (
+    ns_diary,
     response_model_200,
     response_model_400,
+    response_model_404,
     response_model_422,
     user_id_params,
 )
-from api.routes.sleep.diary import response_model_404
 from api.utils.manage_notes import (
     convert_db_notes_to_pydantic_model_notes,
     slice_on_week,
@@ -26,12 +26,12 @@ from common.pydantic_schemas.user import User
 class DiaryRoute(Resource):
     """Получение всех записей дневника сна"""
 
-    @ns_sleep.doc(description=__doc__)
-    @ns_sleep.expect(user_id_params)
-    @ns_sleep.response(**response_model_200)
-    @ns_sleep.response(**response_model_404)
-    @ns_sleep.response(**response_model_400)
-    @ns_sleep.response(**response_model_422)
+    @ns_diary.doc(description=__doc__)
+    @ns_diary.expect(user_id_params)
+    @ns_diary.response(**response_model_200)
+    @ns_diary.response(**response_model_404)
+    @ns_diary.response(**response_model_400)
+    @ns_diary.response(**response_model_422)
     def get(self):
         user = User(**request.args)
         db_notes = find_all_user_notes(user.id)

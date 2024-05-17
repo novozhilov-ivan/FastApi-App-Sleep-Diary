@@ -6,6 +6,7 @@ from flask_restx.reqparse import Argument
 from api import config
 from api.CRUD.notations import create_many_notes
 from api.models import Notation
+from api.routes.diary import user_id_params
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (
     allowed_file_extensions,
@@ -21,7 +22,6 @@ from api.routes.edit.import_file import (
     response_model_415,
     response_unsupported_media_type_415,
 )
-from api.routes.sleep import user_id_params
 from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import User

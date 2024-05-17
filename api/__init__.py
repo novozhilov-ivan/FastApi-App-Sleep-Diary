@@ -32,15 +32,18 @@ def create_app() -> Flask:
     # Register Namespaces
     from api.routes import (
         ns_main,
-        ns_sleep,
+        ns_diary,
         ns_edit,
         ns_auth,
         ns_account,
+        ns_notes,
     )
 
     api.add_namespace(ns_main)
     api.add_namespace(ns_auth)
     api.add_namespace(ns_account)
-    api.add_namespace(ns_sleep)
+    api.add_namespace(ns_notes)
+    api.add_namespace(ns_diary)
     api.add_namespace(ns_edit)
+
     return app

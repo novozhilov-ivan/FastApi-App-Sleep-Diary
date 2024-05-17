@@ -3,7 +3,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
 
-from api.routes.sleep.note_add import note_add_endpoint
+from api.routes.notes.note_add import note_add_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator

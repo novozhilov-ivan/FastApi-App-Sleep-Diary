@@ -3,9 +3,9 @@ from flask_restx import Resource, abort
 from api.CRUD.notations import (
     find_user_note_by_note_id,
 )
-from api.routes import ns_sleep
 from api.routes.account import response_model_401
-from api.routes.sleep.note_read_by_id import (
+from api.routes.notes import ns_notes
+from api.routes.notes.note_read_by_id import (
     path_params,
     response_model_200,
     response_model_404,
@@ -15,13 +15,13 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNote
 
 
-@ns_sleep.response(**response_model_200)
-@ns_sleep.response(**response_model_401)
-@ns_sleep.response(**response_model_404)
+@ns_notes.response(**response_model_200)
+@ns_notes.response(**response_model_401)
+@ns_notes.response(**response_model_404)
 class NoteReadByIdRoute(Resource):
     """Чтение записи из дневника сна по id"""
 
-    @ns_sleep.doc(
+    @ns_notes.doc(
         description=__doc__,
         params=path_params,
     )

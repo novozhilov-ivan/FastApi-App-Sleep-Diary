@@ -2,6 +2,7 @@ from flask import make_response, request
 from flask_restx import Resource
 
 from api.CRUD.notations import find_all_user_notes
+from api.routes.diary import user_id_params
 from api.routes.edit import (
     ns_edit,
     response_model_404,
@@ -9,7 +10,6 @@ from api.routes.edit import (
     response_not_found_404,
 )
 from api.routes.edit.export_file import response_model_200
-from api.routes.sleep import user_id_params
 from api.utils.manage_notes import (
     FileDataConverter,
     convert_db_notes_to_pydantic_model_notes,
