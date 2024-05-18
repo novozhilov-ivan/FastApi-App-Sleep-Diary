@@ -9,7 +9,6 @@ from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
     create_access_token,
-    create_refresh_token,
     response_invalid_authorization_token_401,
     response_invalid_token_type_401,
 )
@@ -17,7 +16,9 @@ from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserInfo, UserValidate
 from tests.test_api.test_auth.conftest import (
+    access_token_header,
     exist_db_user_indirect_params,
+    refresh_token_header,
     user_password_is_hashed,
     user_password_is_hashed_description,
 )
@@ -29,17 +30,19 @@ from tests.test_api.test_auth.conftest import (
     indirect=user_password_is_hashed,
     ids=user_password_is_hashed_description,
 )
+@pytest.mark.account
 class TestAccountInfo:
 
+    @pytest.mark.account_200
     def test_account_info_200(
         self,
         client: FlaskClient,
         exist_db_user: User,
+        access_token_header: dict,
     ):
-        user = UserValidate.model_validate(exist_db_user)
         response = client.get(
             url_for(account_endpoint),
-            headers={"Authorization": f"{bearer} {create_access_token(user)}"},
+            headers=access_token_header,
         )
         response = Response(response)
         response.assert_status_code(HTTP.OK_200)
@@ -52,11 +55,11 @@ class TestAccountInfo:
         self,
         client: FlaskClient,
         exist_db_user: User,
+        refresh_token_header: dict,
     ):
-        user = UserValidate.model_validate(exist_db_user)
         response = client.get(
             url_for(account_endpoint),
-            headers={"Authorization": f"{bearer} {create_refresh_token(user)}"},
+            headers=refresh_token_header,
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)

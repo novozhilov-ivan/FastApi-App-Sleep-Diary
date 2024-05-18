@@ -29,7 +29,7 @@ response_model_422 = response_schema(
 from api.routes.notes.note_add.note_add import AddNote  # noqa
 from api.routes.notes.note_delete.note_delete import DeleteNote  # noqa
 from api.routes.notes.note_update.note_update import UpdateNote  # noqa
-from api.routes.notes.note_read_by_id.note_read_by_id import (
+from api.routes.notes.note_find_by_id.find_by_id import (
     NoteFindById,
     # noqa
 )
@@ -53,7 +53,7 @@ ns_notes.add_resource(
 
 note_find_by_id_endpoint = "note_id"
 
-from api.routes.notes.note_read_by_id.note_read_by_id import NoteFindById  # noqa
+from api.routes.notes.note_find_by_id.find_by_id import NoteFindById  # noqa
 
 ns_notes.add_resource(
     NoteFindById,
@@ -63,7 +63,7 @@ ns_notes.add_resource(
 
 note_find_by_date_endpoint = "note_date"
 
-from api.routes.notes.note_read_by_date.note_read_by_date import (
+from api.routes.notes.note_find_by_date.find_by_date import (
     NoteFindByDate,
     # noqa
 )
