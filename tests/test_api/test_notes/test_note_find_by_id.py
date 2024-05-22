@@ -3,6 +3,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 
 from api.routes.notes import note_find_by_id_endpoint
+from api.routes.notes.note_find_by_id import response_not_found_404
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
@@ -52,4 +53,22 @@ class TestNoteFindById:
         expectation = SleepNote(**note.model_dump())
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
+        response.assert_data(expectation)
+
+    def test_note_find_by_id_404(
+        self,
+        client: FlaskClient,
+        access_token_header: dict,
+    ):
+        non_exist_note_id = 666
+        response = client.get(
+            url_for(
+                endpoint=note_find_by_id_endpoint,
+                note_id=non_exist_note_id,
+            ),
+            headers=access_token_header,
+        )
+        response = Response(response)
+        expectation = {"message": response_not_found_404}
+        response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(expectation)

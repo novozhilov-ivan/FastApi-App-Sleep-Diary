@@ -1,12 +1,19 @@
+import datetime
+
 import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 
 from api.routes.notes import note_find_by_date_endpoint
+from api.routes.notes.note_find_by_date import response_not_found_404
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import (
+    DateOfSleepNote,
+    SleepNote,
+    SleepNoteCompute,
+)
 from tests.test_api.test_auth.conftest import (
     access_token_header,
     exist_db_user_indirect_params,
@@ -52,4 +59,24 @@ class TestNoteFindByDate:
         expectation = SleepNote(**note.model_dump())
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
+        response.assert_data(expectation)
+
+    def test_note_find_by_date_404(
+        self,
+        client: FlaskClient,
+        access_token_header: dict,
+    ):
+        non_exist_note_date = DateOfSleepNote(
+            calendar_date=datetime.date(day=22, month=12, year=2020),
+        )
+        response = client.get(
+            url_for(
+                endpoint=note_find_by_date_endpoint,
+                calendar_date=non_exist_note_date.calendar_date,
+            ),
+            headers=access_token_header,
+        )
+        response = Response(response)
+        expectation = {"message": response_not_found_404}
+        response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(expectation)
