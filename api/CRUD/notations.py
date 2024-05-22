@@ -43,7 +43,7 @@ def find_user_note_by_calendar_date(
 
 
 def find_user_note_by_note_id(
-    note_id: int | str,
+    note_id: int,
     user_id: int,
 ) -> Notation | None:
     """Поиск записи сна пользователя по id записи"""

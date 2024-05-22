@@ -13,6 +13,7 @@ from api.routes.notes.note_find_by_date import (
     response_model_404,
     response_not_found_404,
 )
+from api.utils.auth import get_current_auth_user_id_for_access
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import DateOfSleepNote, SleepNote
 
@@ -28,10 +29,10 @@ class NoteFindByDate(Resource):
         params=path_params,
     )
     def get(self, calendar_date: date):
-        # current_user_id: int = get_current_auth_user_id_for_access()
-        current_user_id: int = 2
-        print(current_user_id)
-        date_of_note = DateOfSleepNote(calendar_date=calendar_date)
+        current_user_id: int = get_current_auth_user_id_for_access()
+        date_of_note = DateOfSleepNote(
+            calendar_date=calendar_date,
+        )
         db_note = find_user_note_by_calendar_date(
             calendar_date=date_of_note.calendar_date,
             user_id=current_user_id,

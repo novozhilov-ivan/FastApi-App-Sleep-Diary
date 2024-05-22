@@ -11,6 +11,7 @@ from api.routes.notes.note_find_by_id import (
     response_model_404,
     response_not_found_404,
 )
+from api.utils.auth import get_current_auth_user_id_for_access
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNote
 
@@ -25,9 +26,8 @@ class NoteFindById(Resource):
         description=__doc__,
         params=path_params,
     )
-    def get(self, note_id: int | str):
-        # current_user_id: int = get_current_auth_user_id_for_access()
-        current_user_id: int = 2
+    def get(self, note_id: int):
+        current_user_id: int = get_current_auth_user_id_for_access()
         db_note = find_user_note_by_note_id(
             note_id=note_id,
             user_id=current_user_id,

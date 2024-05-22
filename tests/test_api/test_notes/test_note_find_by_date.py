@@ -2,7 +2,7 @@ import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 
-from api.routes.notes import note_find_by_id_endpoint
+from api.routes.notes import note_find_by_date_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
@@ -23,8 +23,8 @@ from tests.test_api.test_auth.conftest import (
 )
 @pytest.mark.notes
 @pytest.mark.notes_find
-@pytest.mark.notes_find_by_id
-class TestNoteFindById:
+@pytest.mark.notes_find_by_date
+class TestNoteFindByDate:
 
     @pytest.mark.notes_200
     @pytest.mark.parametrize(
@@ -32,7 +32,7 @@ class TestNoteFindById:
         (7,),
         indirect=True,
     )
-    def test_note_find_by_id_200(
+    def test_note_find_by_date_200(
         self,
         client: FlaskClient,
         access_token_header: dict,
@@ -43,8 +43,8 @@ class TestNoteFindById:
         note: SleepNoteCompute
         response = client.get(
             url_for(
-                endpoint=note_find_by_id_endpoint,
-                note_id=note.id,
+                endpoint=note_find_by_date_endpoint,
+                calendar_date=note.calendar_date,
             ),
             headers=access_token_header,
         )
