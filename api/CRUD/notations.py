@@ -44,7 +44,7 @@ def find_user_note_by_calendar_date(
 
 
 def find_user_note_by_note_id(
-    note_id: int | str,
+    note_id: int,
     user_id: int,
 ) -> Notation | None:
     """Поиск записи сна пользователя по id записи"""
@@ -62,24 +62,22 @@ def find_user_note_by_note_id(
     return db_response.scalar_one_or_none()
 
 
-def delete_user_note(user_id: int, note_id: int) -> bool:
-    try:
-        db.session.execute(
-            delete(
-                Notation,
-            )
-            .where(
-                Notation.user_id == user_id,
-            )
-            .where(
-                Notation.id == note_id,
-            )
+def delete_user_note(
+    user_id: int,
+    note_id: int,
+) -> None:
+    db.session.execute(
+        delete(
+            Notation,
         )
-        db.session.commit()
-    except SQLAlchemyError:
-        return False
-    else:
-        return True
+        .where(
+            Notation.id == note_id,
+        )
+        .where(
+            Notation.user_id == user_id,
+        )
+    )
+    db.session.commit()
 
 
 def update_user_note(note: Notation) -> Notation | None:
