@@ -10,7 +10,7 @@ class DateOfSleepNote(BaseModel):
 
 
 class SleepNote(BaseModel):
-    """Запись в дневник сна"""
+    """Запись в дневнике сна"""
 
     calendar_date: date = Field(
         title="Дата",
@@ -36,7 +36,10 @@ class SleepNote(BaseModel):
         title="Не спал",
         examples=["00:19", "00:32", "00:06", "01:20"],
         alias="without_sleep",
-        validation_alias=AliasChoices("time_of_night_awakenings", "without_sleep"),
+        validation_alias=AliasChoices(
+            "time_of_night_awakenings",
+            "without_sleep",
+        ),
     )
     model_config = ConfigDict(from_attributes=True)
 
@@ -52,10 +55,7 @@ class SleepNoteStatistics(SleepNote):
 
 
 class SleepNoteMeta(BaseModel):
-    id: int | str = Field(
-        title="Идентификатор записи дневника сна",
-        alias="note_id",
-    )
+    id: int | str = Field(title="Идентификатор записи дневника сна")
     user_id: int = Field(title="Идентификатор пользователя дневника сна")
 
 

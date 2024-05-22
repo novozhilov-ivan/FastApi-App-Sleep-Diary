@@ -16,9 +16,9 @@ response_model_404 = response_schema(
 )
 
 path_params = {
-    "note_id": {
+    "id": {
         "in": "path",
-        "description": "ID записи",
+        "description": "Идентификатор записи",
         "required": True,
         "type": "integer",
         "format": "int32",

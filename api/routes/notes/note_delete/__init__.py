@@ -10,9 +10,9 @@ response_model_204 = response_schema(
 )
 
 note_id_params = {
-    "note_id": {
+    "id": {
         "in": "query",
-        "description": "ID записи",
+        "description": "Идентификатор записи",
         "required": True,
         "type": "integer",
         "format": "int32",

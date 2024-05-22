@@ -33,8 +33,8 @@ class DeleteNote:
             **request.args,
         )
         note_is_delete = delete_user_note(
-            note.user_id,
-            note.id,
+            user_id=note.user_id,
+            note_id=note.id,
         )
         if not note_is_delete:
             abort(

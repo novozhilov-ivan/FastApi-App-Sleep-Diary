@@ -42,8 +42,8 @@ class NotesRoute(
 
 
 note_endpoint = "note"
-note_find_by_id_endpoint = "note_id"
-note_find_by_date_endpoint = "note_date"
+note_find_by_id_endpoint = "note_find_by_id"
+note_find_by_date_endpoint = "note_find_by_date"
 
 ns_notes.add_resource(
     NotesRoute,
@@ -53,7 +53,7 @@ ns_notes.add_resource(
 
 ns_notes.add_resource(
     NoteFindById,
-    "/<int:note_id>",
+    "/<int:id>",
     endpoint=note_find_by_id_endpoint,
 )
 

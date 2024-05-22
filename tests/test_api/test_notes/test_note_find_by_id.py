@@ -45,7 +45,7 @@ class TestNoteFindById:
         response = client.get(
             url_for(
                 endpoint=note_find_by_id_endpoint,
-                note_id=note.id,
+                id=note.id,
             ),
             headers=access_token_header,
         )
@@ -64,7 +64,7 @@ class TestNoteFindById:
         response = client.get(
             url_for(
                 endpoint=note_find_by_id_endpoint,
-                note_id=non_exist_note_id,
+                id=non_exist_note_id,
             ),
             headers=access_token_header,
         )

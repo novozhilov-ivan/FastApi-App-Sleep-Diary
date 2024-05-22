@@ -8,10 +8,11 @@ from api.routes.edit import response_model_422
 from api.routes.notes import ns_notes
 from api.routes.notes.note_delete import note_id_params
 from api.routes.notes.note_find_by_id import (
+    response_model_200,
     response_model_404,
     response_not_found_404,
 )
-from api.routes.notes.note_update import response_model_200
+from api.routes.notes.note_update import update_note_params
 from api.utils.auth import get_current_auth_user_id_for_access
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import (
@@ -29,7 +30,10 @@ class UpdateNote:
 
     @ns_notes.doc(
         description=__doc__,
-        params=note_id_params,
+        params={
+            **note_id_params,
+            **update_note_params,
+        },
     )
     def patch(self):
         current_user_id: int = get_current_auth_user_id_for_access()
