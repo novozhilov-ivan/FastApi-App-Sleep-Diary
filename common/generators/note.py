@@ -1,11 +1,11 @@
 import random
-from datetime import datetime, timezone, date, time
+from datetime import date, datetime, time, timezone
 from random import randrange
-from typing import Type, Literal
+from typing import Literal, Type
 
 from faker import Faker
 
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
+from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 
 faker = Faker()
 
@@ -39,8 +39,8 @@ class SleepNoteGenerator:
         note_id: int = 1,
         user_id: int = 1,
         date_of_note: float = datetime.now(timezone.utc).timestamp(),
-        model: Type = SleepNoteCompute,
-    ) -> SleepNoteCompute:
+        model: Type = SleepNoteWithStats,
+    ) -> SleepNoteWithStats:
         rand_bedtime = self._rand_time()
         rand_asleep = self._rand_time(
             start_h=rand_bedtime.hour, start_m=rand_bedtime.minute

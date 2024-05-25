@@ -11,8 +11,8 @@ from common.generators.note import SleepNoteGenerator
 from common.pydantic_schemas.errors.message import ErrorResponse
 from common.pydantic_schemas.sleep.notes import (
     SleepNote,
-    SleepNoteCompute,
     SleepNoteModel,
+    SleepNoteWithStats,
 )
 
 
@@ -26,7 +26,7 @@ class TestSleepNotesPost:
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_201(self, db_user_id: int, client: FlaskClient):
         new_note = SleepDiaryGenerator(db_user_id)
-        created_note: SleepNoteCompute = new_note.create_note()
+        created_note: SleepNoteWithStats = new_note.create_note()
         json_body: dict = created_note.model_dump(
             mode="json",
             by_alias=True,

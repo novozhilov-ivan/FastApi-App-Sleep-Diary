@@ -6,7 +6,7 @@ from api.routes.notes import note_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteWithStats
 from tests.test_api.test_auth.conftest import (
     access_token_header,
     exist_db_user_indirect_params,
@@ -38,7 +38,7 @@ class TestNoteDelete:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        note: SleepNoteCompute
+        note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
         response = client.delete(
             url_for(
@@ -59,7 +59,7 @@ class TestNoteDelete:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        note: SleepNoteCompute
+        note: SleepNoteWithStats
         *_, last_note = saved_diary.notes
         non_exist_note_id: int = 666 + last_note.id
         response = client.delete(

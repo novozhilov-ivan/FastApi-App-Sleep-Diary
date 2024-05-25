@@ -6,7 +6,7 @@ from api.routes.diary import response_model_400, response_model_422, user_id_par
 from api.routes.notes import ns_notes
 from api.routes.notes.note_add import add_note_payload, response_model_201
 from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 from common.pydantic_schemas.user import User
 
 
@@ -27,5 +27,5 @@ class AddNote:
             **new_note.model_dump(by_alias=True),
         )
         new_db_note = create_one_note(new_db_note)
-        created_note = SleepNoteCompute.model_validate(new_db_note)
+        created_note = SleepNoteWithStats.model_validate(new_db_note)
         return created_note.model_dump(mode="json"), HTTP.CREATED_201

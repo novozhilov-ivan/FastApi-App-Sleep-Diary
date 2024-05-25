@@ -60,6 +60,7 @@ class Response:
         error_message = (
             f"\nStatus code: {self.response_status}\n"
             f"Requested url: {self.response.request.full_path}\n"
+            f"Request method: {self.response.request.method}\n"
             f"Response body: {self.response_json}\n"
             f"Response type: {type(self.response_json)}\n"
         )

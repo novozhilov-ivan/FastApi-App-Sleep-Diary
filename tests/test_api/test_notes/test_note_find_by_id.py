@@ -7,7 +7,7 @@ from api.routes.notes.note_find_by_id import response_not_found_404
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 from tests.test_api.test_auth.conftest import (
     access_token_header,
     exist_db_user_indirect_params,
@@ -41,7 +41,7 @@ class TestNoteFindById:
         generated_diary: SleepDiaryGenerator,
     ):
         note, *_ = saved_diary.notes
-        note: SleepNoteCompute
+        note: SleepNoteWithStats
         response = client.get(
             url_for(
                 endpoint=note_find_by_id_endpoint,

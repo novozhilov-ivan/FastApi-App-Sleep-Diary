@@ -1,7 +1,7 @@
 from datetime import date
 from typing import Iterable
 
-from sqlalchemy import delete, select
+from sqlalchemy import delete, select, update
 from sqlalchemy.exc import SQLAlchemyError
 
 from api.extension import db
@@ -81,10 +81,19 @@ def delete_user_note(
 
 
 def update_user_note(note: Notation) -> Notation | None:
+
     try:
+        db.session.execute(
+            update(
+                Notation,
+            )
+            .where(
+                Notation.id == int(note.id),
+            )
+            .values(**note.__dict__)
+        )
         db.session.merge(note)
         db.session.commit()
-        db.session.refresh(note)
     except SQLAlchemyError:
         return None
     else:

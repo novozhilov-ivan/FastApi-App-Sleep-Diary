@@ -1,9 +1,9 @@
 from datetime import time
+
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 from typing_extensions import Annotated
 
-from pydantic import BaseModel, computed_field, Field, ConfigDict
-
-from common.pydantic_schemas.sleep.notes import SleepNoteModel, SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNoteModel, SleepNoteWithStats
 
 
 class SleepDiaryWeeklyStatistic(BaseModel):
@@ -22,7 +22,7 @@ class SleepDiaryWeekModel(SleepDiaryWeeklyNotesModel, SleepDiaryWeeklyStatistic)
 
 
 class SleepDiaryWeeklyNotes(BaseModel):
-    notes: Annotated[list[SleepNoteCompute], Field(max_length=7)]
+    notes: Annotated[list[SleepNoteWithStats], Field(max_length=7)]
 
 
 class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
@@ -32,7 +32,7 @@ class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
         return len(self.notes)
 
     @staticmethod
-    def get_average_time(notes: list[SleepNoteCompute], field_name: str) -> time:
+    def get_average_time(notes: list[SleepNoteWithStats], field_name: str) -> time:
         if not notes:
             return time(0, 0)
         minutes_of_sleep = 0

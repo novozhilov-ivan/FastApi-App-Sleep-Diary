@@ -25,11 +25,17 @@ class Notation(db.Model):
     rise = Column(Time, nullable=False)
     without_sleep = Column(Time, name="without_sleep", nullable=False)
     user_id = Column(Integer, ForeignKey("user.id"), nullable=False)
-    user = relationship("User", lazy=True, backref=backref("notations", lazy=True))
+    user = relationship(
+        "User",
+        lazy=True,
+        backref=backref("notations", lazy=True),
+    )
 
     __table_args__ = (
         UniqueConstraint(
-            "calendar_date", "user_id", name="uniq_calendar_date_for_user"
+            "calendar_date",
+            "user_id",
+            name="uniq_calendar_date_for_user",
         ),
     )
 

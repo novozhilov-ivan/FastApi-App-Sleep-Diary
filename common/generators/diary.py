@@ -1,18 +1,17 @@
+from datetime import date, datetime, time, timezone
 from random import randrange
-
-from datetime import date, time, timezone, datetime
 from typing import Type
 
 from api.utils.manage_notes import slice_on_week
 from common.pydantic_schemas.sleep.diary import SleepDiaryCompute, SleepDiaryModel
-from common.pydantic_schemas.sleep.notes import SleepNoteCompute, SleepNote
+from common.pydantic_schemas.sleep.notes import SleepNoteWithStats
 
 
 class SleepDiaryGenerator:
     def __init__(self, user_id: int = 1, notes_count: int = 1):
         self.user_id: int = user_id
         self.notes_count: int = notes_count
-        self.notes: list[SleepNoteCompute] = self._create_notes()
+        self.notes: list[SleepNoteWithStats] = self._create_notes()
         self.diary: SleepDiaryModel = self._build_sleep_diary()
 
     def convert_model(self, model: Type, by_alias=True, **kw):
@@ -40,8 +39,7 @@ class SleepDiaryGenerator:
         self,
         note_id: int = 1,
         date_of_note: float | None = None,
-        as_model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute,
-    ) -> SleepNoteCompute | SleepNote:
+    ) -> SleepNoteWithStats:
         if date_of_note is None:
             date_of_note = datetime.now(timezone.utc).timestamp()
         rand_bedtime = self._rand_time()
@@ -58,7 +56,7 @@ class SleepDiaryGenerator:
             stop_h=rand_awake.hour - rand_asleep.hour,
             stop_m=rand_awake.minute - rand_asleep.minute,
         )
-        return as_model(
+        return SleepNoteWithStats(
             id=note_id,
             user_id=self.user_id,
             calendar_date=date.fromtimestamp(date_of_note),
@@ -66,10 +64,10 @@ class SleepDiaryGenerator:
             asleep=rand_asleep,
             awake=rand_awake,
             rise=rand_rise,
-            time_of_night_awakenings=rand_time_of_night_awakenings,
+            without_sleep=rand_time_of_night_awakenings,
         )
 
-    def _create_notes(self, start_note_id: int = 1) -> list[SleepNoteCompute]:
+    def _create_notes(self, start_note_id: int = 1) -> list[SleepNoteWithStats]:
         self.notes = []
         self._generate_notes_data(start_note_id)
         return self.notes

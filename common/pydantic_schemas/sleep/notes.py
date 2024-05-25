@@ -44,6 +44,25 @@ class SleepNote(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
+class SleepNoteOptional(BaseModel):
+    """Запись в дневнике сна. Поля необязательные"""
+
+    calendar_date: date | None = Field(default=None)
+    bedtime: time | None = Field(default=None)
+    asleep: time | None = Field(default=None)
+    awake: time | None = Field(default=None)
+    rise: time | None = Field(default=None)
+    time_of_night_awakenings: time | None = Field(
+        default=None,
+        alias="without_sleep",
+        validation_alias=AliasChoices(
+            "time_of_night_awakenings",
+            "without_sleep",
+        ),
+    )
+    model_config = ConfigDict(from_attributes=True)
+
+
 class ListWithSleepNotes(BaseModel):
     notes: list[SleepNote]
 
@@ -66,15 +85,15 @@ class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepNoteCompute(SleepNote, SleepNoteMeta):
+class SleepNoteWithStats(SleepNote, SleepNoteMeta):
     @staticmethod
     def time_to_minutes(time_point: time) -> int:
         return time_point.hour * 60 + time_point.minute
 
     @staticmethod
     def time_diff(subtractor: time, subtrahend: time) -> int:
-        diff = SleepNoteCompute.time_to_minutes(subtractor)
-        diff -= SleepNoteCompute.time_to_minutes(subtrahend)
+        diff = SleepNoteWithStats.time_to_minutes(subtractor)
+        diff -= SleepNoteWithStats.time_to_minutes(subtrahend)
         return diff
 
     @staticmethod

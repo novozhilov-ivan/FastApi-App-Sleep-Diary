@@ -18,6 +18,7 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import (
     SleepNote,
     SleepNoteMeta,
+    SleepNoteOptional,
 )
 
 
@@ -41,13 +42,15 @@ class UpdateNote:
             user_id=current_user_id,
             **request.args,
         )
-        note = SleepNote(**request.json)
-
+        note = SleepNoteOptional(**request.json)
         db_note = Notation(
             **note_meta.model_dump(),
-            **note.model_dump(by_alias=True),
+            **note.model_dump(
+                by_alias=True,
+                exclude_none=True,
+            ),
         )
-        updated_db_note = update_user_note(db_note)
+        updated_db_note: Notation | None = update_user_note(db_note)
         if updated_db_note is None:
             abort(
                 code=HTTP.NOT_FOUND_404,

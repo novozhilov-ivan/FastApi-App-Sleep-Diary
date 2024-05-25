@@ -12,7 +12,7 @@ from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.notes import (
     DateOfSleepNote,
     SleepNote,
-    SleepNoteCompute,
+    SleepNoteWithStats,
 )
 from tests.test_api.test_auth.conftest import (
     access_token_header,
@@ -47,7 +47,7 @@ class TestNoteFindByDate:
         generated_diary: SleepDiaryGenerator,
     ):
         note, *_ = saved_diary.notes
-        note: SleepNoteCompute
+        note: SleepNoteWithStats
         response = client.get(
             url_for(
                 endpoint=note_find_by_date_endpoint,

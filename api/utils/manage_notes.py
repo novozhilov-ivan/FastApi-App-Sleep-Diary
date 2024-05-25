@@ -5,11 +5,11 @@ from pydantic import BaseModel, TypeAdapter
 from werkzeug.datastructures import FileStorage
 
 from api.models import Notation
-from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteCompute
+from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
 
 
-def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
+def slice_on_week(days: list[SleepNoteWithStats]) -> list[SleepDiaryWeekCompute]:
     weeks = []
     week_len = 7
     for notes_batch in batched(days, week_len):
@@ -20,8 +20,8 @@ def slice_on_week(days: list[SleepNoteCompute]) -> list[SleepDiaryWeekCompute]:
 
 def convert_db_notes_to_pydantic_model_notes(
     db_notes: Iterable[Notation],
-    model: Type[SleepNoteCompute | SleepNote] = SleepNoteCompute,
-) -> list[SleepNoteCompute | SleepNote]:
+    model: Type[SleepNoteWithStats | SleepNote] = SleepNoteWithStats,
+) -> list[SleepNoteWithStats | SleepNote]:
     type_adapter = TypeAdapter(list[model])
 
     return type_adapter.validate_python(db_notes, from_attributes=True)
