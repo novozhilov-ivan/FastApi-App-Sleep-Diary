@@ -43,14 +43,15 @@ class UpdateNote:
             **request.args,
         )
         note = SleepNoteOptional(**request.json)
-        db_note = Notation(
-            **note_meta.model_dump(),
-            **note.model_dump(
+
+        updated_db_note: Notation | None = update_user_note(
+            note_id=note_meta.id,
+            user_id=note_meta.user_id,
+            note_values=note.model_dump(
                 by_alias=True,
                 exclude_none=True,
             ),
         )
-        updated_db_note: Notation | None = update_user_note(db_note)
         if updated_db_note is None:
             abort(
                 code=HTTP.NOT_FOUND_404,

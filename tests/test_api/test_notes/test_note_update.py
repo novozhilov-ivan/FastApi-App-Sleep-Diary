@@ -45,18 +45,49 @@ class TestNoteUpdate:
 
     new_date = datetime.now(timezone.utc).timestamp() + 60 * 60 * 24 * 666
     new_note = SleepDiaryGenerator().create_note(date_of_note=new_date)
+    new_note_dict = new_note.model_dump(exclude={"id", "user_id"})
+
+    @pytest.mark.notes_200
+    @pytest.mark.notes_update_200
+    def test_note_update_200_all_values_is_same(
+        self,
+        client: FlaskClient,
+        access_token_header: dict,
+        saved_diary: SleepDiaryGenerator,
+        generated_diary: SleepDiaryGenerator,
+    ):
+        exist_note: SleepNoteWithStats
+        exist_note, *_ = saved_diary.notes
+        updated_note = SleepNoteOptional.model_validate(exist_note)
+        response = client.patch(
+            url_for(
+                endpoint=note_endpoint,
+            ),
+            headers=access_token_header,
+            query_string={
+                "id": exist_note.user_id,
+            },
+            json=updated_note.model_dump(
+                mode="json",
+            ),
+        )
+        response = Response(response)
+        response.assert_status_code(HTTP.OK_200)
+        expectation = SleepNote.model_validate(updated_note)
+        response.validate(SleepNote)
+        response.assert_data(expectation)
 
     @pytest.mark.notes_200
     @pytest.mark.notes_update_200
     @pytest.mark.parametrize(
         "exclude_fields",
         (
-            {
-                "awake",
-            },
+                {
+                    "awake",
+                },
         ),
     )
-    def test_note_update_200(
+    def test_note_update_200_without_some_fields(
         self,
         client: FlaskClient,
         exclude_fields: set,
@@ -64,33 +95,29 @@ class TestNoteUpdate:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        exist_note_with_stats: SleepNoteWithStats
-        exist_note_with_stats, *_ = saved_diary.notes
-        note_optional_fields: SleepNoteOptional = SleepNoteOptional(
-            **exist_note_with_stats.model_dump(),
-        )
-        note_optional_fields: dict = note_optional_fields.model_dump()
-        note_optional_fields.update(self.new_note.model_dump())
-        note_optional_fields: SleepNoteOptional = SleepNoteOptional(
-            **note_optional_fields,
-        )
-        payload = note_optional_fields.model_dump(
-            mode="json",
-            exclude=exclude_fields,
-        )
-        query = {"id": exist_note_with_stats.user_id}
-        print(payload, query)
-        # TODO Доделать тест и роут
+        exist_note: SleepNoteWithStats
+        exist_note, *_ = saved_diary.notes
+        exist_note_dict = exist_note.model_dump()
+        exist_note_dict.update(self.new_note_dict)
+        updated_note = SleepNoteOptional.model_validate(exist_note_dict)
         response = client.patch(
             url_for(endpoint=note_endpoint),
-            json=payload,
-            query_string=query,
             headers=access_token_header,
+            query_string={
+                "id": exist_note.user_id,
+            },
+            json=updated_note.model_dump(
+                mode="json",
+                exclude=exclude_fields,
+            ),
         )
         response = Response(response)
         response.assert_status_code(HTTP.OK_200)
+        expectation = SleepNote.model_validate(exist_note_dict)
         response.validate(SleepNote)
-        response.assert_data(None)
+        print(expectation.model_dump(by_alias=True))
+        # TODO Почти доделано, не сходится assert_data(expectation)
+        response.assert_data(expectation)
 
     @pytest.mark.notes_404
     @pytest.mark.notes_update_404
@@ -113,6 +140,5 @@ class TestNoteUpdate:
         generated_diary: SleepDiaryGenerator,
     ):
         pass
-
 
 # TODO Написать тесты

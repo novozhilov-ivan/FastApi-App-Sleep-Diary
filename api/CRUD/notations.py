@@ -80,24 +80,29 @@ def delete_user_note(
     db.session.commit()
 
 
-def update_user_note(note: Notation) -> Notation | None:
-
+def update_user_note(
+    note_id: int,
+    user_id: int,
+    note_values: dict,
+) -> Notation | None:
     try:
         db.session.execute(
             update(
                 Notation,
             )
             .where(
-                Notation.id == int(note.id),
+                Notation.id == note_id,
             )
-            .values(**note.__dict__)
+            .values(note_values)
         )
-        db.session.merge(note)
         db.session.commit()
     except SQLAlchemyError:
         return None
     else:
-        return note
+        return find_user_note_by_note_id(
+            note_id=note_id,
+            user_id=user_id,
+        )
 
 
 def delete_all_user_notes(user_id: int) -> None:
