@@ -14,10 +14,10 @@ class SleepDiaryGenerator:
         self.notes: list[SleepNoteWithStats] = self._create_notes()
         self.diary: SleepDiaryModel = self._build_sleep_diary()
 
-    def convert_model(self, model: Type, by_alias=True, **kw):
+    def convert_model(self, model: Type, **kw):
         converted_notes = []
         for note in self.notes:
-            converted_note = model(**note.model_dump(by_alias=by_alias, **kw))
+            converted_note = model(**note.model_dump(**kw))
             converted_notes.append(converted_note)
         return converted_notes
 

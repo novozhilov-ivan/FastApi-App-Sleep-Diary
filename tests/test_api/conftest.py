@@ -84,7 +84,7 @@ def create_db_user(
     client: FlaskClient,
 ) -> User:
     pwd_is_hashed: bool = request.param
-    new_user = User(**user_credentials.model_dump(by_alias=True))
+    new_user = User(**user_credentials.model_dump())
     if pwd_is_hashed:
         new_user.password = hash_password(user_credentials.password)
     with client.application.app_context():
