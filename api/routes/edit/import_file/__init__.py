@@ -9,7 +9,7 @@ import_file_payload = create_payload(
     type_="file",
     required=True,
     description=f"Файл формата {', '.join(allowed_file_extensions)} с "
-    f"записями дневника сна",
+                f"записями дневника сна",
     location="files",
 )
 response_created_201 = "All imported notes have been created"
@@ -48,4 +48,8 @@ response_model_413 = response_schema(
 from api.routes.edit.import_file.edit_import import EditRouteImport  # noqa
 
 import_notes_endpoint = "import-notes"
-ns_edit.add_resource(EditRouteImport, "/import", endpoint=import_notes_endpoint)
+ns_edit.add_resource(
+    EditRouteImport,
+    "/import",
+    endpoint=import_notes_endpoint,
+)

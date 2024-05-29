@@ -8,15 +8,15 @@ from api.utils.jwt import validate_auth_token
 from common.baseclasses.status_codes import HTTP
 
 
-@ns_auth.response(**response_model_200)
-@ns_auth.response(**response_model_401)
-@ns_auth.response(**response_model_422)
 class DeAuthUserRoute(Resource):
     """Выход пользователя из аккаунта"""
 
+    @validate_auth_token
+    @ns_auth.response(**response_model_200)
+    @ns_auth.response(**response_model_401)
+    @ns_auth.response(**response_model_422)
     @ns_auth.doc(description=__doc__)
     @ns_auth.deprecated
-    @validate_auth_token
     def post(self) -> tuple:
         # TODO удалить действительные токены, то есть
         #  добавить пару access и refresh токенов в black list, то есть сделать

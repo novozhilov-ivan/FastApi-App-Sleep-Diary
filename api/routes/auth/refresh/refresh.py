@@ -12,13 +12,13 @@ from common.pydantic_schemas.token import AccessTokenInfo
 from common.pydantic_schemas.user import UserValidate
 
 
-@ns_auth.response(**response_model_200)
-@ns_auth.response(**response_model_401)
-@ns_auth.response(**response_model_422)
 class AuthRefreshJWTRoute(Resource):
     """Обновление Access токена с помощью Refresh токена"""
 
     @validate_auth_token
+    @ns_auth.response(**response_model_200)
+    @ns_auth.response(**response_model_401)
+    @ns_auth.response(**response_model_422)
     @ns_auth.doc(description=__doc__)
     def post(self) -> tuple:
         current_user_id: int = get_current_auth_user_id_for_refresh()

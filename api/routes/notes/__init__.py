@@ -1,6 +1,7 @@
 from flask_restx import Namespace, Resource
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
+from api.utils.jwt import validate_auth_token
 from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
@@ -10,7 +11,7 @@ ns_notes = Namespace(
     description="Записи из дневника сна",
     path="/note",
     decorators=[
-        # validate_auth_token,
+        validate_auth_token,
     ],
 )
 ns_notes.errorhandler(handler_unprocessable_entity_422)
@@ -38,7 +39,8 @@ class NotesRoute(
     AddNote,
     UpdateNote,
     DeleteNote,
-): ...  # noqa
+):
+    ...  # noqa
 
 
 note_endpoint = "note"

@@ -15,12 +15,12 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNote
 
 
-@ns_notes.response(**response_model_200)
-@ns_notes.response(**response_model_401)
-@ns_notes.response(**response_model_404)
 class NoteFindById(Resource):
     """Чтение записи из дневника сна по id"""
 
+    @ns_notes.response(**response_model_200)
+    @ns_notes.response(**response_model_401)
+    @ns_notes.response(**response_model_404)
     @ns_notes.doc(
         description=__doc__,
         params=path_params,

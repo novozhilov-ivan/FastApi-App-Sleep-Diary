@@ -13,4 +13,8 @@ response_model_200 = response_schema(
 from api.routes.edit.export_file.edit_export import EditRouteExport  # noqa
 
 export_notes_endpoint = "export_notes"
-ns_edit.add_resource(EditRouteExport, "/export", endpoint=export_notes_endpoint)
+ns_edit.add_resource(
+    EditRouteExport,
+    "/export",
+    endpoint=export_notes_endpoint,
+)

@@ -10,8 +10,11 @@ response_model_204 = response_schema(
     description=response_no_content_204,
 )
 
-
 from api.routes.edit.delete_diary.edit_delete import EditRouteDelete  # noqa
 
 delete_notes_endpoint = "delete_notes"
-ns_edit.add_resource(EditRouteDelete, "/delete", endpoint=delete_notes_endpoint)
+ns_edit.add_resource(
+    EditRouteDelete,
+    "/delete",
+    endpoint=delete_notes_endpoint,
+)

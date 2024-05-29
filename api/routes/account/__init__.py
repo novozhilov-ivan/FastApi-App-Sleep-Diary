@@ -29,7 +29,6 @@ from api.routes.account.account_find.account import FindAccount  # noqa
 from api.routes.account.account_delete.account_delete import DeleteAccount  # noqa
 
 
-# TODO Наследуются/перемешиваются схемы ответа
 class AccountRoute(
     Resource,
     FindAccount,

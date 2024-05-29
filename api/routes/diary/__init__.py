@@ -1,6 +1,7 @@
 from flask_restx import Namespace
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
+from api.utils.jwt import validate_auth_token
 from api.utils.payload import create_payload_from_model
 from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
@@ -11,9 +12,9 @@ from common.pydantic_schemas.user import User
 ns_diary = Namespace(
     name="Sleep diary",
     description="Дневник сна, все записи и статистика",
-    path="/",
+    path="/diary",
     decorators=[
-        # validate_auth_token,
+        validate_auth_token,
     ],
 )
 ns_diary.errorhandler(handler_unprocessable_entity_422)
@@ -46,6 +47,6 @@ from api.routes.diary.diary import DiaryRoute  # noqa
 diary_endpoint = "diary"
 ns_diary.add_resource(
     DiaryRoute,
-    f"/{diary_endpoint}",
+    f"",
     endpoint=diary_endpoint,
 )

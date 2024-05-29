@@ -10,11 +10,11 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserInfo
 
 
-@ns_account.response(**response_model_200)
-@ns_account.response(**response_model_401)
 class FindAccount:
     """Информация об аккаунте пользователя"""
 
+    @ns_account.response(**response_model_200)
+    @ns_account.response(**response_model_401)
     @ns_account.doc(description=__doc__)
     def get(self) -> tuple:
         current_user_id: int = get_current_auth_user_id_for_access()

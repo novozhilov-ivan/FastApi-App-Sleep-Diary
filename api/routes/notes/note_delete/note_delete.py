@@ -10,12 +10,12 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import SleepNoteMeta
 
 
-@ns_notes.response(**response_model_204)
-@ns_notes.response(**response_model_401)
-@ns_notes.response(**response_model_422)
 class DeleteNote:
     """Удаление записи из дневника по id"""
 
+    @ns_notes.response(**response_model_204)
+    @ns_notes.response(**response_model_401)
+    @ns_notes.response(**response_model_422)
     @ns_notes.doc(
         description=__doc__,
         params=note_id_params,

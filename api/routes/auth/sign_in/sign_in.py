@@ -15,12 +15,12 @@ from common.pydantic_schemas.token import TokenInfo
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
-@ns_auth.response(**response_model_200)
-@ns_auth.response(**response_model_401)
-@ns_auth.response(**response_model_422)
 class AuthUserRoute(Resource):
     """Авторизация в приложении по логину и паролю"""
 
+    @ns_auth.response(**response_model_200)
+    @ns_auth.response(**response_model_401)
+    @ns_auth.response(**response_model_422)
     @ns_auth.doc(
         description=__doc__,
         security=None,

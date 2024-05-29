@@ -54,7 +54,10 @@ class EditRouteImport(Resource):
                 HTTP.UNSUPPORTED_MEDIA_TYPE_415,
             )
         new_notes = FileDataConverter(file=file)
-        new_notes.to_model(DreamNote, **user.model_dump(by_alias=True))
+        new_notes.to_model(
+            as_model=DreamNote,
+            **user.model_dump(),
+        )
         new_notes = new_notes.data
 
         try:

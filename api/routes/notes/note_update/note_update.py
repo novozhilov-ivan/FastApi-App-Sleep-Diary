@@ -22,13 +22,13 @@ from common.pydantic_schemas.sleep.notes import (
 )
 
 
-@ns_notes.response(**response_model_200)
-@ns_notes.response(**response_model_401)
-@ns_notes.response(**response_model_404)
-@ns_notes.response(**response_model_422)
 class UpdateNote:
     """Редактирование существующей записи из дневника"""
 
+    @ns_notes.response(**response_model_200)
+    @ns_notes.response(**response_model_401)
+    @ns_notes.response(**response_model_404)
+    @ns_notes.response(**response_model_422)
     @ns_notes.doc(
         description=__doc__,
         params={

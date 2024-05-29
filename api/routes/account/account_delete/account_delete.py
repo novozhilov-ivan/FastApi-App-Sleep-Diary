@@ -5,11 +5,11 @@ from api.utils.auth import get_current_auth_user_id_for_access
 from common.baseclasses.status_codes import HTTP
 
 
-@ns_account.response(**response_model_204)
-@ns_account.response(**response_model_401)
 class DeleteAccount:
     """Удаление аккаунта пользователя"""
 
+    @ns_account.response(**response_model_204)
+    @ns_account.response(**response_model_401)
     @ns_account.doc(description=__doc__)
     def delete(self):
         current_user_id: int = get_current_auth_user_id_for_access()

@@ -17,14 +17,14 @@ from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserCredentials
 
 
-@ns_auth.response(**response_model_201)
-@ns_auth.response(**response_model_409)
-@ns_auth.response(**response_model_422)
 class SignUpUserRoute(Resource):
     """
     Регистрация нового пользователя в приложении по имени пользователя и паролю
     """
 
+    @ns_auth.response(**response_model_201)
+    @ns_auth.response(**response_model_409)
+    @ns_auth.response(**response_model_422)
     @ns_auth.doc(
         description=__doc__,
         security=None,
