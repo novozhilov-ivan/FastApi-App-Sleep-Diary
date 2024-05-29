@@ -1,4 +1,3 @@
-import sqlalchemy
 from flask import request
 from flask_restx import Resource
 from flask_restx.reqparse import Argument
@@ -6,7 +5,6 @@ from flask_restx.reqparse import Argument
 from api import config
 from api.CRUD.dream_notes import create_many_notes
 from api.models import DreamNote
-from api.routes.diary import user_id_params
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (
     allowed_file_extensions,
@@ -22,16 +20,16 @@ from api.routes.edit.import_file import (
     response_model_415,
     response_unsupported_media_type_415,
 )
+from api.utils.auth import UserActions
 from api.utils.manage_notes import FileDataConverter
 from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import User
 
 
-class EditRouteImport(Resource):
+class EditRouteImport(Resource, UserActions):
     """Импортирование новых записей в дневник сна из файла"""
 
     @ns_edit.doc(description=__doc__)
-    @ns_edit.expect(user_id_params, import_file_payload)
+    @ns_edit.expect(import_file_payload)
     @ns_edit.response(**response_model_201)
     @ns_edit.response(**response_model_400)
     @ns_edit.response(**response_model_409)
@@ -39,7 +37,6 @@ class EditRouteImport(Resource):
     @ns_edit.response(**response_model_415)
     @ns_edit.response(**response_model_422)
     def post(self):
-        user = User(**request.args)
         payload_arg: Argument
         payload_arg, *_ = import_file_payload.args
         file = request.files.get(payload_arg.name)
@@ -56,12 +53,9 @@ class EditRouteImport(Resource):
         new_notes = FileDataConverter(file=file)
         new_notes.to_model(
             as_model=DreamNote,
-            **user.model_dump(),
+            id=self.current_user_id,
         )
-        new_notes = new_notes.data
 
-        try:
-            create_many_notes(new_notes)
-        except sqlalchemy.exc.IntegrityError:
-            return response_conflict_409, HTTP.CONFLICT_409
-        return response_created_201, HTTP.CREATED_201
+        if create_many_notes(new_notes.data):
+            return response_created_201, HTTP.CREATED_201
+        return response_conflict_409, HTTP.CONFLICT_409

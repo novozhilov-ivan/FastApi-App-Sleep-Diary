@@ -3,12 +3,6 @@ from datetime import date, time
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 
-class DateOfSleepNote(BaseModel):
-    """Дата записи в дневнике сна"""
-
-    sleep_date: date
-
-
 class SleepNote(BaseModel):
     """Запись в дневнике сна"""
 

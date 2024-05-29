@@ -12,7 +12,7 @@ from api.utils.auth import validate_auth_user
 from api.utils.jwt import create_access_token, create_refresh_token
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.token import TokenInfo
-from common.pydantic_schemas.user import UserCredentials, UserValidate
+from common.pydantic_schemas.user import User, UserCredentials, UserValidate
 
 
 class AuthUserRoute(Resource):
@@ -28,15 +28,10 @@ class AuthUserRoute(Resource):
     @ns_auth.expect(signin_params)
     def post(self) -> tuple:
         user_credentials = UserCredentials(**request.form)
-        user = validate_auth_user(
-            username=user_credentials.username,
-            password=user_credentials.password,
-        )
-        user = UserValidate.model_validate(user)
-        access_token: str = create_access_token(user)
-        refresh_token: str = create_refresh_token(user)
+        user: User = validate_auth_user(**user_credentials.model_dump())
+        user: UserValidate = UserValidate.model_validate(user)
         jwt_token = TokenInfo(
-            access_token=access_token,
-            refresh_token=refresh_token,
+            access_token=create_access_token(user),
+            refresh_token=create_refresh_token(user),
         )
         return jwt_token.model_dump(), HTTP.OK_200

@@ -8,8 +8,11 @@ import_file_payload = create_payload(
     name="file",
     type_="file",
     required=True,
-    description=f"Файл формата {', '.join(allowed_file_extensions)} с "
-                f"записями дневника сна",
+    description=(
+        f"Файл формата "
+        f"{', '.join(allowed_file_extensions)} "
+        f"с записями дневника сна"
+    ),
     location="files",
 )
 response_created_201 = "All imported notes have been created"

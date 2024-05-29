@@ -34,13 +34,8 @@ from api.routes.notes.note_find_by_id.find_by_id import NoteFindById  # noqa
 from api.routes.notes.note_find_by_date.find_by_date import NoteFindByDate  # noqa
 
 
-class NotesRoute(
-    Resource,
-    AddNote,
-    UpdateNote,
-    DeleteNote,
-):
-    ...  # noqa
+class NotesRoute(Resource, AddNote, UpdateNote, DeleteNote):
+    pass
 
 
 note_endpoint = "note"

@@ -79,3 +79,9 @@ get_current_auth_user_id_for_refresh = get_auth_user_from_token_of_type(
 get_current_auth_user_id_for_access = get_auth_user_from_token_of_type(
     ACCESS_TOKEN_TYPE,
 )
+
+
+class UserActions:
+    @property
+    def current_user_id(self) -> int:
+        return get_current_auth_user_id_for_access()

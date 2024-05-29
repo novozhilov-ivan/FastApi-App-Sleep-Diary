@@ -13,7 +13,7 @@ from api.routes.notes.note_find_by_id import (
     response_not_found_404,
 )
 from api.routes.notes.note_update import update_note_params
-from api.utils.auth import get_current_auth_user_id_for_access
+from api.utils.auth import UserActions
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.sleep.notes import (
     SleepNote,
@@ -22,7 +22,7 @@ from common.pydantic_schemas.sleep.notes import (
 )
 
 
-class UpdateNote:
+class UpdateNote(UserActions):
     """Редактирование существующей записи из дневника"""
 
     @ns_notes.response(**response_model_200)
@@ -37,20 +37,16 @@ class UpdateNote:
         },
     )
     def patch(self):
-        current_user_id: int = get_current_auth_user_id_for_access()
         note_meta = SleepNoteMeta(
-            user_id=current_user_id,
+            user_id=self.current_user_id,
             **request.args,
         )
         note = SleepNoteOptional(**request.json)
 
         updated_db_note: DreamNote | None = update_user_note(
-            note_id=note_meta.id,
+            id=note_meta.id,
             user_id=note_meta.user_id,
-            note_values=note.model_dump(
-                by_alias=True,
-                exclude_none=True,
-            ),
+            note_values=note.model_dump(exclude_none=True),
         )
         if updated_db_note is None:
             abort(

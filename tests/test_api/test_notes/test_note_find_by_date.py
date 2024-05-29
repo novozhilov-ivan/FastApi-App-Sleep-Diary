@@ -1,4 +1,4 @@
-import datetime
+from datetime import date
 
 import pytest
 from flask import url_for
@@ -10,8 +10,8 @@ from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.notes import (
-    DateOfSleepNote,
     SleepNote,
+    SleepNoteOptional,
     SleepNoteWithStats,
 )
 from tests.test_api.test_auth.conftest import (
@@ -66,8 +66,12 @@ class TestNoteFindByDate:
         client: FlaskClient,
         access_token_header: dict,
     ):
-        non_exist_note_date = DateOfSleepNote(
-            sleep_date=datetime.date(day=22, month=12, year=2020),
+        non_exist_note_date = SleepNoteOptional(
+            sleep_date=date(
+                day=22,
+                month=12,
+                year=2020,
+            ),
         )
         response = client.get(
             url_for(
