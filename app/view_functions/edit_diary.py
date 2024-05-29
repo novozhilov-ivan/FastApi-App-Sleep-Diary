@@ -1,11 +1,11 @@
 import os
 
 import sqlalchemy.exc
-from flask import request, render_template, redirect, url_for, send_file
+from app.exceptions.exception import *
+from flask import redirect, render_template, request, send_file, url_for
 from flask_login import login_required
 
 from app.controller import *
-from app.exceptions.exception import *
 
 
 # todo добавить нотации к ошибкам при плохом импортируемом файле
@@ -24,8 +24,9 @@ def diary_editing_actions():
             import_file.save(src)
             duplicate_dates = find_duplicate_dates_in_file(src)
             if duplicate_dates:
-                raise NonUniqueNotationDate(
-                    f'В файле "{import_file.filename}" найдены записи с датами, которые уже существуют в дневнике: '
+                raise NonUniqueDreamNoteDate(
+                    f'В файле "{import_file.filename}" найдены записи с датами, '
+                    f"которые уже существуют в дневнике: "
                     f'"{", ".join(duplicate_dates)}"'
                 )
             added_entries = import_diary(src)
@@ -37,13 +38,14 @@ def diary_editing_actions():
             request.form.get("delete_diary_2")
             == "Да, удалить все записи из дневника"
         ):
-            delete_all_notations()
+            delete_all_DreamNotes()
             flash("Все записи из дневника сна удалены.")
     except sqlalchemy.exc.IntegrityError:
         flash(
-            "Ошибка при добавлении записей в базу данных. Даты записей должны быть уникальными."
+            "Ошибка при добавлении записей в базу данных. Даты записей должны быть "
+            "уникальными."
         )
-    except NonUniqueNotationDate as err:
+    except NonUniqueDreamNoteDate as err:
         flash(err.args[0])
     except TypeError as err:
         flash(err.args[0])
@@ -69,7 +71,7 @@ def diary_editing_actions():
             return redirect(url_for("get_edit_diary_page"))
         elif request.form.get("delete_diary_1") == "Удалить дневник":
             return render_template(
-                "edit_diary.html", confirm_delete_all_notations=True
+                "edit_diary.html", confirm_delete_all_DreamNotes=True
             )
         elif (
             request.form.get("delete_diary_2")

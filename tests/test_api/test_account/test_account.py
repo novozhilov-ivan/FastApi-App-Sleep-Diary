@@ -41,7 +41,9 @@ class TestAccountInfo:
         access_token_header: dict,
     ):
         response = client.get(
-            url_for(account_endpoint),
+            url_for(
+                endpoint=account_endpoint,
+            ),
             headers=access_token_header,
         )
         response = Response(response)

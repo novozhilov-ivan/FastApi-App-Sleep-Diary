@@ -25,7 +25,7 @@ def create_app() -> Flask:
 
     # Create DataBase Tables
     with app.app_context():
-        from api.models import Notation, User
+        from api.models import DreamNote, User
 
         db.create_all()
 

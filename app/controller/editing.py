@@ -48,8 +48,8 @@ def find_duplicate_dates_in_file(src: str):
         reader = csv.reader(file)
         next(reader)
         dates = [row[0] for row in reader]
-    date_of_notations = get_all_dates_of_user()
-    exist_dates = [f"{date[0]:%Y-%m-%d}" for date in date_of_notations]
+    date_of_DreamNotes = get_all_dates_of_user()
+    exist_dates = [f"{date[0]:%Y-%m-%d}" for date in date_of_DreamNotes]
     duplicate_dates = [date for date in dates if date in exist_dates]
     return duplicate_dates
 
@@ -57,15 +57,16 @@ def find_duplicate_dates_in_file(src: str):
 def import_diary(src):
     """
     Импортирует записи из csv-файла в базу данных.
-    Возвращает список экземпляров класса, по который были созданы новые записи дневника.
+    Возвращает список экземпляров класса, по который были созданы новые записи
+    дневника.
     """
-    notations_for_adding = []
+    DreamNotes_for_adding = []
     with open(src, "r", encoding="utf-8") as file:
         reader = csv.reader(file)
         next(reader)
         for row in reader:
             # Поч выделяет ошибку? Импорт работает
-            notation = Notation(
+            DreamNote = DreamNote(
                 calendar_date=str_to_date(row[0]),
                 bedtime=str_to_time(row[1]),
                 asleep=str_to_time(row[2]),
@@ -74,6 +75,6 @@ def import_diary(src):
                 without_sleep=str_to_time(row[5]),
                 user_id=current_user.id,
             )
-            notations_for_adding.append(notation)
-    add_all_and_commit(notations_for_adding)
-    return notations_for_adding
+            DreamNotes_for_adding.append(DreamNote)
+    add_all_and_commit(DreamNotes_for_adding)
+    return DreamNotes_for_adding

@@ -43,7 +43,7 @@ class TestRefreshAccessToken:
         assert bearer == token_info.token_type
         decoded_access = decode_jwt(token_info.access_token)
         assert exist_db_user.id == decoded_access["sub"]
-        assert exist_db_user.login == decoded_access["username"]
+        assert exist_db_user.username == decoded_access["username"]
         assert ACCESS_TOKEN_TYPE == decoded_access[TOKEN_TYPE_FIELD]
 
     def test_refresh_invalid_token_type_401(

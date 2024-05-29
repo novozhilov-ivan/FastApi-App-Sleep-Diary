@@ -51,7 +51,7 @@ class TestNoteFindByDate:
         response = client.get(
             url_for(
                 endpoint=note_find_by_date_endpoint,
-                calendar_date=note.calendar_date,
+                sleep_date=note.sleep_date,
             ),
             headers=access_token_header,
         )
@@ -67,12 +67,12 @@ class TestNoteFindByDate:
         access_token_header: dict,
     ):
         non_exist_note_date = DateOfSleepNote(
-            calendar_date=datetime.date(day=22, month=12, year=2020),
+            sleep_date=datetime.date(day=22, month=12, year=2020),
         )
         response = client.get(
             url_for(
                 endpoint=note_find_by_date_endpoint,
-                calendar_date=non_exist_note_date.calendar_date,
+                sleep_date=non_exist_note_date.sleep_date,
             ),
             headers=access_token_header,
         )

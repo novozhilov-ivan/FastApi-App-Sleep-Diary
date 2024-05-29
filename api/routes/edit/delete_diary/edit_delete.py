@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Resource
 
-from api.CRUD.notations import delete_all_user_notes
+from api.CRUD.dream_notes import delete_all_user_notes
 from api.routes.diary import user_id_params
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.delete_diary import response_model_204

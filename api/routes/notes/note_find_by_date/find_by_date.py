@@ -2,9 +2,7 @@ from datetime import date
 
 from flask_restx import Resource, abort
 
-from api.CRUD.notations import (
-    find_user_note_by_calendar_date,
-)
+from api.CRUD.dream_notes import find_user_note_by_calendar_date
 from api.routes.account import response_model_401
 from api.routes.notes import ns_notes
 from api.routes.notes.note_find_by_date import (
@@ -28,13 +26,13 @@ class NoteFindByDate(Resource):
         description=__doc__,
         params=path_params,
     )
-    def get(self, calendar_date: date):
+    def get(self, sleep_date: date):
         current_user_id: int = get_current_auth_user_id_for_access()
         date_of_note = DateOfSleepNote(
-            calendar_date=calendar_date,
+            sleep_date=sleep_date,
         )
         db_note = find_user_note_by_calendar_date(
-            calendar_date=date_of_note.calendar_date,
+            sleep_date=date_of_note.sleep_date,
             user_id=current_user_id,
         )
         if db_note is None:

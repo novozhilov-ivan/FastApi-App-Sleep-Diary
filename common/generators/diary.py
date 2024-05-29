@@ -42,29 +42,29 @@ class SleepDiaryGenerator:
     ) -> SleepNoteWithStats:
         if date_of_note is None:
             date_of_note = datetime.now(timezone.utc).timestamp()
-        rand_bedtime = self._rand_time()
-        rand_asleep = self._rand_time(
-            start_h=rand_bedtime.hour, start_m=rand_bedtime.minute
+        rand_went_to_bed = self._rand_time()
+        rand_fell_asleep = self._rand_time(
+            start_h=rand_went_to_bed.hour, start_m=rand_went_to_bed.minute
         )
-        rand_awake = self._rand_time(
-            start_h=rand_asleep.hour, start_m=rand_asleep.minute
+        rand_woke_up = self._rand_time(
+            start_h=rand_fell_asleep.hour, start_m=rand_fell_asleep.minute
         )
-        rand_rise = self._rand_time(
-            start_h=rand_awake.hour, start_m=rand_awake.minute
+        rand_got_up = self._rand_time(
+            start_h=rand_woke_up.hour, start_m=rand_woke_up.minute
         )
-        rand_time_of_night_awakenings = self._rand_time(
-            stop_h=rand_awake.hour - rand_asleep.hour,
-            stop_m=rand_awake.minute - rand_asleep.minute,
+        rand_no_sleep = self._rand_time(
+            stop_h=rand_woke_up.hour - rand_fell_asleep.hour,
+            stop_m=rand_woke_up.minute - rand_fell_asleep.minute,
         )
         return SleepNoteWithStats(
             id=note_id,
             user_id=self.user_id,
-            calendar_date=date.fromtimestamp(date_of_note),
-            bedtime=rand_bedtime,
-            asleep=rand_asleep,
-            awake=rand_awake,
-            rise=rand_rise,
-            without_sleep=rand_time_of_night_awakenings,
+            sleep_date=date.fromtimestamp(date_of_note),
+            went_to_bed=rand_went_to_bed,
+            fell_asleep=rand_fell_asleep,
+            woke_up=rand_woke_up,
+            got_up=rand_got_up,
+            no_sleep=rand_no_sleep,
         )
 
     def _create_notes(self, start_note_id: int = 1) -> list[SleepNoteWithStats]:
@@ -83,4 +83,4 @@ class SleepDiaryGenerator:
     def _build_sleep_diary(self) -> SleepDiaryModel:
         pd_weeks = slice_on_week(self.notes)
         sleep_diary = SleepDiaryCompute(weeks=pd_weeks)
-        return SleepDiaryModel(**sleep_diary.model_dump())
+        return SleepDiaryModel.model_validate(sleep_diary)

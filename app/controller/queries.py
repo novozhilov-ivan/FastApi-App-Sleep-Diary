@@ -4,30 +4,30 @@ from app.Models import *
 from app import db
 
 
-def add_all_and_commit(list_of_notations: list):
+def add_all_and_commit(list_of_DreamNotes: list):
     """Добавляет и сохраняет в бд все записи из получаемого списка"""
-    db.session.add_all(list_of_notations)
+    db.session.add_all(list_of_DreamNotes)
     db.session.commit()
 
 
-def check_notation_availability(new_date):
+def check_DreamNote_availability(new_date):
     """Ищет запись в дневнике сна с получаемой датой"""
     return (
-        db.session.query(Notation)
+        db.session.query(DreamNote)
         .filter_by(user_id=current_user.id, calendar_date=new_date)
         .first()
     )
 
 
-def delete_notation_and_commit(notation):
+def delete_DreamNote_and_commit(DreamNote):
     """Удаляет одну запись из дневника и сохраняет состояние"""
-    db.session.delete(notation)
+    db.session.delete(DreamNote)
     db.session.commit()
 
 
-def delete_all_notations():
+def delete_all_DreamNotes():
     """Удаляет все записи из дневника и сохраняет состояние"""
-    db.session.query(Notation).filter_by(user_id=current_user.id).delete()
+    db.session.query(DreamNote).filter_by(user_id=current_user.id).delete()
     db.session.commit()
 
 
@@ -36,9 +36,9 @@ def get_user(user_id: str):
     return db.session.query(User).get(user_id)
 
 
-def get_amount_notations_of_user():
+def get_amount_DreamNotes_of_user():
     """Получает количество записей в дневнике пользователя"""
-    return Notation.query.filter_by(user_id=current_user.id).count()
+    return DreamNote.query.filter_by(user_id=current_user.id).count()
 
 
 def check_user(login: str):
@@ -48,27 +48,27 @@ def check_user(login: str):
 
 def get_all_dates_of_user():
     return (
-        db.session.query(Notation.calendar_date)
+        db.session.query(DreamNote.calendar_date)
         .filter_by(user_id=current_user.id)
-        .order_by(Notation.calendar_date)
+        .order_by(DreamNote.calendar_date)
         .all()
     )
 
 
-def get_all_notations_of_user():
+def get_all_DreamNotes_of_user():
     """Получает все записи пользователя и сортирует их по дате"""
     return (
-        Notation.query.filter_by(user_id=current_user.id)
-        .order_by(Notation.calendar_date)
+        DreamNote.query.filter_by(user_id=current_user.id)
+        .order_by(DreamNote.calendar_date)
         .all()
     )
 
 
-def get_notation_by_date(notation_date):
+def get_DreamNote_by_date(DreamNote_date):
     """Проверяет существует ли запись пользователя с получаемой датой"""
     return (
-        db.session.query(Notation)
-        .filter_by(user_id=current_user.id, calendar_date=notation_date)
+        db.session.query(DreamNote)
+        .filter_by(user_id=current_user.id, calendar_date=DreamNote_date)
         .one()
     )
 

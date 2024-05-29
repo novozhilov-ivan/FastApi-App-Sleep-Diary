@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 
 from api import db
-from api.models import Notation
+from api.models import DreamNote
 from api.routes.edit.delete_diary import delete_notes_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
@@ -42,9 +42,9 @@ class TestEditDeleteAllNotes:
         with client.application.app_context():
             notes_is_exist = db.session.execute(
                 select(
-                    Notation,
+                    DreamNote,
                 ).where(
-                    Notation.user_id == db_user_id,
+                    DreamNote.user_id == db_user_id,
                 )
             ).first()
         notes_is_exist = bool(notes_is_exist)

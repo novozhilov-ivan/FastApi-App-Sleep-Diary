@@ -1,1 +1,1 @@
-from api.models.models import Notation, User
+from api.models.models import DreamNote, User

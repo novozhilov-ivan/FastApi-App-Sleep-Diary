@@ -59,6 +59,6 @@ ns_notes.add_resource(
 
 ns_notes.add_resource(
     NoteFindByDate,
-    "/<string:calendar_date>",
+    "/<string:sleep_date>",
     endpoint=note_find_by_date_endpoint,
 )

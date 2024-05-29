@@ -17,7 +17,7 @@ response_model_404 = response_schema(
 pattern_date = r"^(?:\d{4}-\d{2}-\d{2}\d*)$"
 
 path_params = {
-    "calendar_date": {
+    "sleep_date": {
         "in": "path",
         "description": "Дата записи (YYYY-MM-DD)",
         "required": True,

@@ -4,7 +4,8 @@ from app.view_functions import *
 
 # todo из .queries переметить все в .models
 # todo переместить все проверки, изменение формата и создание записи в дневнике -
-#  в класс Notation (например сделать  Notation.add_notation(*args))
+#  в класс DreamNote (например сделать  DreamNote.add_DreamNote(
+#  *args))
 
 # todo прикрутить визуализацию данных на гистограммах
 
@@ -24,15 +25,15 @@ def get_sleep_diary_entries():
     return render_sleep_diary_page()
 
 
-@app.route("/sleep/update/<notation_date>", methods=["POST"])
-def update_diary_entry(notation_date):
+@app.route("/sleep/update/<DreamNote_date>", methods=["POST"])
+def update_diary_entry(DreamNote_date):
     """Обновляет одну запись в дневнике сна. Удаляет или изменяет"""
-    return update_one_diary_entry(notation_date)
+    return update_one_diary_entry(DreamNote_date)
 
 
-@app.route("/sleep/update/<notation_date>", methods=["GET"])
-def get_diary_entry_update_page(notation_date):
-    return render_diary_entry_update_page(notation_date)
+@app.route("/sleep/update/<DreamNote_date>", methods=["GET"])
+def get_diary_entry_update_page(DreamNote_date):
+    return render_diary_entry_update_page(DreamNote_date)
 
 
 @app.route("/edit", methods=["POST"])

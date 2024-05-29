@@ -2,46 +2,60 @@
 {% block title %}
 Обновление записи
 {% endblock %}
-{% block edit_notation %}
-        <div class="alert alert-success text-center my-2">
-        <h4>Обновление записи в дневнике</h4>
+{% block edit_DreamNote %}
+<div class="alert alert-success text-center my-2">
+    <h4>Обновление записи в дневнике</h4>
+</div>
+<div class=" p-2">
+    <form class="row justify-content-center" method="POST"
+          enctype="multipart/form-data">
+        <div class="row justify-content-center">
+            <div class="col-md-3 col-12 text-center mb-2">
+                <label class="sr-only" for="calendar_date">Дата</label>
+                <input disabled type="date" name="calendar_date" id="calendar_date"
+                       class="form-control"
+                       value="{{ DreamNote.calendar_date }}">
+            </div>
         </div>
-        <div class=" p-2">
-            <form class="row justify-content-center" method="POST" enctype="multipart/form-data">
-                <div class="row justify-content-center">
-                    <div class="col-md-3 col-12 text-center mb-2">
-                    <label class="sr-only" for="calendar_date">Дата</label>
-                    <input disabled type="date" name="calendar_date" id="calendar_date" class="form-control" value="{{ notation.calendar_date }}">
-                    </div>
-                </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="bedtime">Лег</label>
-                        <input required type="time" name="bedtime" id="bedtime" class="form-control" value="{{ notation.bedtime }}">
-                    </div>
-                    <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="asleep">Уснул</label>
-                        <input required type="time" name="asleep" id="asleep" class="form-control" value="{{ notation.asleep }}">
-                    </div>
-                    <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="awake">Проснулся</label>
-                        <input required type="time" name="awake" id="awake" class="form-control" value="{{ notation.awake }}">
-                    </div>
-                    <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="rise">Встал</label>
-                        <input required type="time" name="rise" id="rise" class="form-control" value="{{ notation.rise }}">
-                    </div>
-                    <div class="col-md-2 col-12 text-center">
-                        <label class="sr-only" for="without_sleep">Не спал</label>
-                        <input required type="time" name="without_sleep" id="without_sleep" class="form-control" value="{{ notation.without_sleep }}">
-                    </div>
-                </div>
-                    <input type="submit"  class="btn btn-success mt-4 mx-2 w-50" name="update_save" id="update_save" value="Сохранить изменения">
-                    {% if confirm_delete_notation %}
-                    <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_2" id="delete_notation_2" value="Да, удалить запись из дневника">
-                    {% else %}
-                    <input type="submit" class="btn btn-danger mt-4 mx-2 w-50" name="delete_notation_1" id="delete_notation_1" value="Удалить запись">
-                    {% endif %}
-            </form>
+        <div class="row justify-content-center">
+            <div class="col-md-2 col-12 text-center">
+                <label class="sr-only" for="bedtime">Лег</label>
+                <input required type="time" name="bedtime" id="bedtime"
+                       class="form-control" value="{{ DreamNote.bedtime }}">
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <label class="sr-only" for="asleep">Уснул</label>
+                <input required type="time" name="asleep" id="asleep"
+                       class="form-control" value="{{ DreamNote.asleep }}">
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <label class="sr-only" for="awake">Проснулся</label>
+                <input required type="time" name="awake" id="awake"
+                       class="form-control" value="{{ DreamNote.awake }}">
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <label class="sr-only" for="rise">Встал</label>
+                <input required type="time" name="rise" id="rise"
+                       class="form-control" value="{{ DreamNote.rise }}">
+            </div>
+            <div class="col-md-2 col-12 text-center">
+                <label class="sr-only" for="without_sleep">Не спал</label>
+                <input required type="time" name="without_sleep" id="without_sleep"
+                       class="form-control"
+                       value="{{ DreamNote.without_sleep }}">
+            </div>
         </div>
+        <input type="submit" class="btn btn-success mt-4 mx-2 w-50"
+               name="update_save" id="update_save" value="Сохранить изменения">
+        {% if confirm_delete_DreamNote %}
+        <input type="submit" class="btn btn-danger mt-4 mx-2 w-50"
+               name="delete_DreamNote_2" id="delete_DreamNote_2"
+               value="Да, удалить запись из дневника">
+        {% else %}
+        <input type="submit" class="btn btn-danger mt-4 mx-2 w-50"
+               name="delete_DreamNote_1" id="delete_DreamNote_1"
+               value="Удалить запись">
+        {% endif %}
+    </form>
+</div>
 {% endblock %}

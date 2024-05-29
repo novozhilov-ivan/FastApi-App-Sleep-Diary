@@ -37,7 +37,7 @@ class TestSignUp:
 
         with client.application.app_context():
             db_user = db.session.execute(select(User)).scalar_one_or_none()
-        assert user_credentials.username == db_user.login
+        assert user_credentials.username == db_user.username
         assert validate_password(
             password=user_credentials.password,
             hashed_password=db_user.password.encode(),

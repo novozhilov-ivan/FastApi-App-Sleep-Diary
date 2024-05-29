@@ -44,10 +44,7 @@ def validate_auth_user(
             code=HTTP.UNAUTHORIZED_401,
             message=response_invalid_username_or_password_401,
         )
-    user = UserCredentials(
-        login=db_user.login,
-        password=db_user.password,
-    )
+    user = UserCredentials.model_validate(db_user)
     is_valid_password = validate_password(
         password=password,
         hashed_password=user.password,

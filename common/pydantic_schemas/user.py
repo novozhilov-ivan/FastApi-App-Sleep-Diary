@@ -1,18 +1,16 @@
 from datetime import datetime
 
-from pydantic import AliasChoices, BaseModel, ConfigDict, Field
+from pydantic import BaseModel, ConfigDict, Field
 
 
 class UserCredentials(BaseModel):
     """Данные пользователя для авторизации"""
 
     username: str = Field(
-        title="Логин",
-        description="Логин пользователя",
+        title="Username",
+        description="Имя пользователя для входа",
         min_length=4,
         max_length=10,
-        alias="login",
-        validation_alias=AliasChoices("username", "login"),
     )
     password: bytes = Field(
         title="Пароль",
@@ -27,8 +25,6 @@ class User(BaseModel):
         title="User id",
         description="Идентификатор пользователя",
         ge=0,
-        alias="user_id",
-        validation_alias=AliasChoices("id", "user_id"),
     )
     model_config = ConfigDict(from_attributes=True)
 
@@ -40,13 +36,16 @@ class UserValidate(User, UserCredentials):
 class UserInfo(BaseModel):
     """Информация о пользователе"""
 
+    id: int = Field(
+        title="Id",
+        description="Идентификатор пользователя",
+        ge=0,
+    )
     username: str = Field(
-        title="Логин",
-        description="Логин пользователя",
+        title="Username",
+        description="Имя пользователя для входа",
         min_length=4,
         max_length=10,
-        alias="login",
-        validation_alias=AliasChoices("username", "login"),
     )
     date_of_registration: datetime
     model_config = ConfigDict(from_attributes=True)

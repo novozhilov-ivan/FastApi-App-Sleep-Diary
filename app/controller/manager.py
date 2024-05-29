@@ -1,12 +1,12 @@
-from datetime import datetime, time, date, timedelta
+from datetime import date, datetime, time, timedelta
 from typing import Optional
 
+from app.Models import *
 from flask import request
 from flask_login import current_user
 
 from app import db
 from app.controller import *
-from app.Models import *
 
 
 class Descriptor:
@@ -41,8 +41,10 @@ class Descriptor:
 class DiaryEntryManager:
     def __repr__(self):
         return (
-            f"\nЗаготовка для записи: [Дата: {self._calendar_date}, Лег: {self._bedtime}, Уснул: "
-            f"{self._asleep}, Проснулся: {self._awake}, Встал: {self._rise}, Не спал: {self._without_sleep}]\n"
+            f"\nЗаготовка для записи: [Дата: {self._calendar_date}, "
+            f"Лег: {self._bedtime}, Уснул: "
+            f"{self._asleep}, Проснулся: {self._awake}, Встал: {self._rise}, "
+            f"Не спал: {self._without_sleep}]\n"
         )
 
     calendar_date = Descriptor()
@@ -153,7 +155,8 @@ class DiaryEntryManager:
                 )
             elif datetime_rise - datetime_awake > timedelta(hours=12):
                 raise ValueError(
-                    "Время пробуждения не может быть позже времени подъема с кровати!\n"
+                    "Время пробуждения не может быть позже времени подъема с "
+                    "кровати!\n"
                     "Или время между этими событиями не может быть более 12 часов!"
                 )
 
@@ -186,16 +189,18 @@ class DiaryEntryManager:
         self.without_sleep = request.form["without_sleep"][:5]
         self.__check_timings()
 
-    # todo Попробовать сделать в функции create_entry - добавление одной записи или множества записей из списка
+    # todo Попробовать сделать в функции create_entry - добавление одной записи
+    #  или множества записей из списка
     # todo __get_form_data сделать отдельно от create_entry
     # todo Вызывать их по-очереди при создание записи из данных приходящих из форм
-    # todo Создать метод создающий экземпляры менеджера из csv-файла, проверяющий тайминги и проверяющий дубликаты
+    # todo Создать метод создающий экземпляры менеджера из csv-файла, проверяющий
+    #  тайминги и проверяющий дубликаты
     # todo Создать метод для экспорта данных в csv-файл
     # todo Создать метод для удаления всех записей мб
 
     def create_entry(self):
         self.__get_form_data()
-        notation = Notation(
+        DreamNote = DreamNote(
             calendar_date=self._calendar_date,
             bedtime=self._bedtime,
             asleep=self._asleep,
@@ -204,43 +209,43 @@ class DiaryEntryManager:
             without_sleep=self._without_sleep,
             user_id=current_user.id,
         )
-        # notation.save_one()
-        return notation
+        # DreamNote.save_one()
+        return DreamNote
 
-    def update_entry(self, notation_date):
-        notation = get_notation_by_date(notation_date)
+    def update_entry(self, DreamNote_date):
+        DreamNote = get_DreamNote_by_date(DreamNote_date)
         self.__get_form_data()
-        notation.bedtime = self._bedtime
-        notation.asleep = self._asleep
-        notation.awake = self._awake
-        notation.rise = self._rise
-        notation.without_sleep = self._without_sleep
+        DreamNote.bedtime = self._bedtime
+        DreamNote.asleep = self._asleep
+        DreamNote.awake = self._awake
+        DreamNote.rise = self._rise
+        DreamNote.without_sleep = self._without_sleep
         db.session.commit()
-        # notation.save_one()
+        # DreamNote.save_one()
 
     @staticmethod
-    def delete_entry(notation_date):
-        notation = get_notation_by_date(notation_date)
-        # notation.delete_one()
-        delete_notation_and_commit(notation)
+    def delete_entry(DreamNote_date):
+        DreamNote = get_DreamNote_by_date(DreamNote_date)
+        # DreamNote.delete_one()
+        delete_DreamNote_and_commit(DreamNote)
 
     @staticmethod
     def diary_entries():
-        notations = get_all_notations_of_user()
+        DreamNotes = get_all_DreamNotes_of_user()
         list_of_instances = []
-        for notation in notations:
+        for DreamNote in DreamNotes:
             diary_entry = DiaryEntryManager(
-                notation.calendar_date,
-                notation.bedtime,
-                notation.asleep,
-                notation.awake,
-                notation.rise,
-                notation.without_sleep,
+                DreamNote.calendar_date,
+                DreamNote.bedtime,
+                DreamNote.asleep,
+                DreamNote.awake,
+                DreamNote.rise,
+                DreamNote.without_sleep,
             )
             list_of_instances.append(diary_entry)
         return list_of_instances
 
-    def weekly_statistics(self, instances: list[Notation]):
+    def weekly_statistics(self, instances: list[DreamNote]):
         average_values_per_week = []
         amount_of_days = len(instances)
         first_day_of_week = 0

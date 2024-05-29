@@ -43,8 +43,8 @@ class TestSignIn:
         decoded_access = decode_jwt(token_info.access_token)
         decoded_refresh = decode_jwt(token_info.refresh_token)
         assert exist_db_user.id == decoded_access["sub"] == decoded_refresh["sub"]
-        assert exist_db_user.login == decoded_access["username"]
-        assert exist_db_user.login == decoded_refresh["username"]
+        assert exist_db_user.username == decoded_access["username"]
+        assert exist_db_user.username == decoded_refresh["username"]
         assert ACCESS_TOKEN_TYPE == decoded_access[TOKEN_TYPE_FIELD]
         assert REFRESH_TOKEN_TYPE == decoded_refresh[TOKEN_TYPE_FIELD]
 

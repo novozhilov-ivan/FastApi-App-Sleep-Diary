@@ -4,8 +4,8 @@ from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
 from api import config
-from api.CRUD.notations import create_many_notes
-from api.models import Notation
+from api.CRUD.dream_notes import create_many_notes
+from api.models import DreamNote
 from api.routes.diary import user_id_params
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (
@@ -54,7 +54,7 @@ class EditRouteImport(Resource):
                 HTTP.UNSUPPORTED_MEDIA_TYPE_415,
             )
         new_notes = FileDataConverter(file=file)
-        new_notes.to_model(Notation, **user.model_dump(by_alias=True))
+        new_notes.to_model(DreamNote, **user.model_dump(by_alias=True))
         new_notes = new_notes.data
 
         try:

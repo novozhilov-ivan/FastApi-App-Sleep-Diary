@@ -9,37 +9,37 @@ update_note_params = {
             "minProperties": 1,
             "additionalProperties": False,
             "properties": {
-                "calendar_date": {
+                "sleep_date": {
                     "description": "desc",
                     "type": "string",
                     "format": "date",
                     "example": "2021-12-13",
                 },
-                "bedtime": {
+                "went_to_bed": {
                     "description": "desc",
                     "type": "string",
                     "format": "time",
                     "example": "05:30",
                 },
-                "asleep": {
+                "fell_asleep": {
                     "description": "desc",
                     "type": "string",
                     "format": "time",
                     "example": "12:00",
                 },
-                "awake": {
+                "woke_up": {
                     "description": "desc",
                     "type": "string",
                     "format": "time",
                     "example": "12:15",
                 },
-                "rise": {
+                "got_up": {
                     "description": "desc",
                     "type": "string",
                     "format": "time",
                     "example": "00:19",
                 },
-                "time_of_night_awakenings": {
+                "no_sleep": {
                     "description": "desc",
                     "type": "string",
                     "format": "time",

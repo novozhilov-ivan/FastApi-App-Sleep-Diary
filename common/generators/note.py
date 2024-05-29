@@ -58,12 +58,12 @@ class SleepNoteGenerator:
         return model(
             id=note_id,
             user_id=user_id,
-            calendar_date=date.fromtimestamp(date_of_note),
-            bedtime=rand_bedtime,
-            asleep=rand_asleep,
-            awake=rand_awake,
-            rise=rand_rise,
-            time_of_night_awakenings=rand_time_of_night_awakenings,
+            sleep_date=date.fromtimestamp(date_of_note),
+            went_to_bed=rand_bedtime,
+            fell_asleep=rand_asleep,
+            woke_up=rand_awake,
+            got_up=rand_rise,
+            no_sleep=rand_time_of_night_awakenings,
         )
 
     def wrong_note(

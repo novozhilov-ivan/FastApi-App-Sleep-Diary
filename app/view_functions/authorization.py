@@ -102,7 +102,7 @@ def render_user_page():
         return render_template(
             "user_page.html",
             date_and_time_display=date_and_time_display,
-            amount_notations_of_user=get_amount_notations_of_user(),
+            amount_DreamNotes_of_user=get_amount_DreamNotes_of_user(),
         )
     except Exception as err:
         display_unknown_error(err)

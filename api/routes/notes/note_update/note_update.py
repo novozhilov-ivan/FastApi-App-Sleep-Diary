@@ -1,8 +1,8 @@
 from flask import request
 from flask_restx import abort
 
-from api.CRUD.notations import update_user_note
-from api.models import Notation
+from api.CRUD.dream_notes import update_user_note
+from api.models import DreamNote
 from api.routes.account import response_model_401
 from api.routes.edit import response_model_422
 from api.routes.notes import ns_notes
@@ -44,7 +44,7 @@ class UpdateNote:
         )
         note = SleepNoteOptional(**request.json)
 
-        updated_db_note: Notation | None = update_user_note(
+        updated_db_note: DreamNote | None = update_user_note(
             note_id=note_meta.id,
             user_id=note_meta.user_id,
             note_values=note.model_dump(

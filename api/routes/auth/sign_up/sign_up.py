@@ -33,7 +33,7 @@ class SignUpUserRoute(Resource):
     def post(self) -> tuple:
         user_credentials = UserCredentials(**request.form)
         db_user = User(
-            login=user_credentials.username,
+            username=user_credentials.username,
             password=hash_password(user_credentials.password),
         )
         if not create_new_user_by_username(db_user):

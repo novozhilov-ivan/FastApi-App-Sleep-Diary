@@ -1,4 +1,4 @@
-from flask_restx import Namespace
+from flask_restx import Namespace, Resource
 
 from api.exceptions.handlers import handler_unprocessable_entity_422
 from api.utils.jwt import (
@@ -7,22 +7,16 @@ from api.utils.jwt import (
 )
 from api.utils.restx_schema import response_schema
 from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import UserInfo
 
 ns_account = Namespace(
     name="User account info",
     description="Информация об аккаунте пользователя",
-    path="/",
+    path="/account",
     decorators=[
         validate_auth_token,
     ],
 )
 
-response_model_200 = response_schema(
-    ns=ns_account,
-    model=UserInfo,
-    code=HTTP.OK_200,
-)
 response_model_401 = response_schema(
     ns=ns_account,
     description=response_invalid_authorization_token_401,
@@ -31,11 +25,21 @@ response_model_401 = response_schema(
 
 ns_account.errorhandler(handler_unprocessable_entity_422)
 
-from api.routes.account.account import UserAccountRoute  # noqa
+from api.routes.account.account_find.account import FindAccount  # noqa
+from api.routes.account.account_delete.account_delete import DeleteAccount  # noqa
+
+
+# TODO Наследуются/перемешиваются схемы ответа
+class AccountRoute(
+    Resource,
+    FindAccount,
+    DeleteAccount,
+): ...  # noqa
+
 
 account_endpoint = "account"
 ns_account.add_resource(
-    UserAccountRoute,
-    "/account",
+    AccountRoute,
+    "",
     endpoint=account_endpoint,
 )

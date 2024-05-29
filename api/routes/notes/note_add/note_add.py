@@ -1,7 +1,7 @@
 from flask import request
 
-from api.CRUD.notations import create_one_note
-from api.models import Notation
+from api.CRUD.dream_notes import create_one_note
+from api.models import DreamNote
 from api.routes.diary import response_model_400, response_model_422, user_id_params
 from api.routes.notes import ns_notes
 from api.routes.notes.note_add import add_note_payload, response_model_201
@@ -22,7 +22,7 @@ class AddNote:
     def post(self):
         user = User(**request.args)
         new_note = SleepNote(**request.json)
-        new_db_note = Notation(
+        new_db_note = DreamNote(
             user_id=user.id,
             **new_note.model_dump(by_alias=True),
         )

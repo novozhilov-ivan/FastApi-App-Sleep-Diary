@@ -2,40 +2,47 @@
 {% block title %}
 Дневник сна
 {% endblock %}
-{% block addnotation %}
-    <div class="container-fluid text-center mt-4">
-        <div class="p-2">
-            <form class="row justify-content-center" method="POST">
-                <div class="row justify-content-center mb-3">
-                    <div class="col-md-3 col-12">
+{% block addDreamNote %}
+<div class="container-fluid text-center mt-4">
+    <div class="p-2">
+        <form class="row justify-content-center" method="POST">
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-3 col-12">
                     <label class="sr-only" for="calendar_date">Дата</label>
-                    <input required type="date" name="calendar_date" id="calendar_date" class="form-control"  value="{{ today_date }}">
-                    </div>
+                    <input required type="date" name="calendar_date"
+                           id="calendar_date" class="form-control"
+                           value="{{ today_date }}">
                 </div>
-                <div class="row justify-content-center">
-                    <div class="col-md-2 col-12">
-                        <label class="sr-only" for="bedtime">Лег</label>
-                        <input required type="time" name="bedtime" id="bedtime" class="form-control" value="00:00">
-                    </div>
-                    <div class="col-md-2 col-12">
-                        <label class="sr-only" for="asleep">Уснул</label>
-                        <input required type="time" name="asleep" id="asleep" class="form-control" value="00:00">
-                    </div>
-                    <div class="col-md-2 col-12">
-                        <label class="sr-only" for="awake">Проснулся</label>
-                        <input required type="time" name="awake" id="awake" class="form-control" value="00:00">
-                    </div>
-                    <div class="col-md-2 col-12">
-                        <label class="sr-only" for="rise">Встал</label>
-                        <input required type="time" name="rise" id="rise" class="form-control" value="00:00">
-                    </div>
-                    <div class="col-md-2 col-12 ">
-                        <label class="sr-only" for="without_sleep">Не спал</label>
-                        <input required type="time" name="without_sleep" id="without_sleep" class="form-control" value="00:00">
-                    </div>
+            </div>
+            <div class="row justify-content-center">
+                <div class="col-md-2 col-12">
+                    <label class="sr-only" for="bedtime">Лег</label>
+                    <input required type="time" name="bedtime" id="bedtime"
+                           class="form-control" value="00:00">
                 </div>
-                <input type="submit"  class="btn btn-success mt-4 w-50" value="Отправить">
-            </form>
-        </div>
+                <div class="col-md-2 col-12">
+                    <label class="sr-only" for="asleep">Уснул</label>
+                    <input required type="time" name="asleep" id="asleep"
+                           class="form-control" value="00:00">
+                </div>
+                <div class="col-md-2 col-12">
+                    <label class="sr-only" for="awake">Проснулся</label>
+                    <input required type="time" name="awake" id="awake"
+                           class="form-control" value="00:00">
+                </div>
+                <div class="col-md-2 col-12">
+                    <label class="sr-only" for="rise">Встал</label>
+                    <input required type="time" name="rise" id="rise"
+                           class="form-control" value="00:00">
+                </div>
+                <div class="col-md-2 col-12 ">
+                    <label class="sr-only" for="without_sleep">Не спал</label>
+                    <input required type="time" name="without_sleep"
+                           id="without_sleep" class="form-control" value="00:00">
+                </div>
+            </div>
+            <input type="submit" class="btn btn-success mt-4 w-50" value="Отправить">
+        </form>
     </div>
+</div>
 {% endblock %}

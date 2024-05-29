@@ -6,7 +6,7 @@ from pydantic_settings import SettingsConfigDict
 
 from api import create_app, db
 from api.config import Config
-from api.models import Notation, User
+from api.models import DreamNote, User
 from api.utils.auth import hash_password
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.user import UserCredentials
@@ -26,9 +26,11 @@ test_configuration = TestConfig()
 # TODO оптимизировать фикстуры,
 #  распределить фикстуры по файлам,
 #  оптимизировать scope'ы.
+
 # TODO оптимизировать тесты,
-#  поработать над вкл/выкл авторизации для тестируемых роутов,
 #  передавать пользователя через header в token'е.
+
+# TODO Зарефакторить тесты в соответствии с актуальной работой кода в роутах.
 
 # @pytest.fixture(scope='module')
 # def test_client():
@@ -55,10 +57,10 @@ def client(app) -> FlaskClient:
         yield app.test_client()
 
 
-@pytest.fixture(name="user_credentials")
-def create_user_credentials() -> UserCredentials:
+@pytest.fixture
+def user_credentials() -> UserCredentials:
     yield UserCredentials(
-        login="test_login",
+        username="test_username",
         password="test_password".encode(),
     )
 
@@ -119,7 +121,7 @@ def add_notes_to_db(
     generated_diary: SleepDiaryGenerator,
 ) -> None:
     new_notes = generated_diary.convert_model(
-        Notation,
+        DreamNote,
         exclude={
             "sleep_duration",
             "time_spent_in_bed",

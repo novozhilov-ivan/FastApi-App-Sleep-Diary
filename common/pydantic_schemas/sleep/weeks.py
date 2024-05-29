@@ -22,7 +22,10 @@ class SleepDiaryWeekModel(SleepDiaryWeeklyNotesModel, SleepDiaryWeeklyStatistic)
 
 
 class SleepDiaryWeeklyNotes(BaseModel):
-    notes: Annotated[list[SleepNoteWithStats], Field(max_length=7)]
+    notes: Annotated[
+        list[SleepNoteWithStats],
+        Field(max_length=7),
+    ]
 
 
 class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
@@ -40,18 +43,25 @@ class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
             minutes_of_sleep += note.__getattr__(field_name).hour * 60
             minutes_of_sleep += note.__getattr__(field_name).minute
         average_minutes = minutes_of_sleep // len(notes)
-        return time(hour=average_minutes // 60, minute=average_minutes % 60)
+        return time(
+            hour=average_minutes // 60,
+            minute=average_minutes % 60,
+        )
 
     @computed_field
     @property
     def average_sleep_duration(self) -> time:
-        return self.get_average_time(notes=self.notes, field_name="sleep_duration")
+        return self.get_average_time(
+            notes=self.notes,
+            field_name="sleep_duration",
+        )
 
     @computed_field
     @property
     def average_time_spent_in_bed(self) -> time:
         return self.get_average_time(
-            notes=self.notes, field_name="time_spent_in_bed"
+            notes=self.notes,
+            field_name="time_spent_in_bed",
         )
 
     @computed_field

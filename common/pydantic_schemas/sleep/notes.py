@@ -1,45 +1,40 @@
 from datetime import date, time
 
-from pydantic import AliasChoices, BaseModel, ConfigDict, Field, computed_field
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 
 class DateOfSleepNote(BaseModel):
     """Дата записи в дневнике сна"""
 
-    calendar_date: date
+    sleep_date: date
 
 
 class SleepNote(BaseModel):
     """Запись в дневнике сна"""
 
-    calendar_date: date = Field(
+    sleep_date: date = Field(
         title="Дата",
         examples=["2021-12-13", "2021-12-14", "2021-12-15", "2021-12-16"],
     )
-    bedtime: time = Field(
+    went_to_bed: time = Field(
         title="Лег",
         examples=["05:11", "01:55", "01:10", "04:10"],
     )
-    asleep: time = Field(
+    fell_asleep: time = Field(
         title="Уснул",
         examples=["05:30", "02:20", "01:30", "04:20"],
     )
-    awake: time = Field(
+    woke_up: time = Field(
         title="Проснулся",
         examples=["12:00", "07:57", "10:00", "11:50"],
     )
-    rise: time = Field(
+    got_up: time = Field(
         title="Встал",
         examples=["12:15", "08:07", "10:30", "12:15"],
     )
-    time_of_night_awakenings: time = Field(
+    no_sleep: time = Field(
         title="Не спал",
         examples=["00:19", "00:32", "00:06", "01:20"],
-        alias="without_sleep",
-        validation_alias=AliasChoices(
-            "time_of_night_awakenings",
-            "without_sleep",
-        ),
     )
     model_config = ConfigDict(from_attributes=True)
 
@@ -47,19 +42,12 @@ class SleepNote(BaseModel):
 class SleepNoteOptional(BaseModel):
     """Запись в дневнике сна. Поля необязательные"""
 
-    calendar_date: date | None = Field(default=None)
-    bedtime: time | None = Field(default=None)
-    asleep: time | None = Field(default=None)
-    awake: time | None = Field(default=None)
-    rise: time | None = Field(default=None)
-    time_of_night_awakenings: time | None = Field(
-        default=None,
-        alias="without_sleep",
-        validation_alias=AliasChoices(
-            "time_of_night_awakenings",
-            "without_sleep",
-        ),
-    )
+    sleep_date: date | None = Field(default=None)
+    went_to_bed: time | None = Field(default=None)
+    fell_asleep: time | None = Field(default=None)
+    woke_up: time | None = Field(default=None)
+    got_up: time | None = Field(default=None)
+    no_sleep: time | None = (Field(default=None),)
     model_config = ConfigDict(from_attributes=True)
 
 
@@ -105,14 +93,14 @@ class SleepNoteWithStats(SleepNote, SleepNoteMeta):
     @computed_field
     @property
     def sleep_duration(self) -> time:
-        minutes_of_sleep = self.time_diff(self.awake, self.asleep)
-        minutes_of_sleep -= self.time_to_minutes(self.time_of_night_awakenings)
+        minutes_of_sleep = self.time_diff(self.woke_up, self.fell_asleep)
+        minutes_of_sleep -= self.time_to_minutes(self.no_sleep)
         return self.minutes_to_time(minutes_of_sleep)
 
     @computed_field
     @property
     def time_spent_in_bed(self) -> time:
-        minutes_in_bed = self.time_diff(self.rise, self.bedtime)
+        minutes_in_bed = self.time_diff(self.got_up, self.went_to_bed)
         return self.minutes_to_time(minutes_in_bed)
 
     @computed_field

@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import Resource
 
-from api.CRUD.notations import find_all_user_notes
+from api.CRUD.dream_notes import find_all_user_notes
 from api.routes.diary import (
     ns_diary,
     response_model_200,
