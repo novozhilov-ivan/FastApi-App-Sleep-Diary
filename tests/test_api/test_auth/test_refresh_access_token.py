@@ -9,8 +9,8 @@ from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
     TOKEN_TYPE_FIELD,
-    create_access_token,
-    create_refresh_token,
+    create_access_jwt,
+    create_refresh_jwt,
     decode_jwt,
     response_invalid_token_type_401,
 )
@@ -30,7 +30,7 @@ class TestRefreshAccessToken:
         exist_db_user: User,
     ):
         user = UserValidate.model_validate(exist_db_user)
-        access_token = f"{bearer} {create_refresh_token(user)}"
+        access_token = f"{bearer} {create_refresh_jwt(user)}"
         headers = {"Authorization": access_token}
         response = client.post(
             url_for(refresh_endpoint),
@@ -52,7 +52,7 @@ class TestRefreshAccessToken:
         exist_db_user: User,
     ):
         user = UserValidate.model_validate(exist_db_user)
-        refresh_token = f"{bearer} {create_access_token(user)}"
+        refresh_token = f"{bearer} {create_access_jwt(user)}"
         headers = {"Authorization": refresh_token}
         response = client.post(
             url_for(refresh_endpoint),

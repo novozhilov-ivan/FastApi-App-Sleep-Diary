@@ -2,7 +2,7 @@ import pytest
 
 from api.extension import bearer
 from api.models import User
-from api.utils.jwt import create_access_token, create_refresh_token
+from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.pydantic_schemas.user import UserValidate
 
 user_password_is_hashed = True
@@ -25,10 +25,10 @@ def create_db_user(exist_db_user: User):
 @pytest.fixture
 def access_token_header(exist_db_user: User) -> dict:
     user = UserValidate.model_validate(exist_db_user)
-    yield {"Authorization": f"{bearer} {create_access_token(user)}"}
+    yield {"Authorization": f"{bearer} {create_access_jwt(user)}"}
 
 
 @pytest.fixture
 def refresh_token_header(exist_db_user: User) -> dict:
     user = UserValidate.model_validate(exist_db_user)
-    yield {"Authorization": f"{bearer} {create_refresh_token(user)}"}
+    yield {"Authorization": f"{bearer} {create_refresh_jwt(user)}"}

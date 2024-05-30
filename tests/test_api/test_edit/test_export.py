@@ -23,11 +23,11 @@ class TestEditExportNotes:
     def test_export_notes_200(
         self,
         client: FlaskClient,
-        db_user_id: int,
+        exist_user_id: int,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.get(
             url_for(
                 export_notes_endpoint,
@@ -63,9 +63,9 @@ class TestEditExportNotes:
     def test_export_notes_404_notes_dont_exist(
         self,
         client: FlaskClient,
-        db_user_id: int,
+        exist_user_id: int,
     ):
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.get(
             url_for(
                 export_notes_endpoint,

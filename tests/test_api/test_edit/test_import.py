@@ -43,12 +43,12 @@ class TestEditImportNotes:
     )
     def test_import_notes_201(
         self,
-        db_user_id: int,
+        exist_user_id: int,
         generated_diary: SleepDiaryGenerator,
         client: FlaskClient,
     ):
         str_file = FileDataConverter(data=generated_diary.notes).to_csv_str()
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.post(
             url_for(
                 import_notes_endpoint,
@@ -62,8 +62,8 @@ class TestEditImportNotes:
         response.assert_data(response_created_201)
 
     @pytest.mark.import_400
-    def test_import_notes_400(self, db_user_id: int, client: FlaskClient):
-        query = {"id": db_user_id}
+    def test_import_notes_400(self, exist_user_id: int, client: FlaskClient):
+        query = {"id": exist_user_id}
         response = client.post(
             url_for(
                 import_notes_endpoint,
@@ -77,11 +77,11 @@ class TestEditImportNotes:
     @pytest.mark.import_415
     @pytest.mark.parametrize("extension", ("json", "xml", "pdf"))
     def test_import_notes_415(
-        self, extension: str, db_user_id: int, client: FlaskClient
+        self, extension: str, exist_user_id: int, client: FlaskClient
     ):
-        random_notes = SleepDiaryGenerator(user_id=db_user_id).notes
+        random_notes = SleepDiaryGenerator(user_id=exist_user_id).notes
         str_file = FileDataConverter(data=random_notes).to_csv_str()
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.post(
             url_for(
                 import_notes_endpoint,
@@ -106,12 +106,12 @@ class TestEditImportNotes:
     def test_import_notes_409(
         self,
         client: FlaskClient,
-        db_user_id: int,
+        exist_user_id: int,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.post(
             url_for(
                 import_notes_endpoint,

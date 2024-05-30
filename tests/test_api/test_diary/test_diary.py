@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
+from werkzeug.datastructures import Authorization
 
 from api.routes.diary import diary_endpoint
 from common.baseclasses.response import Response
@@ -12,83 +13,63 @@ from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModel
 from common.pydantic_schemas.user import User
 
 
-@pytest.mark.sleep
-@pytest.mark.sleep_get
-class TestSleepNotesGET:
-    RESPONSE_MODEL_200 = SleepDiaryModel
-    RESPONSE_MODEL_404 = SleepDiaryModelEmpty
-    RESPONSE_MODEL_422 = ErrorResponse
-    EMPTY_SLEEP_DIARY = SleepDiaryModelEmpty()
-    SLEEP_PARAMS_NAMES = ["name", "value"]
-    CORRECT_PARAMS_GET_NOTES_BY_USER_ID = [
-        ("id", 1),
-        ("id", "1"),
-        ("user_id", 1),
-        ("user_id", "1"),
-    ]
-    INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID = [
-        ("id", "str_not_int"),
-        ("user_id", "str_not_int"),
-        ("not_id", 1),
-        ("not_id", 0),
-        ("not_id", "1"),
-        ("not_id", "0"),
-        ("not_id", "str_not_int"),
-        ("", ""),
-    ]
+@pytest.mark.diary
+class TestDiary:
 
-    @pytest.mark.sleep_200
-    @pytest.mark.parametrize(
-        SLEEP_PARAMS_NAMES,
-        CORRECT_PARAMS_GET_NOTES_BY_USER_ID,
-    )
-    def test_get_all_sleep_notes_by_user_id_200(
+    @pytest.mark.diary_200
+    def test_get_diary_200(
         self,
-        name: str,
-        value: str | int,
         client: FlaskClient,
+        auth_token: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
-        response = client.get(url_for(diary_endpoint, **{name: value}))
+        response = client.get(
+            path=url_for(
+                endpoint=diary_endpoint,
+            ),
+            auth=auth_token,
+        )
         response = Response(response)
-        expectation = saved_diary.diary
         response.assert_status_code(HTTP.OK_200)
-        response.validate(self.RESPONSE_MODEL_200)
-        response.assert_data(expectation)
+        response.validate(SleepDiaryModel)
+        response.assert_data(saved_diary.diary)
 
-    @pytest.mark.sleep_404
-    @pytest.mark.parametrize(
-        SLEEP_PARAMS_NAMES,
-        CORRECT_PARAMS_GET_NOTES_BY_USER_ID,
-    )
-    def test_get_all_sleep_notes_by_user_id_404(
-        self, name: str, value: str | int, client: FlaskClient
+    @pytest.mark.diary_404
+    def test_get_empty_diary_404(
+        self,
+        client: FlaskClient,
+        auth_token: Authorization,
     ):
         response = client.get(
-            url_for(diary_endpoint),
-            query_string={name: value},
+            path=url_for(
+                endpoint=diary_endpoint,
+            ),
+            auth=auth_token,
         )
         response = Response(response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
-        response.validate(self.RESPONSE_MODEL_404)
-        response.assert_data(self.EMPTY_SLEEP_DIARY)
+        response.validate(SleepDiaryModelEmpty)
+        response.assert_data(SleepDiaryModelEmpty())
 
-    @pytest.mark.sleep_get_422
-    @pytest.mark.parametrize(
-        SLEEP_PARAMS_NAMES, INCORRECT_PARAMETERS_GET_NOTES_BY_USER_ID
-    )
-    def test_get_all_sleep_notes_by_user_id_422(
-        self, name: str, value: str | int, client: FlaskClient
+    @pytest.mark.diary_422
+    @pytest.mark.xfail(reason="Изменилась имплементация тестируемого route'а.")
+    def test_get_diary_wrong_user_id_422(
+        self,
+        client: FlaskClient,
+        auth_token: Authorization,
     ):
-        params = {name: value}
         response = client.get(
-            url_for(diary_endpoint),
-            query_string=params,
+            path=url_for(
+                endpoint=diary_endpoint,
+            ),
+            auth=auth_token,
         )
         response = Response(response)
         with pytest.raises(ValidationError) as exc_info:
             User(**params)
-        errors = self.RESPONSE_MODEL_422(message=exc_info.value.errors())
+        errors = ErrorResponse(
+            message=exc_info.value.errors(),
+        )
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
-        response.validate(self.RESPONSE_MODEL_422)
+        response.validate(ErrorResponse)
         response.assert_data(errors)

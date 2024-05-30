@@ -23,11 +23,11 @@ class TestEditDeleteAllNotes:
     def test_delete_notes_200(
         self,
         client: FlaskClient,
-        db_user_id: int,
+        exist_user_id: int,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        query = {"id": db_user_id}
+        query = {"id": exist_user_id}
         response = client.delete(
             url_for(
                 delete_notes_endpoint,
@@ -44,7 +44,7 @@ class TestEditDeleteAllNotes:
                 select(
                     DreamNote,
                 ).where(
-                    DreamNote.user_id == db_user_id,
+                    DreamNote.user_id == exist_user_id,
                 )
             ).first()
         notes_is_exist = bool(notes_is_exist)

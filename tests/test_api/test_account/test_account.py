@@ -8,7 +8,7 @@ from api.routes.account import account_endpoint
 from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
-    create_access_token,
+    create_access_jwt,
     response_invalid_authorization_token_401,
     response_invalid_token_type_401,
 )
@@ -95,7 +95,7 @@ class TestAccountInfo:
         user.id = 888
         response = client.get(
             url_for(account_endpoint),
-            headers={"Authorization": f"{bearer} {create_access_token(user)}"},
+            headers={"Authorization": f"{bearer} {create_access_jwt(user)}"},
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)

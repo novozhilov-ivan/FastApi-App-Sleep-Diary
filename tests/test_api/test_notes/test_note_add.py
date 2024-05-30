@@ -16,23 +16,22 @@ from common.pydantic_schemas.sleep.notes import (
 )
 
 
-@pytest.mark.sleep
-@pytest.mark.sleep_post
-class TestSleepNotesPost:
+@pytest.mark.note_add
+class TestNoteAdd:
 
-    @pytest.mark.sleep_201
+    @pytest.mark.note_add_201
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_201(
         self,
-        db_user_id: int,
+        exist_user_id: int,
         client: FlaskClient,
     ):
-        new_note = SleepDiaryGenerator(db_user_id)
+        new_note = SleepDiaryGenerator(exist_user_id)
         created_note: SleepNoteWithStats = new_note.create_note()
         response = client.post(
             url_for(
                 endpoint=note_endpoint,
-                user_id=db_user_id,
+                user_id=exist_user_id,
             ),
             json=created_note.model_dump(
                 mode="json",
@@ -47,11 +46,11 @@ class TestSleepNotesPost:
         response.validate(SleepNoteModel)
         response.assert_data(created_note)
 
-    @pytest.mark.sleep_post_422
+    @pytest.mark.note_add_422
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(
         self,
-        db_user_id: int,
+        exist_user_id: int,
         client: FlaskClient,
     ):
         random_note_wrong_values = SleepNoteGenerator().wrong_note(
@@ -60,7 +59,7 @@ class TestSleepNotesPost:
         response = client.post(
             url_for(
                 note_endpoint,
-                id=db_user_id,
+                id=exist_user_id,
             ),
             json=random_note_wrong_values,
         )

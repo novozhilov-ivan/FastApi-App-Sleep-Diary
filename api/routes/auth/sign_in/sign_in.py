@@ -9,7 +9,7 @@ from api.routes.auth.sign_in import (
 )
 from api.routes.edit import response_model_422
 from api.utils.auth import validate_auth_user
-from api.utils.jwt import create_access_token, create_refresh_token
+from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.token import TokenInfo
 from common.pydantic_schemas.user import User, UserCredentials, UserValidate
@@ -31,7 +31,7 @@ class AuthUserRoute(Resource):
         user: User = validate_auth_user(**user_credentials.model_dump())
         user: UserValidate = UserValidate.model_validate(user)
         jwt_token = TokenInfo(
-            access_token=create_access_token(user),
-            refresh_token=create_refresh_token(user),
+            access_token=create_access_jwt(user),
+            refresh_token=create_refresh_jwt(user),
         )
         return jwt_token.model_dump(), HTTP.OK_200

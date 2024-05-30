@@ -1,6 +1,7 @@
 import pytest
 from flask import url_for
 from flask.testing import FlaskClient
+from werkzeug.datastructures import Authorization
 
 from api.routes.notes import note_endpoint
 from common.baseclasses.response import Response
@@ -34,18 +35,18 @@ class TestNoteDelete:
     def test_note_delete_204(
         self,
         client: FlaskClient,
-        access_token_header: dict,
+        auth_token: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
         note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
         response = client.delete(
-            url_for(
+            path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            headers=access_token_header,
+            auth=auth_token,
         )
         response = Response(response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
