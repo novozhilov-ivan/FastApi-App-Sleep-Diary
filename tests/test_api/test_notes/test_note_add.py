@@ -17,6 +17,7 @@ from common.pydantic_schemas.sleep.notes import (
 )
 
 
+@pytest.mark.note
 @pytest.mark.note_add
 class TestNoteAdd:
 
@@ -28,9 +29,8 @@ class TestNoteAdd:
         auth_token: Authorization,
         client: FlaskClient,
     ):
-        notes_generator: SleepDiaryGenerator = SleepDiaryGenerator(
-            user_id=exist_user_id,
-        )
+        notes_generator: SleepDiaryGenerator
+        notes_generator = SleepDiaryGenerator(user_id=exist_user_id)
         new_note_with_stat: SleepNoteWithStats
         new_note_with_stat, *_ = notes_generator.notes
         new_note = SleepNote.model_validate(new_note_with_stat)
@@ -53,7 +53,6 @@ class TestNoteAdd:
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(
         self,
-        exist_user_id: int,
         auth_token: Authorization,
         client: FlaskClient,
     ):

@@ -41,7 +41,7 @@ class SleepNoteOptional(BaseModel):
     fell_asleep: time | None = Field(default=None)
     woke_up: time | None = Field(default=None)
     got_up: time | None = Field(default=None)
-    no_sleep: time | None = (Field(default=None),)
+    no_sleep: time | None = Field(default=None)
     model_config = ConfigDict(from_attributes=True)
 
 
