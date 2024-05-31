@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
+from werkzeug.datastructures import Authorization
 
 from api.routes.notes import note_endpoint
 from common.baseclasses.response import Response
@@ -21,52 +22,56 @@ class TestNoteAdd:
 
     @pytest.mark.note_add_201
     @pytest.mark.repeat(10)
-    def test_create_new_sleep_note_201(
+    def test_note_add_201(
         self,
         exist_user_id: int,
+        auth_token: Authorization,
         client: FlaskClient,
     ):
-        new_note = SleepDiaryGenerator(exist_user_id)
-        created_note: SleepNoteWithStats = new_note.create_note()
+        notes_generator: SleepDiaryGenerator = SleepDiaryGenerator(
+            user_id=exist_user_id,
+        )
+        new_note_with_stat: SleepNoteWithStats
+        new_note_with_stat, *_ = notes_generator.notes
+        new_note = SleepNote.model_validate(new_note_with_stat)
+
         response = client.post(
-            url_for(
+            path=url_for(
                 endpoint=note_endpoint,
-                user_id=exist_user_id,
             ),
-            json=created_note.model_dump(
+            json=new_note.model_dump(
                 mode="json",
-                exclude={
-                    "user_id",
-                    "id",
-                },
             ),
+            auth=auth_token,
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
         response.validate(SleepNoteModel)
-        response.assert_data(created_note)
+        response.assert_data(new_note_with_stat)
 
     @pytest.mark.note_add_422
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(
         self,
         exist_user_id: int,
+        auth_token: Authorization,
         client: FlaskClient,
     ):
-        random_note_wrong_values = SleepNoteGenerator().wrong_note(
+        notes_generator = SleepNoteGenerator()
+        note_with_wrong_values = notes_generator.wrong_note(
             mode="json",
         )
         response = client.post(
-            url_for(
-                note_endpoint,
-                id=exist_user_id,
+            path=url_for(
+                endpoint=note_endpoint,
             ),
-            json=random_note_wrong_values,
+            json=note_with_wrong_values,
+            auth=auth_token,
         )
         response = Response(response)
 
         with pytest.raises(ValidationError) as exc_info:
-            SleepNote(**random_note_wrong_values)
+            SleepNote.model_validate(note_with_wrong_values)
         errors_expectations = ErrorResponse(
             message=exc_info.value.errors(),
         )

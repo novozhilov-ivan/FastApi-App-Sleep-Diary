@@ -5,6 +5,7 @@ from api.extension import api, db
 
 
 # TODO add ruff[isort, etc] | linters | pre-commit
+# TODO добавить файл example.env для файлов с необходимыми переменными окружениями
 
 
 def create_app() -> Flask:
