@@ -8,3 +8,10 @@ response_model_200 = response_schema(
     model=UserInfo,
     code=HTTP.OK_200,
 )
+
+response_not_found_404 = "User not found"
+response_model_404 = response_schema(
+    ns=ns_account,
+    description=response_not_found_404,
+    code=HTTP.NOT_FOUND_404,
+)

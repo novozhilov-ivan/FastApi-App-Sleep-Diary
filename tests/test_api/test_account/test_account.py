@@ -1,10 +1,12 @@
 import pytest
 from flask import url_for
 from flask.testing import FlaskClient
+from werkzeug.datastructures import Authorization
 
 from api.extension import bearer
 from api.models import User
 from api.routes.account import account_endpoint
+from api.routes.account.account_find import response_not_found_404
 from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
@@ -18,20 +20,21 @@ from common.pydantic_schemas.user import UserInfo, UserValidate
 
 
 @pytest.mark.account
-class TestAccountInfo:
+@pytest.mark.account_find
+class TestAccountFind:
 
-    @pytest.mark.account_200
-    def test_account_info_200(
+    @pytest.mark.account_find_200
+    def test_account_find_200(
         self,
         client: FlaskClient,
         exist_user: User,
-        access_token_header: dict,
+        jwt_access: Authorization,
     ):
         response = client.get(
-            url_for(
+            path=url_for(
                 endpoint=account_endpoint,
             ),
-            headers=access_token_header,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.OK_200)
@@ -44,21 +47,23 @@ class TestAccountInfo:
         self,
         client: FlaskClient,
         exist_user: User,
-        refresh_token_header: dict,
+        jwt_refresh: Authorization,
     ):
         response = client.get(
-            url_for(account_endpoint),
-            headers=refresh_token_header,
+            path=url_for(
+                endpoint=account_endpoint,
+            ),
+            auth=jwt_refresh,
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        expectation = {
+        error_expectation = {
             "message": response_invalid_token_type_401.format(
                 REFRESH_TOKEN_TYPE.__repr__(),
                 ACCESS_TOKEN_TYPE.__repr__(),
             )
         }
-        response.assert_data(expectation)
+        response.assert_data(error_expectation)
 
     @pytest.mark.account_401
     def test_account_info_invalid_token_without_headers_401(
@@ -66,25 +71,35 @@ class TestAccountInfo:
         client: FlaskClient,
         exist_user: User,
     ):
-        response = client.get(url_for(account_endpoint))
+        response = client.get(
+            path=url_for(
+                endpoint=account_endpoint,
+            ),
+        )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        expectation = {"message": response_invalid_authorization_token_401}
-        response.assert_data(expectation)
+        error_expectation = {"message": response_invalid_authorization_token_401}
+        response.assert_data(error_expectation)
 
-    @pytest.mark.account_401
-    def test_account_info_invalid_token_wrong_user_401(
+    @pytest.mark.account_404
+    def test_account_info_user_not_found_404(
         self,
         client: FlaskClient,
         exist_user: User,
     ):
         user = UserValidate.model_validate(exist_user)
         user.id = 888
+        jwt_with_wrong_user_id = Authorization(
+            auth_type=bearer,
+            token=create_access_jwt(user),
+        )
         response = client.get(
-            url_for(account_endpoint),
-            headers={"Authorization": f"{bearer} {create_access_jwt(user)}"},
+            path=url_for(
+                endpoint=account_endpoint,
+            ),
+            auth=jwt_with_wrong_user_id,
         )
         response = Response(response)
-        response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        expectation = {"message": response_invalid_authorization_token_401}
-        response.assert_data(expectation)
+        response.assert_status_code(HTTP.NOT_FOUND_404)
+        error_expectation = {"message": response_not_found_404}
+        response.assert_data(error_expectation)

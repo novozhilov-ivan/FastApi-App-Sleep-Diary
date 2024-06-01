@@ -10,7 +10,7 @@ from api.config import Config
 from api.extension import bearer
 from api.models import DreamNote, User
 from api.utils.auth import hash_password
-from api.utils.jwt import create_access_jwt
+from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
@@ -104,6 +104,15 @@ def jwt_access(exist_user: User) -> Authorization:
     yield Authorization(
         auth_type=bearer,
         token=create_access_jwt(user),
+    )
+
+
+@pytest.fixture
+def jwt_refresh(exist_user: User) -> Authorization:
+    user = UserValidate.model_validate(exist_user)
+    yield Authorization(
+        auth_type=bearer,
+        token=create_refresh_jwt(user),
     )
 
 
