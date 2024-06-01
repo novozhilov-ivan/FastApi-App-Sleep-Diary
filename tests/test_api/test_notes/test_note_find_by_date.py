@@ -31,7 +31,7 @@ class TestNoteFindByDate:
     def test_note_find_by_date_200(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
@@ -42,7 +42,7 @@ class TestNoteFindByDate:
                 endpoint=note_find_by_date_endpoint,
                 sleep_date=note.sleep_date,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
 
@@ -62,7 +62,7 @@ class TestNoteFindByDate:
     def test_note_find_by_date_404(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
     ):
         non_exist_note_date = date(day=22, month=12, year=2020)
         non_exist_note = SleepNoteOptional(sleep_date=non_exist_note_date)
@@ -71,7 +71,7 @@ class TestNoteFindByDate:
                 endpoint=note_find_by_date_endpoint,
                 sleep_date=non_exist_note.sleep_date,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         expectation = {"message": response_not_found_404}

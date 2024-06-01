@@ -25,7 +25,7 @@ class TestNoteFindById:
     def test_note_find_by_id_200(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
@@ -36,7 +36,7 @@ class TestNoteFindById:
                 endpoint=note_find_by_id_endpoint,
                 id=note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         expectation = SleepNote(**note.model_dump())
@@ -48,7 +48,7 @@ class TestNoteFindById:
     def test_note_find_by_id_404(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
     ):
         non_exist_note_id = 666
         response = client.get(
@@ -56,7 +56,7 @@ class TestNoteFindById:
                 endpoint=note_find_by_id_endpoint,
                 id=non_exist_note_id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         expectation = {"message": response_not_found_404}

@@ -23,7 +23,7 @@ class TestNoteDelete:
     def test_note_delete_204(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         note: SleepNoteWithStats
@@ -33,7 +33,7 @@ class TestNoteDelete:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
@@ -43,7 +43,7 @@ class TestNoteDelete:
     def test_note_delete_404(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         note: SleepNoteWithStats
@@ -54,7 +54,7 @@ class TestNoteDelete:
                 endpoint=note_endpoint,
                 id=non_exist_note_id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.NO_CONTENT_204)

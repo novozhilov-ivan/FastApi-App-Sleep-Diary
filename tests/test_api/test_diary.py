@@ -20,14 +20,14 @@ class TestDiary:
     def test_get_diary_200(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.OK_200)
@@ -38,13 +38,13 @@ class TestDiary:
     def test_get_empty_diary_404(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
     ):
         response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
@@ -56,13 +56,13 @@ class TestDiary:
     def test_get_diary_wrong_user_id_422(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
     ):
         response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         with pytest.raises(ValidationError) as exc_info:

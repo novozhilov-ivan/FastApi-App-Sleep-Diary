@@ -14,7 +14,7 @@ username_field = Field(
     max_length=25,
 )
 user_password_field = Field(
-    title="Пароль",
+    title="Password",
     description="Пароль пользователя",
     min_length=3,
 )
@@ -33,7 +33,8 @@ class User(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class UserValidate(User, UserCredentials): ...
+class UserValidate(User, UserCredentials):
+    pass
 
 
 class UserInfo(User):

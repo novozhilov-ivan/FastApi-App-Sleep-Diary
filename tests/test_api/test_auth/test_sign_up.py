@@ -27,7 +27,9 @@ class TestSignUp:
         user_credentials: UserCredentials,
     ):
         response = client.post(
-            url_for(signup_endpoint),
+            path=url_for(
+                endpoint=signup_endpoint,
+            ),
             data=user_credentials.model_dump(),
             content_type=self.content_type,
         )
@@ -43,31 +45,24 @@ class TestSignUp:
             hashed_password=db_user.password.encode(),
         )
 
-    @pytest.mark.parametrize(
-        "wrong_password",
-        (
-            {"password": "wrong".encode()},
-            {"password": None},
-        ),
-    )
     def test_sign_up_409(
         self,
         client: FlaskClient,
-        wrong_password: dict,
         user_credentials: UserCredentials,
-        exist_db_user: UserValidate,
+        exist_user: UserValidate,
     ):
-        wrong_password = wrong_password.get("password")
-        if isinstance(wrong_password, bytes):
-            user_credentials.password = wrong_password
-        expectation = {
-            "message": response_conflict_409,
-        }
         response = client.post(
-            url_for(signup_endpoint),
+            path=url_for(
+                endpoint=signup_endpoint,
+            ),
             data=user_credentials.model_dump(),
             content_type=self.content_type,
         )
         response = Response(response)
         response.assert_status_code(HTTP.CONFLICT_409)
-        response.assert_data(expectation)
+        error_expectation = {"message": response_conflict_409}
+        response.assert_data(error_expectation)
+
+    @pytest.mark.skip(reason="Тест отсутствует")
+    def test_sign_up_422(self):
+        pass

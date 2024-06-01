@@ -26,12 +26,14 @@ class TestSignIn:
     def test_sign_in_200(
         self,
         client: FlaskClient,
-        exist_db_user: User,
+        exist_user: User,
         user_credentials: UserCredentials,
     ):
         user = UserCredentials.model_validate(user_credentials)
         response = client.post(
-            url_for(signin_endpoint),
+            path=url_for(
+                endpoint=signin_endpoint,
+            ),
             data=user.model_dump(),
             content_type=self.content_type,
         )
@@ -42,17 +44,17 @@ class TestSignIn:
         assert bearer == token_info.token_type
         decoded_access = decode_jwt(token_info.access_token)
         decoded_refresh = decode_jwt(token_info.refresh_token)
-        assert exist_db_user.id == decoded_access["sub"] == decoded_refresh["sub"]
-        assert exist_db_user.username == decoded_access["username"]
-        assert exist_db_user.username == decoded_refresh["username"]
+        assert exist_user.id == decoded_access["sub"] == decoded_refresh["sub"]
+        assert exist_user.username == decoded_access["username"]
+        assert exist_user.username == decoded_refresh["username"]
         assert ACCESS_TOKEN_TYPE == decoded_access[TOKEN_TYPE_FIELD]
         assert REFRESH_TOKEN_TYPE == decoded_refresh[TOKEN_TYPE_FIELD]
 
     @pytest.mark.parametrize(
         "wrong_credentials",
         (
-            {"password": "wrong".encode()},
-            {"username": "wrong"},
+            {"password": "super_wrong_password".encode()},
+            {"username": "super_wrong_username"},
         ),
     )
     def test_sign_in_401(
@@ -60,18 +62,20 @@ class TestSignIn:
         wrong_credentials: dict,
         client: FlaskClient,
         user_credentials: UserCredentials,
-        exist_db_user: User,
+        exist_user: User,
     ):
         user_credentials = user_credentials.model_dump()
         user_credentials.update(wrong_credentials)
-        expectation = {
-            "message": response_invalid_username_or_password_401,
-        }
         response = client.post(
-            url_for(signin_endpoint),
+            path=url_for(
+                endpoint=signin_endpoint,
+            ),
             data=user_credentials,
             content_type=self.content_type,
         )
         response = Response(response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        response.assert_data(expectation)
+        error_expectation = {
+            "message": response_invalid_username_or_password_401,
+        }
+        response.assert_data(error_expectation)

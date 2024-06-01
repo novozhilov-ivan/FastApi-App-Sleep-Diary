@@ -26,7 +26,7 @@ class TestNoteAdd:
     def test_note_add_201(
         self,
         exist_user_id: int,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         client: FlaskClient,
     ):
         notes_generator: SleepDiaryGenerator
@@ -42,7 +42,7 @@ class TestNoteAdd:
             json=new_note.model_dump(
                 mode="json",
             ),
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
@@ -53,7 +53,7 @@ class TestNoteAdd:
     @pytest.mark.repeat(10)
     def test_create_new_sleep_note_422(
         self,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         client: FlaskClient,
     ):
         notes_generator = SleepNoteGenerator()
@@ -65,7 +65,7 @@ class TestNoteAdd:
                 endpoint=note_endpoint,
             ),
             json=note_with_wrong_values,
-            auth=auth_token,
+            auth=jwt_access,
         )
         response = Response(response)
 

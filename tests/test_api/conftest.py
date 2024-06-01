@@ -82,7 +82,7 @@ user_password_is_hashed_description = [
     params=exist_db_user_indirect_params,
     ids=user_password_is_hashed_description,
 )
-def exist_db_user(
+def exist_user(
     request: FixtureRequest,
     user_credentials: UserCredentials,
     client: FlaskClient,
@@ -99,8 +99,8 @@ def exist_db_user(
 
 
 @pytest.fixture
-def auth_token(exist_db_user: User) -> Authorization:
-    user = UserValidate.model_validate(exist_db_user)
+def jwt_access(exist_user: User) -> Authorization:
+    user = UserValidate.model_validate(exist_user)
     yield Authorization(
         auth_type=bearer,
         token=create_access_jwt(user),
@@ -108,8 +108,8 @@ def auth_token(exist_db_user: User) -> Authorization:
 
 
 @pytest.fixture
-def exist_user_id(exist_db_user: User) -> int:
-    yield exist_db_user.id
+def exist_user_id(exist_user: User) -> int:
+    yield exist_user.id
 
 
 notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]

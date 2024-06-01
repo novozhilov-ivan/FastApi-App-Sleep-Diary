@@ -41,7 +41,7 @@ class TestNoteUpdate:
     def test_note_update_200_all_values_is_same(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -52,7 +52,7 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note.model_dump(
                 mode="json",
             ),
@@ -67,7 +67,7 @@ class TestNoteUpdate:
     def test_update_all_note_fields_200(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -80,7 +80,7 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note.model_dump(
                 mode="json",
             ),
@@ -100,7 +100,7 @@ class TestNoteUpdate:
         self,
         client: FlaskClient,
         exclude_fields: set,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -113,7 +113,7 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note.model_dump(
                 mode="json",
                 exclude=exclude_fields,
@@ -131,7 +131,7 @@ class TestNoteUpdate:
     def test_note_update_404(
         self,
         client: FlaskClient,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -143,7 +143,7 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note.model_dump(
                 mode="json",
             ),
@@ -170,8 +170,8 @@ class TestNoteUpdate:
         self,
         client: FlaskClient,
         wrong_note_params: tuple,
-        auth_token: Authorization,
-        exist_db_user: User,
+        jwt_access: Authorization,
+        exist_user: User,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -183,14 +183,14 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=wrong_note_id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note.model_dump(
                 mode="json",
             ),
         )
         with pytest.raises(ValidationError) as exc_info:
             SleepNoteMeta(
-                user_id=exist_db_user.id,
+                user_id=exist_user.id,
                 **response.request.args,
             )
         response = Response(response)
@@ -211,7 +211,7 @@ class TestNoteUpdate:
         self,
         client: FlaskClient,
         exclude_fields: set,
-        auth_token: Authorization,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -230,7 +230,7 @@ class TestNoteUpdate:
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
-            auth=auth_token,
+            auth=jwt_access,
             json=updated_note_with_random_wrong_values,
         )
         response = Response(response)
