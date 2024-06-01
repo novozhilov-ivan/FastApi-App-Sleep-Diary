@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Any
 
 import pytest
 from flask import url_for
@@ -155,28 +156,27 @@ class TestNoteUpdate:
 
     @pytest.mark.note_update_422
     @pytest.mark.parametrize(
-        "wrong_note_params",
+        "wrong_note_id",
         (
-            ("uid",),
-            ("20:20:20",),
-            (True,),
-            (False,),
-            (None,),
-            ("[1, 2, 3]",),
-            ("{id: 666}",),
+            "uid",
+            "20:20:20",
+            True,
+            False,
+            None,
+            "[1, 2, 3]",
+            "{id: 666}",
         ),
     )
     def test_note_update_wrong_note_id_type_422(
         self,
         client: FlaskClient,
-        wrong_note_params: tuple,
+        wrong_note_id: Any,
         jwt_access: Authorization,
         exist_user: User,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
-        wrong_note_id, *_ = wrong_note_params
         updated_note = SleepNoteOptional.model_validate(exist_note)
         response = client.patch(
             path=url_for(

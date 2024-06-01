@@ -3,6 +3,7 @@ import io
 import pytest
 from flask import url_for
 from flask.testing import FlaskClient
+from werkzeug.datastructures import Authorization
 
 from api.routes.edit.import_file import (
     import_notes_endpoint,
@@ -17,9 +18,11 @@ from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 
 
-@pytest.mark.edit
-@pytest.mark.import_notes
-class TestEditImportNotes:
+@pytest.mark.edit_diary
+@pytest.mark.edit_import
+class TestImportNotes:
+    content_type = "multipart/form-data"
+
     @staticmethod
     def import_file(
         str_file,
@@ -35,7 +38,7 @@ class TestEditImportNotes:
             )
         }
 
-    @pytest.mark.import_201
+    @pytest.mark.edit_import_201
     @pytest.mark.parametrize(
         "generated_diary",
         (7, 10),
@@ -46,58 +49,42 @@ class TestEditImportNotes:
         exist_user_id: int,
         generated_diary: SleepDiaryGenerator,
         client: FlaskClient,
+        jwt_access: Authorization,
     ):
-        str_file = FileDataConverter(data=generated_diary.notes).to_csv_str()
-        query = {"id": exist_user_id}
+        str_file = FileDataConverter(
+            data=generated_diary.notes,
+        ).to_csv_str()
         response = client.post(
-            url_for(
-                import_notes_endpoint,
-                **query,
+            path=url_for(
+                endpoint=import_notes_endpoint,
             ),
-            data=self.import_file(str_file),
-            content_type="multipart/form-data",
+            auth=jwt_access,
+            content_type=self.content_type,
+            data=self.import_file(
+                str_file=str_file,
+            ),
         )
         response = Response(response)
         response.assert_status_code(HTTP.CREATED_201)
         response.assert_data(response_created_201)
 
-    @pytest.mark.import_400
-    def test_import_notes_400(self, exist_user_id: int, client: FlaskClient):
-        query = {"id": exist_user_id}
+    @pytest.mark.edit_import_400
+    def test_import_notes_400(
+        self,
+        client: FlaskClient,
+        jwt_access: Authorization,
+    ):
         response = client.post(
-            url_for(
-                import_notes_endpoint,
-                **query,
-            )
+            path=url_for(
+                endpoint=import_notes_endpoint,
+            ),
+            auth=jwt_access,
         )
         response = Response(response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
         response.assert_data(response_bad_request_400)
 
-    @pytest.mark.import_415
-    @pytest.mark.parametrize("extension", ("json", "xml", "pdf"))
-    def test_import_notes_415(
-        self, extension: str, exist_user_id: int, client: FlaskClient
-    ):
-        random_notes = SleepDiaryGenerator(user_id=exist_user_id).notes
-        str_file = FileDataConverter(data=random_notes).to_csv_str()
-        query = {"id": exist_user_id}
-        response = client.post(
-            url_for(
-                import_notes_endpoint,
-                **query,
-            ),
-            data=self.import_file(
-                str_file,
-                file_extension=extension,
-            ),
-            content_type="multipart/form-data",
-        )
-        response = Response(response)
-        response.assert_status_code(HTTP.UNSUPPORTED_MEDIA_TYPE_415)
-        response.assert_data(response_unsupported_media_type_415)
-
-    @pytest.mark.import_409
+    @pytest.mark.edit_import_409
     @pytest.mark.parametrize(
         "generated_diary",
         (7, 10),
@@ -106,20 +93,47 @@ class TestEditImportNotes:
     def test_import_notes_409(
         self,
         client: FlaskClient,
-        exist_user_id: int,
+        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
-        query = {"id": exist_user_id}
         response = client.post(
-            url_for(
-                import_notes_endpoint,
-                **query,
+            path=url_for(
+                endpoint=import_notes_endpoint,
             ),
-            data=self.import_file(str_file),
-            content_type="multipart/form-data",
+            auth=jwt_access,
+            content_type=self.content_type,
+            data=self.import_file(
+                str_file=str_file,
+            ),
         )
         response = Response(response)
         response.assert_status_code(HTTP.CONFLICT_409)
         response.assert_data(response_conflict_409)
+
+    @pytest.mark.edit_import_415
+    @pytest.mark.parametrize("extension", ("json", "xml", "pdf"))
+    def test_import_notes_415(
+        self,
+        extension: str,
+        exist_user_id: int,
+        client: FlaskClient,
+        jwt_access: Authorization,
+    ):
+        diary_generator = SleepDiaryGenerator(user_id=exist_user_id)
+        str_file = FileDataConverter(data=diary_generator.notes).to_csv_str()
+        response = client.post(
+            path=url_for(
+                endpoint=import_notes_endpoint,
+            ),
+            auth=jwt_access,
+            content_type=self.content_type,
+            data=self.import_file(
+                str_file=str_file,
+                file_extension=extension,
+            ),
+        )
+        response = Response(response)
+        response.assert_status_code(HTTP.UNSUPPORTED_MEDIA_TYPE_415)
+        response.assert_data(response_unsupported_media_type_415)

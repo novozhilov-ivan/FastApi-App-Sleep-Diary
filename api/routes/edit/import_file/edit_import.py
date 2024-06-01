@@ -53,7 +53,7 @@ class EditRouteImport(Resource, UserActions):
         new_notes = FileDataConverter(file=file)
         new_notes.to_model(
             as_model=DreamNote,
-            id=self.current_user_id,
+            user_id=self.current_user_id,
         )
 
         if create_many_notes(new_notes.data):
