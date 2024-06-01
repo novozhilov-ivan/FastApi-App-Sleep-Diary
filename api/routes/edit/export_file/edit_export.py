@@ -30,7 +30,8 @@ class EditRouteExport(Resource, UserActions):
         if not db_notes:
             return response_not_found_404, HTTP.NOT_FOUND_404
         notes: list[SleepNote] = convert_db_notes_to_pydantic_model_notes(
-            db_notes, SleepNote
+            db_notes=db_notes,
+            model=SleepNote,
         )
         file_str: str = FileDataConverter(notes).to_csv_str()
         response = make_response(file_str)
