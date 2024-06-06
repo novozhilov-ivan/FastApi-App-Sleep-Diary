@@ -53,6 +53,31 @@ def user_hashed_password(user_credentials: UserCredentials) -> bytes:
     yield hash_password(user_credentials.password)
 
 
+@pytest.fixture(scope="session")
+def user(user_credentials: UserCredentials) -> UserValidate:
+    yield UserValidate(
+        id=1,
+        username=user_credentials.username,
+        password=user_credentials.password,
+    )
+
+
+@pytest.fixture(scope="session")
+def jwt_access(user: UserValidate) -> Authorization:
+    yield Authorization(
+        auth_type=bearer,
+        token=create_access_jwt(user),
+    )
+
+
+@pytest.fixture(scope="session")
+def jwt_refresh(user: UserValidate) -> Authorization:
+    yield Authorization(
+        auth_type=bearer,
+        token=create_refresh_jwt(user),
+    )
+
+
 @pytest.fixture
 def client(app: Flask) -> FlaskClient:
     assert test_configuration.TESTING is True
@@ -85,35 +110,17 @@ user_password_is_hashed_description = [
     ids=user_password_is_hashed_description,
 )
 def exist_user(
-    user_credentials: UserCredentials,
+    user: UserValidate,
     user_hashed_password: bytes,
     client: FlaskClient,
 ) -> User:
-    new_user = User(**user_credentials.model_dump())
+    new_user = User(**user.model_dump())
     new_user.password = user_hashed_password
     with client.application.app_context():
         db.session.add(new_user)
         db.session.commit()
         db.session.refresh(new_user)
     yield new_user
-
-
-@pytest.fixture
-def jwt_access(exist_user: User) -> Authorization:
-    user = UserValidate.model_validate(exist_user)
-    yield Authorization(
-        auth_type=bearer,
-        token=create_access_jwt(user),
-    )
-
-
-@pytest.fixture
-def jwt_refresh(exist_user: User) -> Authorization:
-    user = UserValidate.model_validate(exist_user)
-    yield Authorization(
-        auth_type=bearer,
-        token=create_refresh_jwt(user),
-    )
 
 
 @pytest.fixture
