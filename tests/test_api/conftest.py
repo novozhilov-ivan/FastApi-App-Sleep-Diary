@@ -29,37 +29,15 @@ test_configuration = TestConfig()
 # TODO оптимизировать фикстуры,
 #  распределить фикстуры по файлам,
 #  оптимизировать scope'ы.
-#  В частности, вынести функцию hash_password в scope='session'.
 #  Записать скорость до и после оптимизации scope'ов.
 
-# TODO оптимизировать тесты,
-#  передавать пользователя через header в token'е.
 
-# TODO Зарефакторить тесты в соответствии с актуальной работой кода в роутах.
-
-# @pytest.fixture(scope='module')
-# def test_client():
-#     app = create_app()
-#     with app.test_client() as testing_client:
-#         with app.app_context():
-#             yield testing_client
-
-
-@pytest.fixture
+@pytest.fixture(scope="session")
 def app() -> Flask:
     assert test_configuration.TESTING is True
     app = create_app()
     app.config.from_object(test_configuration)
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
     yield app
-
-
-@pytest.fixture
-def client(app) -> FlaskClient:
-    with app.test_request_context():
-        yield app.test_client()
 
 
 @pytest.fixture(scope="session")
@@ -73,6 +51,25 @@ def user_credentials() -> UserCredentials:
 @pytest.fixture(scope="session")
 def user_hashed_password(user_credentials: UserCredentials) -> bytes:
     yield hash_password(user_credentials.password)
+
+
+@pytest.fixture
+def client(app: Flask) -> FlaskClient:
+    assert test_configuration.TESTING is True
+    app = create_app()
+    app.config.from_object(test_configuration)
+    with app.test_request_context(), app.app_context():
+        yield app.test_client()
+
+
+@pytest.fixture(
+    autouse=True,
+)
+def create_db(app: Flask) -> None:
+    with app.app_context():
+        db.drop_all()
+        db.create_all()
+    yield
 
 
 user_password_is_hashed = True
@@ -158,6 +155,9 @@ def add_notes_to_db(
     )
     with client.application.app_context():
         db.session.add_all(new_notes)
+        db.session.flush()
+        yield
+        db.session.rollback()
         db.session.commit()
 
 
