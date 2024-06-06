@@ -2,7 +2,6 @@ import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
-from werkzeug.datastructures import Authorization
 
 from api import db
 from api.models import DreamNote
@@ -12,32 +11,33 @@ from common.baseclasses.status_codes import HTTP
 from common.generators.diary import SleepDiaryGenerator
 
 
-@pytest.mark.edit_diary
-@pytest.mark.edit_delete
+@pytest.mark.edit
+@pytest.mark.delete
 class TestEditDeleteAllNotes:
-    @pytest.mark.edit_delete_204
+    @pytest.mark.delete_200
     @pytest.mark.parametrize(
         "generated_diary",
         (7, 10),
         indirect=True,
     )
-    def test_delete_notes_204(
+    def test_delete_notes_200(
         self,
         client: FlaskClient,
         exist_user_id: int,
-        jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
+        query = {"id": exist_user_id}
         response = client.delete(
-            path=url_for(
-                endpoint=delete_notes_endpoint,
-            ),
-            auth=jwt_access,
+            url_for(
+                delete_notes_endpoint,
+                **query,
+            )
         )
+        expectation = None
         response = Response(response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
-        response.assert_data(None)
+        response.assert_data(expectation)
 
         with client.application.app_context():
             notes_is_exist = db.session.execute(

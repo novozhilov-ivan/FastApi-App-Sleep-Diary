@@ -62,17 +62,12 @@ def client(app) -> FlaskClient:
         yield app.test_client()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
 def user_credentials() -> UserCredentials:
     yield UserCredentials(
         username="test_username",
         password="test_password".encode(),
     )
-
-
-@pytest.fixture(scope="session")
-def user_hashed_password(user_credentials: UserCredentials) -> bytes:
-    yield hash_password(user_credentials.password)
 
 
 user_password_is_hashed = True
@@ -88,12 +83,14 @@ user_password_is_hashed_description = [
     ids=user_password_is_hashed_description,
 )
 def exist_user(
+    request: FixtureRequest,
     user_credentials: UserCredentials,
-    user_hashed_password: bytes,
     client: FlaskClient,
 ) -> User:
+    pwd_is_hashed: bool = request.param
     new_user = User(**user_credentials.model_dump())
-    new_user.password = user_hashed_password
+    if pwd_is_hashed:
+        new_user.password = hash_password(user_credentials.password)
     with client.application.app_context():
         db.session.add(new_user)
         db.session.commit()
