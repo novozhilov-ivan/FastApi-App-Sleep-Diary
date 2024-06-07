@@ -1,6 +1,5 @@
 from datetime import date, datetime, time, timezone
 from random import randrange
-from typing import Type
 
 from api.utils.manage_notes import slice_on_week
 from common.pydantic_schemas.sleep.diary import SleepDiaryCompute, SleepDiaryModel
@@ -13,13 +12,6 @@ class SleepDiaryGenerator:
         self.notes_count: int = notes_count
         self.notes: list[SleepNoteWithStats] = self._create_notes()
         self.diary: SleepDiaryModel = self._build_sleep_diary()
-
-    def convert_model(self, model: Type, **kw):
-        converted_notes = []
-        for note in self.notes:
-            converted_note = model(**note.model_dump(**kw))
-            converted_notes.append(converted_note)
-        return converted_notes
 
     @staticmethod
     def _rand_time(

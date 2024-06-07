@@ -5,7 +5,7 @@ from sqlalchemy import select
 from werkzeug.datastructures import Authorization
 
 from api import db
-from api.models import DreamNote
+from api.models import DreamNote, User
 from api.routes.edit.delete_diary import delete_notes_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
@@ -24,7 +24,7 @@ class TestEditDeleteAllNotes:
     def test_delete_notes_204(
         self,
         client: FlaskClient,
-        exist_user_id: int,
+        exist_user: User,
         jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
@@ -41,11 +41,8 @@ class TestEditDeleteAllNotes:
 
         with client.application.app_context():
             notes_is_exist = db.session.execute(
-                select(
-                    DreamNote,
-                ).where(
-                    DreamNote.user_id == exist_user_id,
-                )
+                select(DreamNote).filter_by(user_id=exist_user.id)
             ).first()
+
         notes_is_exist = bool(notes_is_exist)
         assert notes_is_exist is False, f"User notes exist now is [{notes_is_exist}]"

@@ -67,7 +67,11 @@ class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
     model_config = ConfigDict(from_attributes=True)
 
 
-class SleepNoteWithStats(SleepNote, SleepNoteMeta):
+class SleepNoteWithMeta(SleepNote, SleepNoteMeta):
+    pass
+
+
+class SleepNoteWithStats(SleepNoteWithMeta):
     @staticmethod
     def time_to_minutes(time_point: time) -> int:
         return time_point.hour * 60 + time_point.minute

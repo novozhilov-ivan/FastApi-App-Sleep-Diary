@@ -5,6 +5,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
+from api.models import User
 from api.routes.edit.import_file import (
     import_notes_endpoint,
     response_bad_request_400,
@@ -46,7 +47,7 @@ class TestImportNotes:
     )
     def test_import_notes_201(
         self,
-        exist_user_id: int,
+        # exist_user: User,
         generated_diary: SleepDiaryGenerator,
         client: FlaskClient,
         jwt_access: Authorization,
@@ -117,11 +118,11 @@ class TestImportNotes:
     def test_import_notes_415(
         self,
         extension: str,
-        exist_user_id: int,
+        exist_user: User,
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        diary_generator = SleepDiaryGenerator(user_id=exist_user_id)
+        diary_generator = SleepDiaryGenerator(user_id=exist_user.id)
         str_file = FileDataConverter(data=diary_generator.notes).to_csv_str()
         response = client.post(
             path=url_for(

@@ -21,7 +21,7 @@ class FindAccount(UserActions):
     @ns_account.response(**response_model_404)
     @ns_account.doc(description=__doc__)
     def get(self) -> tuple:
-        db_user: User | None = find_user_by_id(self.current_user_id)
+        db_user: User | None = find_user_by_id(user_id=self.current_user_id)
         if db_user is None:
             abort(
                 code=HTTP.NOT_FOUND_404,

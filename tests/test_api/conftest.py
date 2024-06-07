@@ -12,6 +12,7 @@ from api.models import DreamNote, User
 from api.utils.auth import hash_password
 from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.generators.diary import SleepDiaryGenerator
+from common.pydantic_schemas.sleep.notes import SleepNoteWithMeta
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
@@ -24,12 +25,6 @@ class TestConfig(Config):
 
 
 test_configuration = TestConfig()
-
-
-# TODO оптимизировать фикстуры,
-#  распределить фикстуры по файлам,
-#  оптимизировать scope'ы.
-#  Записать скорость до и после оптимизации scope'ов.
 
 
 @pytest.fixture(scope="session")
@@ -114,18 +109,16 @@ def exist_user(
     user_hashed_password: bytes,
     client: FlaskClient,
 ) -> User:
-    new_user = User(**user.model_dump())
-    new_user.password = user_hashed_password
+    new_user = User(
+        id=user.id,
+        username=user.username,
+        password=user_hashed_password,
+    )
     with client.application.app_context():
         db.session.add(new_user)
         db.session.commit()
         db.session.refresh(new_user)
     yield new_user
-
-
-@pytest.fixture
-def exist_user_id(exist_user: User) -> int:
-    yield exist_user.id
 
 
 notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
@@ -137,12 +130,12 @@ notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
 )
 def generated_diary(
     request: FixtureRequest,
-    exist_user_id: int,
+    exist_user: User,
     client: FlaskClient,
 ) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(
-        user_id=exist_user_id,
+        user_id=exist_user.id,
         notes_count=notes_count,
     )
 
@@ -152,19 +145,13 @@ def add_notes_to_db(
     client: FlaskClient,
     generated_diary: SleepDiaryGenerator,
 ) -> None:
-    new_notes = generated_diary.convert_model(
-        DreamNote,
-        exclude={
-            "sleep_duration",
-            "time_spent_in_bed",
-            "sleep_efficiency",
-        },
-    )
+    include_fields: set[str] = set(SleepNoteWithMeta.model_fields)
+    new_notes = [
+        DreamNote(**note.model_dump(include=include_fields))
+        for note in generated_diary.notes
+    ]
     with client.application.app_context():
         db.session.add_all(new_notes)
-        db.session.flush()
-        yield
-        db.session.rollback()
         db.session.commit()
 
 
