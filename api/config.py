@@ -1,7 +1,7 @@
 from pathlib import Path
-from typing import Literal
+from typing import Annotated, Literal
 
-from pydantic import BaseModel, computed_field
+from pydantic import BaseModel, Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent.parent
@@ -31,8 +31,6 @@ class AuthJWT(BaseModel):
 
 
 class DBConfig(BaseSettings):
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ECHO: bool = False
 
     DB_DRIVER: str
     DB_EXTEND_DRIVER: str
@@ -55,6 +53,44 @@ class DBConfig(BaseSettings):
             self.DB_PORT,
             self.DB_NAME,
         )
+
+    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
+    SQLALCHEMY_ECHO: Annotated[
+        bool,
+        Field(
+            title="БД Эхо",
+            description="Вывод всех запросов к Базе Данных в терминал",
+        ),
+    ] = False
+    pool_size: Annotated[
+        int,
+        Field(
+            title="Количество соединений с БД",
+            description="Ограничение по количеству соединений с Базой Данных",
+        ),
+    ] = 5
+    max_overflow: Annotated[
+        int,
+        Field(
+            title="Количество дополнительных соединений к БД",
+            description=(
+                "Количеству дополнительных соединений с Базой Данных "
+                "сверх лимита pool_size"
+            ),
+        ),
+    ] = 10
+
+    @computed_field
+    @property
+    def SQLALCHEMY_ENGINE_OPTIONS(self) -> dict:  # noqa
+        return {
+            "url": self.SQLALCHEMY_DATABASE_URI,
+            "echo": self.SQLALCHEMY_ECHO,
+            "pool_size": self.pool_size,
+            "max_overflow": self.max_overflow,
+        }
+
+    SQLALCHEMY_BINDS: dict = {}
 
 
 class Config(FlaskConfig, FlaskRestxConfig, DBConfig):
