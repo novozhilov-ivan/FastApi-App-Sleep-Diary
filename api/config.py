@@ -40,20 +40,13 @@ class DBConfig(BaseSettings):
     DB_PORT: str
     DB_NAME: str
 
-    @computed_field
-    @property
-    def SQLALCHEMY_DATABASE_URI(self) -> str:  # noqa
-        return "{}{}{}://{}:{}@{}:{}/{}".format(
-            self.DB_DRIVER,
-            "+" if self.DB_EXTEND_DRIVER else "",
-            self.DB_EXTEND_DRIVER,
-            self.DB_USER,
-            self.DB_PASSWORD,
-            self.DB_HOST,
-            self.DB_PORT,
-            self.DB_NAME,
-        )
 
+class SAConfig(DBConfig):
+    model_config = SettingsConfigDict(
+        extra="allow",
+        env_file=".dev.env",
+    )
+    SQLALCHEMY_BINDS: dict = {}
     SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
     SQLALCHEMY_ECHO: Annotated[
         bool,
@@ -81,7 +74,19 @@ class DBConfig(BaseSettings):
     ] = 10
 
     @computed_field
-    @property
+    def SQLALCHEMY_DATABASE_URI(self) -> str:  # noqa
+        return "{}{}{}://{}:{}@{}:{}/{}".format(
+            self.DB_DRIVER,
+            "+" if self.DB_EXTEND_DRIVER else "",
+            self.DB_EXTEND_DRIVER,
+            self.DB_USER,
+            self.DB_PASSWORD,
+            self.DB_HOST,
+            self.DB_PORT,
+            self.DB_NAME,
+        )
+
+    @computed_field
     def SQLALCHEMY_ENGINE_OPTIONS(self) -> dict:  # noqa
         return {
             "url": self.SQLALCHEMY_DATABASE_URI,
@@ -90,15 +95,14 @@ class DBConfig(BaseSettings):
             "max_overflow": self.max_overflow,
         }
 
-    SQLALCHEMY_BINDS: dict = {}
 
-
-class Config(FlaskConfig, FlaskRestxConfig, DBConfig):
-    auth_jwt: AuthJWT = AuthJWT()
+class Config(FlaskConfig, FlaskRestxConfig):
     model_config = SettingsConfigDict(
         extra="allow",
         env_file=".dev.env",
     )
 
 
+sa_config = SAConfig()
 config = Config()
+auth_config: AuthJWT = AuthJWT()

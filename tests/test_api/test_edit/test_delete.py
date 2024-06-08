@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from werkzeug.datastructures import Authorization
 
-from api import db
+from api.extension import db
 from api.models import DreamNote, User
 from api.routes.edit.delete_diary import delete_notes_endpoint
 from common.baseclasses.response import Response

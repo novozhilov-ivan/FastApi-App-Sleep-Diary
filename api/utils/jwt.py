@@ -8,7 +8,7 @@ from flask import request
 from flask_restx import abort
 from jwt import InvalidTokenError
 
-from api import config
+from api.config import auth_config
 from api.extension import bearer
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.user import UserValidate
@@ -23,9 +23,9 @@ response_invalid_token_type_401 = "invalid token type {} expected {}"
 
 def encode_jwt(
     payload: dict,
-    private_key: str = config.auth_jwt.private_key_path.read_text(),
-    algorithm: str = config.auth_jwt.algorithm,
-    expire_minutes: int = config.auth_jwt.access_token_expire_minutes,
+    private_key: str = auth_config.private_key_path.read_text(),
+    algorithm: str = auth_config.algorithm,
+    expire_minutes: int = auth_config.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ):
     to_encode = payload.copy()
@@ -44,8 +44,8 @@ def encode_jwt(
 
 def decode_jwt(
     token: str | bytes,
-    public_key: str = config.auth_jwt.public_key_path.read_text(),
-    algorithm: str = config.auth_jwt.algorithm,
+    public_key: str = auth_config.public_key_path.read_text(),
+    algorithm: str = auth_config.algorithm,
 ) -> dict:
     try:
         return jwt.decode(
@@ -63,7 +63,7 @@ def decode_jwt(
 def create_jwt(
     token_type: str,
     token_data: dict,
-    expire_minutes: int = config.auth_jwt.access_token_expire_minutes,
+    expire_minutes: int = auth_config.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
 ) -> str:
     jwt_payload = {TOKEN_TYPE_FIELD: token_type}
@@ -83,7 +83,7 @@ def create_access_jwt(user: UserValidate) -> str:
     return create_jwt(
         token_type=ACCESS_TOKEN_TYPE,
         token_data=jwt_payload,
-        expire_minutes=config.auth_jwt.access_token_expire_minutes,
+        expire_minutes=auth_config.access_token_expire_minutes,
     )
 
 
@@ -96,7 +96,7 @@ def create_refresh_jwt(user: UserValidate) -> str:
         token_type=REFRESH_TOKEN_TYPE,
         token_data=jwt_payload,
         expire_timedelta=timedelta(
-            days=config.auth_jwt.refresh_token_expire_days,
+            days=auth_config.refresh_token_expire_days,
         ),
     )
 

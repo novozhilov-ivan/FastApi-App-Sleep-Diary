@@ -5,9 +5,9 @@ from flask.testing import FlaskClient
 from pydantic_settings import SettingsConfigDict
 from werkzeug.datastructures import Authorization
 
-from api import create_app, db
-from api.config import Config
-from api.extension import bearer
+from api import create_app
+from api.config import Config, SAConfig
+from api.extension import bearer, db
 from api.models import DreamNote, User
 from api.utils.auth import hash_password
 from api.utils.jwt import create_access_jwt, create_refresh_jwt
@@ -16,7 +16,7 @@ from common.pydantic_schemas.sleep.notes import SleepNoteWithMeta
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
-class TestConfig(Config):
+class TestConfig(Config, SAConfig):
     model_config = SettingsConfigDict(
         extra="allow",
         env_file=".test.env",
@@ -24,14 +24,15 @@ class TestConfig(Config):
     TESTING: bool
 
 
-test_configuration = TestConfig()
+test_config = TestConfig()
 
 
 @pytest.fixture(scope="session")
 def app() -> Flask:
-    assert test_configuration.TESTING is True
+    assert test_config.TESTING is True
     app = create_app()
-    app.config.from_object(test_configuration)
+    app.config.from_object(test_config)
+    assert app.config.get("DB_NAME") == "test_db"
     yield app
 
 
@@ -45,7 +46,9 @@ def user_credentials() -> UserCredentials:
 
 @pytest.fixture(scope="session")
 def user_hashed_password(user_credentials: UserCredentials) -> bytes:
-    yield hash_password(user_credentials.password)
+    yield hash_password(
+        pwd_bytes=user_credentials.password,
+    )
 
 
 @pytest.fixture(scope="session")
@@ -75,35 +78,18 @@ def jwt_refresh(user: UserValidate) -> Authorization:
 
 @pytest.fixture
 def client(app: Flask) -> FlaskClient:
-    assert test_configuration.TESTING is True
-    app = create_app()
-    app.config.from_object(test_configuration)
     with app.test_request_context(), app.app_context():
         yield app.test_client()
 
 
-@pytest.fixture(
-    autouse=True,
-)
+@pytest.fixture(autouse=True)
 def create_db(app: Flask) -> None:
     with app.app_context():
         db.drop_all()
         db.create_all()
-    yield
 
 
-user_password_is_hashed = True
-exist_db_user_indirect_params = (user_password_is_hashed,)
-user_password_is_hashed_description = [
-    f"User pwd is {'' if pwd_hashed else 'UN'}hashed"
-    for pwd_hashed in exist_db_user_indirect_params
-]
-
-
-@pytest.fixture(
-    params=exist_db_user_indirect_params,
-    ids=user_password_is_hashed_description,
-)
+@pytest.fixture
 def exist_user(
     user: UserValidate,
     user_hashed_password: bytes,

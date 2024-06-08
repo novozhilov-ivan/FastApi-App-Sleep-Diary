@@ -2,8 +2,8 @@ from flask import request
 from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
-from api import config
 from api.CRUD.dream_notes import create_many_notes
+from api.config import config
 from api.models import DreamNote
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (

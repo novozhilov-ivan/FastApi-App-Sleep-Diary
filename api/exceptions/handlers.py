@@ -1,6 +1,6 @@
 from pydantic import ValidationError
 
-from api import api
+from api.extension import api
 from common.baseclasses.status_codes import HTTP
 from common.pydantic_schemas.errors.message import ErrorResponse
 

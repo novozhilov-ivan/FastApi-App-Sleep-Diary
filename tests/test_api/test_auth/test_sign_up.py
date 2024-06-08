@@ -3,7 +3,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
 
-from api import db
+from api.extension import db
 from api.models import User
 from api.routes.auth.sign_up import (
     response_conflict_409,

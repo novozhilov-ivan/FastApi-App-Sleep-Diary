@@ -10,6 +10,7 @@ class Base(DeclarativeBase):
 db = SQLAlchemy(
     model_class=Base,
     disable_autonaming=True,
+    # session_options=sa_config.SQLALCHEMY_BINDS,
 )
 
 bearer = "Bearer"
