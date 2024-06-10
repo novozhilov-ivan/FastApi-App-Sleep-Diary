@@ -1,6 +1,6 @@
 from flask import Flask
 
-from api.config import auth_config, config, sa_config
+from api.config import flask_config, flask_restx_config
 from api.extension import api, db
 
 
@@ -14,8 +14,8 @@ def create_app() -> Flask:
         import_name="api",
         instance_relative_config=False,
     )
-    app.config.from_object(config)
-    app.config.from_object(sa_config)
+    app.config.from_object(flask_config)
+    app.config.from_object(flask_restx_config)
 
     # Initialize Plugins
     db.init_app(app)

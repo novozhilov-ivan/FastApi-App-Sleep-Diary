@@ -6,7 +6,7 @@ from pydantic_settings import SettingsConfigDict
 from werkzeug.datastructures import Authorization
 
 from api import create_app
-from api.config import Config, SAConfig
+from api.config import FlaskConfig, SQLAlchemyConfig
 from api.extension import bearer, db
 from api.models import DreamNote, User
 from api.utils.auth import hash_password
@@ -16,22 +16,19 @@ from common.pydantic_schemas.sleep.notes import SleepNoteWithMeta
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
-class TestConfig(Config, SAConfig):
+class TestConfig(FlaskConfig, SQLAlchemyConfig):
     model_config = SettingsConfigDict(
-        extra="allow",
+        extra="forbid",
         env_file=".test.env",
     )
     TESTING: bool
 
 
-test_config = TestConfig()
-
-
 @pytest.fixture(scope="session")
 def app() -> Flask:
-    assert test_config.TESTING is True
     app = create_app()
-    app.config.from_object(test_config)
+    app.config.from_object(TestConfig())
+    assert app.config.get("TESTING")
     assert app.config.get("DB_NAME") == "test_db"
     yield app
 

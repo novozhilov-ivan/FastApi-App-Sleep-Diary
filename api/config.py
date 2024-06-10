@@ -1,5 +1,5 @@
 from pathlib import Path
-from typing import Annotated, Literal
+from typing import Literal
 
 from pydantic import BaseModel, Field, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -8,6 +8,10 @@ BASE_DIR = Path(__file__).parent.parent
 
 
 class FlaskConfig(BaseSettings):
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".dev.env",
+    )
     FLASK_APP: str
     FLASK_ENV: str
     FLASK_DEBUG: bool
@@ -18,6 +22,10 @@ class FlaskConfig(BaseSettings):
 
 
 class FlaskRestxConfig(BaseSettings):
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".dev.env",
+    )
     ERROR_INCLUDE_MESSAGE: bool = False
     SWAGGER_UI_DOC_EXPANSION: Literal["none", "list", "full"] = "list"
 
@@ -31,7 +39,10 @@ class AuthJWT(BaseModel):
 
 
 class DBConfig(BaseSettings):
-
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".dev.env",
+    )
     DB_DRIVER: str
     DB_EXTEND_DRIVER: str
     DB_USER: str
@@ -41,40 +52,44 @@ class DBConfig(BaseSettings):
     DB_NAME: str
 
 
-class SAConfig(DBConfig):
-    model_config = SettingsConfigDict(
-        extra="allow",
-        env_file=".dev.env",
+class SQLAlchemyConfig(DBConfig):
+    echo: bool = Field(
+        default=False,
+        alias="SQLALCHEMY_ECHO",
+        title="БД Эхо",
+        description="Вывод всех запросов к Базе Данных в терминал",
     )
-    SQLALCHEMY_BINDS: dict = {}
-    SQLALCHEMY_TRACK_MODIFICATIONS: bool = False
-    SQLALCHEMY_ECHO: Annotated[
-        bool,
-        Field(
-            title="БД Эхо",
-            description="Вывод всех запросов к Базе Данных в терминал",
+
+    pool_size: int = Field(
+        default=5,
+        alias="POOL_SIZE",
+        title="Количество соединений с БД",
+        description="Ограничение по количеству соединений с Базой Данных",
+    )
+    max_overflow: int = Field(
+        default=10,
+        alias="MAX_OVERFLOW",
+        title="Количество дополнительных соединений к БД",
+        description=(
+            "Количеству дополнительных соединений с Базой Данных сверх "
+            "лимита pool_size"
         ),
-    ] = False
-    pool_size: Annotated[
-        int,
-        Field(
-            title="Количество соединений с БД",
-            description="Ограничение по количеству соединений с Базой Данных",
-        ),
-    ] = 5
-    max_overflow: Annotated[
-        int,
-        Field(
-            title="Количество дополнительных соединений к БД",
-            description=(
-                "Количеству дополнительных соединений с Базой Данных "
-                "сверх лимита pool_size"
-            ),
-        ),
-    ] = 10
+    )
+    expire_on_commit: bool = Field(
+        default=False,
+        alias="EXPIRE_ON_COMMIT",
+    )
+    autocommit: bool = Field(
+        default=False,
+        alias="AUTOCOMMIT",
+    )
+    autoflush: bool = Field(
+        default=True,
+        alias="AUTOFLUSH",
+    )
 
     @computed_field
-    def SQLALCHEMY_DATABASE_URI(self) -> str:  # noqa
+    def database_uri(self) -> str:
         return "{}{}{}://{}:{}@{}:{}/{}".format(
             self.DB_DRIVER,
             "+" if self.DB_EXTEND_DRIVER else "",
@@ -87,22 +102,24 @@ class SAConfig(DBConfig):
         )
 
     @computed_field
-    def SQLALCHEMY_ENGINE_OPTIONS(self) -> dict:  # noqa
+    def session_options(self) -> dict:
         return {
-            "url": self.SQLALCHEMY_DATABASE_URI,
-            "echo": self.SQLALCHEMY_ECHO,
+            "expire_on_commit": self.expire_on_commit,
+            "autocommit": self.autocommit,
+            "autoflush": self.autoflush,
+        }
+
+    @computed_field
+    def engine_options(self) -> dict:
+        return {
+            "url": self.database_uri,
+            "echo": self.echo,
             "pool_size": self.pool_size,
             "max_overflow": self.max_overflow,
         }
 
 
-class Config(FlaskConfig, FlaskRestxConfig):
-    model_config = SettingsConfigDict(
-        extra="allow",
-        env_file=".dev.env",
-    )
-
-
-sa_config = SAConfig()
-config = Config()
+sqlalchemy_config = SQLAlchemyConfig()
+flask_config = FlaskConfig()
+flask_restx_config = FlaskRestxConfig()
 auth_config: AuthJWT = AuthJWT()

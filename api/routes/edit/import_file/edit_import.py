@@ -3,7 +3,7 @@ from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
 from api.CRUD.dream_notes import create_many_notes
-from api.config import config
+from api.config import flask_config
 from api.models import DreamNote
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (
@@ -42,7 +42,7 @@ class EditRouteImport(Resource, UserActions):
         file = request.files.get(payload_arg.name)
         if file is None:
             return response_bad_request_400, HTTP.BAD_REQUEST_400
-        if file.content_length > config.MAX_CONTENT_LENGTH:
+        if file.content_length > flask_config.MAX_CONTENT_LENGTH:
             return response_content_too_large_413, HTTP.CONTENT_TOO_LARGE_413
         *_, file_extension = file.filename.split(".")
         if file_extension not in allowed_file_extensions:

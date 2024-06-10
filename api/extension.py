@@ -2,6 +2,8 @@ from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 
+from api.config import sqlalchemy_config
+
 
 class Base(DeclarativeBase):
     pass
@@ -9,8 +11,9 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(
     model_class=Base,
+    session_options=sqlalchemy_config.session_options,
+    engine_options=sqlalchemy_config.engine_options,
     disable_autonaming=True,
-    # session_options=sa_config.SQLALCHEMY_BINDS,
 )
 
 bearer = "Bearer"
