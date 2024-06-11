@@ -1,68 +1,69 @@
-from datetime import datetime
+from datetime import date, datetime, time
+from typing import Annotated
 
-from sqlalchemy import (
-    Column,
-    Date,
-    DateTime,
-    ForeignKey,
-    Integer,
-    String,
-    Time,
-    UniqueConstraint,
-)
-from sqlalchemy.orm import relationship
+from sqlalchemy import ForeignKey, UniqueConstraint, text
+from sqlalchemy.orm import Mapped, mapped_column
 
-from api.extension import db
+from api.extension import Base
+
+# TODO сделать абстрактные дочерние классы Base
+
+intpk = Annotated[
+    int,
+    mapped_column(
+        primary_key=True,
+    ),
+]
+created_at_type = Annotated[
+    datetime,
+    mapped_column(
+        server_default=text("TIMEZONE('utc', now())"),
+    ),
+]
+updated_at_type = Annotated[
+    datetime,
+    mapped_column(
+        server_default=text("TIMEZONE('utc', now())"),
+        onupdate=datetime.utcnow,
+    ),
+]
 
 
-class DreamNote(db.Model):
+class DreamNote(Base):
     __tablename__ = "dream_note"
     __table_args__ = (
         UniqueConstraint(
             "sleep_date",
             "user_id",
-            name="uniq_sleep_date_for_user",
+            name="unique_sleep_date_for_user",
         ),
     )
-    id = Column(Integer, primary_key=True)
-    sleep_date = Column(Date, nullable=False)
-    went_to_bed = Column(Time, nullable=False)
-    fell_asleep = Column(Time, nullable=False)
-    woke_up = Column(Time, nullable=False)
-    got_up = Column(Time, nullable=False)
-    no_sleep = Column(Time, nullable=False)
-    user_id = Column(
-        Integer,
-        ForeignKey("user.id"),
-        nullable=False,
+    id: Mapped[intpk]
+    sleep_date: Mapped[date]
+    went_to_bed: Mapped[time]
+    fell_asleep: Mapped[time]
+    woke_up: Mapped[time]
+    got_up: Mapped[time]
+    no_sleep: Mapped[time]
+    user_id: Mapped[int] = mapped_column(
+        ForeignKey(
+            column="user.id",
+            ondelete="CASCADE",
+        ),
     )
-
-    def __repr__(self):
-        return (
-            f"Запись в дневнике: "
-            f"["
-            f"ID: {self.id}, "
-            f"ДАТА: {self.sleep_date}, "
-            f"ID ВЛАДЕЛЬЦА: {self.user_id}, "
-            f"]"
-        )
+    created_at: Mapped[created_at_type]
+    updated_at: Mapped[updated_at_type]
 
 
-class User(db.Model):
+class User(Base):
     __tablename__ = "user"
-    id = Column(Integer, primary_key=True)
-    username = Column(String(128), nullable=False, unique=True)
-    password = Column(String(128), nullable=False)
-    registration_date = Column(
-        DateTime,
-        nullable=False,
-        default=datetime.utcnow,
+    id: Mapped[intpk]
+    username: Mapped[str] = mapped_column(
+        unique=True,
     )
-    dream_notes = relationship(
-        "DreamNote",
-        backref="user",
-        cascade="all, delete-orphan",
+    password: Mapped[str]
+    registration_date: Mapped[datetime] = mapped_column(
+        server_default=text("TIMEZONE('utc', now())"),
     )
-
-    def __repr__(self):
-        return f"Пользователь [ID: {self.id}, LOGIN: {self.username}]"
+    created_at: Mapped[created_at_type]
+    updated_at: Mapped[updated_at_type]

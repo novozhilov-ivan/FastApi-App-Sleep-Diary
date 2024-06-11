@@ -1,5 +1,6 @@
 from flask_restx import Api
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import create_engine
 from sqlalchemy.orm import DeclarativeBase
 
 from api.config import sqlalchemy_config
@@ -15,6 +16,7 @@ db = SQLAlchemy(
     engine_options=sqlalchemy_config.engine_options,
     disable_autonaming=True,
 )
+engine = create_engine(**sqlalchemy_config.engine_options)
 
 bearer = "Bearer"
 oauth2 = "oauth2"

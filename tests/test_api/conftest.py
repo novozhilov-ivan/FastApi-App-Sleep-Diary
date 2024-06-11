@@ -3,11 +3,12 @@ from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
 from pydantic_settings import SettingsConfigDict
+from sqlalchemy import create_engine
 from werkzeug.datastructures import Authorization
 
 from api import create_app
 from api.config import FlaskConfig, SQLAlchemyConfig
-from api.extension import bearer, db
+from api.extension import Base, bearer, db
 from api.models import DreamNote, User
 from api.utils.auth import hash_password
 from api.utils.jwt import create_access_jwt, create_refresh_jwt
@@ -25,9 +26,21 @@ class TestConfig(FlaskConfig, SQLAlchemyConfig):
 
 
 @pytest.fixture(scope="session")
-def app() -> Flask:
+def test_config() -> TestConfig:
+    return TestConfig()
+
+
+@pytest.fixture(scope="session")
+def test_engine(test_config: TestConfig):
+    yield create_engine(
+        url=test_config.database_uri,  # noqa
+    )
+
+
+@pytest.fixture(scope="session")
+def app(test_config: TestConfig) -> Flask:
     app = create_app()
-    app.config.from_object(TestConfig())
+    app.config.from_object(test_config)
     assert app.config.get("TESTING")
     assert app.config.get("DB_NAME") == "test_db"
     yield app
@@ -80,10 +93,15 @@ def client(app: Flask) -> FlaskClient:
 
 
 @pytest.fixture(autouse=True)
-def create_db(app: Flask) -> None:
-    with app.app_context():
-        db.drop_all()
-        db.create_all()
+def create_db(
+    test_engine,
+) -> None:
+    Base.metadata.drop_all(
+        bind=test_engine,
+    )
+    Base.metadata.create_all(
+        bind=test_engine,
+    )
 
 
 @pytest.fixture

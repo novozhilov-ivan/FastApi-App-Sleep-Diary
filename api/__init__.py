@@ -1,7 +1,7 @@
 from flask import Flask
 
-from api.config import flask_config, flask_restx_config
-from api.extension import api, db
+from api.config import flask_config, flask_restx_config, sqlalchemy_config
+from api.extension import Base, api, db, engine
 
 
 # TODO add ruff[isort, etc] | linters | pre-commit
@@ -26,10 +26,9 @@ def create_app() -> Flask:
     )
 
     # Create DataBase Tables
-    with app.app_context():
-        from api.models import DreamNote, User
-
-        db.create_all()
+    Base.metadata.create_all(
+        bind=engine,
+    )
 
     # Register Namespaces
     from api.routes import (
