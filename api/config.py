@@ -89,6 +89,7 @@ class SQLAlchemyConfig(DBConfig):
     )
 
     @computed_field
+    @property
     def database_uri(self) -> str:
         return "{}{}{}://{}:{}@{}:{}/{}".format(
             self.DB_DRIVER,
@@ -102,6 +103,7 @@ class SQLAlchemyConfig(DBConfig):
         )
 
     @computed_field
+    @property
     def session_options(self) -> dict:
         return {
             "expire_on_commit": self.expire_on_commit,
@@ -110,6 +112,7 @@ class SQLAlchemyConfig(DBConfig):
         }
 
     @computed_field
+    @property
     def engine_options(self) -> dict:
         return {
             "url": self.database_uri,

@@ -2,6 +2,7 @@ from flask import Flask
 
 from api.config import flask_config, flask_restx_config, sqlalchemy_config
 from api.extension import Base, api, db, engine
+from api.models import DreamNote, User
 
 
 # TODO add ruff[isort, etc] | linters | pre-commit
@@ -18,7 +19,9 @@ def create_app() -> Flask:
     app.config.from_object(flask_restx_config)
 
     # Initialize Plugins
-    db.init_app(app)
+    db.init_app(
+        app=app,
+    )
     api.init_app(
         app=app,
         title="API для дневника сна",

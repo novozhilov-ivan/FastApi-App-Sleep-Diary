@@ -32,9 +32,7 @@ def test_config() -> TestConfig:
 
 @pytest.fixture(scope="session")
 def test_engine(test_config: TestConfig):
-    yield create_engine(
-        url=test_config.database_uri,  # noqa
-    )
+    yield create_engine(**test_config.engine_options)
 
 
 @pytest.fixture(scope="session")
