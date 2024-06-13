@@ -7,8 +7,8 @@ from common.pydantic_schemas.sleep.notes import SleepNoteWithStats
 
 
 class SleepDiaryGenerator:
-    def __init__(self, user_id: int = 1, notes_count: int = 1):
-        self.user_id: int = user_id
+    def __init__(self, owner_id: int = 1, notes_count: int = 1):
+        self.owner_id: int = owner_id
         self.notes_count: int = notes_count
         self.notes: list[SleepNoteWithStats] = self._create_notes()
         self.diary: SleepDiaryModel = self._build_sleep_diary()
@@ -50,7 +50,7 @@ class SleepDiaryGenerator:
         )
         return SleepNoteWithStats(
             id=note_id,
-            user_id=self.user_id,
+            owner_id=self.owner_id,
             sleep_date=date.fromtimestamp(date_of_note),
             went_to_bed=rand_went_to_bed,
             fell_asleep=rand_fell_asleep,

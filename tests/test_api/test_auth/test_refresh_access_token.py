@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
 from api.extension import bearer
-from api.models import User
+from api.models import UserOrm
 from api.routes.auth.refresh import refresh_endpoint
 from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
@@ -26,7 +26,7 @@ class TestRefreshAccessToken:
         self,
         client: FlaskClient,
         jwt_refresh: Authorization,
-        exist_user: User,
+        exist_user: UserOrm,
     ):
         response = client.post(
             path=url_for(
@@ -47,7 +47,7 @@ class TestRefreshAccessToken:
     def test_refresh_invalid_token_type_401(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
         jwt_access: Authorization,
     ):
         response = client.post(

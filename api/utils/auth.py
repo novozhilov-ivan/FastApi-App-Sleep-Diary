@@ -4,7 +4,7 @@ import bcrypt
 from flask_restx import abort
 
 from api.CRUD.users import read_user_by_username
-from api.models import User
+from api.models import UserOrm
 from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
@@ -37,8 +37,8 @@ def validate_password(
 def validate_auth_user(
     username: str,
     password: bytes,
-) -> User:
-    db_user: User = read_user_by_username(username)
+) -> UserOrm:
+    db_user: UserOrm = read_user_by_username(username)
     if db_user is None:
         abort(
             code=HTTP.UNAUTHORIZED_401,

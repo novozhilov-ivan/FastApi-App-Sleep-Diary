@@ -3,7 +3,7 @@ from flask import url_for
 from flask.testing import FlaskClient
 
 from api.extension import bearer
-from api.models import User
+from api.models import UserOrm
 from api.routes.auth.sign_in import signin_endpoint
 from api.utils.auth import response_invalid_username_or_password_401
 from api.utils.jwt import (
@@ -26,7 +26,7 @@ class TestSignIn:
     def test_sign_in_200(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
         user_credentials: UserCredentials,
     ):
         user = UserCredentials.model_validate(user_credentials)
@@ -53,8 +53,8 @@ class TestSignIn:
     @pytest.mark.parametrize(
         "wrong_credentials",
         (
-            {"password": "super_wrong_password".encode()},
-            {"username": "super_wrong_username"},
+                {"password": "super_wrong_password".encode()},
+                {"username": "super_wrong_username"},
         ),
     )
     def test_sign_in_401(
@@ -62,7 +62,7 @@ class TestSignIn:
         wrong_credentials: dict,
         client: FlaskClient,
         user_credentials: UserCredentials,
-        exist_user: User,
+        exist_user: UserOrm,
     ):
         user_credentials = user_credentials.model_dump()
         user_credentials.update(wrong_credentials)

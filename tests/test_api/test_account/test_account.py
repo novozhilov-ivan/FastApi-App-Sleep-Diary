@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
 from api.extension import bearer
-from api.models import User
+from api.models import UserOrm
 from api.routes.account import account_endpoint
 from api.routes.account.account_find import response_not_found_404
 from api.utils.jwt import (
@@ -27,7 +27,7 @@ class TestAccountFind:
     def test_account_find_200(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
         jwt_access: Authorization,
     ):
         response = client.get(
@@ -46,7 +46,7 @@ class TestAccountFind:
     def test_account_info_invalid_token_type_401(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
         jwt_refresh: Authorization,
     ):
         response = client.get(
@@ -69,7 +69,7 @@ class TestAccountFind:
     def test_account_info_invalid_token_without_headers_401(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
     ):
         response = client.get(
             path=url_for(
@@ -85,7 +85,7 @@ class TestAccountFind:
     def test_account_info_user_not_found_404(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
     ):
         user = UserValidate.model_validate(exist_user)
         user.id = 888

@@ -3,7 +3,7 @@ from datetime import date
 from flask_restx import Resource, abort
 
 from api.CRUD.dream_notes import find_user_note_by_calendar_date
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 from api.routes.account import response_model_401
 from api.routes.notes import ns_notes
 from api.routes.notes.note_find_by_date import (
@@ -32,7 +32,7 @@ class NoteFindByDate(Resource, UserActions):
     )
     def get(self, sleep_date: date):
         date_of_note = SleepNoteOptional(sleep_date=sleep_date)
-        db_note: DreamNote | None = find_user_note_by_calendar_date(
+        db_note: SleepNoteOrm | None = find_user_note_by_calendar_date(
             sleep_date=date_of_note.sleep_date,
             user_id=self.current_user_id,
         )

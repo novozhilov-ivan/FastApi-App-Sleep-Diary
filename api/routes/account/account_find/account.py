@@ -1,7 +1,7 @@
 from flask_restx import abort
 
 from api.CRUD.users import find_user_by_id
-from api.models import User
+from api.models import UserOrm
 from api.routes.account import ns_account, response_model_401
 from api.routes.account.account_find import (
     response_model_200,
@@ -21,7 +21,7 @@ class FindAccount(UserActions):
     @ns_account.response(**response_model_404)
     @ns_account.doc(description=__doc__)
     def get(self) -> tuple:
-        db_user: User | None = find_user_by_id(user_id=self.current_user_id)
+        db_user: UserOrm | None = find_user_by_id(user_id=self.current_user_id)
         if db_user is None:
             abort(
                 code=HTTP.NOT_FOUND_404,

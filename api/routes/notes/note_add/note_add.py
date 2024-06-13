@@ -1,7 +1,7 @@
 from flask import request
 
 from api.CRUD.dream_notes import create_one_note
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 from api.routes.diary import response_model_400, response_model_422
 from api.routes.notes import ns_notes
 from api.routes.notes.note_add import add_note_payload, response_model_201
@@ -23,8 +23,8 @@ class AddNote(UserActions):
     @ns_notes.response(**response_model_422)
     def post(self):
         new_note = SleepNote(**request.json)
-        new_db_note = DreamNote(
-            user_id=self.current_user_id,
+        new_db_note = SleepNoteOrm(
+            owner_id=self.current_user_id,
             **new_note.model_dump(),
         )
         new_db_note = create_one_note(new_db_note)

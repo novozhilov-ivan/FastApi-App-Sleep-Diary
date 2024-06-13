@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
-from api.models import User
+from api.models import UserOrm
 from api.routes.notes import note_endpoint
 from common.baseclasses.response import Response
 from common.baseclasses.status_codes import HTTP
@@ -26,12 +26,12 @@ class TestNoteAdd:
     @pytest.mark.repeat(10)
     def test_note_add_201(
         self,
-        exist_user: User,
+        exist_user: UserOrm,
         jwt_access: Authorization,
         client: FlaskClient,
     ):
         notes_generator: SleepDiaryGenerator
-        notes_generator = SleepDiaryGenerator(user_id=exist_user.id)
+        notes_generator = SleepDiaryGenerator(owner_id=exist_user.id)
         new_note_with_stat: SleepNoteWithStats
         new_note_with_stat, *_ = notes_generator.notes
         new_note = SleepNote.model_validate(new_note_with_stat)

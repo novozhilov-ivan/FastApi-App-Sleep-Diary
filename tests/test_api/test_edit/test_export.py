@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
 from api.extension import bearer
-from api.models import User
+from api.models import UserOrm
 from api.routes.edit import response_not_found_404
 from api.routes.edit.export_file import export_notes_endpoint
 from api.utils.jwt import create_access_jwt
@@ -48,7 +48,7 @@ class TestEditExportNotes:
     def test_export_notes_404_user_dont_exist(
         self,
         client: FlaskClient,
-        exist_user: User,
+        exist_user: UserOrm,
     ):
         user = UserValidate.model_validate(exist_user)
         user.id = 999

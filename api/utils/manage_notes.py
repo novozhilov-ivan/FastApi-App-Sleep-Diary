@@ -4,7 +4,7 @@ from more_itertools import batched
 from pydantic import BaseModel, TypeAdapter
 from werkzeug.datastructures import FileStorage
 
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 from common.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 from common.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
 
@@ -19,7 +19,7 @@ def slice_on_week(days: list[SleepNoteWithStats]) -> list[SleepDiaryWeekCompute]
 
 
 def convert_db_notes_to_pydantic_model_notes(
-    db_notes: Iterable[DreamNote],
+    db_notes: Iterable[SleepNoteOrm],
     model: Type[SleepNoteWithStats | SleepNote] = SleepNoteWithStats,
 ) -> list[SleepNoteWithStats | SleepNote]:
     type_adapter = TypeAdapter(list[model])

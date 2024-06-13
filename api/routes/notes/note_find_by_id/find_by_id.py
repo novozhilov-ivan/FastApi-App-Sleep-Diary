@@ -1,7 +1,7 @@
 from flask_restx import Resource, abort
 
 from api.CRUD.dream_notes import find_user_note_by_note_id
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 from api.routes.account import response_model_401
 from api.routes.notes import ns_notes
 from api.routes.notes.note_find_by_id import (
@@ -26,7 +26,7 @@ class NoteFindById(Resource, UserActions):
         params=path_params,
     )
     def get(self, id: int):
-        db_note: DreamNote | None = find_user_note_by_note_id(
+        db_note: SleepNoteOrm | None = find_user_note_by_note_id(
             id=id,
             user_id=self.current_user_id,
         )

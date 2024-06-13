@@ -4,7 +4,7 @@ from flask_restx.reqparse import Argument
 
 from api.CRUD.dream_notes import create_many_notes
 from api.config import flask_config
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 from api.routes.edit import ns_edit, response_model_422
 from api.routes.edit.import_file import (
     allowed_file_extensions,
@@ -52,8 +52,8 @@ class EditRouteImport(Resource, UserActions):
             )
         new_notes = FileDataConverter(file=file)
         new_notes.to_model(
-            as_model=DreamNote,
-            user_id=self.current_user_id,
+            as_model=SleepNoteOrm,
+            owner_id=self.current_user_id,
         )
 
         if create_many_notes(new_notes.data):

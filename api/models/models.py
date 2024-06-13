@@ -6,9 +6,6 @@ from sqlalchemy.orm import Mapped, mapped_column
 from api.extension import Base
 
 
-# TODO сделать абстрактные дочерние классы Base
-
-
 class MetaInfoBaseModel(Base):
     __abstract__ = True
 
@@ -24,12 +21,12 @@ class MetaInfoBaseModel(Base):
     )
 
 
-class DreamNote(MetaInfoBaseModel):
-    __tablename__ = "dream_note"
+class SleepNoteOrm(MetaInfoBaseModel):
+    __tablename__ = "sleep_note"
     __table_args__ = (
         UniqueConstraint(
             "sleep_date",
-            "user_id",
+            "owner_id",
             name="unique_sleep_date_for_user",
         ),
     )
@@ -40,7 +37,7 @@ class DreamNote(MetaInfoBaseModel):
     woke_up: Mapped[time]
     got_up: Mapped[time]
     no_sleep: Mapped[time]
-    user_id: Mapped[int] = mapped_column(
+    owner_id: Mapped[int] = mapped_column(
         ForeignKey(
             column="user.id",
             ondelete="CASCADE",
@@ -48,7 +45,7 @@ class DreamNote(MetaInfoBaseModel):
     )
 
 
-class User(MetaInfoBaseModel):
+class UserOrm(MetaInfoBaseModel):
     __tablename__ = "user"
     username: Mapped[str] = mapped_column(
         unique=True,

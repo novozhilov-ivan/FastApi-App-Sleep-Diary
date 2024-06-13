@@ -1,7 +1,7 @@
 from flask_restx import Resource
 
 from api.CRUD.users import find_user_by_id
-from api.models import User
+from api.models import UserOrm
 from api.routes import ns_auth
 from api.routes.auth.refresh import response_model_200, response_model_401
 from api.routes.edit import response_model_422
@@ -22,7 +22,7 @@ class AuthRefreshJWTRoute(Resource):
     @ns_auth.doc(description=__doc__)
     def post(self) -> tuple:
         current_user_id: int = get_current_auth_user_id_for_refresh()
-        db_user: User = find_user_by_id(current_user_id)
+        db_user: UserOrm = find_user_by_id(current_user_id)
         user: UserValidate = UserValidate.model_validate(db_user)
         access_token: str = create_access_jwt(user)
         jwt_token: AccessTokenInfo = AccessTokenInfo(access_token=access_token)

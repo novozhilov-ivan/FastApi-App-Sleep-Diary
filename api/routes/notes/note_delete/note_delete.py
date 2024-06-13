@@ -22,8 +22,11 @@ class DeleteNote(UserActions):
     )
     def delete(self):
         note = SleepNoteMeta(
-            user_id=self.current_user_id,
+            owner_id=self.current_user_id,
             **request.args,
         )
-        delete_user_note(**note.model_dump())
+        delete_user_note(
+            id=note.id,
+            user_id=note.owner_id,
+        )
         return None, HTTP.NO_CONTENT_204

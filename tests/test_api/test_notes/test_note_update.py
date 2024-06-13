@@ -7,7 +7,7 @@ from flask.testing import FlaskClient
 from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
-from api.models import User
+from api.models import UserOrm
 from api.routes.notes import note_endpoint
 from api.routes.notes.note_find_by_id import response_not_found_404
 from common.baseclasses.response import Response
@@ -158,13 +158,13 @@ class TestNoteUpdate:
     @pytest.mark.parametrize(
         "wrong_note_id",
         (
-            "uid",
-            "20:20:20",
-            True,
-            False,
-            None,
-            "[1, 2, 3]",
-            "{id: 666}",
+                "uid",
+                "20:20:20",
+                True,
+                False,
+                None,
+                "[1, 2, 3]",
+                "{id: 666}",
         ),
     )
     def test_note_update_wrong_note_id_type_422(
@@ -172,7 +172,7 @@ class TestNoteUpdate:
         client: FlaskClient,
         wrong_note_id: Any,
         jwt_access: Authorization,
-        exist_user: User,
+        exist_user: UserOrm,
         saved_diary: SleepDiaryGenerator,
     ):
         exist_note: SleepNoteWithStats
@@ -190,7 +190,7 @@ class TestNoteUpdate:
         )
         with pytest.raises(ValidationError) as exc_info:
             SleepNoteMeta(
-                user_id=exist_user.id,
+                owner_id=exist_user.id,
                 **response.request.args,
             )
         response = Response(response)

@@ -4,7 +4,7 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 
 from api.extension import db
-from api.models import User
+from api.models import UserOrm
 from api.routes.auth.sign_up import (
     response_conflict_409,
     response_created_201,
@@ -38,7 +38,7 @@ class TestSignUp:
         response.assert_data(response_created_201)
 
         with client.application.app_context():
-            db_user = db.session.execute(select(User)).scalar_one_or_none()
+            db_user = db.session.execute(select(UserOrm)).scalar_one_or_none()
         assert user_credentials.username == db_user.username
         assert validate_password(
             password=user_credentials.password,

@@ -2,7 +2,7 @@ from flask import Flask
 
 from api.config import flask_config, flask_restx_config, sqlalchemy_config
 from api.extension import Base, api, db, engine
-from api.models import DreamNote, User
+from api.models import SleepNoteOrm, UserOrm
 
 
 # TODO add ruff[isort, etc] | linters | pre-commit

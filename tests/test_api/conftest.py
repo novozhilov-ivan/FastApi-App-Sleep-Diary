@@ -9,7 +9,7 @@ from werkzeug.datastructures import Authorization
 from api import create_app
 from api.config import FlaskConfig, SQLAlchemyConfig
 from api.extension import Base, bearer, db
-from api.models import DreamNote, User
+from api.models import SleepNoteOrm, UserOrm
 from api.utils.auth import hash_password
 from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.generators.diary import SleepDiaryGenerator
@@ -107,8 +107,8 @@ def exist_user(
     user: UserValidate,
     user_hashed_password: bytes,
     client: FlaskClient,
-) -> User:
-    new_user = User(
+) -> UserOrm:
+    new_user = UserOrm(
         id=user.id,
         username=user.username,
         password=user_hashed_password,
@@ -129,12 +129,12 @@ notes_count_for_db = [1, 5, 7, 8, 11, 14, 16, 21, 27, 30]
 )
 def generated_diary(
     request: FixtureRequest,
-    exist_user: User,
+    exist_user: UserOrm,
     client: FlaskClient,
 ) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(
-        user_id=exist_user.id,
+        owner_id=exist_user.id,
         notes_count=notes_count,
     )
 
@@ -146,7 +146,7 @@ def add_notes_to_db(
 ) -> None:
     include_fields: set[str] = set(SleepNoteWithMeta.model_fields)
     new_notes = [
-        DreamNote(**note.model_dump(include=include_fields))
+        SleepNoteOrm(**note.model_dump(include=include_fields))
         for note in generated_diary.notes
     ]
     with client.application.app_context():

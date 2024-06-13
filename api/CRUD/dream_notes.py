@@ -6,54 +6,55 @@ from sqlalchemy import delete, select, update
 from sqlalchemy.exc import SQLAlchemyError
 
 from api.extension import db
-from api.models import DreamNote
+from api.models import SleepNoteOrm
 
 
-def find_all_user_notes(user_id: int) -> Iterable[DreamNote]:
+def find_all_user_notes(user_id: int) -> Iterable[SleepNoteOrm]:
     """Получает все записи пользователя и сортирует их по дате"""
     db_response = db.session.execute(
         select(
-            DreamNote,
+            SleepNoteOrm,
         )
         .where(
-            DreamNote.user_id == user_id,
+            SleepNoteOrm.owner_id == user_id,
         )
         .order_by(
-            DreamNote.sleep_date,
+            SleepNoteOrm.sleep_date,
         )
     )
     return db_response.scalars().all()
 
 
 def find_user_note_by_calendar_date(
-    sleep_date: date, user_id: int
-) -> DreamNote | None:
+    sleep_date: date,
+    user_id: int,
+) -> SleepNoteOrm | None:
     """Поиск записи сна пользователя по дате"""
     db_response = db.session.execute(
         select(
-            DreamNote,
+            SleepNoteOrm,
         )
         .where(
-            DreamNote.user_id == user_id,
+            SleepNoteOrm.owner_id == user_id,
         )
         .where(
-            DreamNote.sleep_date == sleep_date,
+            SleepNoteOrm.sleep_date == sleep_date,
         )
     )
     return db_response.scalar_one_or_none()
 
 
-def find_user_note_by_note_id(id: int, user_id: int) -> DreamNote | None:
+def find_user_note_by_note_id(id: int, user_id: int) -> SleepNoteOrm | None:
     """Поиск записи сна пользователя по id записи"""
     db_response = db.session.execute(
         select(
-            DreamNote,
+            SleepNoteOrm,
         )
         .where(
-            DreamNote.user_id == user_id,
+            SleepNoteOrm.owner_id == user_id,
         )
         .where(
-            DreamNote.id == id,
+            SleepNoteOrm.id == id,
         )
     )
     return db_response.scalar_one_or_none()
@@ -62,13 +63,13 @@ def find_user_note_by_note_id(id: int, user_id: int) -> DreamNote | None:
 def delete_user_note(id: int, user_id: int) -> None:
     db.session.execute(
         delete(
-            DreamNote,
+            SleepNoteOrm,
         )
         .where(
-            DreamNote.user_id == user_id,
+            SleepNoteOrm.owner_id == user_id,
         )
         .where(
-            DreamNote.id == id,
+            SleepNoteOrm.id == id,
         )
     )
     db.session.commit()
@@ -78,14 +79,14 @@ def update_user_note(
     id: int,
     user_id: int,
     note_values: dict,
-) -> DreamNote | None:
+) -> SleepNoteOrm | None:
     try:
         db.session.execute(
             update(
-                DreamNote,
+                SleepNoteOrm,
             )
             .where(
-                DreamNote.id == id,
+                SleepNoteOrm.id == id,
             )
             .values(note_values)
         )
@@ -102,22 +103,22 @@ def update_user_note(
 def delete_all_user_notes(user_id: int) -> None:
     db.session.execute(
         delete(
-            DreamNote,
+            SleepNoteOrm,
         ).where(
-            DreamNote.user_id == user_id,
+            SleepNoteOrm.owner_id == user_id,
         )
     )
     db.session.commit()
 
 
-def create_one_note(note: DreamNote) -> DreamNote:
+def create_one_note(note: SleepNoteOrm) -> SleepNoteOrm:
     db.session.add(note)
     db.session.commit()
     db.session.refresh(note)
     return note
 
 
-def create_many_notes(notes: Iterable[DreamNote]) -> bool:
+def create_many_notes(notes: Iterable[SleepNoteOrm]) -> bool:
     try:
         db.session.add_all(notes)
         db.session.commit()
