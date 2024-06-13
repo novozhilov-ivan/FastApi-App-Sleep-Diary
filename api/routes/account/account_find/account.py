@@ -1,6 +1,6 @@
 from flask_restx import abort
 
-from api.CRUD.users import find_user_by_id
+from api.CRUD.user_table import find_user_by_id
 from api.models import UserOrm
 from api.routes.account import ns_account, response_model_401
 from api.routes.account.account_find import (

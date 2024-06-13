@@ -1,6 +1,6 @@
 from flask import request
 
-from api.CRUD.dream_notes import delete_user_note
+from api.CRUD.sleep_note_table import delete_user_note
 from api.routes.account import response_model_401
 from api.routes.edit import response_model_422
 from api.routes.notes import ns_notes

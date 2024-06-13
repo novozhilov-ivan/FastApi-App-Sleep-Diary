@@ -1,4 +1,4 @@
-from api.CRUD.users import delete_user_by_id
+from api.CRUD.user_table import delete_user_by_id
 from api.routes.account import ns_account, response_model_401
 from api.routes.account.account_delete import response_model_204
 from api.utils.auth import UserActions

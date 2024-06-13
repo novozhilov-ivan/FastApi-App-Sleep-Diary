@@ -1,6 +1,6 @@
 from flask_restx import Resource
 
-from api.CRUD.users import find_user_by_id
+from api.CRUD.user_table import find_user_by_id
 from api.models import UserOrm
 from api.routes import ns_auth
 from api.routes.auth.refresh import response_model_200, response_model_401

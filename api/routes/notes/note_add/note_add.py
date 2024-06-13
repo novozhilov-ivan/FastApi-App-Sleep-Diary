@@ -1,6 +1,6 @@
 from flask import request
 
-from api.CRUD.dream_notes import create_one_note
+from api.CRUD.sleep_note_table import create_one_note
 from api.models import SleepNoteOrm
 from api.routes.diary import response_model_400, response_model_422
 from api.routes.notes import ns_notes

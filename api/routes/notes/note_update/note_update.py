@@ -1,7 +1,7 @@
 from flask import request
 from flask_restx import abort
 
-from api.CRUD.dream_notes import update_user_note
+from api.CRUD.sleep_note_table import update_user_note
 from api.models import SleepNoteOrm
 from api.routes.account import response_model_401
 from api.routes.edit import response_model_422

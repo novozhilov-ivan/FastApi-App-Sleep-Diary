@@ -3,7 +3,7 @@ from typing import Callable, Literal
 import bcrypt
 from flask_restx import abort
 
-from api.CRUD.users import read_user_by_username
+from api.CRUD.user_table import read_user_by_username
 from api.models import UserOrm
 from api.utils.jwt import (
     ACCESS_TOKEN_TYPE,

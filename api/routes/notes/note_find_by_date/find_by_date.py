@@ -2,7 +2,7 @@ from datetime import date
 
 from flask_restx import Resource, abort
 
-from api.CRUD.dream_notes import find_user_note_by_calendar_date
+from api.CRUD.sleep_note_table import find_user_note_by_calendar_date
 from api.models import SleepNoteOrm
 from api.routes.account import response_model_401
 from api.routes.notes import ns_notes

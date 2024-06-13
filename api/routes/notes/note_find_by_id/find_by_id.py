@@ -1,6 +1,6 @@
 from flask_restx import Resource, abort
 
-from api.CRUD.dream_notes import find_user_note_by_note_id
+from api.CRUD.sleep_note_table import find_user_note_by_note_id
 from api.models import SleepNoteOrm
 from api.routes.account import response_model_401
 from api.routes.notes import ns_notes
