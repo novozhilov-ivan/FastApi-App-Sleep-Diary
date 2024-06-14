@@ -2,12 +2,13 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
+from pydantic import Field
 from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
 from werkzeug.datastructures import Authorization
 
 from api import create_app
-from api.config import FlaskConfig, SQLAlchemyConfig
+from api.config import DBConfig, FlaskConfig, SQLAlchemyConfig
 from api.extension import Base, bearer, db
 from api.models import SleepNoteOrm, UserOrm
 from api.utils.auth import hash_password
@@ -17,10 +18,23 @@ from common.pydantic_schemas.sleep.notes import SleepNoteWithMeta
 from common.pydantic_schemas.user import UserCredentials, UserValidate
 
 
+class TestDBConfig(DBConfig):
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".test.env",
+        env_prefix="db_",
+        case_sensitive=False,
+    )
+
+
 class TestConfig(FlaskConfig, SQLAlchemyConfig):
     model_config = SettingsConfigDict(
-        extra="forbid",
+        extra="ignore",
         env_file=".test.env",
+        case_sensitive=False,
+    )
+    db_config: TestDBConfig = Field(
+        default_factory=lambda: TestDBConfig(),
     )
     TESTING: bool
 

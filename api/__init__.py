@@ -17,7 +17,6 @@ def create_app() -> Flask:
     )
     app.config.from_object(flask_config)
     app.config.from_object(flask_restx_config)
-
     # Initialize Plugins
     db.init_app(
         app=app,

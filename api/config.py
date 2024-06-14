@@ -6,28 +6,31 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent.parent
 
+dev_env_settings_config = SettingsConfigDict(
+    extra="ignore",
+    env_file=".dev.env",
+    case_sensitive=False,
+)
+
 
 class FlaskConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
-    )
-    FLASK_APP: str
-    FLASK_ENV: str
-    FLASK_DEBUG: bool
-    SECRET_KEY: str
-    MAX_CONTENT_LENGTH: int = 1024 * 1024
-    STATIC_FOLDER: str = "static"
-    TEMPLATES_FOLDER: str = "templates"
+    model_config = dev_env_settings_config
+    FLASK_APP: str = Field(default="__init__.py")
+    FLASK_ENV: str = Field(default="development")
+    FLASK_DEBUG: bool = Field(default=True)
+    SECRET_KEY: str = Field(default="No_super_secret_key_yet")
+    MAX_CONTENT_LENGTH: int = Field(default=1024 * 1024)
+    STATIC_FOLDER: str = Field(default="static")
+    TEMPLATES_FOLDER: str = Field(default="templates")
 
 
 class FlaskRestxConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
+    model_config = dev_env_settings_config
+    ERROR_INCLUDE_MESSAGE: bool = Field(default=False)
+    SWAGGER_UI_DOC_EXPANSION: Literal["none", "list", "full"] = Field(
+        default="list",
+        description="По умолчанию состояние вкладок в swagger'е",
     )
-    ERROR_INCLUDE_MESSAGE: bool = False
-    SWAGGER_UI_DOC_EXPANSION: Literal["none", "list", "full"] = "list"
 
 
 class AuthJWT(BaseModel):
@@ -42,67 +45,69 @@ class DBConfig(BaseSettings):
     model_config = SettingsConfigDict(
         extra="ignore",
         env_file=".dev.env",
+        env_prefix="db_",
+        case_sensitive=False,
     )
-    DB_DRIVER: str
-    DB_EXTEND_DRIVER: str
-    DB_USER: str
-    DB_PASSWORD: str
-    DB_HOST: str
-    DB_PORT: str
-    DB_NAME: str
+    driver: str
+    driver_extension: str
+    user: str
+    password: str
+    host: str
+    port: str
+    name: str
 
 
-class SQLAlchemyConfig(DBConfig):
-    echo: bool = Field(
+class SQLAlchemyConfig(BaseSettings):
+    model_config = dev_env_settings_config
+    db_config: DBConfig = Field(
+        default_factory=lambda: DBConfig(),
+    )
+    sqlalchemy_echo: bool = Field(
         default=False,
-        alias="SQLALCHEMY_ECHO",
         title="БД Эхо",
         description="Вывод всех запросов к Базе Данных в терминал",
     )
-
     pool_size: int = Field(
         default=5,
-        alias="POOL_SIZE",
         title="Количество соединений с БД",
         description="Ограничение по количеству соединений с Базой Данных",
     )
     max_overflow: int = Field(
         default=10,
-        alias="MAX_OVERFLOW",
         title="Количество дополнительных соединений к БД",
         description=(
             "Количеству дополнительных соединений с Базой Данных сверх "
             "лимита pool_size"
         ),
     )
-    expire_on_commit: bool = Field(
-        default=False,
-        alias="EXPIRE_ON_COMMIT",
-    )
-    autocommit: bool = Field(
-        default=False,
-        alias="AUTOCOMMIT",
-    )
-    autoflush: bool = Field(
-        default=True,
-        alias="AUTOFLUSH",
-    )
+    expire_on_commit: bool = Field(default=False)
+    autocommit: bool = Field(default=False)
+    autoflush: bool = Field(default=True)
 
-    @computed_field
+    @computed_field(
+        examples=[
+            "postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name",
+            "sqlite:///db.sqlite",
+            "sqlite::memory:",
+        ],
+        return_type=str,
+    )
     @property
-    def database_uri(self) -> str:
+    def sqlalchemy_database_uri(self) -> str:
         return "{}{}{}://{}:{}@{}:{}/{}".format(
-            self.DB_DRIVER,
-            "+" if self.DB_EXTEND_DRIVER else "",
-            self.DB_EXTEND_DRIVER,
-            self.DB_USER,
-            self.DB_PASSWORD,
-            self.DB_HOST,
-            self.DB_PORT,
-            self.DB_NAME,
+            self.db_config.driver,
+            "+" if self.db_config.driver_extension else "",
+            self.db_config.driver_extension,
+            self.db_config.user,
+            self.db_config.password,
+            self.db_config.host,
+            self.db_config.port,
+            self.db_config.name,
         )
 
-    @computed_field
+    @computed_field(
+        return_type=dict,
+    )
     @property
     def session_options(self) -> dict:
         return {
@@ -111,12 +116,14 @@ class SQLAlchemyConfig(DBConfig):
             "autoflush": self.autoflush,
         }
 
-    @computed_field
+    @computed_field(
+        return_type=dict,
+    )
     @property
     def engine_options(self) -> dict:
         return {
-            "url": self.database_uri,
-            "echo": self.echo,
+            "url": self.sqlalchemy_database_uri,
+            "echo": self.sqlalchemy_echo,
             "pool_size": self.pool_size,
             "max_overflow": self.max_overflow,
         }
