@@ -1,6 +1,11 @@
 from flask import Flask
 
-from api.config import flask_config, flask_restx_config, sqlalchemy_config
+from api.config import (
+    flask_config,
+    flask_restx_config,
+    flask_sqlalchemy_config,
+    sqlalchemy_config,
+)
 from api.extension import Base, api, db, engine
 from api.models import SleepNoteOrm, UserOrm
 
@@ -15,8 +20,9 @@ def create_app() -> Flask:
         import_name="api",
         instance_relative_config=False,
     )
-    app.config.from_object(flask_config)
-    app.config.from_object(flask_restx_config)
+    app.config.from_object(obj=flask_config)
+    app.config.from_object(obj=flask_restx_config)
+    app.config.from_object(obj=flask_sqlalchemy_config)
     # Initialize Plugins
     db.init_app(
         app=app,

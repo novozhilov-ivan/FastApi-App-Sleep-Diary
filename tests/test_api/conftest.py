@@ -2,13 +2,10 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
-from pydantic import Field
-from pydantic_settings import SettingsConfigDict
 from sqlalchemy import create_engine
 from werkzeug.datastructures import Authorization
 
 from api import create_app
-from api.config import DBConfig, FlaskConfig, SQLAlchemyConfig
 from api.extension import Base, bearer, db
 from api.models import SleepNoteOrm, UserOrm
 from api.utils.auth import hash_password
@@ -16,45 +13,29 @@ from api.utils.jwt import create_access_jwt, create_refresh_jwt
 from common.generators.diary import SleepDiaryGenerator
 from common.pydantic_schemas.sleep.notes import SleepNoteWithMeta
 from common.pydantic_schemas.user import UserCredentials, UserValidate
-
-
-class TestDBConfig(DBConfig):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".test.env",
-        env_prefix="db_",
-        case_sensitive=False,
-    )
-
-
-class TestConfig(FlaskConfig, SQLAlchemyConfig):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".test.env",
-        case_sensitive=False,
-    )
-    db_config: TestDBConfig = Field(
-        default_factory=lambda: TestDBConfig(),
-    )
-    TESTING: bool
+from tests.test_api.config import (
+    test_flask_config,
+    test_flask_sqlalchemy_config,
+    test_sqlalchemy_config,
+)
 
 
 @pytest.fixture(scope="session")
-def test_config() -> TestConfig:
-    return TestConfig()
+def test_engine():
+    yield create_engine(**test_sqlalchemy_config.engine_options)
 
 
 @pytest.fixture(scope="session")
-def test_engine(test_config: TestConfig):
-    yield create_engine(**test_config.engine_options)
-
-
-@pytest.fixture(scope="session")
-def app(test_config: TestConfig) -> Flask:
+def app() -> Flask:
     app = create_app()
-    app.config.from_object(test_config)
+    app.config.from_object(test_flask_config)
+    app.config.from_object(test_flask_sqlalchemy_config)
     assert app.config.get("TESTING")
-    assert app.config.get("DB_NAME") == "test_db"
+    assert (
+        app.config.get("SQLALCHEMY_DATABASE_URI")
+        == test_flask_sqlalchemy_config.SQLALCHEMY_DATABASE_URI
+    )
+
     yield app
 
 
