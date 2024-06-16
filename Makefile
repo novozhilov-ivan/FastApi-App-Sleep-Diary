@@ -1,7 +1,7 @@
 DC = docker compose
 EXEC = docker exec -it
 LOGS = docker logs
-ENV = --env-file .docker.env
+ENV = --env-file example_docker_app.env --env-file docker_app.env
 API_FILE = docker_compose/docker-compose.yaml
 API_CONTAINER = api
 PGADMIN_CONTAINER = pgadmin

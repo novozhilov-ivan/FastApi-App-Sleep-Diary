@@ -9,39 +9,31 @@ from api.config import (
 
 test_settings_config_dict = SettingsConfigDict(
     extra="ignore",
-    env_file=".test.env",
+    env_file=(
+        "example_test_app.env",
+        "test_app.env",
+    ),
     case_sensitive=False,
 )
 
 
-class TestPostgresDBConfig(PostgresDBConfig):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".test.env",
-        env_prefix="db_",
-        case_sensitive=False,
-    )
+class TestFlaskConfig(FlaskConfig):
+    model_config = test_settings_config_dict
+    DEBUG: bool = True
+    TESTING: bool = True
+
+
+class TestFlaskSQLAlchemyConfig(FlaskSQLAlchemyConfig):
+    model_config = test_settings_config_dict
 
 
 class TestSQLAlchemyConfig(SQLAlchemyConfig):
     model_config = test_settings_config_dict
 
 
-class TestFlaskSQLAlchemyConfig(FlaskSQLAlchemyConfig):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".test.env",
-    )
-
-
-class TestFlaskConfig(FlaskConfig):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".test.env",
-        case_sensitive=False,
-    )
-    DEBUG: bool = True
-    TESTING: bool = True
+class TestPostgresDBConfig(PostgresDBConfig):
+    model_config = test_settings_config_dict
+    model_config["env_prefix"] = "db_"
 
 
 test_sqlalchemy_config = TestSQLAlchemyConfig(
@@ -49,6 +41,6 @@ test_sqlalchemy_config = TestSQLAlchemyConfig(
 )
 test_flask_sqlalchemy_config = TestFlaskSQLAlchemyConfig(
     SQLALCHEMY_DATABASE_URI=test_sqlalchemy_config.database_uri,
-    SQLALCHEMY_ECHO=test_sqlalchemy_config.echo,
+    SQLALCHEMY_ECHO=True,
 )
 test_flask_config = TestFlaskConfig()

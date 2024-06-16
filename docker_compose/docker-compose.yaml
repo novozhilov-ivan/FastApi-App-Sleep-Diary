@@ -14,7 +14,7 @@ services:
       - "8000:8000"
     working_dir: /sleep_diary
     env_file:
-      - ../.docker.env
+      - ../docker_app.env
     volumes:
       - ../api/:/sleep_diary/api/
       - ../common/:/sleep_diary/common/
@@ -32,7 +32,7 @@ services:
     ports:
       - "54321:5432"
     env_file:
-      - ../.docker.env
+      - ../docker_app.env
     volumes:
       - db:/var/lib/postgresql/data
 
@@ -47,7 +47,7 @@ services:
     ports:
       - "5050:80"
     env_file:
-      - ../.docker.env
+      - ../docker_app.env
 
 networks:
   my_net:

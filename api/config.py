@@ -7,9 +7,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent.parent
 
-dev_settings_config_dict = SettingsConfigDict(
+app_settings_config_dict = SettingsConfigDict(
     extra="ignore",
-    env_file=".dev.env",
+    env_file=(
+        "example_app.env",
+        "app.env",
+    ),
     case_sensitive=False,
 )
 
@@ -21,10 +24,7 @@ echo_field = Field(
 
 
 class FlaskConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
-    )
+    model_config = app_settings_config_dict
     DEBUG: bool = Field(
         default=False,
         title="Режим отладки",
@@ -49,16 +49,13 @@ class FlaskConfig(BaseSettings):
 
 
 class FlaskSQLAlchemyConfig(BaseSettings):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
-    )
+    model_config = app_settings_config_dict
     SQLALCHEMY_DATABASE_URI: str
     SQLALCHEMY_ECHO: bool = echo_field
 
 
 class FlaskRestxConfig(BaseSettings):
-    model_config = dev_settings_config_dict
+    model_config = app_settings_config_dict
     ERROR_INCLUDE_MESSAGE: bool = Field(
         default=False,
     )
@@ -69,11 +66,7 @@ class FlaskRestxConfig(BaseSettings):
 
 
 class AuthJWT(BaseSettings):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
-        case_sensitive=False,
-    )
+    model_config = app_settings_config_dict
     private_key: str
     public_key: str
     algorithm: str = "RS256"
@@ -89,12 +82,9 @@ class DBConfigBase(BaseSettings, abc.ABC):
 
 
 class PostgresDBConfig(DBConfigBase):
-    model_config = SettingsConfigDict(
-        extra="ignore",
-        env_file=".dev.env",
-        env_prefix="db_",
-        case_sensitive=False,
-    )
+    model_config = app_settings_config_dict
+    model_config["env_prefix"] = "db_"
+
     driver: str
     driver_extension: str
     user: str
@@ -124,7 +114,7 @@ class PostgresDBConfig(DBConfigBase):
 
 
 class SQLAlchemyConfig(BaseSettings):
-    model_config = dev_settings_config_dict
+    model_config = app_settings_config_dict
     db_config: DBConfigBase
     echo: bool = echo_field
     pool_size: int = Field(
