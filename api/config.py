@@ -2,12 +2,12 @@ import abc
 from pathlib import Path
 from typing import Literal
 
-from pydantic import AnyUrl, BaseModel, Field, PostgresDsn, computed_field
+from pydantic import AnyUrl, Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent.parent
 
-dev_settings_config = SettingsConfigDict(
+dev_settings_config_dict = SettingsConfigDict(
     extra="ignore",
     env_file=".dev.env",
     case_sensitive=False,
@@ -58,7 +58,7 @@ class FlaskSQLAlchemyConfig(BaseSettings):
 
 
 class FlaskRestxConfig(BaseSettings):
-    model_config = dev_settings_config
+    model_config = dev_settings_config_dict
     ERROR_INCLUDE_MESSAGE: bool = Field(
         default=False,
     )
@@ -68,9 +68,14 @@ class FlaskRestxConfig(BaseSettings):
     )
 
 
-class AuthJWT(BaseModel):
-    private_key_path: Path = BASE_DIR / "certs" / "jwt-private.pem"
-    public_key_path: Path = BASE_DIR / "certs" / "jwt-public.pem"
+class AuthJWT(BaseSettings):
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".dev.env",
+        case_sensitive=False,
+    )
+    private_key: str
+    public_key: str
     algorithm: str = "RS256"
     access_token_expire_minutes: int = 3
     refresh_token_expire_days: int = 30
@@ -119,7 +124,7 @@ class PostgresDBConfig(DBConfigBase):
 
 
 class SQLAlchemyConfig(BaseSettings):
-    model_config = dev_settings_config
+    model_config = dev_settings_config_dict
     db_config: DBConfigBase
     echo: bool = echo_field
     pool_size: int = Field(

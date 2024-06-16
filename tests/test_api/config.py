@@ -10,13 +10,17 @@ from api.config import (
 test_settings_config_dict = SettingsConfigDict(
     extra="ignore",
     env_file=".test.env",
-    env_prefix="db_",
     case_sensitive=False,
 )
 
 
 class TestPostgresDBConfig(PostgresDBConfig):
-    model_config = test_settings_config_dict
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".test.env",
+        env_prefix="db_",
+        case_sensitive=False,
+    )
 
 
 class TestSQLAlchemyConfig(SQLAlchemyConfig):
@@ -24,7 +28,10 @@ class TestSQLAlchemyConfig(SQLAlchemyConfig):
 
 
 class TestFlaskSQLAlchemyConfig(FlaskSQLAlchemyConfig):
-    pass
+    model_config = SettingsConfigDict(
+        extra="ignore",
+        env_file=".test.env",
+    )
 
 
 class TestFlaskConfig(FlaskConfig):

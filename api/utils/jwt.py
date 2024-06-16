@@ -23,7 +23,7 @@ response_invalid_token_type_401 = "invalid token type {} expected {}"
 
 def encode_jwt(
     payload: dict,
-    private_key: str = auth_config.private_key_path.read_text(),
+    private_key: str = auth_config.private_key,
     algorithm: str = auth_config.algorithm,
     expire_minutes: int = auth_config.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
@@ -44,7 +44,7 @@ def encode_jwt(
 
 def decode_jwt(
     token: str | bytes,
-    public_key: str = auth_config.public_key_path.read_text(),
+    public_key: str = auth_config.public_key,
     algorithm: str = auth_config.algorithm,
 ) -> dict:
     try:
