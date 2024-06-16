@@ -7,4 +7,10 @@ LICENSE
 README.md
 *.env
 *.pem
+certs
+
+# Coverage
+coverage_re/
+.coverage
+report*
 

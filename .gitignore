@@ -4,6 +4,7 @@ __pycache__/
 
 *.env
 *.pem
+certs
 
 # Coverage
 coverage_re/
