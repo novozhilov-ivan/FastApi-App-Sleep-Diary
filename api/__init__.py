@@ -10,7 +10,17 @@ from api.extension import Base, api, db, engine
 from api.models import SleepNoteOrm, UserOrm
 
 
-# TODO add ruff[isort, etc] | linters mypy | pre-commit
+# TODO add ruff[isort, etc] | linters mypy | pre-commit.
+
+# TODO Рефакторинг докер файлов.
+#  1. Изменить копирование файлов в Dockerfile_api.
+#  2. Разделить compose файл на файлы для каждого сервиса.
+
+# TODO Рефакторинг архитектуры под DDD.
+
+# TODO Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
+#  Заменить на session = session_maker(session_options).
+#  И вызов with session() as session: ...
 
 
 def create_app() -> Flask:
