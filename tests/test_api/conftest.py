@@ -2,11 +2,10 @@ import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
-from sqlalchemy import create_engine
 from werkzeug.datastructures import Authorization
 
 from api import create_app
-from api.extension import Base, bearer, db
+from api.extension import bearer, db
 from api.models import SleepNoteOrm, UserOrm
 from api.utils.auth import hash_password
 from api.utils.jwt import create_access_jwt, create_refresh_jwt
@@ -16,26 +15,22 @@ from common.pydantic_schemas.user import UserCredentials, UserValidate
 from tests.test_api.config import (
     test_flask_config,
     test_flask_sqlalchemy_config,
-    test_sqlalchemy_config,
 )
 
 
-@pytest.fixture(scope="session")
-def test_engine():
-    yield create_engine(**test_sqlalchemy_config.engine_options)
+# @pytest.fixture(scope="session")
+# def test_engine():
+#     yield create_engine(**test_sqlalchemy_config.engine_options)
 
 
 @pytest.fixture(scope="session")
 def app() -> Flask:
     app = create_app()
-    app.config.from_object(test_flask_config)
-    app.config.from_object(test_flask_sqlalchemy_config)
+    app.config.from_object(obj=test_flask_config)
+    app.config.from_object(obj=test_flask_sqlalchemy_config)
     assert app.config.get("TESTING")
-    assert (
-        app.config.get("SQLALCHEMY_DATABASE_URI")
-        == test_flask_sqlalchemy_config.SQLALCHEMY_DATABASE_URI
-    )
-
+    *_, db_name_in_config = app.config.get("SQLALCHEMY_DATABASE_URI").split("/")
+    assert db_name_in_config == "test_db"
     yield app
 
 
@@ -85,16 +80,21 @@ def client(app: Flask) -> FlaskClient:
         yield app.test_client()
 
 
+# @pytest.fixture(autouse=True)
+# def create_db(
+#     test_engine,
+# ) -> None:
+#     Base.metadata.drop_all(bind=test_engine)
+#     Base.metadata.create_all(bind=test_engine)
+
+
 @pytest.fixture(autouse=True)
 def create_db(
-    test_engine,
+    client: FlaskClient,
 ) -> None:
-    Base.metadata.drop_all(
-        bind=test_engine,
-    )
-    Base.metadata.create_all(
-        bind=test_engine,
-    )
+    with client.application.app_context():
+        db.drop_all()
+        db.create_all()
 
 
 @pytest.fixture

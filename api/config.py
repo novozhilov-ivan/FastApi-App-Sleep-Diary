@@ -9,10 +9,7 @@ BASE_DIR = Path(__file__).parent.parent
 
 app_settings_config_dict = SettingsConfigDict(
     extra="ignore",
-    env_file=(
-        "example_app.env",
-        "app.env",
-    ),
+    env_file=".env",
     case_sensitive=False,
 )
 

@@ -1,46 +1,67 @@
-from pydantic_settings import SettingsConfigDict
+from pydantic import PostgresDsn, computed_field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from api.config import (
-    FlaskConfig,
+    DBConfigBase,
     FlaskSQLAlchemyConfig,
-    PostgresDBConfig,
     SQLAlchemyConfig,
 )
 
 test_settings_config_dict = SettingsConfigDict(
     extra="ignore",
-    env_file=(
-        "example_test_app.env",
-        "test_app.env",
-    ),
+    env_file=".env",
     case_sensitive=False,
 )
 
 
-class TestFlaskConfig(FlaskConfig):
+class TestFlaskConfig(BaseSettings):
     model_config = test_settings_config_dict
     DEBUG: bool = True
-    TESTING: bool = True
+    TESTING: bool
 
 
 class TestFlaskSQLAlchemyConfig(FlaskSQLAlchemyConfig):
     model_config = test_settings_config_dict
 
 
+class TestPostgresDBConfig(DBConfigBase):
+    model_config = test_settings_config_dict
+    model_config["env_prefix"] = "test_db_"
+    driver: str
+    driver_extension: str
+    user: str
+    password: str
+    host: str
+    port: str
+    name: str
+
+    @computed_field(
+        return_type=PostgresDsn,
+    )
+    @property
+    def database_dsn(self) -> PostgresDsn:
+        return "{}{}{}://{}:{}@{}:{}/{}".format(
+            self.driver,
+            "+" if self.driver_extension else "",
+            self.driver_extension,
+            self.user,
+            self.password,
+            self.host,
+            self.port,
+            self.name,
+        )
+
+
 class TestSQLAlchemyConfig(SQLAlchemyConfig):
     model_config = test_settings_config_dict
 
 
-class TestPostgresDBConfig(PostgresDBConfig):
-    model_config = test_settings_config_dict
-    model_config["env_prefix"] = "db_"
-
-
+db_config = TestPostgresDBConfig()
 test_sqlalchemy_config = TestSQLAlchemyConfig(
-    db_config=TestPostgresDBConfig(),
+    db_config=db_config,
 )
 test_flask_sqlalchemy_config = TestFlaskSQLAlchemyConfig(
     SQLALCHEMY_DATABASE_URI=test_sqlalchemy_config.database_uri,
-    SQLALCHEMY_ECHO=True,
+    SQLALCHEMY_ECHO=test_sqlalchemy_config.echo,
 )
 test_flask_config = TestFlaskConfig()

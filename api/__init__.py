@@ -10,8 +10,7 @@ from api.extension import Base, api, db, engine
 from api.models import SleepNoteOrm, UserOrm
 
 
-# TODO add ruff[isort, etc] | linters | pre-commit
-# TODO добавить файл example.env для файлов с необходимыми переменными окружениями
+# TODO add ruff[isort, etc] | linters mypy | pre-commit
 
 
 def create_app() -> Flask:
@@ -24,9 +23,7 @@ def create_app() -> Flask:
     app.config.from_object(obj=flask_restx_config)
     app.config.from_object(obj=flask_sqlalchemy_config)
     # Initialize Plugins
-    db.init_app(
-        app=app,
-    )
+    db.init_app(app=app)
     api.init_app(
         app=app,
         title="API для дневника сна",
@@ -34,9 +31,7 @@ def create_app() -> Flask:
     )
 
     # Create DataBase Tables
-    Base.metadata.create_all(
-        bind=engine,
-    )
+    Base.metadata.create_all(bind=engine)
 
     # Register Namespaces
     from api.routes import (
