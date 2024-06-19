@@ -3,17 +3,17 @@ from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
 
-from api.extension import db
-from api.models import UserOrm
-from api.routes.auth.sign_up import (
+from src.extension import db
+from src.models import UserOrm
+from src.pydantic_schemas.user import UserCredentials, UserValidate
+from src.routes.auth.sign_up import (
     response_conflict_409,
     response_created_201,
     signup_endpoint,
 )
-from api.utils.auth import validate_password
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import UserCredentials, UserValidate
+from src.utils.auth import validate_password
+from src.utils.status_codes import HTTP
+from tests.response import Response
 
 
 @pytest.mark.auth

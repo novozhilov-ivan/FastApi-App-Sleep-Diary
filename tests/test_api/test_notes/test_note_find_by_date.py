@@ -5,16 +5,16 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from api.routes.notes import note_find_by_date_endpoint
-from api.routes.notes.note_find_by_date import response_not_found_404
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.notes import (
+from src.pydantic_schemas.sleep.notes import (
     SleepNote,
     SleepNoteOptional,
     SleepNoteWithStats,
 )
+from src.routes.notes import note_find_by_date_endpoint
+from src.routes.notes.note_find_by_date import response_not_found_404
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.response import Response
 
 
 @pytest.mark.note

@@ -1,32 +1,19 @@
-DC = docker compose
-EXEC = docker exec -it
-LOGS = docker logs
-ENV = --env-file example_docker_app.env --env-file docker_app.env
-API_FILE = docker_compose/docker-compose.yaml
-API_CONTAINER = api
-PGADMIN_CONTAINER = pgadmin
+build:
+		docker compose build
 
+up: build
+		docker compose up -d
+		#docker compose up -d --env-file .env
 
-.PHONY: api
-api:
-	${DC} -f ${API_FILE} ${ENV} up --build -d
-
-.PHONY: down
 down:
-	${DC} -f ${API_FILE} down
+		docker compose down --remove-orphans
 
-.PHONY: logs
+test: up
+		docker compose run --rm --no-deps --entrypoint=pytest api
+
 logs:
-	${LOGS} ${API_CONTAINER} -f
+		docker compose logs --tail=25 api postgres pgadmin
 
-.PHONY: logs_pgadmin
-logs_pgadmin:
-	${LOGS} ${PGADMIN_CONTAINER} -f
-
-.PHONY: sh
 sh:
-	${EXEC} ${API_CONTAINER} bash
+		docker compose -it api bash
 
-.PHONY: test
-test:
-	${EXEC} ${API_CONTAINER} pytest -s

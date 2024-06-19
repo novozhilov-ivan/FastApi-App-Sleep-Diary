@@ -4,12 +4,12 @@ from flask.testing import FlaskClient
 from sqlalchemy import select
 from werkzeug.datastructures import Authorization
 
-from api.extension import db
-from api.models import SleepNoteOrm, UserOrm
-from api.routes.edit.delete_diary import delete_notes_endpoint
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
+from src.extension import db
+from src.models import SleepNoteOrm, UserOrm
+from src.routes.edit.delete_diary import delete_notes_endpoint
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.response import Response
 
 
 @pytest.mark.edit_diary

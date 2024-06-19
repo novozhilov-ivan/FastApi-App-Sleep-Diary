@@ -4,13 +4,16 @@ from flask.testing import FlaskClient
 from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
-from api.routes.diary import diary_endpoint
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.errors.message import ErrorResponse
-from common.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
-from common.pydantic_schemas.user import User
+from src.pydantic_schemas.errors.message import ErrorResponse
+from src.pydantic_schemas.sleep.diary import (
+    SleepDiaryModel,
+    SleepDiaryModelEmpty,
+)
+from src.pydantic_schemas.user import User
+from src.routes.diary import diary_endpoint
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.response import Response
 
 
 @pytest.mark.diary

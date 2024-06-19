@@ -3,19 +3,19 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from api.extension import bearer
-from api.models import UserOrm
-from api.routes.auth.refresh import refresh_endpoint
-from api.utils.jwt import (
+from src.extension import bearer
+from src.models import UserOrm
+from src.pydantic_schemas.token import AccessTokenInfo
+from src.routes.auth.refresh import refresh_endpoint
+from src.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
     TOKEN_TYPE_FIELD,
     decode_jwt,
     response_invalid_token_type_401,
 )
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.token import AccessTokenInfo
+from src.utils.status_codes import HTTP
+from tests.response import Response
 
 
 @pytest.mark.auth

@@ -3,17 +3,17 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from api.extension import bearer
-from api.models import UserOrm
-from api.routes.edit import response_not_found_404
-from api.routes.edit.export_file import export_notes_endpoint
-from api.utils.jwt import create_access_jwt
-from api.utils.manage_notes import FileDataConverter
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
-from common.pydantic_schemas.sleep.notes import SleepNote
-from common.pydantic_schemas.user import UserValidate
+from src.extension import bearer
+from src.models import UserOrm
+from src.pydantic_schemas.sleep.notes import SleepNote
+from src.pydantic_schemas.user import UserValidate
+from src.routes.edit import response_not_found_404
+from src.routes.edit.export_file import export_notes_endpoint
+from src.utils.jwt import create_access_jwt
+from src.utils.manage_notes import FileDataConverter
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.response import Response
 
 
 @pytest.mark.edit_diary

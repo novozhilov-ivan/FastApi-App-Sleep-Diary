@@ -7,20 +7,20 @@ from flask.testing import FlaskClient
 from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
-from api.models import UserOrm
-from api.routes.notes import note_endpoint
-from api.routes.notes.note_find_by_id import response_not_found_404
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
-from common.generators.note import SleepNoteGenerator
-from common.pydantic_schemas.errors.message import ErrorResponse
-from common.pydantic_schemas.sleep.notes import (
+from src.models import UserOrm
+from src.pydantic_schemas.errors.message import ErrorResponse
+from src.pydantic_schemas.sleep.notes import (
     SleepNote,
     SleepNoteMeta,
     SleepNoteOptional,
     SleepNoteWithStats,
 )
+from src.routes.notes import note_endpoint
+from src.routes.notes.note_find_by_id import response_not_found_404
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.generators.note import SleepNoteGenerator
+from tests.response import Response
 
 
 @pytest.mark.parametrize(

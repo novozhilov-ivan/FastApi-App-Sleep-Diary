@@ -3,20 +3,20 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from api.extension import bearer
-from api.models import UserOrm
-from api.routes.account import account_endpoint
-from api.routes.account.account_find import response_not_found_404
-from api.utils.jwt import (
+from src.extension import bearer
+from src.models import UserOrm
+from src.pydantic_schemas.user import UserInfo, UserValidate
+from src.routes.account import account_endpoint
+from src.routes.account.account_find import response_not_found_404
+from src.utils.jwt import (
     ACCESS_TOKEN_TYPE,
     REFRESH_TOKEN_TYPE,
     create_access_jwt,
     response_invalid_authorization_token_401,
     response_invalid_token_type_401,
 )
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.pydantic_schemas.user import UserInfo, UserValidate
+from src.utils.status_codes import HTTP
+from tests.response import Response
 
 
 @pytest.mark.account

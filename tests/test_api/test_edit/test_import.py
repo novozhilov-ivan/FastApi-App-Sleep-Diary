@@ -5,18 +5,18 @@ from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from api.models import UserOrm
-from api.routes.edit.import_file import (
+from src.models import UserOrm
+from src.routes.edit.import_file import (
     import_notes_endpoint,
     response_bad_request_400,
     response_conflict_409,
     response_created_201,
     response_unsupported_media_type_415,
 )
-from api.utils.manage_notes import FileDataConverter
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
+from src.utils.manage_notes import FileDataConverter
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.response import Response
 
 
 @pytest.mark.edit_diary

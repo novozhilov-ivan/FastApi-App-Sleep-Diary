@@ -1,0 +1,59 @@
+services:
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sleep-diary-app-image
+    restart: always
+    networks:
+      - my_net
+    depends_on:
+      - postgres
+    env_file:
+      - ./.env
+    volumes:
+      - ./src:/src
+      - ./tests:/tests
+    entrypoint:
+      - flask
+      - --app=src.flask_app:create_app
+      - run
+      - --reload
+      - --host=0.0.0.0
+      - --port=8000
+    ports:
+      - "8000:8000"
+
+  postgres:
+    image: postgres:16
+    restart: always
+    networks:
+      - my_net
+    ports:
+      - "54321:5432"
+    env_file:
+      - ./.env
+    volumes:
+      - db:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4:8.4
+    restart: always
+    networks:
+      - my_net
+    depends_on:
+      - postgres
+    ports:
+      - "5050:80"
+    env_file:
+      - ./.env
+
+networks:
+  my_net:
+volumes:
+  db:
+    driver: local
+
+
+

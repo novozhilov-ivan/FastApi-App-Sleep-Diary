@@ -4,18 +4,18 @@ from flask.testing import FlaskClient
 from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
-from api.models import UserOrm
-from api.routes.notes import note_endpoint
-from common.baseclasses.response import Response
-from common.baseclasses.status_codes import HTTP
-from common.generators.diary import SleepDiaryGenerator
-from common.generators.note import SleepNoteGenerator
-from common.pydantic_schemas.errors.message import ErrorResponse
-from common.pydantic_schemas.sleep.notes import (
+from src.models import UserOrm
+from src.pydantic_schemas.errors.message import ErrorResponse
+from src.pydantic_schemas.sleep.notes import (
     SleepNote,
     SleepNoteModel,
     SleepNoteWithStats,
 )
+from src.routes.notes import note_endpoint
+from src.utils.status_codes import HTTP
+from tests.generators.diary import SleepDiaryGenerator
+from tests.generators.note import SleepNoteGenerator
+from tests.response import Response
 
 
 @pytest.mark.note
