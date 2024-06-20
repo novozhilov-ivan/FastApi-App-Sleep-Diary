@@ -11,11 +11,12 @@ services:
     depends_on:
       - postgres
     env_file:
-      - ./.env
+      - .env
     volumes:
       - ./src:/src
       - ./tests:/tests
     entrypoint:
+      # flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000
       - flask
       - --app=src.flask_app:create_app
       - run
@@ -33,7 +34,7 @@ services:
     ports:
       - "54321:5432"
     env_file:
-      - ./.env
+      - .env
     volumes:
       - db:/var/lib/postgresql/data
 
@@ -47,7 +48,7 @@ services:
     ports:
       - "5050:80"
     env_file:
-      - ./.env
+      - .env
 
 networks:
   my_net:
