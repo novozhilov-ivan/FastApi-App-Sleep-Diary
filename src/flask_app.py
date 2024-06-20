@@ -15,6 +15,10 @@ from src.extension import Base, api, db, engine
 #  2. Разделить compose файл на файлы для каждого сервиса.
 
 # TODO Рефакторинг архитектуры под DDD.
+#  1. Отделить бизнес логику в модель предметной области - domain
+#  2. Протестировать бизнес логику
+#  3. Добавить Базовый репозиторий, фейковый и SQLAlchemy
+#  4.Добавить сервисы/сервисный слой
 
 # TODO Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
 #  Заменить на session = session_maker(session_options).
