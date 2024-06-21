@@ -1,32 +1,12 @@
-import pytest
-
-from src.domain.model import Diary, Note
+from src.domain.note.model import Note
 
 
-def make_diary_and_note() -> tuple[Note, Diary]:
-    ...
-
-
-@pytest.mark.xfail(reason="todo")
-def test_write_note():
-    ...
-
-
-@pytest.mark.xfail(reason="todo")
-def test_erase_note():
-    ...
-
-
-@pytest.mark.xfail(reason="todo")
-def test_cannot_twice_write_note():
-    ...
-
-
-@pytest.mark.xfail(reason="todo")
-def test_can_only_erase_written_note():
-    ...
-
-
-@pytest.mark.xfail(reason="todo")
-def test_can_only_erase_written_note():
-    ...
+def test_create_note():
+    note = Note(
+        bedtime_date="2020-12-12",
+        went_to_bed="00:10",
+        fell_asleep="00:30",
+        woke_up="08:40",
+        got_up="09:00",
+        no_sleep="00:10",
+    )

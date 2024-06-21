@@ -6,30 +6,12 @@ from pydantic import BaseModel, ConfigDict, Field, computed_field
 class SleepNote(BaseModel):
     """Запись в дневнике сна"""
 
-    sleep_date: date = Field(
-        title="Дата",
-        examples=["2021-12-13", "2021-12-14", "2021-12-15", "2021-12-16"],
-    )
-    went_to_bed: time = Field(
-        title="Лег",
-        examples=["05:11", "01:55", "01:10", "04:10"],
-    )
-    fell_asleep: time = Field(
-        title="Уснул",
-        examples=["05:30", "02:20", "01:30", "04:20"],
-    )
-    woke_up: time = Field(
-        title="Проснулся",
-        examples=["12:00", "07:57", "10:00", "11:50"],
-    )
-    got_up: time = Field(
-        title="Встал",
-        examples=["12:15", "08:07", "10:30", "12:15"],
-    )
-    no_sleep: time = Field(
-        title="Не спал",
-        examples=["00:19", "00:32", "00:06", "01:20"],
-    )
+    sleep_date: date
+    went_to_bed: time
+    fell_asleep: time
+    woke_up: time
+    got_up: time
+    no_sleep: time
     model_config = ConfigDict(from_attributes=True)
 
 
