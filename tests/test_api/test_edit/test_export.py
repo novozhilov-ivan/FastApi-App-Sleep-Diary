@@ -13,7 +13,7 @@ from src.utils.jwt import create_access_jwt
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.edit_diary

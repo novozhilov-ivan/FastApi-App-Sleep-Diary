@@ -15,7 +15,7 @@ from src.routes.notes import note_endpoint
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator
 from tests.generators.note import SleepNoteGenerator
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.note

@@ -13,7 +13,7 @@ from src.pydantic_schemas.user import User
 from src.routes.diary import diary_endpoint
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.diary

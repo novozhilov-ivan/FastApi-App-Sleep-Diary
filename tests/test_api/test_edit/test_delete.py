@@ -9,7 +9,7 @@ from src.models import SleepNoteOrm, UserOrm
 from src.routes.edit.delete_diary import delete_notes_endpoint
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.edit_diary

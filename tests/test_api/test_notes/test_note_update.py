@@ -20,7 +20,7 @@ from src.routes.notes.note_find_by_id import response_not_found_404
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator
 from tests.generators.note import SleepNoteGenerator
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.parametrize(
@@ -158,13 +158,13 @@ class TestNoteUpdate:
     @pytest.mark.parametrize(
         "wrong_note_id",
         (
-            "uid",
-            "20:20:20",
-            True,
-            False,
-            None,
-            "[1, 2, 3]",
-            "{id: 666}",
+                "uid",
+                "20:20:20",
+                True,
+                False,
+                None,
+                "[1, 2, 3]",
+                "{id: 666}",
         ),
     )
     def test_note_update_wrong_note_id_type_422(

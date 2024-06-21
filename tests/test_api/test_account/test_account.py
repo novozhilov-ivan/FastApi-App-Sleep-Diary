@@ -16,7 +16,7 @@ from src.utils.jwt import (
     response_invalid_token_type_401,
 )
 from src.utils.status_codes import HTTP
-from tests.response import Response
+from tests.test_api.response import Response
 
 
 @pytest.mark.account
