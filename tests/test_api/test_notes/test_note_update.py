@@ -158,13 +158,13 @@ class TestNoteUpdate:
     @pytest.mark.parametrize(
         "wrong_note_id",
         (
-                "uid",
-                "20:20:20",
-                True,
-                False,
-                None,
-                "[1, 2, 3]",
-                "{id: 666}",
+            "uid",
+            "20:20:20",
+            True,
+            False,
+            None,
+            "[1, 2, 3]",
+            "{id: 666}",
         ),
     )
     def test_note_update_wrong_note_id_type_422(

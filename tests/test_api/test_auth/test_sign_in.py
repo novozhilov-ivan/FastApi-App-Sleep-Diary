@@ -53,8 +53,8 @@ class TestSignIn:
     @pytest.mark.parametrize(
         "wrong_credentials",
         (
-                {"password": "super_wrong_password".encode()},
-                {"username": "super_wrong_username"},
+            {"password": "super_wrong_password".encode()},
+            {"username": "super_wrong_username"},
         ),
     )
     def test_sign_in_401(
