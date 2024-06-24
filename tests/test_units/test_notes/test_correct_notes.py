@@ -4,21 +4,10 @@ from src.domain.note.model import Note
 def test_create_note_with_increasing_sequenced_of_all_time_points():
     Note(
         bedtime_date="2020-12-12",
-        went_to_bed="04:00",
-        fell_asleep="03:00",
-        woke_up="12:00",
-        got_up="14:00",
-    )
-
-
-def test_create_note_with_increasing_sequenced_of_all_time_points_with_no_sleep_time():
-    Note(
-        bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",
         woke_up="12:00",
         got_up="14:00",
-        no_sleep="00:59",
     )
 
 
@@ -32,17 +21,6 @@ def test_create_note_with_one_time_point_after_midnight():
     )
 
 
-def test_create_note_with_one_time_point_after_midnight_with_no_sleep_time():
-    Note(
-        bedtime_date="2020-12-12",
-        went_to_bed="13:00",
-        fell_asleep="15:00",
-        woke_up="23:00",
-        got_up="01:00",
-        no_sleep="00:59",
-    )
-
-
 def test_create_note_with_two_time_point_after_midnight():
     Note(
         bedtime_date="2020-12-12",
@@ -53,17 +31,6 @@ def test_create_note_with_two_time_point_after_midnight():
     )
 
 
-def test_create_note_with_two_time_point_after_midnight_with_no_sleep_time():
-    Note(
-        bedtime_date="2020-12-12",
-        went_to_bed="15:00",
-        fell_asleep="17:00",
-        woke_up="01:00",
-        got_up="03:00",
-        no_sleep="00:59",
-    )
-
-
 def test_create_note_with_three_time_point_after_midnight():
     Note(
         bedtime_date="2020-12-12",
@@ -71,15 +38,4 @@ def test_create_note_with_three_time_point_after_midnight():
         fell_asleep="01:00",
         woke_up="09:00",
         got_up="11:00",
-    )
-
-
-def test_create_note_with_three_time_point_after_midnight_with_no_sleep_time():
-    Note(
-        bedtime_date="2020-12-12",
-        went_to_bed="23:00",
-        fell_asleep="01:00",
-        woke_up="09:00",
-        got_up="11:00",
-        no_sleep="00:59",
     )
