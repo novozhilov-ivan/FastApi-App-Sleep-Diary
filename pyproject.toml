@@ -9,6 +9,8 @@ description = ""
 authors = ["ivan"]
 license = "MIT License"
 readme = "README.md"
+package-mode = false
+
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -18,7 +20,7 @@ pydantic = "^2.7.4"
 bcrypt = "^4.1.3"
 flask-restx = "^1.3.0"
 pydantic-settings = "^2.3.3"
-pyjwt = {extras = ["crypto"], version = "^2.8.0"}
+pyjwt = { extras = ["crypto"], version = "^2.8.0" }
 more-itertools = "^10.3.0"
 jsonref = "^1.1.0"
 psycopg2-binary = "^2.9.9"
@@ -36,6 +38,9 @@ pytest = "^8.2.2"
 black = "^24.4.2"
 coverage = "^7.5.3"
 mypy = "^1.10.0"
+
+[tool.poetry.scripts]
+app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"
 
 [build-system]
 requires = ["poetry-core"]

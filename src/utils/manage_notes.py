@@ -47,9 +47,7 @@ class FileDataConverter:
         data = (note.model_dump(mode="json") for note in data)
         data = (note.values() for note in data)
         data = (columns_delimiter.join(row) for row in data)
-        return (
-            f"{columns_delimiter.join(titles)}" f"\n" f"{rows_delimiter.join(data)}"
-        )
+        return f"{columns_delimiter.join(titles)}\n{rows_delimiter.join(data)}"
 
     def to_model(self, as_model: SleepNote | type = SleepNote, **kwargs) -> None:
         with self._file.stream as file:

@@ -14,6 +14,7 @@ def test_went_to_bed_cannot_be_gt_fell_asleep_and_lt_other_time_points():
         )
     assert error.value.message == ValidateTimePointNoteFieldError().message
 
+
 def test_went_to_bed_cannot_be_gt_fell_asleep_and_woke_up_and_lt_got_up():
     with pytest.raises(ValidateTimePointNoteFieldError) as error:
         Note(
@@ -24,6 +25,7 @@ def test_went_to_bed_cannot_be_gt_fell_asleep_and_woke_up_and_lt_got_up():
             got_up="13:00",
         )
     assert error.value.message == ValidateTimePointNoteFieldError().message
+
 
 def test_went_to_bed_cannot_be_gt_other_time_points():
     with pytest.raises(ValidateTimePointNoteFieldError) as error:

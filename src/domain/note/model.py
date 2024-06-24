@@ -92,10 +92,10 @@ class NoteWithFieldsValidator(NoteBase):
     @model_validator(mode="after")
     def validate_went_to_bed(self) -> Self:
         if (
-                (self.went_to_bed > self.fell_asleep > self.woke_up > self.got_up)
-                or (self.got_up > self.went_to_bed > self.fell_asleep > self.woke_up)
-                or (self.woke_up > self.got_up > self.went_to_bed > self.fell_asleep)
-                or (self.fell_asleep > self.woke_up > self.got_up > self.went_to_bed)
+            (self.went_to_bed > self.fell_asleep > self.woke_up > self.got_up)
+            or (self.got_up > self.went_to_bed > self.fell_asleep > self.woke_up)
+            or (self.woke_up > self.got_up > self.went_to_bed > self.fell_asleep)
+            or (self.fell_asleep > self.woke_up > self.got_up > self.went_to_bed)
         ):
             return self
         raise ValidateTimePointNoteFieldError

@@ -1,5 +1,3 @@
-
-
 class NoteBaseError(Exception):
     @property
     def message(self) -> str:
