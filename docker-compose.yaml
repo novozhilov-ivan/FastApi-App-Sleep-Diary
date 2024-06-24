@@ -16,7 +16,6 @@ services:
       - ./src:/src
       - ./tests:/tests
     entrypoint:
-      # flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000
       - flask
       - --app=src.flask_app:create_app
       - run

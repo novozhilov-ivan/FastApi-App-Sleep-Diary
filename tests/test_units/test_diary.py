@@ -1,9 +1,10 @@
 import pytest
 
+from src.domain.diary.model import Diary
 from src.domain.note.model import Note
 
 
-def make_diary_and_note() -> tuple[Note, "Diary"]: ...
+def make_diary_and_note() -> tuple[Note, Diary]: ...
 
 
 @pytest.mark.xfail(reason="todo")

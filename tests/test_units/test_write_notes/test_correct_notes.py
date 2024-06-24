@@ -6,8 +6,8 @@ def test_create_note_with_increasing_sequenced_of_all_time_points():
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",
-        woke_up="12:00",
-        got_up="14:00",
+        woke_up="11:00",
+        got_up="13:00",
     )
 
 
