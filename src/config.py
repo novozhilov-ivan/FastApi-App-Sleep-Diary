@@ -31,9 +31,7 @@ class FlaskConfig(BaseSettings):
             "запускается через app.run()."
         ),
     )
-    SECRET_KEY: str = Field(
-        default="No_super_secret_key_yet",
-    )
+    SECRET_KEY: str
     MAX_CONTENT_LENGTH: int = Field(
         default=1024 * 1024,
     )

@@ -1,16 +1,24 @@
-FROM python:3.10-slim-bookworm
+FROM python:3.10-slim-bookworm as builder
+
+COPY poetry.lock pyproject.toml ./
+
+RUN python -m pip install poetry>=1.8.2 && \
+    poetry export -o requirements.prod.txt --without-hashes && \
+    poetry export --with=dev -o requirements.dev.txt --without-hashes
+
+FROM python:3.10-slim-bookworm as dev
+
+WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+COPY --from=builder requirements.dev.txt /app
 
+RUN apt clean && apt update -y && apt install --no-install-recommends -y \
+    python3-dev && \
+    pip install --upgrade pip --no-cache-dir -r \
+    requirements.dev.txt && \
+    rm requirements.dev.txt
 
-RUN apt-get clean && apt-get update -y \
-    && apt-get install --no-install-recommends -y \
-    python3-dev
-
-COPY requirements.txt /tmp/
-RUN pip install --upgrade pip --no-cache-dir -r /tmp/requirements.txt
-
-RUN mkdir -p /src
-COPY src/ /src/
-COPY tests/ /tests/
+COPY src/ /app/src
+COPY tests/ /app/tests

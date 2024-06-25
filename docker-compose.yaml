@@ -5,16 +5,28 @@ services:
       context: .
       dockerfile: Dockerfile
     image: sleep-diary-app-image
-    restart: always
-    networks:
-      - my_net
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
+    restart: always
     env_file:
       - .env
-    volumes:
-      - ./src:/src
-      - ./tests:/tests
+    environment:
+      SECRET_KEY: ${SECRET_KEY:?}
+      DB_DRIVER: ${DB_DRIVER:?}
+      DB_DRIVER_EXTENSION: ${DB_DRIVER_EXTENSION:?}
+      DB_USER: ${DB_USER:?}
+      DB_PASSWORD: ${DB_PASSWORD:?}
+      DB_HOST: ${DB_HOST:?}
+      DB_PORT: ${DB_PORT:?}
+      DB_NAME: ${DB_NAME:?}
+      PRIVATE_KEY: ${PRIVATE_KEY:?}
+      PUBLIC_KEY: ${PUBLIC_KEY:?}
+    ports:
+      - "8000:8000"
+    networks:
+      - backend
+    working_dir: /app
     entrypoint:
       - flask
       - --app=src.flask_app:create_app
@@ -22,38 +34,42 @@ services:
       - --reload
       - --host=0.0.0.0
       - --port=8000
-    ports:
-      - "8000:8000"
 
   postgres:
     image: postgres:16
     restart: always
-    networks:
-      - my_net
-    ports:
-      - "54321:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready"]
+      interval: 1s
+      timeout: 5s
+      retries: 10
     env_file:
       - .env
-    volumes:
-      - db:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      POSTGRES_DB: ${POSTGRES_DB:?}
+    ports:
+      - "54321:5432"
+    networks:
+      - backend
 
   pgadmin:
     image: dpage/pgadmin4:8.4
     restart: always
-    networks:
-      - my_net
     depends_on:
-      - postgres
-    ports:
-      - "5050:80"
+      postgres:
+        condition: service_healthy
     env_file:
       - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:?}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?}
+    ports:
+      - "5050:80"
+    networks:
+      - backend
 
 networks:
-  my_net:
-volumes:
-  db:
-    driver: local
-
-
-
+  backend:
+    driver: bridge
