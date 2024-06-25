@@ -10,10 +10,6 @@ from src.extension import Base, api, db, engine
 
 # TODO add ruff[isort, etc] | linters mypy | pre-commit.
 
-# TODO Рефакторинг докер файлов.
-#  1. Изменить копирование файлов в Dockerfile.
-#  2. Разделить compose файл на файлы для каждого сервиса.
-
 # TODO Рефакторинг архитектуры под DDD.
 #  1. Отделить бизнес логику в модель предметной области - domain
 #  2. Протестировать бизнес логику

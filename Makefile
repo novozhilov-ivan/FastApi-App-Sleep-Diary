@@ -1,12 +1,12 @@
 build:
-		docker compose build
+		docker compose -f flask_app.yml -f postgres.yml build
 up: build
-		docker compose up -d
+		docker compose -f flask_app.yml -f postgres.yml up -d
 down:
-		docker compose down --remove-orphans
+		docker compose -f flask_app.yml -f postgres.yml down --remove-orphans
 test: up
-		docker compose run --rm --no-deps  --entrypoint="pytest tests/" api
+		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/" api
 logs:
-		docker compose logs --tail=25 api postgres pgadmin
+		docker compose -f flask_app.yml -f postgres.yml logs --tail=25 api postgres pgadmin
 sh:
 		docker run -it api bash
