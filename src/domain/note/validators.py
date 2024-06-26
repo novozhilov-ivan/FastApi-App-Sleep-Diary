@@ -9,11 +9,25 @@ from src.domain.note.durations import NoteDurations
 class NoteFieldsValidators(NoteDurations, NoteBase):
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
-        if (
+        all_time_points_within_one_day = (
             self.went_to_bed <= self.fell_asleep <= self.woke_up <= self.got_up
-            or self.got_up <= self.went_to_bed <= self.fell_asleep <= self.woke_up
-            or self.woke_up <= self.got_up <= self.went_to_bed <= self.fell_asleep
-            or self.fell_asleep <= self.woke_up <= self.got_up <= self.went_to_bed
+        )
+        got_up_after_midnight_other_time_points_within_one_day = (
+            self.got_up <= self.went_to_bed <= self.fell_asleep <= self.woke_up
+        )
+        woke_up_and_got_up_after_midnight_other_time_points_within_one_day = (
+            self.woke_up <= self.got_up <= self.went_to_bed <= self.fell_asleep
+        )
+        went_to_bed_within_one_day_other_time_point_after_midnight = (
+            self.fell_asleep <= self.woke_up <= self.got_up <= self.went_to_bed
+        )
+        if any(
+            (
+                all_time_points_within_one_day,
+                got_up_after_midnight_other_time_points_within_one_day,
+                woke_up_and_got_up_after_midnight_other_time_points_within_one_day,
+                went_to_bed_within_one_day_other_time_point_after_midnight,
+            )
         ):
             return self
         raise TimePointsSequenceError
