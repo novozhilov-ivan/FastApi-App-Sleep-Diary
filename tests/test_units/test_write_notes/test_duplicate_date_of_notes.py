@@ -23,7 +23,7 @@ def test_notes_is_equals_by_bedtime_date():
 def test_cannot_add_notes_with_same_bedtime_date_in_week_gt_one_time_and_adding_is_idempotent():
     week = set()
     week.add(note_1)
-    assert len(week) == 1
+    assert note_1 in week
     week.add(note_2)
     assert len(week) == 1
     unique_note_of_week: NoteValueObject
