@@ -1,4 +1,3 @@
-import abc
 from datetime import timedelta
 
 from pydantic import model_validator
@@ -8,7 +7,7 @@ from src.domain.note.base import NoteBase
 from src.domain.note.error import NoSleepDurationError, TimePointsSequenceError
 
 
-class NoteFieldsValidators(NoteBase, abc.ABC):
+class NoteFieldsValidators(NoteBase):
     @model_validator(mode="after")
     def validate_time_points_sequences(self) -> Self:
         if (

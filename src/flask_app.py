@@ -11,10 +11,13 @@ from src.extension import Base, api, db, engine
 # TODO add ruff[isort, etc] | linters mypy | pre-commit.
 
 # TODO Рефакторинг архитектуры под DDD.
-#  1. Отделить бизнес логику в модель предметной области - domain
-#  2. Протестировать бизнес логику
-#  3. Добавить Базовый репозиторий, фейковый и SQLAlchemy
-#  4.Добавить сервисы/сервисный слой
+#  1. Отделить бизнес логику в domain и Протестировать
+#   1.1 NoteBase, NoteFieldsValidators, NoteValueObject, NoteStatistics, NoteEntity
+#   1.2 WeekBase, WeekFieldsValidators, WeekValueObject, WeekStatistics, WeekEntity
+#    или убрать прослойку Week и сделать это computed_field в Diary
+#   1.3 DiaryBase, DiaryStatistics, etc
+#  2. Добавить Базовый репозиторий, фейковый и SQLAlchemy
+#  3.Добавить сервисы/сервисный слой
 
 # TODO Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
 #  Заменить на session = session_maker(session_options).
