@@ -1,12 +1,12 @@
 import pytest
 
-from src.domain.note.error import NoSleepTimeError
-from src.domain.note.model import Note
+from src.domain.note.error import NoSleepDurationError
+from src.domain.note.value_object import NoteValueObject
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points():
-    with pytest.raises(NoSleepTimeError) as error:
-        Note(
+    with pytest.raises(NoSleepDurationError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="03:00",
@@ -21,8 +21,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points():
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnight():
-    with pytest.raises(NoSleepTimeError) as error:
-        Note(
+    with pytest.raises(NoSleepDurationError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="13:00",
             fell_asleep="15:00",
@@ -37,8 +37,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnig
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnight():
-    with pytest.raises(NoSleepTimeError) as error:
-        Note(
+    with pytest.raises(NoSleepDurationError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",
             fell_asleep="17:00",
@@ -53,8 +53,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnig
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight():
-    with pytest.raises(NoSleepTimeError) as error:
-        Note(
+    with pytest.raises(NoSleepDurationError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="01:00",

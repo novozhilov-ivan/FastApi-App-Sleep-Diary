@@ -1,18 +1,16 @@
-from datetime import time, timedelta
+import abc
+from datetime import timedelta
 
 from pydantic import model_validator
 from typing_extensions import Self
 
 from src.domain.note.base import NoteBase
-from src.domain.note.error import NoSleepTimeError, SleepTimePointError
+from src.domain.note.error import NoSleepDurationError, TimePointsSequenceError
 
 
-class NoteWithFieldsValidator(NoteBase):
+class NoteFieldsValidators(NoteBase, abc.ABC):
     @model_validator(mode="after")
     def validate_time_points_sequences(self) -> Self:
-        """
-        4 точки времени должны соблюдать следующие 4 вариации последовательностей
-        """
         if (
             self.went_to_bed <= self.fell_asleep <= self.woke_up <= self.got_up
             or self.got_up <= self.went_to_bed <= self.fell_asleep <= self.woke_up
@@ -20,11 +18,10 @@ class NoteWithFieldsValidator(NoteBase):
             or self.fell_asleep <= self.woke_up <= self.got_up <= self.went_to_bed
         ):
             return self
-        raise SleepTimePointError
+        raise TimePointsSequenceError
 
     @model_validator(mode="after")
     def validate_no_sleep_time_duration(self) -> Self:
-        """Время без сна не может быть больше времени сна"""
         if self.fell_asleep <= self.woke_up:
             sleep_timedelta = timedelta(
                 hours=self.woke_up.hour - self.fell_asleep.hour,
@@ -44,4 +41,4 @@ class NoteWithFieldsValidator(NoteBase):
         )
         if no_sleep_timedelta < sleep_timedelta:
             return self
-        raise NoSleepTimeError
+        raise NoSleepDurationError

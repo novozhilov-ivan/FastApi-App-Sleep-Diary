@@ -1,12 +1,12 @@
 import pytest
 
-from src.domain.note.model import Note
-from src.domain.note.validators import SleepTimePointError
+from src.domain.note.value_object import NoteValueObject
+from src.domain.note.validators import TimePointsSequenceError
 
 
 def test_got_up_cannot_be_lt_only_woke_up():
-    with pytest.raises(SleepTimePointError) as error:
-        Note(
+    with pytest.raises(TimePointsSequenceError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="03:00",
@@ -17,8 +17,8 @@ def test_got_up_cannot_be_lt_only_woke_up():
 
 
 def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight():
-    with pytest.raises(SleepTimePointError) as error:
-        Note(
+    with pytest.raises(TimePointsSequenceError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="01:00",
@@ -29,8 +29,8 @@ def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight()
 
 
 def test_got_up_cannot_be_gt_woke_up_and_lt_other_points_with_some_time_points_after_midnight():
-    with pytest.raises(SleepTimePointError) as error:
-        Note(
+    with pytest.raises(TimePointsSequenceError) as error:
+        NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",
             fell_asleep="17:00",

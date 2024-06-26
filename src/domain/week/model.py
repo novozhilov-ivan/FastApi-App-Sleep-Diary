@@ -6,4 +6,4 @@ from src.domain.note.base import NoteBase
 
 
 class WeekBase(BaseModel, abc.ABC):
-    notes: list[NoteBase]
+    notes: set[NoteBase]
