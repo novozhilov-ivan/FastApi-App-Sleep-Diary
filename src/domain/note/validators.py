@@ -27,7 +27,7 @@ class NoteFieldsValidators(NoteDurations, NoteBase):
                 got_up_after_midnight_other_time_points_within_one_day,
                 woke_up_and_got_up_after_midnight_other_time_points_within_one_day,
                 went_to_bed_within_one_day_other_time_point_after_midnight,
-            )
+            ),
         ):
             return self
         raise TimePointsSequenceError

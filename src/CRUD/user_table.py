@@ -8,7 +8,7 @@ from src.models import UserOrm
 def read_user_by_username(username: str) -> UserOrm | None:
     """Получает пользователя по username"""
     db_response = db.session.execute(
-        select(UserOrm).where(UserOrm.username == username)
+        select(UserOrm).where(UserOrm.username == username),
     )
     return db_response.scalar_one_or_none()
 

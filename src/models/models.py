@@ -39,7 +39,7 @@ class SleepNoteOrm(MetaInfoBaseModel):
         ForeignKey(
             column="user.id",
             ondelete="CASCADE",
-        )
+        ),
     )
 
 

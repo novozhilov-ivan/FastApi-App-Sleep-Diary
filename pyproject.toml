@@ -3,9 +3,11 @@ line-length = 85
 target-version = ["py310"]
 
 [tool.flake8]
+exclude = [".git", ".idea", "__pycache__", "venv",]
 max-line-length = 85
 count = true
 statistics = true
+max-complexity = 8
 per-file-ignores = ["__init__.py:F811"]
 
 [tool.mypy]
@@ -59,6 +61,11 @@ coverage = "^7.5.3"
 mypy = "^1.10.1"
 flake8 = "^7.1.0"
 flake8-pyproject = "^1.2.3"
+flake8-bugbear = "^24.4.26"
+flake8-builtins = "^2.5.0"
+pep8-naming = "^0.14.1"
+flake8-commas = "^4.0.0"
+flake8-variables-names = "^0.0.6"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

@@ -14,11 +14,14 @@ class SleepNoteGenerator:
     def __init__(
         self,
         note_id: int = 1,
-        date_of_note: float = datetime.now(timezone.utc).timestamp(),
+        date_of_note: float | None = None,
     ):
         self.note = self.create_note()
         self.note_id: int = note_id
-        self.date_of_note: float = date_of_note
+        if date_of_note is None:
+            self.date_of_note: float = datetime.now(timezone.utc).timestamp()
+        else:
+            self.date_of_note = date_of_note
 
     @staticmethod
     def _rand_time(
@@ -43,13 +46,16 @@ class SleepNoteGenerator:
     ) -> SleepNoteWithStats:
         rand_bedtime = self._rand_time()
         rand_asleep = self._rand_time(
-            start_h=rand_bedtime.hour, start_m=rand_bedtime.minute
+            start_h=rand_bedtime.hour,
+            start_m=rand_bedtime.minute,
         )
         rand_awake = self._rand_time(
-            start_h=rand_asleep.hour, start_m=rand_asleep.minute
+            start_h=rand_asleep.hour,
+            start_m=rand_asleep.minute,
         )
         rand_rise = self._rand_time(
-            start_h=rand_awake.hour, start_m=rand_awake.minute
+            start_h=rand_awake.hour,
+            start_m=rand_awake.minute,
         )
         rand_time_of_night_awakenings = self._rand_time(
             stop_h=rand_awake.hour - rand_asleep.hour,

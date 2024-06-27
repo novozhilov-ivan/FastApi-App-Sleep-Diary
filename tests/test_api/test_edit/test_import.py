@@ -37,7 +37,7 @@ class TestImportNotes:
                 io.BytesIO(str_bytes),
                 f"{file_name}.{file_extension}",
                 "text/csv",
-            )
+            ),
         }
 
     @pytest.mark.edit_import_201

@@ -60,7 +60,7 @@ class TestRefreshAccessToken:
             "message": response_invalid_token_type_401.format(
                 ACCESS_TOKEN_TYPE.__repr__(),
                 REFRESH_TOKEN_TYPE.__repr__(),
-            )
+            ),
         }
         response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)

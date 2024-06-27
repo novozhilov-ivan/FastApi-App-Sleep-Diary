@@ -36,13 +36,16 @@ class SleepDiaryGenerator:
             date_of_note = datetime.now(timezone.utc).timestamp()
         rand_went_to_bed = self._rand_time()
         rand_fell_asleep = self._rand_time(
-            start_h=rand_went_to_bed.hour, start_m=rand_went_to_bed.minute
+            start_h=rand_went_to_bed.hour,
+            start_m=rand_went_to_bed.minute,
         )
         rand_woke_up = self._rand_time(
-            start_h=rand_fell_asleep.hour, start_m=rand_fell_asleep.minute
+            start_h=rand_fell_asleep.hour,
+            start_m=rand_fell_asleep.minute,
         )
         rand_got_up = self._rand_time(
-            start_h=rand_woke_up.hour, start_m=rand_woke_up.minute
+            start_h=rand_woke_up.hour,
+            start_m=rand_woke_up.minute,
         )
         rand_no_sleep = self._rand_time(
             stop_h=rand_woke_up.hour - rand_fell_asleep.hour,

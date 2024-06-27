@@ -47,5 +47,5 @@ update_note_params: dict = {
                 },
             },
         },
-    }
+    },
 }

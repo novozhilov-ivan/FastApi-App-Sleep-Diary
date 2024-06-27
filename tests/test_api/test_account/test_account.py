@@ -61,7 +61,7 @@ class TestAccountFind:
             "message": response_invalid_token_type_401.format(
                 REFRESH_TOKEN_TYPE.__repr__(),
                 ACCESS_TOKEN_TYPE.__repr__(),
-            )
+            ),
         }
         response.assert_data(error_expectation)
 

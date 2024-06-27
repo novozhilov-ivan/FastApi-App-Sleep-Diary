@@ -43,7 +43,7 @@ class TestEditDeleteAllNotes:
             one_note = db.session.execute(
                 select(SleepNoteOrm).filter_by(
                     owner_id=exist_user.id,
-                )
+                ),
             ).scalar_one_or_none()
         note_is_exist = isinstance(one_note, SleepNoteOrm)
         assert note_is_exist is False, f"Now user notes is exist = [{note_is_exist}]"

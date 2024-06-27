@@ -14,7 +14,7 @@ def find_all_user_notes(user_id: int) -> Iterable[SleepNoteOrm]:
     db_response = db.session.execute(
         select(SleepNoteOrm)
         .where(SleepNoteOrm.owner_id == user_id)
-        .order_by(SleepNoteOrm.sleep_date)
+        .order_by(SleepNoteOrm.sleep_date),
     )
     return db_response.scalars().all()
 
@@ -27,7 +27,7 @@ def find_user_note_by_calendar_date(
     db_response = db.session.execute(
         select(SleepNoteOrm)
         .where(SleepNoteOrm.owner_id == user_id)
-        .where(SleepNoteOrm.sleep_date == sleep_date)
+        .where(SleepNoteOrm.sleep_date == sleep_date),
     )
     return db_response.scalar_one_or_none()
 
@@ -37,7 +37,7 @@ def find_user_note_by_note_id(id: int, user_id: int) -> SleepNoteOrm | None:
     db_response = db.session.execute(
         select(SleepNoteOrm)
         .where(SleepNoteOrm.owner_id == user_id)
-        .where(SleepNoteOrm.id == id)
+        .where(SleepNoteOrm.id == id),
     )
     return db_response.scalar_one_or_none()
 
@@ -46,7 +46,7 @@ def delete_user_note(id: int, user_id: int) -> None:
     db.session.execute(
         delete(SleepNoteOrm)
         .where(SleepNoteOrm.owner_id == user_id)
-        .where(SleepNoteOrm.id == id)
+        .where(SleepNoteOrm.id == id),
     )
     db.session.commit()
 
@@ -58,7 +58,7 @@ def update_user_note(
 ) -> SleepNoteOrm | None:
     try:
         db.session.execute(
-            update(SleepNoteOrm).where(SleepNoteOrm.id == id).values(note_values)
+            update(SleepNoteOrm).where(SleepNoteOrm.id == id).values(note_values),
         )
         db.session.commit()
     except SQLAlchemyError:
