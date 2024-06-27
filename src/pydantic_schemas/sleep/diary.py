@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
 from src.pydantic_schemas.sleep.weeks import (
@@ -18,7 +20,7 @@ class SleepDiaryDataModel(BaseModel):
 class SleepDiaryModel(SleepDiaryDataModel, SleepDiaryStatisticModel):
     """Дневника сна пользователя с записями и информацией о количестве записей"""
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryModelEmpty(SleepDiaryModel):
@@ -34,7 +36,7 @@ class SleepDiaryDataCompute(BaseModel):
 
 
 class SleepDiaryCompute(SleepDiaryDataCompute):
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def notes_count(self) -> int:
         if not self.weeks:
@@ -43,7 +45,7 @@ class SleepDiaryCompute(SleepDiaryDataCompute):
         days_count = sum(days_in_weeks)
         return days_count
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def weeks_count(self) -> int:
         return len(self.weeks)

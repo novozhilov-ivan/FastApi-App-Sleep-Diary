@@ -12,7 +12,7 @@ class ErrorResponse(BaseModel):
 
     message: list[ErrorDescription] | str
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def errors_count(self) -> int:
         if isinstance(self.message, list):

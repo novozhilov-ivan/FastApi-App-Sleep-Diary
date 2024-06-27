@@ -1,13 +1,13 @@
 import abc
 from pathlib import Path
-from typing import Literal
+from typing import ClassVar, Literal
 
 from pydantic import AnyUrl, Field, PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 BASE_DIR = Path(__file__).parent.parent
 
-app_settings_config_dict = SettingsConfigDict(
+app_settings_config_dict: SettingsConfigDict = SettingsConfigDict(
     extra="ignore",
     env_file=".env",
     case_sensitive=False,
@@ -21,7 +21,7 @@ echo_field = Field(
 
 
 class FlaskConfig(BaseSettings):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     DEBUG: bool = Field(
         default=False,
         title="Режим отладки",
@@ -44,13 +44,13 @@ class FlaskConfig(BaseSettings):
 
 
 class FlaskSQLAlchemyConfig(BaseSettings):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     SQLALCHEMY_DATABASE_URI: str
     SQLALCHEMY_ECHO: bool = echo_field
 
 
 class FlaskRestxConfig(BaseSettings):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     ERROR_INCLUDE_MESSAGE: bool = Field(
         default=False,
     )
@@ -61,7 +61,7 @@ class FlaskRestxConfig(BaseSettings):
 
 
 class AuthJWT(BaseSettings):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     private_key: str
     public_key: str
     algorithm: str = "RS256"
@@ -77,7 +77,7 @@ class DBConfigBase(BaseSettings, abc.ABC):
 
 
 class PostgresDBConfig(DBConfigBase):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     model_config["env_prefix"] = "db_"
 
     driver: str
@@ -88,9 +88,9 @@ class PostgresDBConfig(DBConfigBase):
     port: str
     name: str
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         examples=[
-            "postgresql+psycopg2://db_user:passwd@0.0.0.0:5432" "/db_name",
+            "postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name",
         ],
         return_type=PostgresDsn,
     )
@@ -109,7 +109,7 @@ class PostgresDBConfig(DBConfigBase):
 
 
 class SQLAlchemyConfig(BaseSettings):
-    model_config = app_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
     db_config: DBConfigBase
     echo: bool = echo_field
     pool_size: int = Field(
@@ -135,7 +135,7 @@ class SQLAlchemyConfig(BaseSettings):
         default=True,
     )
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         examples=[
             "postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name",
             "sqlite:///db.sqlite",
@@ -147,7 +147,7 @@ class SQLAlchemyConfig(BaseSettings):
     def database_uri(self) -> AnyUrl:
         return self.db_config.database_dsn
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         return_type=dict,
     )
     @property
@@ -158,7 +158,7 @@ class SQLAlchemyConfig(BaseSettings):
             "autoflush": self.autoflush,
         }
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         return_type=dict,
     )
     @property

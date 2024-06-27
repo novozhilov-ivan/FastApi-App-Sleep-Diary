@@ -1,4 +1,5 @@
 from datetime import date, time
+from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 
@@ -12,7 +13,7 @@ class SleepNote(BaseModel):
     woke_up: time
     got_up: time
     no_sleep: time
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class SleepNoteOptional(BaseModel):
@@ -24,7 +25,7 @@ class SleepNoteOptional(BaseModel):
     woke_up: time | None = Field(default=None)
     got_up: time | None = Field(default=None)
     no_sleep: time | None = Field(default=None)
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class ListWithSleepNotes(BaseModel):
@@ -50,7 +51,7 @@ class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):
     """Запись в дневнике сна со статистикой и идентификаторами пользователя и
     записи."""
 
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class SleepNoteWithMeta(SleepNote, SleepNoteMeta):
@@ -74,20 +75,20 @@ class SleepNoteWithStats(SleepNoteWithMeta):
             minutes = 0
         return time(hour=minutes // 60, minute=minutes % 60)
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def sleep_duration(self) -> time:
         minutes_of_sleep = self.time_diff(self.woke_up, self.fell_asleep)
         minutes_of_sleep -= self.time_to_minutes(self.no_sleep)
         return self.minutes_to_time(minutes_of_sleep)
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def time_spent_in_bed(self) -> time:
         minutes_in_bed = self.time_diff(self.got_up, self.went_to_bed)
         return self.minutes_to_time(minutes_in_bed)
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def sleep_efficiency(self) -> float:
         minutes_of_sleep = self.time_to_minutes(self.sleep_duration)

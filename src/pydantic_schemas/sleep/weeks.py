@@ -1,4 +1,5 @@
 from datetime import time
+from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 from typing_extensions import Annotated
@@ -18,7 +19,7 @@ class SleepDiaryWeeklyNotesModel(BaseModel):
 
 
 class SleepDiaryWeekModel(SleepDiaryWeeklyNotesModel, SleepDiaryWeeklyStatistic):
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class SleepDiaryWeeklyNotes(BaseModel):
@@ -29,7 +30,7 @@ class SleepDiaryWeeklyNotes(BaseModel):
 
 
 class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def days_count(self) -> int:
         return len(self.notes)
@@ -48,7 +49,7 @@ class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
             minute=average_minutes % 60,
         )
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def average_sleep_duration(self) -> time:
         return self.get_average_time(
@@ -56,7 +57,7 @@ class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
             field_name="sleep_duration",
         )
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def average_time_spent_in_bed(self) -> time:
         return self.get_average_time(
@@ -64,7 +65,7 @@ class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):
             field_name="time_spent_in_bed",
         )
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def average_sleep_efficiency(self) -> float:
         sleep_duration = (

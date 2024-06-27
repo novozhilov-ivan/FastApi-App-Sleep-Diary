@@ -1,3 +1,5 @@
+from typing import Generator
+
 import pytest
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
@@ -19,12 +21,12 @@ from tests.test_api.config import (
 
 
 # @pytest.fixture(scope="session")
-# def test_engine():
+# def test_engine() -> Generator[Engine, None, None]:
 #     yield create_engine(**test_sqlalchemy_config.engine_options)
 
 
 @pytest.fixture(scope="session")
-def app() -> Flask:
+def app() -> Generator[Flask, None, None]:
     app = create_app()
     app.config.from_object(obj=test_flask_config)
     app.config.from_object(obj=test_flask_sqlalchemy_config)
@@ -35,7 +37,7 @@ def app() -> Flask:
 
 
 @pytest.fixture(scope="session")
-def user_credentials() -> UserCredentials:
+def user_credentials() -> Generator[UserCredentials, None, None]:
     yield UserCredentials(
         username="test_username",
         password="test_password".encode(),
@@ -43,14 +45,16 @@ def user_credentials() -> UserCredentials:
 
 
 @pytest.fixture(scope="session")
-def user_hashed_password(user_credentials: UserCredentials) -> bytes:
+def user_hashed_password(
+    user_credentials: UserCredentials,
+) -> Generator[str, None, None]:
     yield hash_password(
         pwd_bytes=user_credentials.password,
     )
 
 
 @pytest.fixture(scope="session")
-def user(user_credentials: UserCredentials) -> UserValidate:
+def user(user_credentials: UserCredentials) -> Generator[UserValidate, None, None]:
     yield UserValidate(
         id=1,
         username=user_credentials.username,
@@ -59,7 +63,7 @@ def user(user_credentials: UserCredentials) -> UserValidate:
 
 
 @pytest.fixture(scope="session")
-def jwt_access(user: UserValidate) -> Authorization:
+def jwt_access(user: UserValidate) -> Generator[Authorization, None, None]:
     yield Authorization(
         auth_type=bearer,
         token=create_access_jwt(user),
@@ -67,7 +71,7 @@ def jwt_access(user: UserValidate) -> Authorization:
 
 
 @pytest.fixture(scope="session")
-def jwt_refresh(user: UserValidate) -> Authorization:
+def jwt_refresh(user: UserValidate) -> Generator[Authorization, None, None]:
     yield Authorization(
         auth_type=bearer,
         token=create_refresh_jwt(user),
@@ -75,14 +79,14 @@ def jwt_refresh(user: UserValidate) -> Authorization:
 
 
 @pytest.fixture
-def client(app: Flask) -> FlaskClient:
+def client(app: Flask) -> Generator[FlaskClient, None, None]:
     with app.test_request_context(), app.app_context():
         yield app.test_client()
 
 
 # @pytest.fixture(autouse=True)
 # def create_db(
-#     test_engine,
+#     test_engine: Engine,
 # ) -> None:
 #     Base.metadata.drop_all(bind=test_engine)
 #     Base.metadata.create_all(bind=test_engine)
@@ -100,9 +104,9 @@ def create_db(
 @pytest.fixture
 def exist_user(
     user: UserValidate,
-    user_hashed_password: bytes,
+    user_hashed_password: str,
     client: FlaskClient,
-) -> UserOrm:
+) -> Generator[UserOrm, None, None]:
     new_user = UserOrm(
         id=user.id,
         username=user.username,

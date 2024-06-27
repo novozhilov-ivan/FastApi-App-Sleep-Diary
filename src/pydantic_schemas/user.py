@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Annotated
+from typing import Annotated, ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field
 
@@ -35,16 +35,15 @@ class UserCredentials(BaseModel):
 
     username: username_field
     password: user_password_field
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
 class User(BaseModel):
     id: user_id_field
-    model_config = ConfigDict(from_attributes=True)
+    model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
-class UserValidate(User, UserCredentials):
-    pass
+class UserValidate(User, UserCredentials): ...
 
 
 class UserInfo(User):

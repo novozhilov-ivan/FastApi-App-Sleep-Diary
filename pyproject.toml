@@ -2,6 +2,11 @@
 line-length = 85
 target-version = ["py310"]
 
+[tool.mypy]
+disable_error_code = ["import-untyped"]
+# type: ignore[misc]
+# type: ignore[prop-decorator] еще не поддерживается
+
 [tool.poetry]
 name = "sleep-diary-app"
 version = "0.1.0"
@@ -10,7 +15,6 @@ authors = ["ivan"]
 license = "MIT License"
 readme = "README.md"
 package-mode = false
-
 
 [tool.poetry.dependencies]
 python = "^3.10"
@@ -25,7 +29,6 @@ more-itertools = "^10.3.0"
 jsonref = "^1.1.0"
 psycopg2-binary = "^2.9.9"
 
-
 [tool.poetry.group.dev.dependencies]
 pytest-html = "^4.1.1"
 faker = "^25.9.1"
@@ -37,7 +40,7 @@ pytest-metadata = "^3.1.1"
 pytest = "^8.2.2"
 black = "^24.4.2"
 coverage = "^7.5.3"
-mypy = "^1.10.0"
+mypy = "^1.10.1"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

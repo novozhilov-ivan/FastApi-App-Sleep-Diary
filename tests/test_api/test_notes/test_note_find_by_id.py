@@ -2,6 +2,7 @@ import pytest
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
+from werkzeug.test import TestResponse
 
 from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
 from src.routes.notes import note_find_by_id_endpoint

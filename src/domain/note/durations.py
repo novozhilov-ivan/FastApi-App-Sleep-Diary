@@ -7,7 +7,7 @@ from src.domain.note.base import NoteBase
 
 
 class NoteDurations(NoteBase):
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def _sleep_duration_without_the_no_sleep(self: Self) -> timedelta:
         sleep_duration = timedelta(
@@ -18,7 +18,7 @@ class NoteDurations(NoteBase):
             seconds=sleep_duration.seconds,
         )
 
-    @computed_field
+    @computed_field  # type: ignore[misc]
     @property
     def _no_sleep_duration(self: Self) -> timedelta:
         return timedelta(

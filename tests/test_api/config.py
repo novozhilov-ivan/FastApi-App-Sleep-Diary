@@ -1,3 +1,5 @@
+from typing import ClassVar
+
 from pydantic import PostgresDsn, computed_field
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
@@ -15,17 +17,17 @@ test_settings_config_dict = SettingsConfigDict(
 
 
 class TestFlaskConfig(BaseSettings):
-    model_config = test_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = test_settings_config_dict
     DEBUG: bool = True
     TESTING: bool
 
 
 class TestFlaskSQLAlchemyConfig(FlaskSQLAlchemyConfig):
-    model_config = test_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = test_settings_config_dict
 
 
 class TestPostgresDBConfig(DBConfigBase):
-    model_config = test_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = test_settings_config_dict
     model_config["env_prefix"] = "test_db_"
     driver: str
     driver_extension: str
@@ -35,7 +37,7 @@ class TestPostgresDBConfig(DBConfigBase):
     port: str
     name: str
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         return_type=PostgresDsn,
     )
     @property
@@ -53,7 +55,7 @@ class TestPostgresDBConfig(DBConfigBase):
 
 
 class TestSQLAlchemyConfig(SQLAlchemyConfig):
-    model_config = test_settings_config_dict
+    model_config: ClassVar[SettingsConfigDict] = test_settings_config_dict
 
 
 db_config = TestPostgresDBConfig()

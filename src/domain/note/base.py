@@ -1,5 +1,6 @@
 import abc
 from datetime import date, time, timedelta
+from typing import ClassVar
 
 from pydantic import BaseModel, ConfigDict, Field, computed_field
 from typing_extensions import Self
@@ -38,7 +39,7 @@ class NoteBase(BaseModel, abc.ABC):
         examples=["00:00", "00:20"],
     )
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         title="Длительность сна без учета времени отсутствия сна",
         return_type=timedelta,
     )
@@ -46,7 +47,7 @@ class NoteBase(BaseModel, abc.ABC):
     @abc.abstractmethod
     def _sleep_duration_without_the_no_sleep(self: Self) -> timedelta: ...
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         title="Длительность отсутствия сна (секунд)",
         return_type=timedelta,
     )
@@ -54,12 +55,14 @@ class NoteBase(BaseModel, abc.ABC):
     @abc.abstractmethod
     def _no_sleep_duration(self: Self) -> timedelta: ...
 
-    model_config: ConfigDict = ConfigDict(
+    model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True,
         extra="forbid",
     )
 
-    def __eq__(self, other: Self) -> bool:
+    def __eq__(self, other: object) -> bool:
+        if not isinstance(other, NoteBase):
+            return NotImplemented
         return self.bedtime_date == other.bedtime_date
 
     def __hash__(self: Self) -> int:
