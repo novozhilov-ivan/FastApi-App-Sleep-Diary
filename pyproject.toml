@@ -6,7 +6,11 @@ target-version = ["py310"]
 plugins = [
   "pydantic.mypy",
 ]
-disable_error_code = ["import-untyped"]
+#disable_error_code = [
+#    "import-untyped",
+#]
+ignore_missing_imports = true
+
 check_untyped_defs = true
 #disallow_untyped_defs = true  # Проверяет все не типизированные переменные в def's
 # type: ignore[misc]

@@ -12,3 +12,12 @@ from src.routes.edit.export_file import ns_edit
 from src.routes.edit.import_file import ns_edit
 from src.routes.main import ns_main
 from src.routes.notes import ns_notes
+
+__all__ = [
+    "ns_account",
+    "ns_notes",
+    "ns_main",
+    "ns_diary",
+    "ns_edit",
+    "ns_auth",
+]
