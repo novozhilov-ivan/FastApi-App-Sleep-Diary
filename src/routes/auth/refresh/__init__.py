@@ -8,12 +8,12 @@ from src.utils.jwt import (
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
-response_model_200 = response_schema(
+response_model_200: dict = response_schema(
     code=HTTP.OK_200,
     ns=ns_auth,
     model=AccessTokenInfo,
 )
-response_model_401 = response_schema(
+response_model_401: dict = response_schema(
     code=HTTP.UNAUTHORIZED_401,
     ns=ns_auth,
     description=response_invalid_token_type_401.format(

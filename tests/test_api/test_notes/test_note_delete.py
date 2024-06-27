@@ -28,14 +28,14 @@ class TestNoteDelete:
     ):
         note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
-        response = client.delete(
+        raw_response = client.delete(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
         response.assert_data(None)
 
@@ -49,13 +49,13 @@ class TestNoteDelete:
         note: SleepNoteWithStats
         *_, last_note = saved_diary.notes
         non_exist_note_id: int = 666 + last_note.id
-        response = client.delete(
+        raw_response = client.delete(
             path=url_for(
                 endpoint=note_endpoint,
                 id=non_exist_note_id,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
         response.assert_data(None)

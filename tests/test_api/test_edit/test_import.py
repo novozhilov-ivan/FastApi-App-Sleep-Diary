@@ -57,7 +57,7 @@ class TestImportNotes:
         str_file = FileDataConverter(
             data=generated_diary.notes,
         ).to_csv_str()
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,
             ),
@@ -67,7 +67,7 @@ class TestImportNotes:
                 str_file=str_file,
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.CREATED_201)
         response.assert_data(response_created_201)
 
@@ -77,13 +77,13 @@ class TestImportNotes:
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.BAD_REQUEST_400)
         response.assert_data(response_bad_request_400)
 
@@ -101,7 +101,7 @@ class TestImportNotes:
         generated_diary: SleepDiaryGenerator,
     ):
         str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,
             ),
@@ -111,7 +111,7 @@ class TestImportNotes:
                 str_file=str_file,
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.CONFLICT_409)
         response.assert_data(response_conflict_409)
 
@@ -126,7 +126,7 @@ class TestImportNotes:
     ):
         diary_generator = SleepDiaryGenerator(owner_id=exist_user.id)
         str_file = FileDataConverter(data=diary_generator.notes).to_csv_str()
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,
             ),
@@ -137,6 +137,6 @@ class TestImportNotes:
                 file_extension=extension,
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNSUPPORTED_MEDIA_TYPE_415)
         response.assert_data(response_unsupported_media_type_415)

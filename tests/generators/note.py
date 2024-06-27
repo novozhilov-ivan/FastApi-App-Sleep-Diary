@@ -76,7 +76,7 @@ class SleepNoteGenerator:
             errors_count = random.randint(1, 5)
         wrong_note = self.create_note(model=model).model_dump(mode=mode)
 
-        keys_for_random_value = set()
+        keys_for_random_value: set = set()
         all_keys = list(wrong_note.keys())
         if len(all_keys) == errors_count:
             keys_for_random_value.add(*all_keys)

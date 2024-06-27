@@ -35,14 +35,14 @@ class TestEditExportNotes:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=export_notes_endpoint,
             ),
             auth=jwt_access,
         )
         converter: FileDataConverter = FileDataConverter(data=saved_diary.notes)
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
         response.assert_data(converter.to_csv_str())
@@ -59,13 +59,13 @@ class TestEditExportNotes:
             auth_type=bearer,
             token=create_access_jwt(user),
         )
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=export_notes_endpoint,
             ),
             auth=jwt_with_non_exist_user_id,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(response_not_found_404)
 
@@ -75,12 +75,12 @@ class TestEditExportNotes:
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=export_notes_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(response_not_found_404)

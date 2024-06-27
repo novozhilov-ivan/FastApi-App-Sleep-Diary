@@ -31,7 +31,9 @@ def app() -> Generator[Flask, None, None]:
     app.config.from_object(obj=test_flask_config)
     app.config.from_object(obj=test_flask_sqlalchemy_config)
     assert app.config.get("TESTING")
-    *_, db_name_in_config = app.config.get("SQLALCHEMY_DATABASE_URI").split("/")
+    db_uri = app.config.get("SQLALCHEMY_DATABASE_URI")
+    assert db_uri
+    *_, db_name_in_config = db_uri.split("/")
     assert db_name_in_config == "test_db"
     yield app
 

@@ -30,14 +30,14 @@ class TestSignIn:
         user_credentials: UserCredentials,
     ):
         user = UserCredentials.model_validate(user_credentials)
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=signin_endpoint,
             ),
             data=user.model_dump(),
             content_type=self.content_type,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(TokenInfo)
         token_info = TokenInfo.model_validate(response.response_json)
@@ -66,14 +66,14 @@ class TestSignIn:
     ):
         user_credentials = user_credentials.model_dump()
         user_credentials.update(wrong_credentials)
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=signin_endpoint,
             ),
             data=user_credentials,
             content_type=self.content_type,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
         error_expectation = {
             "message": response_invalid_username_or_password_401,

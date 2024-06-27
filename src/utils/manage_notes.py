@@ -2,6 +2,7 @@ from typing import Iterable, Type
 
 from more_itertools import batched
 from pydantic import BaseModel, TypeAdapter
+from typing_extensions import Self
 from werkzeug.datastructures import FileStorage
 
 from src.models import SleepNoteOrm
@@ -20,25 +21,28 @@ def slice_on_week(days: list[SleepNoteWithStats]) -> list[SleepDiaryWeekCompute]
 
 def convert_db_notes_to_pydantic_model_notes(
     db_notes: Iterable[SleepNoteOrm],
-    model: Type[SleepNoteWithStats | SleepNote] = SleepNoteWithStats,
+    model: SleepNoteWithStats | SleepNote = SleepNoteWithStats,
 ) -> list[SleepNoteWithStats | SleepNote]:
     type_adapter = TypeAdapter(list[model])
-
-    return type_adapter.validate_python(db_notes, from_attributes=True)
+    converted_notes = type_adapter.validate_python(
+        db_notes,
+        from_attributes=True,
+    )
+    return converted_notes
 
 
 class FileDataConverter:
     def __init__(
         self,
-        data: list[BaseModel] | None = None,
+        data: Iterable[SleepNoteWithStats] | None = None,
         file: FileStorage | None = None,
         model: SleepNote | Type[BaseModel] = SleepNote,
     ):
-        self.data: list | None = data
+        self.data: Iterable[SleepNoteWithStats] | None = data
         self.model: SleepNote | Type[BaseModel] = model
         self._file: FileStorage | None = file
 
-    def to_csv_str(self) -> str:
+    def to_csv_str(self: Self) -> str:
         rows_delimiter = "\n"
         columns_delimiter = ","
         titles = (field.title for field in self.model.model_fields.values())

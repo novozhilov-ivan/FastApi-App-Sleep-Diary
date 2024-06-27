@@ -22,7 +22,7 @@ class AuthRefreshJWTRoute(Resource):
     @ns_auth.doc(description=__doc__)
     def post(self) -> tuple:
         current_user_id: int = get_current_auth_user_id_for_refresh()
-        db_user: UserOrm = find_user_by_id(current_user_id)
+        db_user: UserOrm | None = find_user_by_id(current_user_id)
         user: UserValidate = UserValidate.model_validate(db_user)
         access_token: str = create_access_jwt(user)
         jwt_token: AccessTokenInfo = AccessTokenInfo(access_token=access_token)

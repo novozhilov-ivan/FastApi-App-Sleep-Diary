@@ -26,13 +26,13 @@ class TestDiary:
         jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepDiaryModel)
         response.assert_data(saved_diary.diary)
@@ -43,13 +43,13 @@ class TestDiary:
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.validate(SleepDiaryModelEmpty)
         response.assert_data(SleepDiaryModelEmpty())
@@ -61,15 +61,15 @@ class TestDiary:
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=diary_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         with pytest.raises(ValidationError) as exc_info:
-            User(**params)
+            User(**params)  # type: ignore # noqa
         errors = ErrorResponse(
             message=exc_info.value.errors(),
         )

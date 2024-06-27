@@ -29,22 +29,21 @@ class TestEditDeleteAllNotes:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        response = client.delete(
+        raw_response = client.delete(
             path=url_for(
                 endpoint=delete_notes_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NO_CONTENT_204)
         response.assert_data(None)
 
         with client.application.app_context():
-            notes_is_exist = db.session.execute(
+            one_note = db.session.execute(
                 select(SleepNoteOrm).filter_by(
                     owner_id=exist_user.id,
                 )
-            ).first()
-
-        notes_is_exist = bool(notes_is_exist)
-        assert notes_is_exist is False, f"User notes exist now is [{notes_is_exist}]"
+            ).scalar_one_or_none()
+        note_is_exist = isinstance(one_note, SleepNoteOrm)
+        assert note_is_exist is False, f"Now user notes is exist = [{note_is_exist}]"

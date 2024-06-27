@@ -28,13 +28,13 @@ class TestRefreshAccessToken:
         jwt_refresh: Authorization,
         exist_user: UserOrm,
     ):
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=refresh_endpoint,
             ),
             auth=jwt_refresh,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(AccessTokenInfo)
         token_info = AccessTokenInfo.model_validate(response.response_json)
@@ -50,7 +50,7 @@ class TestRefreshAccessToken:
         exist_user: UserOrm,
         jwt_access: Authorization,
     ):
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=refresh_endpoint,
             ),
@@ -62,6 +62,6 @@ class TestRefreshAccessToken:
                 REFRESH_TOKEN_TYPE.__repr__(),
             )
         }
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
         response.assert_data(error_expectation)

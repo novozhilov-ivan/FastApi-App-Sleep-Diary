@@ -37,14 +37,14 @@ class TestNoteFindByDate:
     ):
         note: SleepNoteWithStats
         note, *_ = saved_diary.notes
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=note_find_by_date_endpoint,
                 sleep_date=note.sleep_date,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
 
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
@@ -66,14 +66,14 @@ class TestNoteFindByDate:
     ):
         non_exist_note_date = date(day=22, month=12, year=2020)
         non_exist_note = SleepNoteOptional(sleep_date=non_exist_note_date)
-        response = client.get(
+        raw_response = client.get(
             url_for(
                 endpoint=note_find_by_date_endpoint,
                 sleep_date=non_exist_note.sleep_date,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         expectation = {"message": response_not_found_404}
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(expectation)

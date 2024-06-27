@@ -31,9 +31,9 @@ class NoteFindByDate(Resource, UserActions):
         params=path_params,
     )
     def get(self, sleep_date: date):
-        date_of_note = SleepNoteOptional(sleep_date=sleep_date)
+        note = SleepNoteOptional(sleep_date=sleep_date)
         db_note: SleepNoteOrm | None = find_user_note_by_calendar_date(
-            sleep_date=date_of_note.sleep_date,
+            sleep_date=note.sleep_date,
             user_id=self.current_user_id,
         )
         if db_note is None:
@@ -41,5 +41,5 @@ class NoteFindByDate(Resource, UserActions):
                 code=HTTP.NOT_FOUND_404,
                 message=response_not_found_404,
             )
-        note = SleepNote.model_validate(db_note)
-        return note.model_dump(mode="json"), HTTP.OK_200
+        response_note = SleepNote.model_validate(db_note)
+        return response_note.model_dump(mode="json"), HTTP.OK_200

@@ -30,16 +30,16 @@ class TestNoteFindById:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        note, *_ = saved_diary.notes
         note: SleepNoteWithStats
-        response = client.get(
+        note, *_ = saved_diary.notes
+        raw_response = client.get(
             path=url_for(
                 endpoint=note_find_by_id_endpoint,
                 id=note.id,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         expectation = SleepNote(**note.model_dump())
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
@@ -52,14 +52,14 @@ class TestNoteFindById:
         jwt_access: Authorization,
     ):
         non_exist_note_id = 666
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=note_find_by_id_endpoint,
                 id=non_exist_note_id,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         expectation = {"message": response_not_found_404}
         response.assert_status_code(HTTP.NOT_FOUND_404)
         response.assert_data(expectation)

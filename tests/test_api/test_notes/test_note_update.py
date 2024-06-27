@@ -48,7 +48,7 @@ class TestNoteUpdate:
         exist_note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
         updated_note = SleepNoteOptional.model_validate(exist_note)
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
@@ -58,7 +58,7 @@ class TestNoteUpdate:
                 mode="json",
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
         expectation = SleepNote.model_validate(updated_note)
@@ -76,7 +76,7 @@ class TestNoteUpdate:
         exist_note_dict = exist_note.model_dump()
         exist_note_dict.update(self.new_note_dict)
         updated_note = SleepNoteOptional.model_validate(exist_note_dict)
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
@@ -86,7 +86,7 @@ class TestNoteUpdate:
                 mode="json",
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
         expectation = SleepNote.model_validate(exist_note_dict)
@@ -109,7 +109,7 @@ class TestNoteUpdate:
         exist_note_dict = exist_note.model_dump()
         exist_note_dict.update(self.new_note_dict)
         updated_note = SleepNoteOptional.model_validate(exist_note_dict)
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
@@ -120,7 +120,7 @@ class TestNoteUpdate:
                 exclude=exclude_fields,
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(SleepNote)
         exclude_field_with_value = exist_note.model_dump(include=exclude_fields)
@@ -139,7 +139,7 @@ class TestNoteUpdate:
         exist_note, *_ = saved_diary.notes
         exist_note.id = 666
         updated_note = SleepNoteOptional.model_validate(exist_note)
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
@@ -149,7 +149,7 @@ class TestNoteUpdate:
                 mode="json",
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         expectation = {"message": response_not_found_404}
         response.assert_data(expectation)
@@ -178,7 +178,7 @@ class TestNoteUpdate:
         exist_note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
         updated_note = SleepNoteOptional.model_validate(exist_note)
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=wrong_note_id,
@@ -191,9 +191,9 @@ class TestNoteUpdate:
         with pytest.raises(ValidationError) as exc_info:
             SleepNoteMeta(
                 owner_id=exist_user.id,
-                **response.request.args,
+                **raw_response.request.args,
             )
-        response = Response(response)
+        response = Response(raw_response)
 
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(ErrorResponse)
@@ -225,7 +225,7 @@ class TestNoteUpdate:
         for exclude_field in exclude_fields:
             updated_note_with_random_wrong_values.pop(exclude_field)
 
-        response = client.patch(
+        raw_response = client.patch(
             path=url_for(
                 endpoint=note_endpoint,
                 id=exist_note.id,
@@ -233,7 +233,7 @@ class TestNoteUpdate:
             auth=jwt_access,
             json=updated_note_with_random_wrong_values,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
 
         exclude_field_with_value = exist_note.model_dump(include=exclude_fields)

@@ -30,13 +30,13 @@ class TestAccountFind:
         exist_user: UserOrm,
         jwt_access: Authorization,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=account_endpoint,
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(UserInfo)
         expectation = UserInfo.model_validate(exist_user)
@@ -49,13 +49,13 @@ class TestAccountFind:
         exist_user: UserOrm,
         jwt_refresh: Authorization,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=account_endpoint,
             ),
             auth=jwt_refresh,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
         error_expectation = {
             "message": response_invalid_token_type_401.format(
@@ -71,12 +71,12 @@ class TestAccountFind:
         client: FlaskClient,
         exist_user: UserOrm,
     ):
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=account_endpoint,
             ),
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
         error_expectation = {"message": response_invalid_authorization_token_401}
         response.assert_data(error_expectation)
@@ -93,13 +93,13 @@ class TestAccountFind:
             auth_type=bearer,
             token=create_access_jwt(user),
         )
-        response = client.get(
+        raw_response = client.get(
             path=url_for(
                 endpoint=account_endpoint,
             ),
             auth=jwt_with_wrong_user_id,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.NOT_FOUND_404)
         error_expectation = {"message": response_not_found_404}
         response.assert_data(error_expectation)

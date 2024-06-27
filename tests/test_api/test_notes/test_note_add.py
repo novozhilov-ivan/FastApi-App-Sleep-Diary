@@ -36,7 +36,7 @@ class TestNoteAdd:
         new_note_with_stat, *_ = notes_generator.notes
         new_note = SleepNote.model_validate(new_note_with_stat)
 
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=note_endpoint,
             ),
@@ -45,7 +45,7 @@ class TestNoteAdd:
             ),
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
         response.assert_status_code(HTTP.CREATED_201)
         response.validate(SleepNoteModel)
         response.assert_data(new_note_with_stat)
@@ -61,14 +61,14 @@ class TestNoteAdd:
         note_with_wrong_values = notes_generator.wrong_note(
             mode="json",
         )
-        response = client.post(
+        raw_response = client.post(
             path=url_for(
                 endpoint=note_endpoint,
             ),
             json=note_with_wrong_values,
             auth=jwt_access,
         )
-        response = Response(response)
+        response = Response(raw_response)
 
         with pytest.raises(ValidationError) as exc_info:
             SleepNote.model_validate(note_with_wrong_values)

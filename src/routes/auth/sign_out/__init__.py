@@ -3,7 +3,7 @@ from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
 response_ok_200 = "User is sign out"
-response_model_200 = response_schema(
+response_model_200: dict = response_schema(
     code=HTTP.OK_200,
     ns=ns_auth,
     description=response_ok_200,

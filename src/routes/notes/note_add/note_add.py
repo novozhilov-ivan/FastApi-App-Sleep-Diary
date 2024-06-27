@@ -1,3 +1,5 @@
+from typing import Any
+
 from flask import request
 
 from src.CRUD.sleep_note_table import create_one_note
@@ -22,7 +24,8 @@ class AddNote(UserActions):
     @ns_notes.response(**response_model_400)
     @ns_notes.response(**response_model_422)
     def post(self):
-        new_note = SleepNote(**request.json)
+        payload: Any | dict = request.json
+        new_note = SleepNote(**payload)
         new_db_note = SleepNoteOrm(
             owner_id=self.current_user_id,
             **new_note.model_dump(),

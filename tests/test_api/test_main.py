@@ -12,8 +12,8 @@ from tests.test_api.response import Response
 class TestMainPage:
 
     def test_main_page_200(self, client: FlaskClient):
-        response = client.get(url_for(main_endpoint))
-        response = Response(response)
+        raw_response = client.get(url_for(main_endpoint))
+        response = Response(raw_response)
         response.assert_status_code(HTTP.OK_200)
         response.validate(MainPageModel)
         response.assert_data(MainPageModel())

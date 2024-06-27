@@ -1,4 +1,4 @@
-update_note_params = {
+update_note_params: dict = {
     "updated_note": {
         "in": "body",
         "name": "updated_note",

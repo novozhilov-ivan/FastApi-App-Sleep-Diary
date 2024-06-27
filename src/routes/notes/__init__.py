@@ -6,7 +6,7 @@ from src.utils.jwt import validate_auth_token
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
-ns_notes = Namespace(
+ns_notes: Namespace = Namespace(
     name="Sleep diary notes",
     description="Записи из дневника сна",
     path="/note",
@@ -16,12 +16,12 @@ ns_notes = Namespace(
 )
 ns_notes.errorhandler(handler_unprocessable_entity_422)
 
-response_model_400 = response_schema(
+response_model_400: dict = response_schema(
     code=HTTP.BAD_REQUEST_400,
     ns=ns_notes,
     model=ErrorResponse,
 )
-response_model_422 = response_schema(
+response_model_422: dict = response_schema(
     code=HTTP.UNPROCESSABLE_ENTITY_422,
     ns=ns_notes,
     model=ErrorResponse,

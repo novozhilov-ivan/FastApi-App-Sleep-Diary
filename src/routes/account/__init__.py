@@ -8,7 +8,7 @@ from src.utils.jwt import (
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
-ns_account = Namespace(
+ns_account: Namespace = Namespace(
     name="User account info",
     description="Информация об аккаунте пользователя",
     path="/account",
@@ -17,7 +17,7 @@ ns_account = Namespace(
     ],
 )
 
-response_model_401 = response_schema(
+response_model_401: dict = response_schema(
     ns=ns_account,
     description=response_invalid_authorization_token_401,
     code=HTTP.UNAUTHORIZED_401,

@@ -1,3 +1,5 @@
+from typing import Any
+
 from flask import request
 from flask_restx import abort
 
@@ -41,7 +43,8 @@ class UpdateNote(UserActions):
             owner_id=self.current_user_id,
             **request.args,
         )
-        note = SleepNoteOptional(**request.json)
+        payload: Any | dict = request.json
+        note = SleepNoteOptional(**payload)
 
         updated_db_note: SleepNoteOrm | None = update_user_note(
             id=note_meta.id,
@@ -53,5 +56,5 @@ class UpdateNote(UserActions):
                 code=HTTP.NOT_FOUND_404,
                 message=response_not_found_404,
             )
-        note = SleepNote.model_validate(updated_db_note)
-        return note.model_dump(mode="json"), HTTP.OK_200
+        response_note = SleepNote.model_validate(updated_db_note)
+        return response_note.model_dump(mode="json"), HTTP.OK_200
