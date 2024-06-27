@@ -1,7 +1,13 @@
 from typing import ClassVar
 
-from pydantic import PostgresDsn, computed_field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pydantic import (
+    PostgresDsn,
+    computed_field,
+)
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+)
 
 from src.config import (
     DBConfigBase,
@@ -37,9 +43,7 @@ class TestPostgresDBConfig(DBConfigBase):
     port: str
     name: str
 
-    @computed_field(  # type: ignore[misc]
-        return_type=PostgresDsn,
-    )
+    @computed_field(return_type=PostgresDsn)  # type: ignore[misc]
     @property
     def database_dsn(self) -> PostgresDsn:
         return "{}{}{}://{}:{}@{}:{}/{}".format(
@@ -59,9 +63,7 @@ class TestSQLAlchemyConfig(SQLAlchemyConfig):
 
 
 db_config = TestPostgresDBConfig()
-test_sqlalchemy_config = TestSQLAlchemyConfig(
-    db_config=db_config,
-)
+test_sqlalchemy_config = TestSQLAlchemyConfig(db_config=db_config)
 test_flask_sqlalchemy_config = TestFlaskSQLAlchemyConfig(
     SQLALCHEMY_DATABASE_URI=test_sqlalchemy_config.database_uri,
     SQLALCHEMY_ECHO=test_sqlalchemy_config.echo,

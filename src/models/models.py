@@ -9,9 +9,7 @@ from src.extension import Base
 class MetaInfoBaseModel(Base):
     __abstract__ = True
 
-    id: Mapped[int] = mapped_column(
-        primary_key=True,
-    )
+    id: Mapped[int] = mapped_column(primary_key=True)
     created_at: Mapped[datetime] = mapped_column(
         default=lambda: datetime.utcnow(),
     )
@@ -41,13 +39,11 @@ class SleepNoteOrm(MetaInfoBaseModel):
         ForeignKey(
             column="user.id",
             ondelete="CASCADE",
-        ),
+        )
     )
 
 
 class UserOrm(MetaInfoBaseModel):
     __tablename__ = "user"
-    username: Mapped[str] = mapped_column(
-        unique=True,
-    )
+    username: Mapped[str] = mapped_column(unique=True)
     password: Mapped[str]

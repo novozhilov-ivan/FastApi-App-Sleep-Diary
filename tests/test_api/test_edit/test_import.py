@@ -19,9 +19,7 @@ from tests.generators.diary import SleepDiaryGenerator
 from tests.test_api.response import Response
 
 
-@pytest.mark.xfail(
-    reason="DDD Рефакторинг. Убрал Field(title=...) из " "SleepNote.",
-)
+@pytest.mark.xfail(reason="DDD Рефакторинг. Убрал Field(title=...) из " "SleepNote.")
 @pytest.mark.edit_diary
 @pytest.mark.edit_import
 class TestImportNotes:
@@ -100,7 +98,9 @@ class TestImportNotes:
         saved_diary: SleepDiaryGenerator,
         generated_diary: SleepDiaryGenerator,
     ):
-        str_file = FileDataConverter(data=saved_diary.notes).to_csv_str()
+        str_file = FileDataConverter(
+            data=saved_diary.notes,
+        ).to_csv_str()
         raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,
@@ -125,7 +125,9 @@ class TestImportNotes:
         jwt_access: Authorization,
     ):
         diary_generator = SleepDiaryGenerator(owner_id=exist_user.id)
-        str_file = FileDataConverter(data=diary_generator.notes).to_csv_str()
+        str_file = FileDataConverter(
+            data=diary_generator.notes,
+        ).to_csv_str()
         raw_response = client.post(
             path=url_for(
                 endpoint=import_notes_endpoint,

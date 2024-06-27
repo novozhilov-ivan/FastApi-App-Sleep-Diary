@@ -47,7 +47,7 @@ class FileDataConverter:
         columns_delimiter = ","
         titles = (field.title for field in self.model.model_fields.values())
         data = (note.model_dump() for note in self.data)
-        data = (self.model(**note) for note in data)
+        data = (self.model.model_validate(note) for note in data)
         data = (note.model_dump(mode="json") for note in data)
         data = (note.values() for note in data)
         data = (columns_delimiter.join(row) for row in data)

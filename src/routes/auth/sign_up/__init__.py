@@ -18,7 +18,10 @@ response_model_409: dict = response_schema(
     ns=ns_auth,
     description=response_conflict_409,
 )
-signup_params: RequestParser = create_payload_from_model("form", UserCredentials)
+signup_params: RequestParser = create_payload_from_model(
+    location="form",
+    model=UserCredentials,
+)
 
 from src.routes.auth.sign_up.sign_up import SignUpUserRoute  # noqa
 

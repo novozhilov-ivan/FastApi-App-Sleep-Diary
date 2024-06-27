@@ -26,7 +26,7 @@ class TestNoteDelete:
         jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
-        note: SleepNoteWithStats
+        exist_note: SleepNoteWithStats
         exist_note, *_ = saved_diary.notes
         raw_response = client.delete(
             path=url_for(
@@ -46,7 +46,7 @@ class TestNoteDelete:
         jwt_access: Authorization,
         saved_diary: SleepDiaryGenerator,
     ):
-        note: SleepNoteWithStats
+        last_note: SleepNoteWithStats
         *_, last_note = saved_diary.notes
         non_exist_note_id: int = 666 + last_note.id
         raw_response = client.delete(

@@ -27,17 +27,21 @@ def encode_jwt(
     algorithm: str = auth_config.algorithm,
     expire_minutes: int = auth_config.access_token_expire_minutes,
     expire_timedelta: timedelta | None = None,
-):
+) -> str:
     to_encode = payload.copy()
     utc_now = datetime.utcnow()
     if expire_timedelta:
         expire = utc_now + expire_timedelta
     else:
         expire = utc_now + timedelta(minutes=expire_minutes)
-    to_encode.update(exp=expire, iat=utc_now, jti=str(uuid.uuid4()))
+    to_encode.update(
+        exp=expire,
+        iat=utc_now,
+        jti=str(uuid.uuid4()),
+    )
     return jwt.encode(
-        to_encode,
-        private_key,
+        payload=to_encode,
+        key=private_key,
         algorithm=algorithm,
     )
 
@@ -49,8 +53,8 @@ def decode_jwt(
 ) -> dict:
     try:
         return jwt.decode(
-            token,
-            public_key,
+            jwt=token,
+            key=public_key,
             algorithms=[algorithm],
         )
     except InvalidTokenError:

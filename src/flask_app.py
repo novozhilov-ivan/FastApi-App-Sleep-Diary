@@ -1,10 +1,7 @@
 from flask import Flask
 
-from src.config import (
-    flask_config,
-    flask_restx_config,
-    flask_sqlalchemy_config,
-)
+from src import routes
+from src.config import flask_config, flask_restx_config, flask_sqlalchemy_config
 from src.extension import Base, api, db, engine
 
 
@@ -42,8 +39,6 @@ def create_app() -> Flask:
     Base.metadata.create_all(bind=engine)
 
     # Register Namespaces
-    from src import routes
-
     api.add_namespace(routes.ns_main)
     api.add_namespace(routes.ns_auth)
     api.add_namespace(routes.ns_account)

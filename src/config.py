@@ -32,15 +32,9 @@ class FlaskConfig(BaseSettings):
         ),
     )
     SECRET_KEY: str
-    MAX_CONTENT_LENGTH: int = Field(
-        default=1024 * 1024,
-    )
-    STATIC_FOLDER: str = Field(
-        default="static",
-    )
-    TEMPLATES_FOLDER: str = Field(
-        default="templates",
-    )
+    MAX_CONTENT_LENGTH: int = Field(default=1024 * 1024)
+    STATIC_FOLDER: str = Field(default="static")
+    TEMPLATES_FOLDER: str = Field(default="templates")
 
 
 class FlaskSQLAlchemyConfig(BaseSettings):
@@ -51,9 +45,7 @@ class FlaskSQLAlchemyConfig(BaseSettings):
 
 class FlaskRestxConfig(BaseSettings):
     model_config: ClassVar[SettingsConfigDict] = app_settings_config_dict
-    ERROR_INCLUDE_MESSAGE: bool = Field(
-        default=False,
-    )
+    ERROR_INCLUDE_MESSAGE: bool = Field(default=False)
     SWAGGER_UI_DOC_EXPANSION: Literal["none", "list", "full"] = Field(
         default="list",
         description="По умолчанию состояние вкладок в swagger'е",
@@ -89,9 +81,7 @@ class PostgresDBConfig(DBConfigBase):
     name: str
 
     @computed_field(  # type: ignore[misc]
-        examples=[
-            "postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name",
-        ],
+        examples=["postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name"],
         return_type=PostgresDsn,
     )
     @property
@@ -125,15 +115,9 @@ class SQLAlchemyConfig(BaseSettings):
             "лимита pool_size"
         ),
     )
-    expire_on_commit: bool = Field(
-        default=False,
-    )
-    autocommit: bool = Field(
-        default=False,
-    )
-    autoflush: bool = Field(
-        default=True,
-    )
+    expire_on_commit: bool = Field(default=False)
+    autocommit: bool = Field(default=False)
+    autoflush: bool = Field(default=True)
 
     @computed_field(  # type: ignore[misc]
         examples=[
@@ -147,9 +131,7 @@ class SQLAlchemyConfig(BaseSettings):
     def database_uri(self) -> AnyUrl:
         return self.db_config.database_dsn
 
-    @computed_field(  # type: ignore[misc]
-        return_type=dict,
-    )
+    @computed_field(return_type=dict)  # type: ignore[misc]
     @property
     def session_options(self) -> dict:
         return {
@@ -158,9 +140,7 @@ class SQLAlchemyConfig(BaseSettings):
             "autoflush": self.autoflush,
         }
 
-    @computed_field(  # type: ignore[misc]
-        return_type=dict,
-    )
+    @computed_field(return_type=dict)  # type: ignore[misc]
     @property
     def engine_options(self) -> dict:
         return {
@@ -171,9 +151,7 @@ class SQLAlchemyConfig(BaseSettings):
         }
 
 
-sqlalchemy_config = SQLAlchemyConfig(
-    db_config=PostgresDBConfig(),
-)
+sqlalchemy_config = SQLAlchemyConfig(db_config=PostgresDBConfig())
 flask_sqlalchemy_config = FlaskSQLAlchemyConfig(
     SQLALCHEMY_DATABASE_URI=sqlalchemy_config.database_uri,
     SQLALCHEMY_ECHO=sqlalchemy_config.echo,

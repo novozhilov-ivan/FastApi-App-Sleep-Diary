@@ -12,9 +12,7 @@ ns_account: Namespace = Namespace(
     name="User account info",
     description="Информация об аккаунте пользователя",
     path="/account",
-    decorators=[
-        validate_auth_token,
-    ],
+    decorators=[validate_auth_token],
 )
 
 response_model_401: dict = response_schema(
@@ -33,7 +31,8 @@ class AccountRoute(
     Resource,
     FindAccount,
     DeleteAccount,
-): ...  # noqa
+):
+    ...  # fmt: skip
 
 
 account_endpoint = "account"

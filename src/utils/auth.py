@@ -17,9 +17,7 @@ from src.utils.status_codes import HTTP
 response_invalid_username_or_password_401 = "invalid username or password"
 
 
-def hash_password(
-    pwd_bytes: bytes,
-) -> str:
+def hash_password(pwd_bytes: bytes) -> str:
     salt = bcrypt.gensalt()
     return bcrypt.hashpw(pwd_bytes, salt).decode("utf-8")
 
@@ -74,10 +72,10 @@ def get_auth_user_from_token_of_type(
 
 
 get_current_auth_user_id_for_refresh = get_auth_user_from_token_of_type(
-    REFRESH_TOKEN_TYPE,
+    token_type=REFRESH_TOKEN_TYPE,
 )
 get_current_auth_user_id_for_access = get_auth_user_from_token_of_type(
-    ACCESS_TOKEN_TYPE,
+    token_type=ACCESS_TOKEN_TYPE,
 )
 
 

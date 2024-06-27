@@ -43,7 +43,11 @@ class User(BaseModel):
     model_config: ClassVar[ConfigDict] = ConfigDict(from_attributes=True)
 
 
-class UserValidate(User, UserCredentials): ...
+class UserValidate(
+    User,
+    UserCredentials,
+):
+    ...  # fmt: skip
 
 
 class UserInfo(User):

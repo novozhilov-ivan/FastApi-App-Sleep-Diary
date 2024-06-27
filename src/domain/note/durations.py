@@ -14,9 +14,7 @@ class NoteDurations(NoteBase):
             hours=self.woke_up.hour - self.fell_asleep.hour,
             minutes=self.woke_up.minute - self.fell_asleep.minute,
         )
-        return timedelta(
-            seconds=sleep_duration.seconds,
-        )
+        return timedelta(seconds=sleep_duration.seconds)
 
     @computed_field  # type: ignore[misc]
     @property

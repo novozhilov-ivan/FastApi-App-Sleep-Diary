@@ -2,19 +2,26 @@
 line-length = 85
 target-version = ["py310"]
 
-[tool.mypy]
-plugins = [
-  "pydantic.mypy",
-]
-#disable_error_code = [
-#    "import-untyped",
-#]
-ignore_missing_imports = true
+[tool.flake8]
+max-line-length = 85
+count = true
+statistics = true
+per-file-ignores = ["__init__.py:F811"]
 
+[tool.mypy]
+files = ["."]
+plugins = ["pydantic.mypy"]
+python_version = "3.10"
+ignore_missing_imports = true
 check_untyped_defs = true
-#disallow_untyped_defs = true  # Проверяет все не типизированные переменные в def's
-# type: ignore[misc]
-# type: ignore[prop-decorator] еще не поддерживается
+disallow_incomplete_defs = true
+
+
+[[tool.mypy.overrides]]
+module = "tests/*"
+disable_error_code = ["no-untyped-def"]
+
+[tool.pydantic-mypy]
 
 [tool.poetry]
 name = "sleep-diary-app"
@@ -50,6 +57,8 @@ pytest = "^8.2.2"
 black = "^24.4.2"
 coverage = "^7.5.3"
 mypy = "^1.10.1"
+flake8 = "^7.1.0"
+flake8-pyproject = "^1.2.3"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

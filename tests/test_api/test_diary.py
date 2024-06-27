@@ -70,9 +70,7 @@ class TestDiary:
         response = Response(raw_response)
         with pytest.raises(ValidationError) as exc_info:
             User(**params)  # type: ignore # noqa
-        errors = ErrorResponse(
-            message=exc_info.value.errors(),
-        )
+        errors = ErrorResponse(message=exc_info.value.errors())
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(ErrorResponse)
         response.assert_data(errors)

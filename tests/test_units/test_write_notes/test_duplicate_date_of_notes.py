@@ -20,7 +20,7 @@ def test_notes_is_equals_by_bedtime_date():
     assert note_1 == note_2
 
 
-def test_cannot_add_notes_with_same_bedtime_date_in_week_gt_one_time_and_adding_is_idempotent():
+def test_cannot_add_notes_with_same_bedtime_date_in_week_gt_one_time_and_adding_is_idempotent():  # noqa
     week = set()
     week.add(note_1)
     assert note_1 in week

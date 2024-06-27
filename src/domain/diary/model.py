@@ -9,4 +9,5 @@ class DiaryBase(BaseModel, abc.ABC):
     weeks: list[WeekBase]
 
 
-class Diary(DiaryBase): ...
+class Diary(DiaryBase):
+    ...  # fmt: skip

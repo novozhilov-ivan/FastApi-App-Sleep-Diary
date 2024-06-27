@@ -11,9 +11,7 @@ ns_diary: Namespace = Namespace(
     name="Sleep diary",
     description="Дневник сна, все записи и статистика",
     path="/diary",
-    decorators=[
-        validate_auth_token,
-    ],
+    decorators=[validate_auth_token],
 )
 ns_diary.errorhandler(handler_unprocessable_entity_422)
 

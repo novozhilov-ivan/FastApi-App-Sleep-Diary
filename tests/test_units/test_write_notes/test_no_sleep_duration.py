@@ -47,7 +47,7 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnig
     assert error.value.message == incorrect_sleep_duration_error_message
 
 
-def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight():
+def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight():  # noqa
     with pytest.raises(NoSleepDurationError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",

@@ -197,9 +197,7 @@ class TestNoteUpdate:
 
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(ErrorResponse)
-        errors_expectations = ErrorResponse(
-            message=exc_info.value.errors(),
-        )
+        errors_expectations = ErrorResponse(message=exc_info.value.errors())
         response.assert_data(errors_expectations)
 
     @pytest.mark.note_update_422
@@ -240,8 +238,6 @@ class TestNoteUpdate:
         updated_note_with_random_wrong_values.update(exclude_field_with_value)
         with pytest.raises(ValidationError) as exc_info:
             SleepNoteOptional(**updated_note_with_random_wrong_values)
-        errors_expectations = ErrorResponse(
-            message=exc_info.value.errors(),
-        )
+        errors_expectations = ErrorResponse(message=exc_info.value.errors())
         response.validate(ErrorResponse)
         response.assert_data(errors_expectations)

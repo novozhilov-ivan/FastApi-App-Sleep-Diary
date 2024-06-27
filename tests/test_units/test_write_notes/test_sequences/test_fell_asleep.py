@@ -44,7 +44,7 @@ def test_fell_asleep_cannot_be_gt_woke_up_with_one_time_points_after_midnight():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_fell_asleep_cannot_be_gt_woke_up_and_gt_got_up_with_two_time_points_after_midnight():
+def test_fell_asleep_cannot_be_gt_woke_up_and_gt_got_up_with_two_time_points_after_midnight():  # noqa
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",

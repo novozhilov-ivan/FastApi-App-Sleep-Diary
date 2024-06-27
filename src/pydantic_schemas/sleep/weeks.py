@@ -23,10 +23,7 @@ class SleepDiaryWeekModel(SleepDiaryWeeklyNotesModel, SleepDiaryWeeklyStatistic)
 
 
 class SleepDiaryWeeklyNotes(BaseModel):
-    notes: Annotated[
-        list[SleepNoteWithStats],
-        Field(max_length=7),
-    ]
+    notes: Annotated[list[SleepNoteWithStats], Field(max_length=7)]
 
 
 class SleepDiaryWeekCompute(SleepDiaryWeeklyNotes):

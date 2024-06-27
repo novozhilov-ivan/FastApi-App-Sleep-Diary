@@ -72,9 +72,7 @@ class TestNoteAdd:
 
         with pytest.raises(ValidationError) as exc_info:
             SleepNote.model_validate(note_with_wrong_values)
-        errors_expectations = ErrorResponse(
-            message=exc_info.value.errors(),
-        )
+        errors_expectations = ErrorResponse(message=exc_info.value.errors())
         response.assert_status_code(HTTP.UNPROCESSABLE_ENTITY_422)
         response.validate(ErrorResponse)
         response.assert_data(errors_expectations)

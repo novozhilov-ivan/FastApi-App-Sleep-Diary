@@ -10,9 +10,7 @@ ns_notes: Namespace = Namespace(
     name="Sleep diary notes",
     description="Записи из дневника сна",
     path="/note",
-    decorators=[
-        validate_auth_token,
-    ],
+    decorators=[validate_auth_token],
 )
 ns_notes.errorhandler(handler_unprocessable_entity_422)
 
@@ -34,8 +32,13 @@ from src.routes.notes.note_find_by_id.find_by_id import NoteFindById  # noqa
 from src.routes.notes.note_find_by_date.find_by_date import NoteFindByDate  # noqa
 
 
-class NotesRoute(Resource, AddNote, UpdateNote, DeleteNote):
-    pass
+class NotesRoute(
+    Resource,
+    AddNote,
+    UpdateNote,
+    DeleteNote,
+):
+    ...  # fmt: skip
 
 
 note_endpoint = "note"

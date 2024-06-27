@@ -50,9 +50,7 @@ def user_credentials() -> Generator[UserCredentials, None, None]:
 def user_hashed_password(
     user_credentials: UserCredentials,
 ) -> Generator[str, None, None]:
-    yield hash_password(
-        pwd_bytes=user_credentials.password,
-    )
+    yield hash_password(pwd_bytes=user_credentials.password)
 
 
 @pytest.fixture(scope="session")
@@ -95,9 +93,7 @@ def client(app: Flask) -> Generator[FlaskClient, None, None]:
 
 
 @pytest.fixture(autouse=True)
-def create_db(
-    client: FlaskClient,
-) -> None:
+def create_db(client: FlaskClient) -> None:
     with client.application.app_context():
         db.drop_all()
         db.create_all()

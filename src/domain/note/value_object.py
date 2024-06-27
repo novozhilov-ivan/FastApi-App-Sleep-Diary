@@ -5,4 +5,5 @@ from src.domain.note.validators import NoteFieldsValidators
 class NoteValueObject(
     NoteFieldsValidators,
     NoteBase,
-): ...
+):
+    ...  # fmt: skip

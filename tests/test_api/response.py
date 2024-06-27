@@ -7,16 +7,9 @@ from werkzeug.test import TestResponse
 class Response:
     def __init__(self, response: TestResponse):
         self.response: TestResponse = response
-        self.response_json: (
-            str
-            | dict
-            | list
-            | Generator[
-                dict,
-                None,
-                None,
-            ]
-        ) = response.get_json(silent=True)
+        self.response_json: str | dict | list | Generator[dict, None, None] = (
+            response.get_json(silent=True)
+        )
         self.response_data: str = response.data.decode()
         self.response_status: int | list[int] = response.status_code
         self.mimetype = response.mimetype

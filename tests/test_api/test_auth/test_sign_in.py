@@ -64,18 +64,16 @@ class TestSignIn:
         user_credentials: UserCredentials,
         exist_user: UserOrm,
     ):
-        user_credentials = user_credentials.model_dump()
-        user_credentials.update(wrong_credentials)
+        user_credentials_dump: dict = user_credentials.model_dump()
+        user_credentials_dump.update(wrong_credentials)
         raw_response = client.post(
             path=url_for(
                 endpoint=signin_endpoint,
             ),
-            data=user_credentials,
+            data=user_credentials_dump,
             content_type=self.content_type,
         )
         response = Response(raw_response)
         response.assert_status_code(HTTP.UNAUTHORIZED_401)
-        error_expectation = {
-            "message": response_invalid_username_or_password_401,
-        }
+        error_expectation = {"message": response_invalid_username_or_password_401}
         response.assert_data(error_expectation)

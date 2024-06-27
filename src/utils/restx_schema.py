@@ -14,9 +14,7 @@ def response_schema(
     headers: dict | None = None,
     description: str = "No response schema description yet",
 ) -> dict:
-    schema = {
-        "code": code,
-    }
+    schema = {"code": code}
     if model is not None:
         schema.update(
             description=model.model_json_schema().get("description"),

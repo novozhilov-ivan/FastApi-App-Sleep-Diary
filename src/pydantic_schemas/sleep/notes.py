@@ -39,12 +39,8 @@ class SleepNoteStatistics(SleepNote):
 
 
 class SleepNoteMeta(BaseModel):
-    id: int = Field(
-        title="Идентификатор записи дневника сна",
-    )
-    owner_id: int = Field(
-        title="Идентификатор владельца дневника сна",
-    )
+    id: int = Field(title="Идентификатор записи дневника сна")
+    owner_id: int = Field(title="Идентификатор владельца дневника сна")
 
 
 class SleepNoteModel(SleepNoteStatistics, SleepNoteMeta):

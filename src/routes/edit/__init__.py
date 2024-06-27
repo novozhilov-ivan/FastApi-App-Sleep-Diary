@@ -9,9 +9,7 @@ ns_edit: Namespace = Namespace(
     name="Edit diary",
     description="Изменения в дневнике сна",
     path="/edit",
-    decorators=[
-        validate_auth_token,
-    ],
+    decorators=[validate_auth_token],
 )
 response_not_found_404 = "User or sleep notes not found"
 response_model_404: dict = response_schema(
