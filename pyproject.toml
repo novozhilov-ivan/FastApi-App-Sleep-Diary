@@ -18,12 +18,14 @@ ignore_missing_imports = true
 check_untyped_defs = true
 disallow_incomplete_defs = true
 
+[tool.pydantic-mypy]
+init_forbid_extra = true
+init_typed = true
+warn_required_dynamic_aliases = true
 
 [[tool.mypy.overrides]]
 module = "tests/*"
 disable_error_code = ["no-untyped-def"]
-
-[tool.pydantic-mypy]
 
 [tool.poetry]
 name = "sleep-diary-app"
@@ -66,6 +68,7 @@ flake8-builtins = "^2.5.0"
 pep8-naming = "^0.14.1"
 flake8-commas = "^4.0.0"
 flake8-variables-names = "^0.0.6"
+flake8-pydantic = "^0.3.1"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

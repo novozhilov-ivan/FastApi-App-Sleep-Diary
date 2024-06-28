@@ -459,6 +459,21 @@ files = [
 flake8 = ">=5"
 
 [[package]]
+name = "flake8-pydantic"
+version = "0.3.1"
+description = "A flake8 plugin to check Pydantic related code."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "flake8_pydantic-0.3.1-py3-none-any.whl", hash = "sha256:9177b5ad48557b280b0a963f9e68954e651bdb78469e56d505623a14295e56f5"},
+    {file = "flake8_pydantic-0.3.1.tar.gz", hash = "sha256:40b975dd5b812e5c369d75affde4f63e5aab73abf179a1d3cc9b23be5c24e86a"},
+]
+
+[package.dependencies]
+flake8 = "*"
+typing-extensions = {version = ">=4.4.0", markers = "python_version < \"3.11\""}
+
+[[package]]
 name = "flake8-pyproject"
 version = "1.2.3"
 description = "Flake8 plug-in loading the configuration from pyproject.toml"
@@ -1625,4 +1640,4 @@ watchdog = ["watchdog (>=2.3)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "8f91f93387626285dce3981a10110c6d1dbd5da5f8f388a0f6579b7e79924407"
+content-hash = "6894064f4154647ffcb4efb96b110e37d26ba0b7f4d4b608d2fff59b1dc32377"
