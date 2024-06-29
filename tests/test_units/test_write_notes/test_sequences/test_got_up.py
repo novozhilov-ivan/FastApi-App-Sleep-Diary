@@ -7,7 +7,7 @@ from tests.test_units.test_write_notes.test_sequences.test_fell_asleep import (
 )
 
 
-def test_got_up_cannot_be_lt_only_woke_up():
+def test_got_up_cannot_be_lt_only_woke_up() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -19,7 +19,9 @@ def test_got_up_cannot_be_lt_only_woke_up():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight():
+def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight() -> (
+    None
+):
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -31,7 +33,9 @@ def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight()
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_got_up_cannot_be_gt_woke_up_and_lt_other_points_with_some_time_points_after_midnight():  # noqa
+def test_got_up_cannot_be_gt_woke_up_and_lt_other_points_with_some_time_points_after_midnight() -> (  # noqa
+    None
+):
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",

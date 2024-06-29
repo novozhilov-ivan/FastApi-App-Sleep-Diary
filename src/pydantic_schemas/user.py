@@ -1,7 +1,15 @@
 from datetime import datetime
-from typing import Annotated, ClassVar
+from typing import (
+    Annotated,
+    ClassVar,
+)
 
-from pydantic import BaseModel, ConfigDict, Field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+)
+
 
 user_id_field = Annotated[
     int,

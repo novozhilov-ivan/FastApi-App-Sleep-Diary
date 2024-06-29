@@ -1,5 +1,6 @@
 from src.domain.note.value_object import NoteValueObject
 
+
 note_1 = NoteValueObject(
     bedtime_date="2020-12-12",
     went_to_bed="01:00",
@@ -16,11 +17,13 @@ note_2 = NoteValueObject(
 )
 
 
-def test_notes_is_equals_by_bedtime_date():
+def test_notes_is_equals_by_bedtime_date() -> None:
     assert note_1 == note_2
 
 
-def test_cannot_add_notes_with_same_bedtime_date_in_week_gt_one_time_and_adding_is_idempotent():  # noqa
+def test_cannot_add_notes_with_same_bedtime_date_in_week_gt_one_time_and_adding_is_idempotent() -> (  # noqa
+    None
+):
     week = set()
     week.add(note_1)
     assert note_1 in week

@@ -1,11 +1,15 @@
 import pytest
+
 from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
 
 from src.extension import db
 from src.models import UserOrm
-from src.pydantic_schemas.user import UserCredentials, UserValidate
+from src.pydantic_schemas.user import (
+    UserCredentials,
+    UserValidate,
+)
 from src.routes.auth.sign_up import (
     response_conflict_409,
     response_created_201,

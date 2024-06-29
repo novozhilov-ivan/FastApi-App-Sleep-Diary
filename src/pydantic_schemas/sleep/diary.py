@@ -1,6 +1,11 @@
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    computed_field,
+)
 
 from src.pydantic_schemas.sleep.weeks import (
     SleepDiaryWeekCompute,

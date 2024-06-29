@@ -4,10 +4,19 @@ from flask import request
 
 from src.CRUD.sleep_note_table import create_one_note
 from src.models import SleepNoteOrm
-from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
-from src.routes.diary import response_model_400, response_model_422
+from src.pydantic_schemas.sleep.notes import (
+    SleepNote,
+    SleepNoteWithStats,
+)
+from src.routes.diary import (
+    response_model_400,
+    response_model_422,
+)
 from src.routes.notes import ns_notes
-from src.routes.notes.note_add import add_note_payload, response_model_201
+from src.routes.notes.note_add import (
+    add_note_payload,
+    response_model_201,
+)
 from src.utils.auth import UserActions
 from src.utils.status_codes import HTTP
 

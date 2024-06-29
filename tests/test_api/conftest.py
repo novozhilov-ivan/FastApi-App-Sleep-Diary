@@ -1,20 +1,37 @@
 from typing import Generator
 
 import pytest
+
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
-from src.extension import bearer, db
+from src.extension import (
+    bearer,
+    db,
+)
 from src.flask_app import create_app
-from src.models import SleepNoteOrm, UserOrm
+from src.models import (
+    SleepNoteOrm,
+    UserOrm,
+)
 from src.pydantic_schemas.sleep.notes import SleepNoteWithMeta
-from src.pydantic_schemas.user import UserCredentials, UserValidate
+from src.pydantic_schemas.user import (
+    UserCredentials,
+    UserValidate,
+)
 from src.utils.auth import hash_password
-from src.utils.jwt import create_access_jwt, create_refresh_jwt
+from src.utils.jwt import (
+    create_access_jwt,
+    create_refresh_jwt,
+)
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.config import test_flask_config, test_flask_sqlalchemy_config
+from tests.test_api.config import (
+    test_flask_config,
+    test_flask_sqlalchemy_config,
+)
+
 
 # @pytest.fixture(scope="session")
 # def test_engine() -> Generator[Engine, None, None]:

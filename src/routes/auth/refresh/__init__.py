@@ -8,6 +8,7 @@ from src.utils.jwt import (
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_model_200: dict = response_schema(
     code=HTTP.OK_200,
     ns=ns_auth,
@@ -23,6 +24,7 @@ response_model_401: dict = response_schema(
 )
 
 from src.routes.auth.refresh.refresh import AuthRefreshJWTRoute  # noqa
+
 
 refresh_endpoint = "refresh"
 ns_auth.add_resource(

@@ -5,6 +5,7 @@ from src.utils.jwt import validate_auth_token
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 ns_edit: Namespace = Namespace(
     name="Edit diary",
     description="Изменения в дневнике сна",

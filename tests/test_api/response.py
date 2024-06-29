@@ -1,4 +1,7 @@
-from typing import Generator, Type
+from typing import (
+    Generator,
+    Type,
+)
 
 from pydantic import BaseModel
 from werkzeug.test import TestResponse

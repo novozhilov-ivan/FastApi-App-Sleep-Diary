@@ -8,6 +8,7 @@ from src.utils.payload import create_payload_from_model
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_model_200: dict = response_schema(
     code=HTTP.OK_200,
     ns=ns_auth,
@@ -25,6 +26,7 @@ signin_params: RequestParser = create_payload_from_model(
 )
 
 from src.routes.auth.sign_in.sign_in import AuthUserRoute  # noqa
+
 
 signin_endpoint = "signin"
 ns_auth.add_resource(

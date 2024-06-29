@@ -1,5 +1,8 @@
 from src.CRUD.user_table import delete_user_by_id
-from src.routes.account import ns_account, response_model_401
+from src.routes.account import (
+    ns_account,
+    response_model_401,
+)
 from src.routes.account.account_delete import response_model_204
 from src.utils.auth import UserActions
 from src.utils.status_codes import HTTP

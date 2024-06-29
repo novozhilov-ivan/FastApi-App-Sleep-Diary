@@ -2,6 +2,7 @@ from src.routes.notes import ns_notes
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_no_content_204 = "Diary note successfully deleted"
 response_model_204: dict = response_schema(
     ns=ns_notes,

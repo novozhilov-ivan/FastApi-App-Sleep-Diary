@@ -1,7 +1,15 @@
-from datetime import date, datetime, time, timezone
+from datetime import (
+    date,
+    datetime,
+    time,
+    timezone,
+)
 from random import randrange
 
-from src.pydantic_schemas.sleep.diary import SleepDiaryCompute, SleepDiaryModel
+from src.pydantic_schemas.sleep.diary import (
+    SleepDiaryCompute,
+    SleepDiaryModel,
+)
 from src.pydantic_schemas.sleep.notes import SleepNoteWithStats
 from src.utils.manage_notes import slice_on_week
 

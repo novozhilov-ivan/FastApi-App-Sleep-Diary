@@ -1,11 +1,24 @@
 import random
-from datetime import date, datetime, time, timezone
+
+from datetime import (
+    date,
+    datetime,
+    time,
+    timezone,
+)
 from random import randrange
-from typing import Literal, Type
+from typing import (
+    Literal,
+    Type,
+)
 
 from faker import Faker
 
-from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
+from src.pydantic_schemas.sleep.notes import (
+    SleepNote,
+    SleepNoteWithStats,
+)
+
 
 faker = Faker()
 

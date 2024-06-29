@@ -2,11 +2,12 @@ from datetime import timedelta
 
 from src.domain.note.durations import NoteDurations
 
+
 eight_hour_timedelta_of_sleep = timedelta(hours=8)
 one_hour_timedelta_of_no_sleep = timedelta(hours=1)
 
 
-def test_note_durations_all_time_point_is_sequences():
+def test_note_durations_all_time_point_is_sequences() -> None:
     note = NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
@@ -19,7 +20,7 @@ def test_note_durations_all_time_point_is_sequences():
     assert note._no_sleep_duration == one_hour_timedelta_of_no_sleep
 
 
-def test_note_durations_with_one_time_point_after_midnight():
+def test_note_durations_with_one_time_point_after_midnight() -> None:
     note = NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -32,7 +33,7 @@ def test_note_durations_with_one_time_point_after_midnight():
     assert note._no_sleep_duration == one_hour_timedelta_of_no_sleep
 
 
-def test_note_durations_with_two_time_point_after_midnight():
+def test_note_durations_with_two_time_point_after_midnight() -> None:
     note = NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="15:00",
@@ -45,7 +46,7 @@ def test_note_durations_with_two_time_point_after_midnight():
     assert note._no_sleep_duration == one_hour_timedelta_of_no_sleep
 
 
-def test_note_durations_with_three_time_point_after_midnight():
+def test_note_durations_with_three_time_point_after_midnight() -> None:
     note = NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="23:00",

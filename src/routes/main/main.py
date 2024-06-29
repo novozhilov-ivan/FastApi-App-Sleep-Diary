@@ -1,7 +1,10 @@
 from flask_restx import Resource
 
 from src.pydantic_schemas.main import MainPageModel
-from src.routes.main import ns_main, response_model_200
+from src.routes.main import (
+    ns_main,
+    response_model_200,
+)
 from src.utils.status_codes import HTTP
 
 

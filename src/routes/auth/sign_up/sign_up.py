@@ -1,5 +1,8 @@
 from flask import request
-from flask_restx import Resource, abort
+from flask_restx import (
+    Resource,
+    abort,
+)
 
 from src.CRUD.user_table import create_new_user_by_username
 from src.models import UserOrm

@@ -1,11 +1,15 @@
 import pytest
+
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
 
 from src.extension import bearer
 from src.models import UserOrm
-from src.pydantic_schemas.user import UserInfo, UserValidate
+from src.pydantic_schemas.user import (
+    UserInfo,
+    UserValidate,
+)
 from src.routes.account import account_endpoint
 from src.routes.account.account_find import response_not_found_404
 from src.utils.jwt import (

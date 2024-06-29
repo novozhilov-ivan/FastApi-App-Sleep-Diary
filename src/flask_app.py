@@ -1,8 +1,18 @@
 from flask import Flask
 
 from src import routes
-from src.config import flask_config, flask_restx_config, flask_sqlalchemy_config
-from src.extension import Base, api, db, engine
+from src.config import (
+    flask_config,
+    flask_restx_config,
+    flask_sqlalchemy_config,
+)
+from src.extension import (
+    Base,
+    api,
+    db,
+    engine,
+)
+
 
 # TODO add ruff[isort, etc] | linters mypy | pre-commit.
 

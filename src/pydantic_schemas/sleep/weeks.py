@@ -1,10 +1,18 @@
 from datetime import time
 from typing import ClassVar
-
-from pydantic import BaseModel, ConfigDict, Field, computed_field
 from typing_extensions import Annotated
 
-from src.pydantic_schemas.sleep.notes import SleepNoteModel, SleepNoteWithStats
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    computed_field,
+)
+
+from src.pydantic_schemas.sleep.notes import (
+    SleepNoteModel,
+    SleepNoteWithStats,
+)
 
 
 class SleepDiaryWeeklyStatistic(BaseModel):

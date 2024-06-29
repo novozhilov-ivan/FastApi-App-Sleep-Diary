@@ -5,7 +5,10 @@ from src.pydantic_schemas.sleep.notes import SleepNoteMeta
 from src.routes.account import response_model_401
 from src.routes.edit import response_model_422
 from src.routes.notes import ns_notes
-from src.routes.notes.note_delete import note_id_params, response_model_204
+from src.routes.notes.note_delete import (
+    note_id_params,
+    response_model_204,
+)
 from src.utils.auth import UserActions
 from src.utils.status_codes import HTTP
 

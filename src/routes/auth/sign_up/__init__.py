@@ -6,6 +6,7 @@ from src.utils.payload import create_payload_from_model
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_created_201 = "User is created"
 response_model_201: dict = response_schema(
     code=HTTP.CREATED_201,
@@ -24,6 +25,7 @@ signup_params: RequestParser = create_payload_from_model(
 )
 
 from src.routes.auth.sign_up.sign_up import SignUpUserRoute  # noqa
+
 
 signup_endpoint = "signup"
 ns_auth.add_resource(

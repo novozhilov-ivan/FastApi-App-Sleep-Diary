@@ -1,4 +1,7 @@
-from flask_restx import Namespace, Resource
+from flask_restx import (
+    Namespace,
+    Resource,
+)
 
 from src.exceptions.handlers import handler_unprocessable_entity_422
 from src.utils.jwt import (
@@ -7,6 +10,7 @@ from src.utils.jwt import (
 )
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
+
 
 ns_account: Namespace = Namespace(
     name="User account info",

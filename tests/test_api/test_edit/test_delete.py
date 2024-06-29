@@ -1,11 +1,15 @@
 import pytest
+
 from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
 from werkzeug.datastructures import Authorization
 
 from src.extension import db
-from src.models import SleepNoteOrm, UserOrm
+from src.models import (
+    SleepNoteOrm,
+    UserOrm,
+)
 from src.routes.edit.delete_diary import delete_notes_endpoint
 from src.utils.status_codes import HTTP
 from tests.generators.diary import SleepDiaryGenerator

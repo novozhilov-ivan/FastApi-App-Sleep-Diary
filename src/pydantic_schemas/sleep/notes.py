@@ -1,7 +1,15 @@
-from datetime import date, time
+from datetime import (
+    date,
+    time,
+)
 from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    computed_field,
+)
 
 
 class SleepNote(BaseModel):

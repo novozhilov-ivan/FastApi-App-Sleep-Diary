@@ -15,7 +15,10 @@ from src.routes.auth.sign_in import (
 )
 from src.routes.edit import response_model_422
 from src.utils.auth import validate_auth_user
-from src.utils.jwt import create_access_jwt, create_refresh_jwt
+from src.utils.jwt import (
+    create_access_jwt,
+    create_refresh_jwt,
+)
 from src.utils.status_codes import HTTP
 
 

@@ -1,6 +1,10 @@
-from typing import Callable, Literal
+from typing import (
+    Callable,
+    Literal,
+)
 
 import bcrypt
+
 from flask_restx import abort
 
 from src.CRUD.user_table import read_user_by_username
@@ -13,6 +17,7 @@ from src.utils.jwt import (
     validate_token_type,
 )
 from src.utils.status_codes import HTTP
+
 
 response_invalid_username_or_password_401 = "invalid username or password"
 

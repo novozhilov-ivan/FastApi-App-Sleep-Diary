@@ -4,6 +4,7 @@ from src.pydantic_schemas.main import MainPageModel
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 ns_main: Namespace = Namespace(
     name="Main",
     description="Основная страница с описанием",
@@ -18,6 +19,7 @@ response_model_200: dict = response_schema(
 )
 
 from src.routes.main.main import MainRoute  # noqa
+
 
 main_endpoint = "main"
 ns_main.add_resource(

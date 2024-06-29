@@ -3,12 +3,13 @@ import pytest
 from src.domain.note.error import NoSleepDurationError
 from src.domain.note.validators import NoteFieldsValidators
 
+
 incorrect_sleep_duration_error_message = (
     "Время без сна должно быть меньше или равно времени сна."
 )
 
 
-def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points():
+def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points() -> None:
     with pytest.raises(NoSleepDurationError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -21,7 +22,9 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points():
     assert error.value.message == incorrect_sleep_duration_error_message
 
 
-def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnight():
+def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnight() -> (  # noqa
+    None
+):
     with pytest.raises(NoSleepDurationError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -34,7 +37,9 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnig
     assert error.value.message == incorrect_sleep_duration_error_message
 
 
-def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnight():
+def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnight() -> (  # noqa
+    None
+):
     with pytest.raises(NoSleepDurationError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -47,7 +52,9 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnig
     assert error.value.message == incorrect_sleep_duration_error_message
 
 
-def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight():  # noqa
+def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight() -> (  # noqa
+    None
+):
     with pytest.raises(NoSleepDurationError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",

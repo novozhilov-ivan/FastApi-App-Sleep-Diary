@@ -1,38 +1,63 @@
 import abc
-from datetime import date, time, timedelta
-from typing import ClassVar
 
-from pydantic import BaseModel, ConfigDict, Field, computed_field
+from datetime import (
+    date,
+    time,
+    timedelta,
+)
+from typing import (
+    Annotated,
+    ClassVar,
+)
 from typing_extensions import Self
+
+from pydantic import (
+    BaseModel,
+    ConfigDict,
+    Field,
+    PlainValidator,
+    computed_field,
+)
+
+
+StrToDate = Annotated[
+    time | str,
+    PlainValidator(
+        lambda t: time(
+            hour=int(t.split(":")[0]),
+            minute=int(t.split(":")[1]),
+        ),
+    ),
+]
 
 
 class NoteBase(BaseModel, abc.ABC):
-    bedtime_date: date = Field(
+    bedtime_date: date | str = Field(
         title="Дата отхода ко сну",
         description="",
         examples=["2020-12-12", "2021-01-20"],
     )
-    went_to_bed: time = Field(
+    went_to_bed: StrToDate = Field(
         title="Время отхода ко сну",
         description="",
         examples=["01:00", "13:00"],
     )
-    fell_asleep: time = Field(
+    fell_asleep: StrToDate = Field(
         title="Время засыпания",
         description="",
         examples=["03:00", "15:00"],
     )
-    woke_up: time = Field(
+    woke_up: StrToDate = Field(
         title="Время пробуждения",
         description="",
         examples=["11:00", "23:00"],
     )
-    got_up: time = Field(
+    got_up: StrToDate = Field(
         title="Время подъема",
         description="",
         examples=["13:00", "01:00"],
     )
-    no_sleep: time = Field(
+    no_sleep: StrToDate = Field(
         default=time(hour=0, minute=0),
         title="Время отсутствия сна (в ЧЧ:ММ)",
         description="",

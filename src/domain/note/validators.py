@@ -1,9 +1,13 @@
-from pydantic import model_validator
 from typing_extensions import Self
 
-from src.domain.note.base import NoteBase
-from src.domain.note.durations import NoteDurations
-from src.domain.note.error import NoSleepDurationError, TimePointsSequenceError
+from pydantic import model_validator
+
+from src.domain.note import (
+    NoSleepDurationError,
+    NoteBase,
+    NoteDurations,
+    TimePointsSequenceError,
+)
 
 
 class NoteFieldsValidators(NoteDurations, NoteBase):

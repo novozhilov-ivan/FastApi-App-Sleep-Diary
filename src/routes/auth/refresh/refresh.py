@@ -5,10 +5,16 @@ from src.models import UserOrm
 from src.pydantic_schemas.token import AccessTokenInfo
 from src.pydantic_schemas.user import UserValidate
 from src.routes import ns_auth
-from src.routes.auth.refresh import response_model_200, response_model_401
+from src.routes.auth.refresh import (
+    response_model_200,
+    response_model_401,
+)
 from src.routes.edit import response_model_422
 from src.utils.auth import get_current_auth_user_id_for_refresh
-from src.utils.jwt import create_access_jwt, validate_auth_token
+from src.utils.jwt import (
+    create_access_jwt,
+    validate_auth_token,
+)
 from src.utils.status_codes import HTTP
 
 

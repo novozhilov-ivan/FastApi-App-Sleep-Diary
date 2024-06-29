@@ -1,7 +1,7 @@
 from datetime import timedelta
+from typing_extensions import Self
 
 from pydantic import computed_field
-from typing_extensions import Self
 
 from src.domain.note.base import NoteBase
 

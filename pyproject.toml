@@ -3,7 +3,35 @@ target-version = ["py310"]
 line-length = 85
 
 [tool.isort]
-profile = "black"
+lines_between_types = 1
+combine_as_imports = true
+sections = [
+    "FUTURE",
+    "STDLIB",
+    "FIRSTPARTY",
+    "THIRDPARTY",
+    "AIRFLOW",
+    "LOCALFOLDER",
+]
+known_airflow = ["airflow"]
+lines_after_imports = 2
+multi_line_output = 3
+use_parentheses = true
+extra_standard_library = ["typing_extensions"]
+known_third_party = [
+    "flask",
+    "flask-sqlalchemy",
+    "pydantic",
+    "bcrypt",
+    "flask-restx",
+    "pydantic-settings",
+    "more-itertools",
+    "jsonref",
+]
+known_local_folder = [
+    "src",
+    "tests",
+]
 src_paths = ["."]
 line_length = 85
 include_trailing_comma = true
@@ -16,6 +44,7 @@ max-line-length = 85
 count = true
 statistics = true
 max-complexity = 8
+#no-print-logs = true
 per-file-ignores = [
 #    "__init__.py:F811", # Повторный импорт объекта / переопределение
 #    "tests/*:ANN201", # Отсутствуют return hint в тестовых функциях
@@ -35,7 +64,7 @@ init_typed = true
 warn_required_dynamic_aliases = true
 
 [[tool.mypy.overrides]]
-#module = "tests/*"
+module = "tests/*"
 disable_error_code = ["no-untyped-def"]
 
 [tool.poetry]
@@ -75,7 +104,6 @@ mypy = "^1.10.1"
 flake8 = "^7.1.0"
 flake8-pyproject = "^1.2.3"
 flake8-bugbear = "^24.4.26"
-flake8-builtins = "^2.5.0"
 pep8-naming = "^0.14.1"
 flake8-commas = "^4.0.0"
 flake8-variables-names = "^0.0.6"
@@ -102,6 +130,8 @@ flake8-pep604 = "^1.1.0"
 flake8-black = "^0.3.6"
 flake8-isort = "^6.1.1"
 flake8-for-pycharm = "^0.4.1"
+flake8-builtins = "^2.5.0"
+pytest-mypy-plugins = "^3.1.2"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

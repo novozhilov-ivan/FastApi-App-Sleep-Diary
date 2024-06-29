@@ -1,4 +1,7 @@
-from sqlalchemy import delete, select
+from sqlalchemy import (
+    delete,
+    select,
+)
 from sqlalchemy.exc import SQLAlchemyError
 
 from src.extension import db

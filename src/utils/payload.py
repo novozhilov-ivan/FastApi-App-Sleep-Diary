@@ -1,4 +1,7 @@
-from typing import Literal, Type
+from typing import (
+    Literal,
+    Type,
+)
 
 from flask_restx.reqparse import RequestParser
 from pydantic import BaseModel

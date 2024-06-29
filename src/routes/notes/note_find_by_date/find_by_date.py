@@ -1,10 +1,16 @@
 from datetime import date
 
-from flask_restx import Resource, abort
+from flask_restx import (
+    Resource,
+    abort,
+)
 
 from src.CRUD.sleep_note_table import find_user_note_by_calendar_date
 from src.models import SleepNoteOrm
-from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteOptional
+from src.pydantic_schemas.sleep.notes import (
+    SleepNote,
+    SleepNoteOptional,
+)
 from src.routes.account import response_model_401
 from src.routes.notes import ns_notes
 from src.routes.notes.note_find_by_date import (

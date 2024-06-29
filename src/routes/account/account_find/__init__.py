@@ -3,6 +3,7 @@ from src.routes.account import ns_account
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_model_200: dict = response_schema(
     ns=ns_account,
     model=UserInfo,

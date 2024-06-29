@@ -5,7 +5,10 @@ from flask_restx import Resource
 
 from src.CRUD.sleep_note_table import find_all_user_notes
 from src.models import SleepNoteOrm
-from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
+from src.pydantic_schemas.sleep.notes import (
+    SleepNote,
+    SleepNoteWithStats,
+)
 from src.routes.edit import (
     ns_edit,
     response_model_404,

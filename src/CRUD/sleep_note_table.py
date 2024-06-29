@@ -2,7 +2,12 @@ from datetime import date
 from typing import Iterable
 
 import sqlalchemy
-from sqlalchemy import delete, select, update
+
+from sqlalchemy import (
+    delete,
+    select,
+    update,
+)
 from sqlalchemy.exc import SQLAlchemyError
 
 from src.extension import db

@@ -1,13 +1,12 @@
 import pytest
 
-from src.domain.note.error import TimePointsSequenceError
-from src.domain.note.validators import NoteFieldsValidators
+from src.domain.note import NoteFieldsValidators, TimePointsSequenceError
 from tests.test_units.test_write_notes.test_sequences.test_fell_asleep import (
     incorrect_time_points_sequence_message,
 )
 
 
-def test_woke_up_cannot_be_gt_got_up():
+def test_woke_up_cannot_be_gt_got_up() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -19,7 +18,7 @@ def test_woke_up_cannot_be_gt_got_up():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_1():
+def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_1() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -31,7 +30,7 @@ def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_1():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_2():
+def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_2() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -43,7 +42,7 @@ def test_woke_up_cannot_be_gt_got_up_with_one_time_point_after_midnight_2():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_woke_up_cannot_be_gt_got_up_with_two_time_point_after_midnight_1():
+def test_woke_up_cannot_be_gt_got_up_with_two_time_point_after_midnight_1() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",
@@ -55,7 +54,7 @@ def test_woke_up_cannot_be_gt_got_up_with_two_time_point_after_midnight_1():
     assert error.value.message == incorrect_time_points_sequence_message
 
 
-def test_woke_up_cannot_be_gt_got_up_with_two_time_point_after_midnight_2():
+def test_woke_up_cannot_be_gt_got_up_with_two_time_point_after_midnight_2() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
         NoteFieldsValidators(
             bedtime_date="2020-12-12",

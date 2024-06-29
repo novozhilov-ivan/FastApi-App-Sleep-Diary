@@ -1,7 +1,17 @@
-from datetime import date, datetime, time
+from datetime import (
+    date,
+    datetime,
+    time,
+)
 
-from sqlalchemy import ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy import (
+    ForeignKey,
+    UniqueConstraint,
+)
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_column,
+)
 
 from src.extension import Base
 

@@ -1,9 +1,22 @@
 import abc
-from pathlib import Path
-from typing import ClassVar, Literal
 
-from pydantic import AnyUrl, Field, PostgresDsn, computed_field
-from pydantic_settings import BaseSettings, SettingsConfigDict
+from pathlib import Path
+from typing import (
+    ClassVar,
+    Literal,
+)
+
+from pydantic import (
+    AnyUrl,
+    Field,
+    PostgresDsn,
+    computed_field,
+)
+from pydantic_settings import (
+    BaseSettings,
+    SettingsConfigDict,
+)
+
 
 BASE_DIR = Path(__file__).parent.parent
 

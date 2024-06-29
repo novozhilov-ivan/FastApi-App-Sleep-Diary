@@ -3,6 +3,7 @@ from src.routes.notes import ns_notes
 from src.utils.restx_schema import response_schema
 from src.utils.status_codes import HTTP
 
+
 response_model_200: dict = response_schema(
     code=HTTP.OK_200,
     ns=ns_notes,

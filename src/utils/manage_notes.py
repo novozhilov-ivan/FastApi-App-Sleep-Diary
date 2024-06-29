@@ -1,12 +1,21 @@
-from typing import Iterable, Type
+from typing import (
+    Iterable,
+    Type,
+)
+from typing_extensions import Self
 
 from more_itertools import batched
-from pydantic import BaseModel, TypeAdapter
-from typing_extensions import Self
+from pydantic import (
+    BaseModel,
+    TypeAdapter,
+)
 from werkzeug.datastructures import FileStorage
 
 from src.models import SleepNoteOrm
-from src.pydantic_schemas.sleep.notes import SleepNote, SleepNoteWithStats
+from src.pydantic_schemas.sleep.notes import (
+    SleepNote,
+    SleepNoteWithStats,
+)
 from src.pydantic_schemas.sleep.weeks import SleepDiaryWeekCompute
 
 

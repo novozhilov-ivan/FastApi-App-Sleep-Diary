@@ -2,7 +2,10 @@ from flask_restx import Resource
 
 from src.routes.account import response_model_401
 from src.routes.auth import ns_auth
-from src.routes.auth.sign_out import response_model_200, response_ok_200
+from src.routes.auth.sign_out import (
+    response_model_200,
+    response_ok_200,
+)
 from src.routes.edit import response_model_422
 from src.utils.jwt import validate_auth_token
 from src.utils.status_codes import HTTP

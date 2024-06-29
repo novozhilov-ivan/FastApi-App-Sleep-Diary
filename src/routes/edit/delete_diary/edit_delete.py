@@ -1,7 +1,10 @@
 from flask_restx import Resource
 
 from src.CRUD.sleep_note_table import delete_all_user_notes
-from src.routes.edit import ns_edit, response_model_422
+from src.routes.edit import (
+    ns_edit,
+    response_model_422,
+)
 from src.routes.edit.delete_diary import response_model_204
 from src.utils.auth import UserActions
 from src.utils.status_codes import HTTP

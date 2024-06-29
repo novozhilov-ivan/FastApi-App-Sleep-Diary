@@ -3,7 +3,10 @@ from flask_restx import abort
 from src.CRUD.user_table import find_user_by_id
 from src.models import UserOrm
 from src.pydantic_schemas.user import UserInfo
-from src.routes.account import ns_account, response_model_401
+from src.routes.account import (
+    ns_account,
+    response_model_401,
+)
 from src.routes.account.account_find import (
     response_model_200,
     response_model_404,

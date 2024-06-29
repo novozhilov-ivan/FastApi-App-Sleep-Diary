@@ -1,9 +1,14 @@
 import json
+
 from copy import deepcopy
 from typing import Type
 
 import jsonref
-from flask_restx import Namespace, SchemaModel
+
+from flask_restx import (
+    Namespace,
+    SchemaModel,
+)
 from pydantic import BaseModel
 
 

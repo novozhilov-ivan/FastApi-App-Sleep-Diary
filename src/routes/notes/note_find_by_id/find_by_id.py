@@ -1,4 +1,7 @@
-from flask_restx import Resource, abort
+from flask_restx import (
+    Resource,
+    abort,
+)
 
 from src.CRUD.sleep_note_table import find_user_note_by_note_id
 from src.models import SleepNoteOrm

@@ -1,9 +1,14 @@
 import uuid
-from datetime import datetime, timedelta
+
+from datetime import (
+    datetime,
+    timedelta,
+)
 from functools import wraps
 from typing import Literal
 
 import jwt
+
 from flask import request
 from flask_restx import abort
 from jwt import InvalidTokenError
@@ -12,6 +17,7 @@ from src.config import auth_config
 from src.extension import bearer
 from src.pydantic_schemas.user import UserValidate
 from src.utils.status_codes import HTTP
+
 
 TOKEN_TYPE_FIELD = "type"
 ACCESS_TOKEN_TYPE = "access"
