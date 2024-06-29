@@ -4,6 +4,7 @@ line-length = 85
 
 [tool.isort]
 profile = "black"
+src_paths = ["."]
 line_length = 85
 include_trailing_comma = true
 split_on_trailing_comma = true
@@ -15,7 +16,10 @@ max-line-length = 85
 count = true
 statistics = true
 max-complexity = 8
-per-file-ignores = ["__init__.py:F811"]
+per-file-ignores = [
+#    "__init__.py:F811", # Повторный импорт объекта / переопределение
+#    "tests/*:ANN201", # Отсутствуют return hint в тестовых функциях
+]
 
 [tool.mypy]
 files = ["."]
@@ -31,7 +35,7 @@ init_typed = true
 warn_required_dynamic_aliases = true
 
 [[tool.mypy.overrides]]
-module = "tests/*"
+#module = "tests/*"
 disable_error_code = ["no-untyped-def"]
 
 [tool.poetry]
@@ -77,6 +81,27 @@ flake8-commas = "^4.0.0"
 flake8-variables-names = "^0.0.6"
 flake8-pydantic = "^0.3.1"
 isort = "^5.13.2"
+dlint = "^0.15.0"
+flake8-pie = "^0.16.0"
+flake8-simplify = "^0.21.0"
+flake8-dunder-all = "^0.4.1"
+flake8-mutable = "^1.2.0"
+flake8-unused-arguments = "^0.0.13"
+flake8-useless-assert = "^0.4.4"
+flake8-warnings = "^0.4.1"
+flake8-comprehensions = "^3.14.0"
+flake8-return = "^1.2.0"
+flake8-print = "^5.0.0"
+nitpick = "^0.35.0"
+flake8-absolute-import = "^1.0.0.2"
+flake8-pytest = "^1.4"
+flake8-pytest-style = "^2.0.0"
+flake8-annotations-coverage = "^0.0.6"
+flake8-annotations = "^3.1.1"
+flake8-pep604 = "^1.1.0"
+flake8-black = "^0.3.6"
+flake8-isort = "^6.1.1"
+flake8-for-pycharm = "^0.4.1"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"
