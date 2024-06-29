@@ -27,9 +27,9 @@ response_model_422: dict = response_schema(
 
 from src.routes.notes.note_add.note_add import AddNote  # noqa
 from src.routes.notes.note_delete.note_delete import DeleteNote  # noqa
-from src.routes.notes.note_update.note_update import UpdateNote  # noqa
-from src.routes.notes.note_find_by_id.find_by_id import NoteFindById  # noqa
 from src.routes.notes.note_find_by_date.find_by_date import NoteFindByDate  # noqa
+from src.routes.notes.note_find_by_id.find_by_id import NoteFindById  # noqa
+from src.routes.notes.note_update.note_update import UpdateNote  # noqa
 
 
 class NotesRoute(

@@ -1,7 +1,7 @@
 import pytest
 
-from src.domain.note.validators import NoteFieldsValidators
 from src.domain.note.error import TimePointsSequenceError
+from src.domain.note.validators import NoteFieldsValidators
 
 incorrect_time_points_sequence_message = (
     "Некорректная последовательность временных точек записи."

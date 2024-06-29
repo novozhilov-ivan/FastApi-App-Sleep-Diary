@@ -1,6 +1,13 @@
 [tool.black]
-line-length = 85
 target-version = ["py310"]
+line-length = 85
+
+[tool.isort]
+profile = "black"
+line_length = 85
+include_trailing_comma = true
+split_on_trailing_comma = true
+skip = [".gitignore", ".dockerignore"]
 
 [tool.flake8]
 exclude = [".git", ".idea", "__pycache__", "venv",]
@@ -69,6 +76,7 @@ pep8-naming = "^0.14.1"
 flake8-commas = "^4.0.0"
 flake8-variables-names = "^0.0.6"
 flake8-pydantic = "^0.3.1"
+isort = "^5.13.2"
 
 [tool.poetry.scripts]
 app = "flask --app=src.flask_app:create_app run --reload --host=0.0.0.0 --port=8000"

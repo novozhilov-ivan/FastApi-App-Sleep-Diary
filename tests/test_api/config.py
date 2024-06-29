@@ -1,19 +1,9 @@
 from typing import ClassVar
 
-from pydantic import (
-    PostgresDsn,
-    computed_field,
-)
-from pydantic_settings import (
-    BaseSettings,
-    SettingsConfigDict,
-)
+from pydantic import PostgresDsn, computed_field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
-from src.config import (
-    DBConfigBase,
-    FlaskSQLAlchemyConfig,
-    SQLAlchemyConfig,
-)
+from src.config import DBConfigBase, FlaskSQLAlchemyConfig, SQLAlchemyConfig
 
 test_settings_config_dict = SettingsConfigDict(
     extra="ignore",

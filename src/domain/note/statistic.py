@@ -1,6 +1,5 @@
 from datetime import time
 
-
 from src.domain.note.base import NoteBase
 from src.domain.note.durations import NoteDurations
 

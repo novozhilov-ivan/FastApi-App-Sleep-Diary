@@ -2,8 +2,8 @@ from flask import request
 from flask_restx import Resource
 from flask_restx.reqparse import Argument
 
-from src.CRUD.sleep_note_table import create_many_notes
 from src.config import flask_config
+from src.CRUD.sleep_note_table import create_many_notes
 from src.models import SleepNoteOrm
 from src.routes.edit import ns_edit, response_model_422
 from src.routes.edit.import_file import (

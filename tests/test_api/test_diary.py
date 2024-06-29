@@ -5,10 +5,7 @@ from pydantic import ValidationError
 from werkzeug.datastructures import Authorization
 
 from src.pydantic_schemas.errors.message import ErrorResponse
-from src.pydantic_schemas.sleep.diary import (
-    SleepDiaryModel,
-    SleepDiaryModelEmpty,
-)
+from src.pydantic_schemas.sleep.diary import SleepDiaryModel, SleepDiaryModelEmpty
 from src.pydantic_schemas.user import User
 from src.routes.diary import diary_endpoint
 from src.utils.status_codes import HTTP

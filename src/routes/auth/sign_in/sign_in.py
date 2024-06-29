@@ -2,7 +2,11 @@ from flask import request
 from flask_restx import Resource
 
 from src.pydantic_schemas.token import TokenInfo
-from src.pydantic_schemas.user import User, UserCredentials, UserValidate
+from src.pydantic_schemas.user import (
+    User,
+    UserCredentials,
+    UserValidate,
+)
 from src.routes.auth import ns_auth
 from src.routes.auth.sign_in import (
     response_model_200,

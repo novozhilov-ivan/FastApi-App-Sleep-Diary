@@ -14,11 +14,7 @@ from src.pydantic_schemas.user import UserCredentials, UserValidate
 from src.utils.auth import hash_password
 from src.utils.jwt import create_access_jwt, create_refresh_jwt
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.config import (
-    test_flask_config,
-    test_flask_sqlalchemy_config,
-)
-
+from tests.test_api.config import test_flask_config, test_flask_sqlalchemy_config
 
 # @pytest.fixture(scope="session")
 # def test_engine() -> Generator[Engine, None, None]:

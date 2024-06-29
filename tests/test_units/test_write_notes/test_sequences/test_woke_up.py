@@ -1,7 +1,7 @@
 import pytest
 
-from src.domain.note.validators import NoteFieldsValidators
 from src.domain.note.error import TimePointsSequenceError
+from src.domain.note.validators import NoteFieldsValidators
 from tests.test_units.test_write_notes.test_sequences.test_fell_asleep import (
     incorrect_time_points_sequence_message,
 )
