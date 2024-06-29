@@ -20,7 +20,7 @@ from pydantic import (
 )
 
 
-StrToDate = Annotated[
+StrToDate = Annotated[  # TODO переделать на AfterValidator и функцию def
     time | str,
     PlainValidator(
         lambda t: time(
@@ -29,6 +29,7 @@ StrToDate = Annotated[
         ),
     ),
 ]
+# TODO Сделать тоже самое для bedtime_date
 
 
 class NoteBase(BaseModel, abc.ABC):
