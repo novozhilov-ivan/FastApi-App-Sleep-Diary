@@ -709,6 +709,17 @@ files = [
 ]
 
 [[package]]
+name = "eradicate"
+version = "2.3.0"
+description = "Removes commented-out code."
+optional = false
+python-versions = "*"
+files = [
+    {file = "eradicate-2.3.0-py3-none-any.whl", hash = "sha256:2b29b3dd27171f209e4ddd8204b70c02f0682ae95eecb353f10e8d72b149c63e"},
+    {file = "eradicate-2.3.0.tar.gz", hash = "sha256:06df115be3b87d0fc1c483db22a2ebb12bcf40585722810d809cc770f5031c37"},
+]
+
+[[package]]
 name = "exceptiongroup"
 version = "1.2.1"
 description = "Backport of PEP 654 (exception groups)"
@@ -910,6 +921,22 @@ domdf-python-tools = ">=2.6.0"
 flake8 = ">=3.7"
 
 [[package]]
+name = "flake8-eradicate"
+version = "1.5.0"
+description = "Flake8 plugin to find commented out code"
+optional = false
+python-versions = ">=3.8,<4.0"
+files = [
+    {file = "flake8_eradicate-1.5.0-py3-none-any.whl", hash = "sha256:18acc922ad7de623f5247c7d5595da068525ec5437dd53b22ec2259b96ce9d22"},
+    {file = "flake8_eradicate-1.5.0.tar.gz", hash = "sha256:aee636cb9ecb5594a7cd92d67ad73eb69909e5cc7bd81710cf9d00970f3983a6"},
+]
+
+[package.dependencies]
+attrs = "*"
+eradicate = ">=2.0,<3.0"
+flake8 = ">5"
+
+[[package]]
 name = "flake8-for-pycharm"
 version = "0.4.1"
 description = "Add flake8 support to pycharm. See README for how to use."
@@ -923,6 +950,17 @@ files = [
 [package.dependencies]
 flake8 = "*"
 pylint = "*"
+
+[[package]]
+name = "flake8-implicit-str-concat"
+version = "0.4.0"
+description = "Flake8 plugin to encourage correct string literal concatenation."
+optional = false
+python-versions = "~=3.7"
+files = [
+    {file = "flake8_implicit_str_concat-0.4.0-py3-none-any.whl", hash = "sha256:b91805a3e0ff30ae2890830548478af25c79a4a579ec402a6ba3538043dff60c"},
+    {file = "flake8_implicit_str_concat-0.4.0.tar.gz", hash = "sha256:b6acf233afee943dc1802ef4bc242a19f0419fac9943739e235d3f2aaf616361"},
+]
 
 [[package]]
 name = "flake8-isort"
@@ -2967,4 +3005,4 @@ dev = ["black (>=19.3b0)", "pytest (>=4.6.2)"]
 [metadata]
 lock-version = "2.0"
 python-versions = "^3.10"
-content-hash = "1461b9db8ac62760f85b0aaf78fcc901020e9abd17344e8a75c30c4138603a42"
+content-hash = "7af0ef9f77ac6cfe232f6daea319dd4077d5f13e0b8f5de1a27fbe89fdf36a59"
