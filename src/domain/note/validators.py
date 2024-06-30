@@ -38,6 +38,6 @@ class NoteFieldsValidators(NoteDurations, NoteBase):
 
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
-        if self._no_sleep_duration <= self._sleep_duration_without_the_no_sleep:
+        if self._no_sleep_duration <= self._sleep_duration_without_no_sleep:
             return self
         raise NoSleepDurationError

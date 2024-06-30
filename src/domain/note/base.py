@@ -65,7 +65,15 @@ class NoteBase(BaseModel, abc.ABC):
     )
     @property
     @abc.abstractmethod
-    def _sleep_duration_without_the_no_sleep(self: Self) -> timedelta: ...
+    def _sleep_duration_without_no_sleep(self: Self) -> timedelta: ...
+
+    @computed_field(  # type: ignore[misc]
+        title="Длительность времени, проведенного в постели.",
+        return_type=timedelta,
+    )
+    @property
+    @abc.abstractmethod
+    def _spent_in_bed_duration(self: Self) -> timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Длительность отсутствия сна (секунд)",

@@ -9,10 +9,19 @@ from src.domain.note.base import NoteBase
 class NoteDurations(NoteBase):
     @computed_field  # type: ignore[misc]
     @property
-    def _sleep_duration_without_the_no_sleep(self: Self) -> timedelta:
+    def _sleep_duration_without_no_sleep(self: Self) -> timedelta:
         sleep_duration = timedelta(
             hours=self.woke_up.hour - self.fell_asleep.hour,
             minutes=self.woke_up.minute - self.fell_asleep.minute,
+        )
+        return timedelta(seconds=sleep_duration.seconds)
+
+    @computed_field  # type: ignore[misc]
+    @property
+    def _spent_in_bed_duration(self: Self) -> timedelta:
+        sleep_duration = timedelta(
+            hours=self.got_up.hour - self.went_to_bed.hour,
+            minutes=self.got_up.minute - self.went_to_bed.minute,
         )
         return timedelta(seconds=sleep_duration.seconds)
 
