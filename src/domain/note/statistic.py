@@ -1,9 +1,33 @@
+import abc
+
 from datetime import time
 
-from src.domain.note import NoteBase, NoteDurations
+from pydantic import computed_field
+
+from src.domain.note import (
+    NoteDurationsBase,
+    NoteStatisticBase,
+    NoteValueObjectBase,
+)
 
 
-class NoteStatistic(NoteDurations, NoteBase):
-    sleep_duration: time
-    time_spent_in_bed: time
-    sleep_efficiency: float
+class NoteStatistic(
+    NoteValueObjectBase,
+    NoteDurationsBase,
+    NoteStatisticBase,
+    abc.ABC,
+):
+    @computed_field
+    @property
+    def time_in_sleep(self) -> time:
+        return time(hour=0)
+
+    @computed_field
+    @property
+    def time_in_bed(self) -> time:
+        return time(hour=0)
+
+    @computed_field
+    @property
+    def sleep_efficiency(self) -> float:
+        return 0.1

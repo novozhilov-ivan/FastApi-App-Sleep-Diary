@@ -14,11 +14,11 @@ from src.extension import (
 )
 
 
-# TODO add ruff[isort, etc] | linters mypy | pre-commit.
+# TODO add pre-commit.
 
 # TODO Рефакторинг архитектуры под DDD.
 #  1. Отделить бизнес логику в domain и Протестировать
-#   1.1 NoteBase, NoteFieldsValidators, NoteValueObject, NoteStatistics, NoteEntity
+#   1.1 NoteBase, NoteValidators, NoteValueObject, NoteStatistics, NoteEntity
 #   1.2 WeekBase, WeekFieldsValidators, WeekValueObject, WeekStatistics, WeekEntity
 #    или убрать прослойку Week и сделать это computed_field в Diary
 #   1.3 DiaryBase, DiaryStatistics, etc

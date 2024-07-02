@@ -3,10 +3,16 @@ from typing_extensions import Self
 
 from pydantic import computed_field
 
-from src.domain.note.base import NoteBase
+from src.domain.note import (
+    NoteDurationsBase,
+    NoteValueObjectBase,
+)
 
 
-class NoteDurations(NoteBase):
+class NoteDurations(
+    NoteValueObjectBase,
+    NoteDurationsBase,
+):
     @computed_field  # type: ignore[misc]
     @property
     def _sleep_duration_without_no_sleep(self: Self) -> timedelta:
@@ -18,7 +24,7 @@ class NoteDurations(NoteBase):
 
     @computed_field  # type: ignore[misc]
     @property
-    def _spent_in_bed_duration(self: Self) -> timedelta:
+    def _in_bed_duration(self: Self) -> timedelta:
         sleep_duration = timedelta(
             hours=self.got_up.hour - self.went_to_bed.hour,
             minutes=self.got_up.minute - self.went_to_bed.minute,

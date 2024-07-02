@@ -1,16 +1,16 @@
+import abc
+
 from typing_extensions import Self
 
 from pydantic import model_validator
 
-from src.domain.note import (
-    NoSleepDurationError,
-    NoteBase,
-    NoteDurations,
-    TimePointsSequenceError,
-)
+from src.domain import note
 
 
-class NoteFieldsValidators(NoteDurations, NoteBase):
+class TimePointsSequencesValidatorBase(
+    note.NoteValueObjectBase,
+    abc.ABC,
+):
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
         all_time_points_within_one_day = (
@@ -34,10 +34,26 @@ class NoteFieldsValidators(NoteDurations, NoteBase):
             ),
         ):
             return self
-        raise TimePointsSequenceError
+        raise note.TimePointsSequenceError
 
+
+class TimePointsSequencesValidator(TimePointsSequencesValidatorBase):
+    ...  # fmt: skip
+
+
+class NoSleepDurationValidatorBase(
+    note.NoteDurationsBase,
+    abc.ABC,
+):
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
         if self._no_sleep_duration <= self._sleep_duration_without_no_sleep:
             return self
-        raise NoSleepDurationError
+        raise note.NoSleepDurationError
+
+
+class NoSleepDurationValidator(
+    note.NoteDurations,
+    NoSleepDurationValidatorBase,
+):
+    ...  # fmt: skip

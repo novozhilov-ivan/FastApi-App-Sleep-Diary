@@ -1,9 +1,12 @@
-from src.domain.note.base import NoteBase
-from src.domain.note.validators import NoteFieldsValidators
+from src.domain import note
 
 
 class NoteValueObject(
-    NoteFieldsValidators,
-    NoteBase,
+    note.NoteDurations,
+    note.NoteStatistic,
+    note.TimePointsSequencesValidatorBase,
+    note.NoSleepDurationValidatorBase,
+    note.NoteValueObjectBase,
+    note.NoteDurationsBase,
 ):
     ...  # fmt: skip

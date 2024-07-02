@@ -2,8 +2,8 @@ import abc
 
 from pydantic import BaseModel
 
-from src.domain.note.base import NoteBase
+from src.domain import note
 
 
 class WeekBase(BaseModel, abc.ABC):
-    notes: set[NoteBase]
+    notes: set[note.NoteValueObjectBase]

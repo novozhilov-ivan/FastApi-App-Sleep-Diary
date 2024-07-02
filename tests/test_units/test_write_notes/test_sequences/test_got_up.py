@@ -1,7 +1,7 @@
 import pytest
 
 from src.domain.note.error import TimePointsSequenceError
-from src.domain.note.validators import NoteFieldsValidators
+from src.domain.note.validators import TimePointsSequencesValidator
 from tests.test_units.test_write_notes.test_sequences.test_fell_asleep import (
     incorrect_time_points_sequence_message,
 )
@@ -9,7 +9,7 @@ from tests.test_units.test_write_notes.test_sequences.test_fell_asleep import (
 
 def test_got_up_cannot_be_lt_only_woke_up() -> None:
     with pytest.raises(TimePointsSequenceError) as error:
-        NoteFieldsValidators(
+        TimePointsSequencesValidator(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="03:00",
@@ -23,7 +23,7 @@ def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight()
     None
 ):
     with pytest.raises(TimePointsSequenceError) as error:
-        NoteFieldsValidators(
+        TimePointsSequencesValidator(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="01:00",
@@ -37,7 +37,7 @@ def test_got_up_cannot_be_gt_woke_up_and_lt_other_points_with_some_time_points_a
     None
 ):
     with pytest.raises(TimePointsSequenceError) as error:
-        NoteFieldsValidators(
+        TimePointsSequencesValidator(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",
             fell_asleep="17:00",

@@ -26,7 +26,7 @@ StrToTime = Annotated[time | str, AfterValidator(normalize_str_to_time)]
 StrToDate = Annotated[date | str, AfterValidator(normalize_str_to_date)]
 
 
-class NoteBase(BaseModel, abc.ABC):
+class NoteValueObjectBase(BaseModel, abc.ABC):
     bedtime_date: StrToDate = Field(
         title="Дата отхода ко сну",
         description="",
@@ -58,7 +58,21 @@ class NoteBase(BaseModel, abc.ABC):
         description="",
         examples=["00:00", "00:20"],
     )
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        frozen=True,
+        extra="forbid",
+    )
 
+    def __eq__(self: Self, other: object) -> bool:
+        if not isinstance(other, NoteValueObjectBase):
+            return NotImplemented
+        return self.bedtime_date == other.bedtime_date
+
+    def __hash__(self: Self) -> int:
+        return hash(self.bedtime_date)
+
+
+class NoteDurationsBase(abc.ABC):
     @computed_field(  # type: ignore[misc]
         title="Длительность сна без учета времени отсутствия сна",
         return_type=timedelta,
@@ -73,7 +87,7 @@ class NoteBase(BaseModel, abc.ABC):
     )
     @property
     @abc.abstractmethod
-    def _spent_in_bed_duration(self: Self) -> timedelta: ...
+    def _in_bed_duration(self: Self) -> timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Длительность отсутствия сна (секунд)",
@@ -83,15 +97,32 @@ class NoteBase(BaseModel, abc.ABC):
     @abc.abstractmethod
     def _no_sleep_duration(self: Self) -> timedelta: ...
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(
-        frozen=True,
-        extra="forbid",
+
+class NoteStatisticBase(abc.ABC):
+    @computed_field(
+        title="",
+        return_type=time,
     )
+    @property
+    @abc.abstractmethod
+    def time_in_sleep(self) -> time: ...
 
-    def __eq__(self: Self, other: object) -> bool:
-        if not isinstance(other, NoteBase):
-            return NotImplemented
-        return self.bedtime_date == other.bedtime_date
+    @computed_field(
+        title="",
+        return_type=time,
+    )
+    @property
+    @abc.abstractmethod
+    def time_in_bed(self) -> time: ...
 
-    def __hash__(self: Self) -> int:
-        return hash(self.bedtime_date)
+    @computed_field(
+        title="",
+        return_type=float,
+    )
+    @property
+    @abc.abstractmethod
+    def sleep_efficiency(self) -> float: ...
+
+
+class NoteBase(abc.ABC):
+    pass
