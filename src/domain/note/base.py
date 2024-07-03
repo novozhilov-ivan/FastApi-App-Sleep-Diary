@@ -99,29 +99,29 @@ class NoteDurationsBase(abc.ABC):
 
 
 class NoteStatisticBase(abc.ABC):
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         title="",
         return_type=time,
     )
     @property
     @abc.abstractmethod
-    def time_in_sleep(self) -> time: ...
+    def time_in_sleep(self: Self) -> time: ...
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         title="",
         return_type=time,
     )
     @property
     @abc.abstractmethod
-    def time_in_bed(self) -> time: ...
+    def time_in_bed(self: Self) -> time: ...
 
-    @computed_field(
+    @computed_field(  # type: ignore[misc]
         title="",
         return_type=float,
     )
     @property
     @abc.abstractmethod
-    def sleep_efficiency(self) -> float: ...
+    def sleep_efficiency(self: Self) -> float: ...
 
 
 class NoteBase(

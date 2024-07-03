@@ -1,10 +1,10 @@
 from datetime import date, time
 
-from src.domain.note import NoteValueObject
+from src.domain import note as nt
 
 
 def test_field_types() -> None:
-    note = NoteValueObject(
+    note = nt.NoteValueObject(
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",

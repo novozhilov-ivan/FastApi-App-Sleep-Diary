@@ -3,15 +3,12 @@ from typing_extensions import Self
 
 from pydantic import computed_field
 
-from src.domain.note import (
-    NoteDurationsBase,
-    NoteValueObjectBase,
-)
+from src.domain import note
 
 
 class NoteDurations(
-    NoteValueObjectBase,
-    NoteDurationsBase,
+    note.NoteValueObjectBase,
+    note.NoteDurationsBase,
 ):
     @computed_field  # type: ignore[misc]
     @property

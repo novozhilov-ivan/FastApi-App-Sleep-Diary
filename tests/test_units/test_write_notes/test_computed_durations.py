@@ -1,6 +1,6 @@
 from datetime import timedelta
 
-from src.domain.note.durations import NoteDurations
+from src.domain import note as nt
 
 
 twelve_hours_duration_in_bed = timedelta(hours=12)
@@ -9,7 +9,7 @@ one_hour_duration_of_no_sleep = timedelta(hours=1)
 
 
 def test_note_durations_all_time_point_is_sequences() -> None:
-    note = NoteDurations(
+    note = nt.NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",
@@ -23,7 +23,7 @@ def test_note_durations_all_time_point_is_sequences() -> None:
 
 
 def test_note_durations_with_one_time_point_after_midnight() -> None:
-    note = NoteDurations(
+    note = nt.NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
         fell_asleep="15:00",
@@ -37,7 +37,7 @@ def test_note_durations_with_one_time_point_after_midnight() -> None:
 
 
 def test_note_durations_with_two_time_point_after_midnight() -> None:
-    note = NoteDurations(
+    note = nt.NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="15:00",
         fell_asleep="17:00",
@@ -51,7 +51,7 @@ def test_note_durations_with_two_time_point_after_midnight() -> None:
 
 
 def test_note_durations_with_three_time_point_after_midnight() -> None:
-    note = NoteDurations(
+    note = nt.NoteDurations(
         bedtime_date="2020-12-12",
         went_to_bed="23:00",
         fell_asleep="01:00",

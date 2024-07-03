@@ -1,8 +1,8 @@
-from src.domain.note.value_object import NoteValueObject
+from src.domain import note
 
 
 def test_create_note_with_increasing_sequenced_of_all_time_points() -> None:
-    NoteValueObject(
+    note.NoteValueObject(
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",
@@ -12,7 +12,7 @@ def test_create_note_with_increasing_sequenced_of_all_time_points() -> None:
 
 
 def test_create_note_with_one_time_point_after_midnight() -> None:
-    NoteValueObject(
+    note.NoteValueObject(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
         fell_asleep="15:00",
@@ -22,7 +22,7 @@ def test_create_note_with_one_time_point_after_midnight() -> None:
 
 
 def test_create_note_with_two_time_point_after_midnight() -> None:
-    NoteValueObject(
+    note.NoteValueObject(
         bedtime_date="2020-12-12",
         went_to_bed="15:00",
         fell_asleep="17:00",
@@ -32,7 +32,7 @@ def test_create_note_with_two_time_point_after_midnight() -> None:
 
 
 def test_create_note_with_three_time_point_after_midnight() -> None:
-    NoteValueObject(
+    note.NoteValueObject(
         bedtime_date="2020-12-12",
         went_to_bed="23:00",
         fell_asleep="01:00",
