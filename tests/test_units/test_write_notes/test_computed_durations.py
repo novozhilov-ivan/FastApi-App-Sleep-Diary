@@ -2,10 +2,10 @@ from datetime import timedelta
 
 from src.domain import note as nt
 
-
 twelve_hours_duration_in_bed = timedelta(hours=12)
 eight_hours_duration_of_sleep = timedelta(hours=8)
 one_hour_duration_of_no_sleep = timedelta(hours=1)
+seven_hours_of_sleep_duration_minus_no_sleep = timedelta(hours=7)
 
 
 def test_note_durations_all_time_point_is_sequences() -> None:
@@ -20,6 +20,10 @@ def test_note_durations_all_time_point_is_sequences() -> None:
     assert note._sleep_duration == eight_hours_duration_of_sleep
     assert note._no_sleep_duration == one_hour_duration_of_no_sleep
     assert note._in_bed_duration == twelve_hours_duration_in_bed
+    assert (
+        note._sleep_duration_minus_no_sleep
+        == seven_hours_of_sleep_duration_minus_no_sleep
+    )
 
 
 def test_note_durations_with_one_time_point_after_midnight() -> None:
@@ -34,6 +38,10 @@ def test_note_durations_with_one_time_point_after_midnight() -> None:
     assert note._sleep_duration == eight_hours_duration_of_sleep
     assert note._no_sleep_duration == one_hour_duration_of_no_sleep
     assert note._in_bed_duration == twelve_hours_duration_in_bed
+    assert (
+        note._sleep_duration_minus_no_sleep
+        == seven_hours_of_sleep_duration_minus_no_sleep
+    )
 
 
 def test_note_durations_with_two_time_point_after_midnight() -> None:
@@ -48,6 +56,10 @@ def test_note_durations_with_two_time_point_after_midnight() -> None:
     assert note._sleep_duration == eight_hours_duration_of_sleep
     assert note._no_sleep_duration == one_hour_duration_of_no_sleep
     assert note._in_bed_duration == twelve_hours_duration_in_bed
+    assert (
+        note._sleep_duration_minus_no_sleep
+        == seven_hours_of_sleep_duration_minus_no_sleep
+    )
 
 
 def test_note_durations_with_three_time_point_after_midnight() -> None:
@@ -62,3 +74,7 @@ def test_note_durations_with_three_time_point_after_midnight() -> None:
     assert note._sleep_duration == eight_hours_duration_of_sleep
     assert note._no_sleep_duration == one_hour_duration_of_no_sleep
     assert note._in_bed_duration == twelve_hours_duration_in_bed
+    assert (
+        note._sleep_duration_minus_no_sleep
+        == seven_hours_of_sleep_duration_minus_no_sleep
+    )
