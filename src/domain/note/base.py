@@ -19,11 +19,11 @@ from pydantic import (
     computed_field,
 )
 
-from src.domain.note.utils import normalize_str_to_date, normalize_str_to_time
+from src.domain.note import utils
 
 
-StrToTime = Annotated[time | str, AfterValidator(normalize_str_to_time)]
-StrToDate = Annotated[date | str, AfterValidator(normalize_str_to_date)]
+StrToTime = Annotated[time | str, AfterValidator(utils.normalize_str_to_time)]
+StrToDate = Annotated[date | str, AfterValidator(utils.normalize_str_to_date)]
 
 
 class NoteValueObjectBase(BaseModel, abc.ABC):
@@ -124,5 +124,10 @@ class NoteStatisticBase(abc.ABC):
     def sleep_efficiency(self) -> float: ...
 
 
-class NoteBase(abc.ABC):
-    pass
+class NoteBase(
+    NoteValueObjectBase,
+    NoteDurationsBase,
+    NoteStatisticBase,
+    abc.ABC,
+):
+    ...  # fmt: skip

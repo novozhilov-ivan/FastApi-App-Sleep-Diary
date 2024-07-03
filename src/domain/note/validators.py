@@ -7,7 +7,7 @@ from pydantic import model_validator
 from src.domain import note
 
 
-class TimePointsSequencesValidatorBase(
+class TimePointsSequencesValidator(
     note.NoteValueObjectBase,
     abc.ABC,
 ):
@@ -37,11 +37,7 @@ class TimePointsSequencesValidatorBase(
         raise note.TimePointsSequenceError
 
 
-class TimePointsSequencesValidator(TimePointsSequencesValidatorBase):
-    ...  # fmt: skip
-
-
-class NoSleepDurationValidatorBase(
+class NoSleepDurationValidator(
     note.NoteDurationsBase,
     abc.ABC,
 ):
@@ -50,10 +46,3 @@ class NoSleepDurationValidatorBase(
         if self._no_sleep_duration <= self._sleep_duration_without_no_sleep:
             return self
         raise note.NoSleepDurationError
-
-
-class NoSleepDurationValidator(
-    note.NoteDurations,
-    NoSleepDurationValidatorBase,
-):
-    ...  # fmt: skip
