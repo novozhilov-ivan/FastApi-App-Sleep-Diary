@@ -44,7 +44,7 @@ class TestPostgresDBConfig(DBConfigBase):
     port: str
     name: str
 
-    @computed_field(return_type=PostgresDsn)  # type: ignore[misc]
+    @computed_field  # type: ignore[misc]
     @property
     def database_dsn(self) -> PostgresDsn:
         return "{}{}{}://{}:{}@{}:{}/{}".format(

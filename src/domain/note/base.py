@@ -75,7 +75,6 @@ class NoteValueObjectBase(BaseModel, abc.ABC):
 class NoteDurationsBase(abc.ABC):
     @computed_field(  # type: ignore[misc]
         title="Длительность сна",
-        return_type=timedelta,
     )
     @property
     @abc.abstractmethod
@@ -83,7 +82,6 @@ class NoteDurationsBase(abc.ABC):
 
     @computed_field(  # type: ignore[misc]
         title="Длительность сна за вычетом времени без сна",
-        return_type=timedelta,
     )
     @property
     @abc.abstractmethod
@@ -91,7 +89,6 @@ class NoteDurationsBase(abc.ABC):
 
     @computed_field(  # type: ignore[misc]
         title="Длительность времени, проведенного в постели.",
-        return_type=timedelta,
     )
     @property
     @abc.abstractmethod
@@ -99,7 +96,6 @@ class NoteDurationsBase(abc.ABC):
 
     @computed_field(  # type: ignore[misc]
         title="Длительность отсутствия сна",
-        return_type=timedelta,
     )
     @property
     @abc.abstractmethod
@@ -109,7 +105,6 @@ class NoteDurationsBase(abc.ABC):
 class NoteStatisticBase(abc.ABC):
     @computed_field(  # type: ignore[misc]
         title="Время сна",
-        return_type=time,
     )
     @property
     @abc.abstractmethod
@@ -117,7 +112,6 @@ class NoteStatisticBase(abc.ABC):
 
     @computed_field(  # type: ignore[misc]
         title="Время в кровати",
-        return_type=time,
     )
     @property
     @abc.abstractmethod
@@ -125,7 +119,6 @@ class NoteStatisticBase(abc.ABC):
 
     @computed_field(  # type: ignore[misc]
         title="Эффективность сна (%)",
-        return_type=float,
     )
     @property
     @abc.abstractmethod

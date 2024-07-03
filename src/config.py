@@ -95,7 +95,6 @@ class PostgresDBConfig(DBConfigBase):
 
     @computed_field(  # type: ignore[misc]
         examples=["postgresql+psycopg2://db_user:passwd@0.0.0.0:5432/db_name"],
-        return_type=PostgresDsn,
     )
     @property
     def database_dsn(self) -> PostgresDsn:
@@ -138,13 +137,12 @@ class SQLAlchemyConfig(BaseSettings):
             "sqlite:///db.sqlite",
             "sqlite::memory:",
         ],
-        return_type=AnyUrl,
     )
     @property
     def database_uri(self) -> AnyUrl:
         return self.db_config.database_dsn
 
-    @computed_field(return_type=dict)  # type: ignore[misc]
+    @computed_field  # type: ignore[misc]
     @property
     def session_options(self) -> dict:
         return {
@@ -153,7 +151,7 @@ class SQLAlchemyConfig(BaseSettings):
             "autoflush": self.autoflush,
         }
 
-    @computed_field(return_type=dict)  # type: ignore[misc]
+    @computed_field  # type: ignore[misc]
     @property
     def engine_options(self) -> dict:
         return {
