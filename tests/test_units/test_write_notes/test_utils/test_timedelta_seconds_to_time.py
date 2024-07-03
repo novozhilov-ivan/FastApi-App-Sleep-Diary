@@ -25,9 +25,9 @@ def test_timedelta_with_seconds_to_time() -> None:
     seconds_of_twenty_five_minutes = 60 * 25
     useless_second_lesser_than_60 = 42
     test_seconds_value = (
-            seconds_of_one_hour
-            + seconds_of_twenty_five_minutes
-            + useless_second_lesser_than_60
+        seconds_of_one_hour
+        + seconds_of_twenty_five_minutes
+        + useless_second_lesser_than_60
     )
     timedelta_test = timedelta(seconds=test_seconds_value)
     time_test = time(

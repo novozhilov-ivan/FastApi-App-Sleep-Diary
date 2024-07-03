@@ -44,10 +44,11 @@ max-line-length = 85
 count = true
 statistics = true
 max-complexity = 8
-#no-print-logs = true
+no-print-logs = true
 per-file-ignores = [
 #    "__init__.py:F811", # Повторный импорт объекта / переопределение
-#    "tests/*:ANN201", # Отсутствуют return hint в тестовых функциях
+    "*:DALL000"
+
 ]
 
 [tool.mypy]

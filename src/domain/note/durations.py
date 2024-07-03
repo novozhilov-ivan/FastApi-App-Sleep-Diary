@@ -1,7 +1,7 @@
 from datetime import timedelta
+from typing_extensions import Self
 
 from pydantic import computed_field
-from typing_extensions import Self
 
 from src.domain import note
 
@@ -22,6 +22,8 @@ class NoteDurations(
     @computed_field  # type: ignore[misc]
     @property
     def _sleep_duration_minus_no_sleep(self: Self) -> timedelta:
+        if self._no_sleep_duration >= self._sleep_duration:
+            return timedelta(0)
         sleep_duration_minus_no_sleep = (
             self._sleep_duration - self._no_sleep_duration
         )

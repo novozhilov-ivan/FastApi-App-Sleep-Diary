@@ -2,6 +2,7 @@ from datetime import timedelta
 
 from src.domain import note as nt
 
+
 twelve_hours_duration_in_bed = timedelta(hours=12)
 eight_hours_duration_of_sleep = timedelta(hours=8)
 one_hour_duration_of_no_sleep = timedelta(hours=1)
