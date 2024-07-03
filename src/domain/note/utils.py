@@ -1,4 +1,4 @@
-from datetime import date, time
+from datetime import date, time, timedelta
 
 
 def normalize_str_to_time(
@@ -24,3 +24,10 @@ def normalize_str_to_date(
             day=int(str_day),
         )
     return date_point
+
+
+def timedelta_seconds_to_time(td: timedelta) -> time:
+    return time(
+        hour=td.seconds // 60 // 60,
+        minute=td.seconds // 60 % 60,
+    )

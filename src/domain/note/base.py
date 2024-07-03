@@ -54,7 +54,7 @@ class NoteValueObjectBase(BaseModel, abc.ABC):
     )
     no_sleep: StrToTime = Field(
         default=time(hour=0, minute=0),
-        title="Время отсутствия сна (в ЧЧ:ММ)",
+        title="Время отсутствия сна",
         description="",
         examples=["00:00", "00:20"],
     )
@@ -74,12 +74,20 @@ class NoteValueObjectBase(BaseModel, abc.ABC):
 
 class NoteDurationsBase(abc.ABC):
     @computed_field(  # type: ignore[misc]
-        title="Длительность сна без учета времени отсутствия сна",
+        title="Длительность сна",
         return_type=timedelta,
     )
     @property
     @abc.abstractmethod
-    def _sleep_duration_without_no_sleep(self: Self) -> timedelta: ...
+    def _sleep_duration(self: Self) -> timedelta: ...
+
+    @computed_field(  # type: ignore[misc]
+        title="Длительность сна за вычетом времени без сна",
+        return_type=timedelta,
+    )
+    @property
+    @abc.abstractmethod
+    def _sleep_duration_minus_no_sleep(self: Self) -> timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Длительность времени, проведенного в постели.",
@@ -90,7 +98,7 @@ class NoteDurationsBase(abc.ABC):
     def _in_bed_duration(self: Self) -> timedelta: ...
 
     @computed_field(  # type: ignore[misc]
-        title="Длительность отсутствия сна (секунд)",
+        title="Длительность отсутствия сна",
         return_type=timedelta,
     )
     @property
@@ -100,7 +108,7 @@ class NoteDurationsBase(abc.ABC):
 
 class NoteStatisticBase(abc.ABC):
     @computed_field(  # type: ignore[misc]
-        title="",
+        title="Время сна",
         return_type=time,
     )
     @property
@@ -108,7 +116,7 @@ class NoteStatisticBase(abc.ABC):
     def time_in_sleep(self: Self) -> time: ...
 
     @computed_field(  # type: ignore[misc]
-        title="",
+        title="Время в кровати",
         return_type=time,
     )
     @property
@@ -116,7 +124,7 @@ class NoteStatisticBase(abc.ABC):
     def time_in_bed(self: Self) -> time: ...
 
     @computed_field(  # type: ignore[misc]
-        title="",
+        title="Эффективность сна (%)",
         return_type=float,
     )
     @property

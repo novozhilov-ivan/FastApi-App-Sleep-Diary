@@ -43,6 +43,6 @@ class NoSleepDurationValidator(
 ):
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
-        if self._no_sleep_duration <= self._sleep_duration_without_no_sleep:
+        if self._no_sleep_duration <= self._sleep_duration:
             return self
         raise note.NoSleepDurationError

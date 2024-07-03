@@ -12,12 +12,21 @@ class NoteDurations(
 ):
     @computed_field  # type: ignore[misc]
     @property
-    def _sleep_duration_without_no_sleep(self: Self) -> timedelta:
+    def _sleep_duration(self: Self) -> timedelta:
         sleep_duration = timedelta(
             hours=self.woke_up.hour - self.fell_asleep.hour,
             minutes=self.woke_up.minute - self.fell_asleep.minute,
         )
         return timedelta(seconds=sleep_duration.seconds)
+
+    # TODO Дописать тест с этим методом
+    @computed_field  # type: ignore[misc]
+    @property
+    def _sleep_duration_minus_no_sleep(self: Self) -> timedelta:
+        sleep_duration_minus_no_sleep = (
+            self._sleep_duration - self._no_sleep_duration
+        )
+        return timedelta(seconds=sleep_duration_minus_no_sleep.seconds)
 
     @computed_field  # type: ignore[misc]
     @property

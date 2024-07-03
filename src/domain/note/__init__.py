@@ -14,6 +14,7 @@ from src.domain.note.statistic import NoteStatistic
 from src.domain.note.utils import (
     normalize_str_to_date,
     normalize_str_to_time,
+    timedelta_seconds_to_time,
 )
 from src.domain.note.validators import (
     NoSleepDurationValidator,
@@ -34,6 +35,7 @@ __all__ = [
     "NoteStatistic",
     "normalize_str_to_date",
     "normalize_str_to_time",
+    "timedelta_seconds_to_time",
     "NoSleepDurationValidator",
     "TimePointsSequencesValidator",
     "NoteValueObject",
