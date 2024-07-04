@@ -2,10 +2,9 @@ from src.domain import note
 
 
 class NoteValueObject(
-    note.TimePointsSequencesValidator,
-    note.NoSleepDurationValidator,
-    note.NoteDurations,
     note.NoteStatistic,
+    note.NoSleepDurationValidator,
+    note.TimePointsSequencesValidator,
     note.NoteBase,
 ):
     ...  # fmt: skip

@@ -3,15 +3,8 @@ from datetime import time
 from src.domain import note as nt
 
 
-class NoteStatistic(
-    nt.NoteDurations,
-    nt.NoteStatistic,
-):
-    ...  # fmt: skip
-
-
 def test_note_statistic_with_zero_time_points() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="00:00",
         fell_asleep="00:00",
@@ -25,7 +18,7 @@ def test_note_statistic_with_zero_time_points() -> None:
 
 
 def test_note_statistic_with_no_sleep_gt_sleep_duration() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="00:00",
         fell_asleep="00:00",
@@ -39,7 +32,7 @@ def test_note_statistic_with_no_sleep_gt_sleep_duration() -> None:
 
 
 def test_note_statistic_correct_time_points() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="01:25",
         fell_asleep="01:45",
@@ -53,7 +46,7 @@ def test_note_statistic_correct_time_points() -> None:
 
 
 def test_note_statistic_all_time_points_after_midnight() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="01:00",
         fell_asleep="03:00",
@@ -67,7 +60,7 @@ def test_note_statistic_all_time_points_after_midnight() -> None:
 
 
 def test_note_statistic_with_one_time_point_after_midnight() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
         fell_asleep="15:00",
@@ -81,7 +74,7 @@ def test_note_statistic_with_one_time_point_after_midnight() -> None:
 
 
 def test_note_statistic_with_two_time_point_after_midnight() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="15:00",
         fell_asleep="17:00",
@@ -95,7 +88,7 @@ def test_note_statistic_with_two_time_point_after_midnight() -> None:
 
 
 def test_note_statistic_with_three_time_point_after_midnight() -> None:
-    note = NoteStatistic(
+    note = nt.NoteStatistic(
         bedtime_date="2020-12-12",
         went_to_bed="23:00",
         fell_asleep="01:00",

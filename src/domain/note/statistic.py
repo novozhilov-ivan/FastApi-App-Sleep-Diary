@@ -1,5 +1,3 @@
-import abc
-
 from datetime import time, timedelta
 from typing_extensions import Self
 
@@ -9,10 +7,10 @@ from src.domain import note
 
 
 class NoteStatistic(
-    note.NoteValueObjectBase,
-    note.NoteDurationsBase,
     note.NoteStatisticBase,
-    abc.ABC,
+    note.NoteDurations,
+    note.NoteDurationsBase,
+    note.NoteValueObjectBase,
 ):
     @computed_field  # type: ignore[misc]
     @property

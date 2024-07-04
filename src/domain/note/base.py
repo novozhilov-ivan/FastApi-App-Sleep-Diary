@@ -72,7 +72,7 @@ class NoteValueObjectBase(BaseModel, abc.ABC):
         return hash(self.bedtime_date)
 
 
-class NoteDurationsBase(abc.ABC):
+class NoteDurationsBase(NoteValueObjectBase, abc.ABC):
     @computed_field(  # type: ignore[misc]
         title="Длительность сна",
     )
@@ -102,7 +102,7 @@ class NoteDurationsBase(abc.ABC):
     def _no_sleep_duration(self: Self) -> timedelta: ...
 
 
-class NoteStatisticBase(abc.ABC):
+class NoteStatisticBase(NoteDurationsBase, abc.ABC):
     @computed_field(  # type: ignore[misc]
         title="Время сна",
     )
@@ -126,9 +126,9 @@ class NoteStatisticBase(abc.ABC):
 
 
 class NoteBase(
-    NoteValueObjectBase,
-    NoteDurationsBase,
     NoteStatisticBase,
+    NoteDurationsBase,
+    NoteValueObjectBase,
     abc.ABC,
 ):
     ...  # fmt: skip

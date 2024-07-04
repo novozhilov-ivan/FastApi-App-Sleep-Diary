@@ -7,8 +7,8 @@ from src.domain import note
 
 
 class NoteDurations(
-    note.NoteValueObjectBase,
     note.NoteDurationsBase,
+    note.NoteValueObjectBase,
 ):
     @computed_field  # type: ignore[misc]
     @property
