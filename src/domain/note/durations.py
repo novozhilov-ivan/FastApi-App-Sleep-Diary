@@ -1,3 +1,5 @@
+import abc
+
 from datetime import timedelta
 from typing_extensions import Self
 
@@ -6,11 +8,8 @@ from pydantic import computed_field
 from src.domain import note
 
 
-class NoteDurations(
-    note.NoteDurationsBase,
-    note.NoteValueObjectBase,
-):
-    @computed_field  # type: ignore[misc]
+class NoteDurations(note.BaseNoteDurations, abc.ABC):
+    @computed_field(title="Длительность сна")  # type: ignore[misc]
     @property
     def _sleep_duration(self: Self) -> timedelta:
         sleep_duration = timedelta(
@@ -19,7 +18,9 @@ class NoteDurations(
         )
         return timedelta(seconds=sleep_duration.seconds)
 
-    @computed_field  # type: ignore[misc]
+    @computed_field(  # type: ignore[misc]
+        title="Длительность сна за вычетом времени без сна",
+    )
     @property
     def _sleep_duration_minus_no_sleep(self: Self) -> timedelta:
         if self._no_sleep_duration >= self._sleep_duration:
@@ -29,7 +30,9 @@ class NoteDurations(
         )
         return timedelta(seconds=sleep_duration_minus_no_sleep.seconds)
 
-    @computed_field  # type: ignore[misc]
+    @computed_field(  # type: ignore[misc]
+        title="Длительность времени, проведенного в постели.",
+    )
     @property
     def _in_bed_duration(self: Self) -> timedelta:
         sleep_duration = timedelta(
@@ -38,7 +41,7 @@ class NoteDurations(
         )
         return timedelta(seconds=sleep_duration.seconds)
 
-    @computed_field  # type: ignore[misc]
+    @computed_field(title="Длительность отсутствия сна")  # type: ignore[misc]
     @property
     def _no_sleep_duration(self: Self) -> timedelta:
         return timedelta(

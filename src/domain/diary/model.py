@@ -2,7 +2,7 @@ import abc
 
 from pydantic import BaseModel
 
-from src.domain.week.model import WeekBase
+from src.domain.week.base import WeekBase
 
 
 class DiaryBase(BaseModel, abc.ABC):

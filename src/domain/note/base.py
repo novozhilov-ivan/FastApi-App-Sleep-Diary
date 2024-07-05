@@ -5,18 +5,15 @@ from datetime import (
     time,
     timedelta,
 )
-from typing import (
-    Annotated,
-    ClassVar,
-)
+from typing import Annotated
 from typing_extensions import Self
 
 from pydantic import (
     AfterValidator,
     BaseModel,
-    ConfigDict,
     Field,
     computed_field,
+    model_validator,
 )
 
 from src.domain.note import utils
@@ -26,7 +23,7 @@ StrToTime = Annotated[time | str, AfterValidator(utils.normalize_str_to_time)]
 StrToDate = Annotated[date | str, AfterValidator(utils.normalize_str_to_date)]
 
 
-class NoteValueObjectBase(BaseModel, abc.ABC):
+class BaseNoteDateTimePoints(BaseModel, abc.ABC):
     bedtime_date: StrToDate = Field(
         title="Дата отхода ко сну",
         description="",
@@ -58,24 +55,16 @@ class NoteValueObjectBase(BaseModel, abc.ABC):
         description="",
         examples=["00:00", "00:20"],
     )
-    model_config: ClassVar[ConfigDict] = ConfigDict(
-        frozen=True,
-        extra="forbid",
-    )
-
-    def __eq__(self: Self, other: object) -> bool:
-        if not isinstance(other, NoteValueObjectBase):
-            return NotImplemented
-        return self.bedtime_date == other.bedtime_date
-
-    def __hash__(self: Self) -> int:
-        return hash(self.bedtime_date)
 
 
-class NoteDurationsBase(NoteValueObjectBase, abc.ABC):
-    @computed_field(  # type: ignore[misc]
-        title="Длительность сна",
-    )
+class BaseTimePointsSequencesValidator(BaseNoteDateTimePoints, abc.ABC):
+    @model_validator(mode="after")
+    @abc.abstractmethod
+    def validate_time_points_sequences(self: Self) -> Self: ...
+
+
+class BaseNoteDurations(BaseNoteDateTimePoints, abc.ABC):
+    @computed_field(title="Длительность сна")  # type: ignore[misc]
     @property
     @abc.abstractmethod
     def _sleep_duration(self: Self) -> timedelta: ...
@@ -94,41 +83,44 @@ class NoteDurationsBase(NoteValueObjectBase, abc.ABC):
     @abc.abstractmethod
     def _in_bed_duration(self: Self) -> timedelta: ...
 
-    @computed_field(  # type: ignore[misc]
-        title="Длительность отсутствия сна",
-    )
+    @computed_field(title="Длительность отсутствия сна")  # type: ignore[misc]
     @property
     @abc.abstractmethod
     def _no_sleep_duration(self: Self) -> timedelta: ...
 
 
-class NoteStatisticBase(NoteDurationsBase, abc.ABC):
-    @computed_field(  # type: ignore[misc]
-        title="Время сна",
-    )
+class BaseNoSleepDurationValidator(BaseNoteDurations, abc.ABC):
+    @model_validator(mode="after")
+    @abc.abstractmethod
+    def validate_no_sleep_duration(self: Self) -> Self: ...
+
+
+class BaseNoteStatistic(BaseNoteDurations, abc.ABC):
+    @computed_field(title="Время сна")  # type: ignore[misc]
     @property
     @abc.abstractmethod
     def time_in_sleep(self: Self) -> time: ...
 
-    @computed_field(  # type: ignore[misc]
-        title="Время в кровати",
-    )
+    @computed_field(title="Время в кровати")  # type: ignore[misc]
     @property
     @abc.abstractmethod
     def time_in_bed(self: Self) -> time: ...
 
-    @computed_field(  # type: ignore[misc]
-        title="Эффективность сна (%)",
-    )
+    @computed_field(title="Эффективность сна (%)")  # type: ignore[misc]
     @property
     @abc.abstractmethod
     def sleep_efficiency(self: Self) -> float: ...
 
 
-class NoteBase(
-    NoteStatisticBase,
-    NoteDurationsBase,
-    NoteValueObjectBase,
+class BaseNoteValueObject(
+    BaseNoteStatistic,
+    BaseTimePointsSequencesValidator,
+    BaseNoSleepDurationValidator,
+    BaseNoteDateTimePoints,
     abc.ABC,
 ):
-    ...  # fmt: skip
+    @abc.abstractmethod
+    def __eq__(self: Self, other: object) -> bool: ...
+
+    @abc.abstractmethod
+    def __hash__(self: Self) -> int: ...

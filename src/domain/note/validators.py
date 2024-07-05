@@ -1,3 +1,5 @@
+import abc
+
 from typing_extensions import Self
 
 from pydantic import model_validator
@@ -5,7 +7,7 @@ from pydantic import model_validator
 from src.domain import note
 
 
-class TimePointsSequencesValidator(note.NoteValueObjectBase):
+class TimePointsSequencesValidator(note.BaseTimePointsSequencesValidator, abc.ABC):
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
         all_time_points_within_one_day = (
@@ -34,8 +36,8 @@ class TimePointsSequencesValidator(note.NoteValueObjectBase):
 
 class NoSleepDurationValidator(
     note.NoteDurations,
-    note.NoteDurationsBase,
-    note.NoteValueObjectBase,
+    note.BaseNoSleepDurationValidator,
+    abc.ABC,
 ):
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
