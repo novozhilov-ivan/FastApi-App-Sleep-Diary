@@ -47,9 +47,8 @@ max-complexity = 8
 no-print-logs = true
 per-file-ignores = [
 #    "__init__.py:F811", # Повторный импорт объекта / переопределение
-    "*:DALL000"
-
 ]
+unused-arguments-ignore-dunder = true
 
 [tool.mypy]
 files = ["."]
@@ -113,7 +112,6 @@ isort = "^5.13.2"
 dlint = "^0.15.0"
 flake8-pie = "^0.16.0"
 flake8-simplify = "^0.21.0"
-flake8-dunder-all = "^0.4.1"
 flake8-mutable = "^1.2.0"
 flake8-unused-arguments = "^0.0.13"
 flake8-useless-assert = "^0.4.4"
