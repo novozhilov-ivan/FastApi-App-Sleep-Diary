@@ -1,31 +1,35 @@
 import abc
 
 from datetime import time, timedelta
-from typing import Annotated
+from typing import Annotated, ClassVar
 from typing_extensions import Self
 
 from pydantic import (
     BaseModel,
+    ConfigDict,
     Field,
     computed_field,
     conint,
 )
 
-from src.domain import note as nt
+from src.domain import note
 
 
 int_weekly_notes_count = Annotated[int, conint(ge=1, le=7)]
 
 
-class WeekBase(BaseModel, abc.ABC):
-    notes: set[nt.BaseNoteValueObject] = Field(
+# TODO Наследоваться от set
+# TODO Сделать ограничения
+class BaseWeek(BaseModel, abc.ABC):
+    notes: set[note.NoteValueObject] = Field(
         title="Неделя с записями сна",
         min_length=1,
         max_length=7,
     )
+    model_config: ClassVar = ConfigDict(extra="forbid")
 
 
-class WeekDurationsBase(WeekBase, abc.ABC):
+class BaseWeeklyAverageDurations(BaseWeek, abc.ABC):
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
@@ -53,7 +57,7 @@ class WeekDurationsBase(WeekBase, abc.ABC):
     def _average_weekly_no_sleep_duration(self: Self) -> timedelta: ...
 
 
-class WeekStatisticBase(WeekDurationsBase, abc.ABC):
+class BaseWeekStatistic(BaseWeeklyAverageDurations, abc.ABC):
     @computed_field(title="Количество записей сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
@@ -80,3 +84,11 @@ class WeekStatisticBase(WeekDurationsBase, abc.ABC):
     @property
     @abc.abstractmethod
     def average_weekly_sleep_efficiency(self: Self) -> float: ...
+
+
+class BaseWeekValueObject(
+    BaseWeekStatistic,
+    BaseWeek,
+    abc.ABC,
+):
+    ...  # fmt: skip

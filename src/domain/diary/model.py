@@ -2,11 +2,11 @@ import abc
 
 from pydantic import BaseModel
 
-from src.domain.week.base import WeekBase
+from src.domain.week import BaseWeekValueObject
 
 
 class DiaryBase(BaseModel, abc.ABC):
-    weeks: list[WeekBase]
+    weeks: list[BaseWeekValueObject]
 
 
 class Diary(DiaryBase):
