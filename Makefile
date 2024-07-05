@@ -10,3 +10,5 @@ logs:
 		docker compose -f flask_app.yml -f postgres.yml logs --tail=25 api postgres pgadmin
 sh:
 		docker run -it api bash
+bi:
+		black . && isort .
