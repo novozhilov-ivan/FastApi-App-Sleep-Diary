@@ -48,6 +48,7 @@ no-print-logs = true
 per-file-ignores = [
 #    "__init__.py:F811", # Повторный импорт объекта / переопределение
 ]
+unused-arguments-ignore-abstract-functions = true
 unused-arguments-ignore-dunder = true
 
 [tool.mypy]

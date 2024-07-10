@@ -1,35 +1,34 @@
 import abc
 
 from datetime import time, timedelta
-from typing import Annotated, ClassVar
+from typing import Annotated, Generator
 from typing_extensions import Self
 
 from pydantic import (
-    BaseModel,
-    ConfigDict,
-    Field,
     computed_field,
     conint,
 )
-
-from src.domain import note
 
 
 int_weekly_notes_count = Annotated[int, conint(ge=1, le=7)]
 
 
-# TODO Наследоваться от set
-# TODO Сделать ограничения
-class BaseWeek(BaseModel, abc.ABC):
-    notes: set[note.NoteValueObject] = Field(
-        title="Неделя с записями сна",
-        min_length=1,
-        max_length=7,
-    )
-    model_config: ClassVar = ConfigDict(extra="forbid")
+class BaseWeek(set, abc.ABC):
+    ...  # fmt: skip
 
 
 class BaseWeeklyAverageDurations(BaseWeek, abc.ABC):
+    @abc.abstractmethod
+    def __compute_average_duration_of_field(
+        self: Self,
+        field_name: str,
+    ) -> Generator[timedelta, None, None]: ...
+
+    @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
+    @property
+    @abc.abstractmethod
+    def _week_duration(self: Self) -> int_weekly_notes_count: ...
+
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod

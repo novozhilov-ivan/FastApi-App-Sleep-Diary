@@ -3,6 +3,10 @@ from src.domain.week.base import (
     BaseWeeklyAverageDurations,
     BaseWeekStatistic,
     BaseWeekValueObject,
+    int_weekly_notes_count,
+)
+from src.domain.week.durations import (
+    WeeklyAverageDurations,
 )
 
 
@@ -11,4 +15,6 @@ __all__ = [
     "BaseWeeklyAverageDurations",
     "BaseWeekStatistic",
     "BaseWeekValueObject",
+    "int_weekly_notes_count",
+    "WeeklyAverageDurations",
 ]
