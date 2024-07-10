@@ -2,6 +2,7 @@ import abc
 
 from datetime import (
     date,
+    datetime,
     time,
     timedelta,
 )
@@ -124,3 +125,9 @@ class BaseNoteValueObject(
 
     @abc.abstractmethod
     def __hash__(self: Self) -> int: ...
+
+
+class BaseNoteEntity(BaseNoteValueObject, abc.ABC):
+    oid: int = Field(gt=0)
+    created_at: datetime
+    updated_at: datetime
