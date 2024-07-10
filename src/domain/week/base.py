@@ -1,6 +1,6 @@
 import abc
+import datetime as dt
 
-from datetime import time, timedelta
 from typing import Annotated, Generator
 from typing_extensions import Self
 
@@ -22,7 +22,7 @@ class BaseWeeklyAverageDurations(BaseWeek, abc.ABC):
     def __compute_average_duration_of_field(
         self: Self,
         field_name: str,
-    ) -> Generator[timedelta, None, None]: ...
+    ) -> Generator[dt.timedelta, None, None]: ...
 
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
@@ -32,28 +32,30 @@ class BaseWeeklyAverageDurations(BaseWeek, abc.ABC):
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def _average_weekly_sleep_duration(self: Self) -> timedelta: ...
+    def _average_weekly_sleep_duration(self: Self) -> dt.timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Средняя длительность сна за неделю за вычетом времени без сна",
     )
     @property
     @abc.abstractmethod
-    def _average_weekly_sleep_duration_minus_no_sleep(self: Self) -> timedelta: ...
+    def _average_weekly_sleep_duration_minus_no_sleep(
+        self: Self,
+    ) -> dt.timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Средняя длительность времени, проведенного в постели, за неделю.",
     )
     @property
     @abc.abstractmethod
-    def _average_weekly_in_bed_duration(self: Self) -> timedelta: ...
+    def _average_weekly_in_bed_duration(self: Self) -> dt.timedelta: ...
 
     @computed_field(  # type: ignore[misc]
         title="Средняя длительность отсутствия сна за неделю",
     )
     @property
     @abc.abstractmethod
-    def _average_weekly_no_sleep_duration(self: Self) -> timedelta: ...
+    def _average_weekly_no_sleep_duration(self: Self) -> dt.timedelta: ...
 
 
 class BaseWeekStatistic(BaseWeeklyAverageDurations, abc.ABC):
@@ -65,17 +67,17 @@ class BaseWeekStatistic(BaseWeeklyAverageDurations, abc.ABC):
     @computed_field(title="Средняя время сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def average_weekly_time_in_sleep(self: Self) -> time: ...
+    def average_weekly_time_in_sleep(self: Self) -> dt.time: ...
 
     @computed_field(title="Среднее время в кровати за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def average_weekly_time_in_bed(self: Self) -> time: ...
+    def average_weekly_time_in_bed(self: Self) -> dt.time: ...
 
     @computed_field(title="Среднее время без сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def average_weekly_no_sleep_time(self: Self) -> time: ...
+    def average_weekly_no_sleep_time(self: Self) -> dt.time: ...
 
     @computed_field(  # type: ignore[misc]
         title="Средняя эффективность сна (%) за неделю",

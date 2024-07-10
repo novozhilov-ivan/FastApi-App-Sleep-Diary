@@ -1,12 +1,12 @@
-from datetime import timedelta
+import datetime as dt
 
 from src.domain import note as nt
 
 
-twelve_hours_duration_in_bed = timedelta(hours=12)
-eight_hours_duration_of_sleep = timedelta(hours=8)
-one_hour_duration_of_no_sleep = timedelta(hours=1)
-seven_hours_of_sleep_duration_minus_no_sleep = timedelta(hours=7)
+twelve_hours_duration_in_bed = dt.timedelta(hours=12)
+eight_hours_duration_of_sleep = dt.timedelta(hours=8)
+one_hour_duration_of_no_sleep = dt.timedelta(hours=1)
+seven_hours_of_sleep_duration_minus_no_sleep = dt.timedelta(hours=7)
 
 
 def test_note_durations_all_time_point_is_sequences() -> None:

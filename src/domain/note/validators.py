@@ -4,10 +4,10 @@ from typing_extensions import Self
 
 from pydantic import model_validator
 
-from src.domain import note
+from src.domain import note as nt
 
 
-class TimePointsSequencesValidator(note.BaseTimePointsSequencesValidator, abc.ABC):
+class TimePointsSequencesValidator(nt.BaseTimePointsSequencesValidator, abc.ABC):
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
         all_time_points_within_one_day = (
@@ -31,16 +31,16 @@ class TimePointsSequencesValidator(note.BaseTimePointsSequencesValidator, abc.AB
             ),
         ):
             return self
-        raise note.TimePointsSequenceError
+        raise nt.TimePointsSequenceError
 
 
 class NoSleepDurationValidator(
-    note.NoteDurations,
-    note.BaseNoSleepDurationValidator,
+    nt.NoteDurations,
+    nt.BaseNoSleepDurationValidator,
     abc.ABC,
 ):
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
         if self._no_sleep_duration <= self._sleep_duration:
             return self
-        raise note.NoSleepDurationError
+        raise nt.NoSleepDurationError

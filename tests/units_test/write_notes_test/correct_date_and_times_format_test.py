@@ -1,4 +1,4 @@
-from datetime import date, time
+import datetime as dt
 
 from src.domain import note as nt
 
@@ -12,9 +12,9 @@ def test_field_types() -> None:
         got_up="13:00",
         no_sleep="01:00",
     )
-    assert isinstance(note.bedtime_date, date)
-    assert isinstance(note.went_to_bed, time)
-    assert isinstance(note.fell_asleep, time)
-    assert isinstance(note.woke_up, time)
-    assert isinstance(note.got_up, time)
-    assert isinstance(note.no_sleep, time)
+    assert isinstance(note.bedtime_date, dt.date)
+    assert isinstance(note.went_to_bed, dt.time)
+    assert isinstance(note.fell_asleep, dt.time)
+    assert isinstance(note.woke_up, dt.time)
+    assert isinstance(note.got_up, dt.time)
+    assert isinstance(note.no_sleep, dt.time)

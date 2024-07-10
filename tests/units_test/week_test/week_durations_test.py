@@ -1,4 +1,4 @@
-from datetime import timedelta
+import datetime as dt
 
 from src.domain import note as nt, week as wk
 
@@ -25,10 +25,10 @@ def test_average_weekly_sleep_duration_of_one_note_in_week() -> None:
     week = wk.WeeklyAverageDurations()
     week.add(note_1)
     assert week._week_duration == 1
-    assert week._average_weekly_sleep_duration == timedelta(seconds=8 * 60 * 60)
-    assert week._average_weekly_in_bed_duration == timedelta(seconds=12 * 60 * 60)
-    assert week._average_weekly_no_sleep_duration == timedelta(seconds=30 * 60)
-    assert week._average_weekly_sleep_duration_minus_no_sleep == timedelta(
+    assert week._average_weekly_sleep_duration == dt.timedelta(seconds=8 * 60 * 60)
+    assert week._average_weekly_in_bed_duration == dt.timedelta(seconds=12 * 60 * 60)
+    assert week._average_weekly_no_sleep_duration == dt.timedelta(seconds=30 * 60)
+    assert week._average_weekly_sleep_duration_minus_no_sleep == dt.timedelta(
         seconds=8 * 60 * 60 - 30 * 60,
     )
 
@@ -38,15 +38,15 @@ def test_average_weekly_sleep_duration() -> None:
     week.add(note_1)
     week.add(note_2)
     assert week._week_duration == 2
-    assert week._average_weekly_sleep_duration == timedelta(
+    assert week._average_weekly_sleep_duration == dt.timedelta(
         seconds=(8 * 60 * 60 + 9 * 60 * 60) / 2,
     )
-    assert week._average_weekly_in_bed_duration == timedelta(
+    assert week._average_weekly_in_bed_duration == dt.timedelta(
         seconds=(12 * 60 * 60 + 13 * 60 * 60) / 2,
     )
-    assert week._average_weekly_no_sleep_duration == timedelta(
+    assert week._average_weekly_no_sleep_duration == dt.timedelta(
         seconds=(30 * 60 + 60 * 60) / 2,
     )
-    assert week._average_weekly_sleep_duration_minus_no_sleep == timedelta(
+    assert week._average_weekly_sleep_duration_minus_no_sleep == dt.timedelta(
         seconds=(8 * 60 * 60 + 9 * 60 * 60) / 2 - (30 * 60 + 60 * 60) / 2,
     )
