@@ -102,6 +102,13 @@ class BaseNoteStatistic(BaseNoteDurations, abc.ABC):
     @abc.abstractmethod
     def time_in_bed(self: Self) -> dt.time: ...
 
+    @computed_field(  # type: ignore[misc]
+        title="Время сна за вычетом времени без сна",
+    )
+    @property
+    @abc.abstractmethod
+    def time_in_sleep_minus_no_sleep(self: Self) -> dt.time: ...
+
     @computed_field(title="Эффективность сна (%)")  # type: ignore[misc]
     @property
     @abc.abstractmethod

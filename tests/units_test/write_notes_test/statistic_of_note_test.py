@@ -1,4 +1,5 @@
 import datetime as dt
+import operator as op
 
 from src.domain import note as nt
 
@@ -14,7 +15,8 @@ def test_note_statistic_with_zero_time_points() -> None:
     )
     assert note.time_in_sleep == dt.time(hour=0)
     assert note.time_in_bed == dt.time(hour=0)
-    assert note.sleep_efficiency == round(0, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=0)
+    assert note.sleep_efficiency == round(number=0, ndigits=2)
 
 
 def test_note_statistic_with_no_sleep_gt_sleep_duration() -> None:
@@ -28,7 +30,8 @@ def test_note_statistic_with_no_sleep_gt_sleep_duration() -> None:
     )
     assert note.time_in_sleep == dt.time(hour=0)
     assert note.time_in_bed == dt.time(hour=0)
-    assert note.sleep_efficiency == round(0, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=0)
+    assert note.sleep_efficiency == round(number=0, ndigits=2)
 
 
 def test_note_statistic_correct_time_points() -> None:
@@ -40,9 +43,16 @@ def test_note_statistic_correct_time_points() -> None:
         got_up="10:09",
         no_sleep="00:11",
     )
-    assert note.time_in_sleep == dt.time(hour=7, minute=57)
+    assert note.time_in_sleep == dt.time(hour=8, minute=8)
     assert note.time_in_bed == dt.time(hour=8, minute=44)
-    assert note.sleep_efficiency == round((7 * 60 + 57) / (8 * 60 + 46), 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=7, minute=57)
+    assert note.sleep_efficiency == round(
+        number=op.truediv(
+            (7 * 60 + 57),
+            (8 * 60 + 46),
+        ),
+        ndigits=2,
+    )
 
 
 def test_note_statistic_all_time_points_after_midnight() -> None:
@@ -54,9 +64,13 @@ def test_note_statistic_all_time_points_after_midnight() -> None:
         got_up="13:00",
         no_sleep="01:00",
     )
-    assert note.time_in_sleep == dt.time(hour=7)
+    assert note.time_in_sleep == dt.time(hour=8)
     assert note.time_in_bed == dt.time(hour=12)
-    assert note.sleep_efficiency == round(7 / 12, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=7)
+    assert note.sleep_efficiency == round(
+        number=op.truediv(7, 12),
+        ndigits=2,
+    )
 
 
 def test_note_statistic_with_one_time_point_after_midnight() -> None:
@@ -68,9 +82,13 @@ def test_note_statistic_with_one_time_point_after_midnight() -> None:
         got_up="01:00",
         no_sleep="01:00",
     )
-    assert note.time_in_sleep == dt.time(hour=7)
+    assert note.time_in_sleep == dt.time(hour=8)
     assert note.time_in_bed == dt.time(hour=12)
-    assert note.sleep_efficiency == round(7 / 12, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=7)
+    assert note.sleep_efficiency == round(
+        number=op.truediv(7, 12),
+        ndigits=2,
+    )
 
 
 def test_note_statistic_with_two_time_point_after_midnight() -> None:
@@ -82,9 +100,13 @@ def test_note_statistic_with_two_time_point_after_midnight() -> None:
         got_up="03:00",
         no_sleep="01:00",
     )
-    assert note.time_in_sleep == dt.time(hour=7)
+    assert note.time_in_sleep == dt.time(hour=8)
     assert note.time_in_bed == dt.time(hour=12)
-    assert note.sleep_efficiency == round(7 / 12, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=7)
+    assert note.sleep_efficiency == round(
+        number=op.truediv(7, 12),
+        ndigits=2,
+    )
 
 
 def test_note_statistic_with_three_time_point_after_midnight() -> None:
@@ -96,6 +118,10 @@ def test_note_statistic_with_three_time_point_after_midnight() -> None:
         got_up="11:00",
         no_sleep="01:00",
     )
-    assert note.time_in_sleep == dt.time(hour=7)
+    assert note.time_in_sleep == dt.time(hour=8)
     assert note.time_in_bed == dt.time(hour=12)
-    assert note.sleep_efficiency == round(7 / 12, 2)
+    assert note.time_in_sleep_minus_no_sleep == dt.time(hour=7)
+    assert note.sleep_efficiency == round(
+        number=op.truediv(7, 12),
+        ndigits=2,
+    )
