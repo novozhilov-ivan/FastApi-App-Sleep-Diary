@@ -13,11 +13,11 @@ from pydantic import (
 int_duration_of_week = Annotated[int, conint(ge=1, le=7)]
 
 
-class BaseWeek(set, abc.ABC):
+class BaseWeekStorage(set, abc.ABC):
     ...  # fmt: skip
 
 
-class BaseWeeklyAverageDurations(BaseWeek, abc.ABC):
+class BaseWeeklyAverageDurations(BaseWeekStorage, abc.ABC):
     @abc.abstractmethod
     def __compute_average_duration(
         self: Self,
@@ -94,9 +94,9 @@ class BaseWeekStatistic(BaseWeeklyAverageDurations, abc.ABC):
     def average_weekly_sleep_efficiency(self: Self) -> float: ...
 
 
-class BaseWeekValueObject(
+class BaseWeek(
     BaseWeekStatistic,
-    BaseWeek,
+    BaseWeekStorage,
     abc.ABC,
 ):
     ...  # fmt: skip

@@ -8,6 +8,7 @@ from src.domain.note.base import (
     BaseTimePointsSequencesValidator,
 )
 from src.domain.note.durations import NoteDurations
+from src.domain.note.entity import NoteEntity
 from src.domain.note.error import (
     NoSleepDurationError,
     NoteBaseError,
@@ -40,6 +41,7 @@ __all__ = [
     "NoteStatistic",
     "NoteValueObject",
     "NoteBaseError",
+    "NoteEntity",
     "TimePointsSequenceError",
     "NoSleepDurationError",
     "normalize_str_to_date",

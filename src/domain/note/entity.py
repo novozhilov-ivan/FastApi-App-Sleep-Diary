@@ -2,12 +2,12 @@ from typing import ClassVar
 
 from pydantic import ConfigDict
 
-from src.domain import note
+from src.domain.note import base, value_object
 
 
 class NoteEntity(
-    note.NoteValueObject,
-    note.BaseNoteEntity,
+    value_object.NoteValueObject,
+    base.BaseNoteEntity,
 ):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=False,

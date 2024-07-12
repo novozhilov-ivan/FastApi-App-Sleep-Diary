@@ -1,6 +1,6 @@
 import pytest
 
-from src.domain import note
+from src.domain import note as nt
 
 
 incorrect_sleep_duration_error_message = (
@@ -9,8 +9,8 @@ incorrect_sleep_duration_error_message = (
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points() -> None:
-    with pytest.raises(note.NoSleepDurationError) as error:
-        note.NoSleepDurationValidator(
+    with pytest.raises(nt.NoSleepDurationError) as error:
+        nt.NoSleepDurationValidator(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="03:00",
@@ -24,8 +24,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points() -> N
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(note.NoSleepDurationError) as error:
-        note.NoSleepDurationValidator(
+    with pytest.raises(nt.NoSleepDurationError) as error:
+        nt.NoSleepDurationValidator(
             bedtime_date="2020-12-12",
             went_to_bed="13:00",
             fell_asleep="15:00",
@@ -39,8 +39,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnig
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(note.NoSleepDurationError) as error:
-        note.NoSleepDurationValidator(
+    with pytest.raises(nt.NoSleepDurationError) as error:
+        nt.NoSleepDurationValidator(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",
             fell_asleep="17:00",
@@ -54,8 +54,8 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnig
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(note.NoSleepDurationError) as error:
-        note.NoSleepDurationValidator(
+    with pytest.raises(nt.NoSleepDurationError) as error:
+        nt.NoSleepDurationValidator(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="01:00",

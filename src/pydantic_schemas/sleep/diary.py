@@ -47,8 +47,7 @@ class SleepDiaryCompute(SleepDiaryDataCompute):
         if not self.weeks:
             return 0
         days_in_weeks = map(lambda week: len(week.notes), self.weeks)
-        days_count = sum(days_in_weeks)
-        return days_count
+        return sum(days_in_weeks)
 
     @computed_field  # type: ignore[misc]
     @property

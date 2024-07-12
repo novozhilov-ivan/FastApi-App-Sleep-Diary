@@ -7,7 +7,10 @@ from pydantic import model_validator
 from src.domain import note as nt
 
 
-class TimePointsSequencesValidator(nt.BaseTimePointsSequencesValidator, abc.ABC):
+class TimePointsSequencesValidator(
+    nt.BaseTimePointsSequencesValidator,
+    abc.ABC,
+):
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
         all_time_points_within_one_day = (

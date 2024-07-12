@@ -3,14 +3,14 @@ from typing_extensions import Self
 
 from pydantic import ConfigDict
 
-from src.domain import note
+from src.domain.note import base, statistic, validators
 
 
 class NoteValueObject(
-    note.NoteStatistic,
-    note.NoSleepDurationValidator,
-    note.TimePointsSequencesValidator,
-    note.BaseNoteValueObject,
+    statistic.NoteStatistic,
+    validators.NoSleepDurationValidator,
+    validators.TimePointsSequencesValidator,
+    base.BaseNoteValueObject,
 ):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True,
@@ -18,7 +18,7 @@ class NoteValueObject(
     )
 
     def __eq__(self: Self, other: object) -> bool:
-        if not isinstance(other, note.BaseNoteDateTimePoints):
+        if not isinstance(other, base.BaseNoteDateTimePoints):
             return NotImplemented
         return self.bedtime_date == other.bedtime_date
 
