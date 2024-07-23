@@ -16,7 +16,7 @@ from src.utils.jwt import (
     decode_jwt,
 )
 from src.utils.status_codes import HTTP
-from tests.test_api.response import Response
+from tests.api_test.response import Response
 
 
 @pytest.mark.auth

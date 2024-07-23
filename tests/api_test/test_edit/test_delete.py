@@ -12,8 +12,8 @@ from src.models import (
 )
 from src.routes.edit.delete_diary import delete_notes_endpoint
 from src.utils.status_codes import HTTP
+from tests.api_test.response import Response
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.response import Response
 
 
 @pytest.mark.edit_diary

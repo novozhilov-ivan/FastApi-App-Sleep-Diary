@@ -11,8 +11,8 @@ from src.pydantic_schemas.sleep.notes import (
 from src.routes.notes import note_find_by_id_endpoint
 from src.routes.notes.note_find_by_id import response_not_found_404
 from src.utils.status_codes import HTTP
+from tests.api_test.response import Response
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.response import Response
 
 
 @pytest.mark.note

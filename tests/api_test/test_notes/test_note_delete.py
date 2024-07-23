@@ -7,8 +7,8 @@ from werkzeug.datastructures import Authorization
 from src.pydantic_schemas.sleep.notes import SleepNoteWithStats
 from src.routes.notes import note_endpoint
 from src.utils.status_codes import HTTP
+from tests.api_test.response import Response
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.response import Response
 
 
 @pytest.mark.note

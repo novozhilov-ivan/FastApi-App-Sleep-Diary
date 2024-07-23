@@ -26,11 +26,11 @@ from src.utils.jwt import (
     create_access_jwt,
     create_refresh_jwt,
 )
-from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.config import (
+from tests.api_test.config import (
     test_flask_config,
     test_flask_sqlalchemy_config,
 )
+from tests.generators.diary import SleepDiaryGenerator
 
 
 # @pytest.fixture(scope="session")

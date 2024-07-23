@@ -16,8 +16,8 @@ from src.routes.edit.import_file import (
 )
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
+from tests.api_test.response import Response
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.response import Response
 
 
 @pytest.mark.xfail(reason="DDD Рефакторинг. Убрал Field(title=...) из " "SleepNote.")

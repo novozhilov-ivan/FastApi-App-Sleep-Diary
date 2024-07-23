@@ -17,7 +17,7 @@ from src.routes.auth.sign_up import (
 )
 from src.utils.auth import validate_password
 from src.utils.status_codes import HTTP
-from tests.test_api.response import Response
+from tests.api_test.response import Response
 
 
 @pytest.mark.auth

@@ -13,8 +13,8 @@ from src.routes.edit.export_file import export_notes_endpoint
 from src.utils.jwt import create_access_jwt
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
+from tests.api_test.response import Response
 from tests.generators.diary import SleepDiaryGenerator
-from tests.test_api.response import Response
 
 
 @pytest.mark.edit_diary
