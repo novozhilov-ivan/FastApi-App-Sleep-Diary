@@ -1,5 +1,5 @@
 [tool.black]
-target-version = ["py310"]
+target-version = ["py312"]
 line-length = 85
 
 [tool.isort]
@@ -54,7 +54,7 @@ unused-arguments-ignore-dunder = true
 [tool.mypy]
 files = ["."]
 plugins = ["pydantic.mypy"]
-python_version = "3.10"
+python_version = "3.12"
 ignore_missing_imports = true
 check_untyped_defs = true
 disallow_incomplete_defs = true
@@ -78,7 +78,7 @@ readme = "README.md"
 package-mode = false
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.12"
 flask = "^3.0.3"
 flask-sqlalchemy = "^3.1.1"
 pydantic = "^2.7.4"

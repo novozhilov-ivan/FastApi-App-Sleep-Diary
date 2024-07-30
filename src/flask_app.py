@@ -20,26 +20,36 @@ from src.extension import (
 #   dev+ ipython
 #   dev+ sqlite driver
 #   prod-+ Flask-SQLAlchemy -> SQLAlchemy
-#  Рефакторинг архитектуры под DDD.
+
+# TODO
+#  Рефакторинг архитектуры под DDD в пунктах 1 и 2.
+
+# TODO
 #   1. Отделить бизнес логику в domain и Протестировать
 #    1.1 Рассмотреть варианты переезда наследование -> композиция.
 #       Разобраться с ошибками mypy в validators и durations.
 #       Попробовать: композицию | Generic'и | доп. проверки на тип данных.
 #    1.3 DiaryBase, DiaryStatistics, etc Diary.
-#    Diary нужен для возврата json с данными, а также
-#    он должен иметь @classmethod для создания Diary из множества с Note.
-#    Позже можно сделать Diary как uow, для валидаций при добавлении Note,
-#    но к этому стоит вернутся после создания service layer.
+#       Diary нужен для возврата json с данными, а также
+#       он должен иметь @classmethod для создания Diary из множества с Note.
+#       Позже можно сделать Diary как uow, для валидаций при добавлении Note,
+#       но к этому стоит вернутся после создания service layer.
+
+# TODO
 #   2. Добавить абстрактный репозиторий, фейковый и SQLAlchemy
 #    2.1 Добавить тесты репозиториев.
 #    2.2 Протестировать репозиторий Sqlalchemy с sqlite::memory
 #    2.3 Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
 #       Заменить на session = session_maker(session_options).
 #       И вызов with session() as session: ...
+
+# TODO
 #   3.Добавить сервисы/сервисный слой
 #    3.1 Рассмотреть замену flask-restx. Начать с "connexion".
 #      Иначе хорошо исправить мой вспомогательный код описания параметров для
 #      swagger ui, чтоб не ругал mypy и flake8
+
+# TODO
 #   4. CI/CD
 
 
