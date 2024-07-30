@@ -26,9 +26,6 @@ from src.extension import (
 
 # TODO
 #   1. Отделить бизнес логику в domain и Протестировать
-#    1.1 Рассмотреть варианты переезда наследование -> композиция.
-#       Разобраться с ошибками mypy в validators и durations.
-#       Попробовать: композицию | Generic'и | доп. проверки на тип данных.
 #    1.3 DiaryBase, DiaryStatistics, etc Diary.
 #       Diary нужен для возврата json с данными, а также
 #       он должен иметь @classmethod для создания Diary из множества с Note.
