@@ -1,51 +1,43 @@
 import abc
 import datetime as dt
 
-from typing import Annotated
 from typing_extensions import Self
 
 from pydantic import (
-    AfterValidator,
     BaseModel,
     Field,
     computed_field,
     model_validator,
 )
 
-from src.domain.note import utils
-
-
-StrToTime = Annotated[dt.time | str, AfterValidator(utils.normalize_str_to_time)]
-StrToDate = Annotated[dt.date | str, AfterValidator(utils.normalize_str_to_date)]
-
 
 class BaseNoteDateTimePoints(BaseModel, abc.ABC):
-    bedtime_date: StrToDate = Field(
+    bedtime_date: dt.date = Field(
         title="Дата отхода ко сну",
         description="",
         examples=["2020-12-12", "2021-01-20"],
     )
-    went_to_bed: StrToTime = Field(
+    went_to_bed: dt.time = Field(
         title="Время отхода ко сну",
         description="",
         examples=["01:00", "13:00"],
     )
-    fell_asleep: StrToTime = Field(
+    fell_asleep: dt.time = Field(
         title="Время засыпания",
         description="",
         examples=["03:00", "15:00"],
     )
-    woke_up: StrToTime = Field(
+    woke_up: dt.time = Field(
         title="Время пробуждения",
         description="",
         examples=["11:00", "23:00"],
     )
-    got_up: StrToTime = Field(
+    got_up: dt.time = Field(
         title="Время подъема",
         description="",
         examples=["13:00", "01:00"],
     )
-    no_sleep: StrToTime = Field(
+    no_sleep: dt.time = Field(
         default=dt.time(hour=0, minute=0),
         title="Время отсутствия сна",
         description="",

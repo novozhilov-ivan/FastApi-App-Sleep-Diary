@@ -66,7 +66,8 @@ warn_required_dynamic_aliases = true
 
 [[tool.mypy.overrides]]
 module = "tests/*"
-disable_error_code = ["no-untyped-def"]
+disable_error_code = ["no-untyped-def", "arg-type"]
+
 
 [tool.poetry]
 name = "sleep-diary-app"

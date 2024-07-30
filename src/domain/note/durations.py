@@ -9,7 +9,10 @@ from pydantic import computed_field
 from src.domain import note as nt
 
 
-class NoteDurations(nt.BaseNoteDurations, abc.ABC):
+class NoteDurations(
+    nt.BaseNoteDurations,
+    abc.ABC,
+):
     @computed_field(title="Длительность сна")  # type: ignore[misc]
     @property
     def _sleep_duration(self: Self) -> dt.timedelta:
