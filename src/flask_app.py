@@ -25,12 +25,9 @@ from src.extension import (
 #  Рефакторинг архитектуры под DDD в пунктах 1 и 2.
 
 # TODO
-#   1. Отделить бизнес логику в domain и Протестировать
-#    1.3 DiaryBase, DiaryStatistics, etc Diary.
+#    1.3 DiaryStatistics, etc Diary.
 #       Diary нужен для возврата json с данными, а также
 #       он должен иметь @classmethod для создания Diary из множества с Note.
-#       Позже можно сделать Diary как uow, для валидаций при добавлении Note,
-#       но к этому стоит вернутся после создания service layer.
 
 # TODO
 #   2. Добавить абстрактный репозиторий, фейковый и SQLAlchemy
