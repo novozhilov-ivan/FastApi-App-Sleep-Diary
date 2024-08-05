@@ -15,22 +15,20 @@ from src.extension import (
 
 
 # TODO
-#  0. Зависимости:
-#   dev+ pre-committer
-#   dev+ ipython
-#   dev+ sqlite driver
-#   prod-+ Flask-SQLAlchemy -> SQLAlchemy
+#           DDD
+#   - DiaryStatistics
+#   - domain < Добавить службу предметной области write()
+#   - domain < Добавить метод в класс Diary - write(note)
+#   - tests/.../diary_write_note < Добавить тест Diary(...).write(note)
+#   - tests/.../test_orm.py < Протестировать orm.py
+#   - .../repo/fake.py удалить и переместить класс в tests_repo.py
+#   - src/.../services.py < Добавить службу сервисного слоя write(
+#   note, repo, session).
+#   - services.py < Добавить ошибки, службы для проверки, etc.
+#   - tests/.../test_services.py < Добавить тесты служб сервисов
 
 # TODO
-#  Рефакторинг архитектуры под DDD в пунктах 1 и 2.
-
-# TODO
-#    1.3 DiaryStatistics, etc Diary.
-#       Diary нужен для возврата json с данными, а также
-#       он должен иметь @classmethod для создания Diary из множества с Note.
-
-# TODO
-#   2. Добавить абстрактный репозиторий, фейковый и SQLAlchemy
+#   etc. Добавить абстрактный репозиторий, фейковый и SQLAlchemy
 #    2.1 Добавить тесты репозиториев.
 #    2.2 Протестировать репозиторий Sqlalchemy с sqlite::memory
 #    2.3 Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
@@ -39,9 +37,17 @@ from src.extension import (
 
 # TODO
 #   3.Добавить сервисы/сервисный слой
-#    3.1 Рассмотреть замену flask-restx. Начать с "connexion".
-#      Иначе хорошо исправить мой вспомогательный код описания параметров для
-#      swagger ui, чтоб не ругал mypy и flake8
+
+# TODO
+#  0. Зависимости:
+#   dev+ pre-committer
+#   dev+ ipython
+#   dev+ sqlite driver
+#   prod-+ Flask-SQLAlchemy -> SQLAlchemy
+# TODO
+#   Рассмотреть замену flask-restx. Начать с "connexion".
+#   Иначе хорошо исправить мой вспомогательный код описания параметров для
+#   swagger ui, чтоб не ругал mypy и flake8
 
 # TODO
 #   4. CI/CD

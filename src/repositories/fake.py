@@ -1,9 +1,7 @@
 from typing import Iterable
 
-from pydantic import BaseModel, Field
-
-from src.adapters import orm
-from src.adapters.repositories.abstract import AbstractRepository
+from src import orm
+from src.repositories.abstract import AbstractRepository
 
 
 class FakeRepository(AbstractRepository):

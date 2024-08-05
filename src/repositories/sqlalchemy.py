@@ -1,4 +1,4 @@
-from src.adapters.repositories.abstract import AbstractRepository
+from src.repositories.abstract import AbstractRepository
 
 
 class SQLAlchemyRepository(AbstractRepository):
