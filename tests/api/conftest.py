@@ -1,7 +1,6 @@
 from typing import Generator
 
 import pytest
-
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
@@ -26,7 +25,7 @@ from src.utils.jwt import (
     create_access_jwt,
     create_refresh_jwt,
 )
-from tests.api_test.config import (
+from tests.api.config import (
     test_flask_config,
     test_flask_sqlalchemy_config,
 )

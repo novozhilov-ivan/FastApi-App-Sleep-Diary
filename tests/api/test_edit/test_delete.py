@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
@@ -12,7 +11,7 @@ from src.models import (
 )
 from src.routes.edit.delete_diary import delete_notes_endpoint
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 from tests.generators.diary import SleepDiaryGenerator
 
 

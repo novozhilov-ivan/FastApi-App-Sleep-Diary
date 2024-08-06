@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
@@ -13,7 +12,7 @@ from src.pydantic_schemas.sleep.diary import (
 from src.pydantic_schemas.user import User
 from src.routes.diary import diary_endpoint
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 from tests.generators.diary import SleepDiaryGenerator
 
 

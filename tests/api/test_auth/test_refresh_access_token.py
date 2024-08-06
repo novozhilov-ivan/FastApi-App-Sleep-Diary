@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
@@ -16,7 +15,7 @@ from src.utils.jwt import (
     response_invalid_token_type_401,
 )
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 
 
 @pytest.mark.auth

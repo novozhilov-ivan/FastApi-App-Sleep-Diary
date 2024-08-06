@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from sqlalchemy import select
@@ -17,7 +16,7 @@ from src.routes.auth.sign_up import (
 )
 from src.utils.auth import validate_password
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 
 
 @pytest.mark.auth

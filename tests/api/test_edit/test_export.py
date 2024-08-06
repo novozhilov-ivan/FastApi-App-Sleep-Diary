@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
@@ -13,7 +12,7 @@ from src.routes.edit.export_file import export_notes_endpoint
 from src.utils.jwt import create_access_jwt
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 from tests.generators.diary import SleepDiaryGenerator
 
 

@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 
@@ -16,7 +15,7 @@ from src.utils.jwt import (
     decode_jwt,
 )
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 
 
 @pytest.mark.auth

@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization
@@ -7,7 +6,7 @@ from werkzeug.datastructures import Authorization
 from src.pydantic_schemas.sleep.notes import SleepNoteWithStats
 from src.routes.notes import note_endpoint
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 from tests.generators.diary import SleepDiaryGenerator
 
 

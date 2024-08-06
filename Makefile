@@ -6,10 +6,10 @@ down:
 		docker compose -f flask_app.yml -f postgres.yml down --remove-orphans
 test: up
 		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/" api
-test-api: up
-		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/ -k api_test" api
-test-units: up
-		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/ -k units_test" api
+api: up
+		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/ -k api" api
+unit: up
+		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/ -k unit" api
 logs:
 		docker compose -f flask_app.yml -f postgres.yml logs --tail=25 api postgres pgadmin
 sh:

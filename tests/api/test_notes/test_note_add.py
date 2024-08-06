@@ -1,5 +1,4 @@
 import pytest
-
 from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError
@@ -14,7 +13,7 @@ from src.pydantic_schemas.sleep.notes import (
 )
 from src.routes.notes import note_endpoint
 from src.utils.status_codes import HTTP
-from tests.api_test.response import Response
+from tests.api.response import Response
 from tests.generators.diary import SleepDiaryGenerator
 from tests.generators.note import SleepNoteGenerator
 
