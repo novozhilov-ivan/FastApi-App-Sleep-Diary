@@ -10,7 +10,7 @@ from pydantic import (
 )
 
 
-int_duration_of_week = Annotated[int, conint(ge=1, le=7)]
+week_duration_limits = Annotated[int, conint(ge=1, le=7)]
 
 
 class BaseWeekStorage(set, abc.ABC):
@@ -27,7 +27,7 @@ class BaseWeeklyAverageDurations(BaseWeekStorage, abc.ABC):
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def _duration_of_week(self: Self) -> int_duration_of_week: ...
+    def _duration_of_week(self: Self) -> week_duration_limits: ...
 
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
     @property
@@ -62,7 +62,7 @@ class BaseWeekStatistic(BaseWeeklyAverageDurations, abc.ABC):
     @computed_field(title="Количество записей сна за неделю")  # type: ignore[misc]
     @property
     @abc.abstractmethod
-    def weekly_notes_count(self: Self) -> int_duration_of_week: ...
+    def weekly_notes_count(self: Self) -> week_duration_limits: ...
 
     @computed_field(title="Средняя время сна за неделю")  # type: ignore[misc]
     @property
@@ -99,4 +99,5 @@ class BaseWeek(
     BaseWeekStorage,
     abc.ABC,
 ):
-    ...  # fmt: skip
+    def is_writable(self: Self) -> bool:
+        return len(self) < 7

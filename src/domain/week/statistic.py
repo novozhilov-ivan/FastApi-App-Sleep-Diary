@@ -15,7 +15,7 @@ class WeekStatistic(
 ):
     @computed_field(title="Количество записей сна за неделю")  # type: ignore[misc]
     @property
-    def weekly_notes_count(self: Self) -> wk.int_duration_of_week:
+    def weekly_notes_count(self: Self) -> wk.week_duration_limits:
         return self._duration_of_week
 
     @computed_field(title="Средняя время сна за неделю")  # type: ignore[misc]

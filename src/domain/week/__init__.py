@@ -3,7 +3,7 @@ from src.domain.week.base import (
     BaseWeeklyAverageDurations,
     BaseWeekStatistic,
     BaseWeekStorage,
-    int_duration_of_week,
+    week_duration_limits,
 )
 from src.domain.week.durations import (
     WeeklyAverageDurations,
@@ -17,7 +17,7 @@ __all__ = [
     "BaseWeeklyAverageDurations",
     "BaseWeekStatistic",
     "BaseWeek",
-    "int_duration_of_week",
+    "week_duration_limits",
     "WeeklyAverageDurations",
     "WeekStatistic",
     "Week",

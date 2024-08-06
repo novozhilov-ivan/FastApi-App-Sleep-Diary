@@ -24,7 +24,7 @@ class WeeklyAverageDurations(wk.BaseWeeklyAverageDurations):
 
     @computed_field(title="Продолжительность недели")  # type: ignore[misc]
     @property
-    def _duration_of_week(self: Self) -> wk.int_duration_of_week:
+    def _duration_of_week(self: Self) -> wk.week_duration_limits:
         return len(self)
 
     @computed_field(title="Средняя длительность сна за неделю")  # type: ignore[misc]
