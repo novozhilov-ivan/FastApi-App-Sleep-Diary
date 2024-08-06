@@ -18,7 +18,7 @@ class WeeklyAverageDurations(wk.BaseWeeklyAverageDurations):
         all_durations_in_seconds_of_week: Generator[int, None, None] = (
             op.attrgetter(f"{duration_name}.seconds")(note)
             for note in self
-            if isinstance(note, nt.BaseNoteDurations)
+            if isinstance(note, nt.NoteTimePoints)
         )
         yield dt.timedelta(seconds=st.mean(all_durations_in_seconds_of_week))
 

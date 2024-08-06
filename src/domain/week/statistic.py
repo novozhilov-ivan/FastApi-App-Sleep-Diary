@@ -56,7 +56,7 @@ class WeekStatistic(
         weekly_notes_efficiencies: Generator[float, None, None] = (
             note.sleep_efficiency
             for note in self
-            if isinstance(note, nt.BaseNoteStatistic)
+            if isinstance(note, nt.NoteStatistic)
         )
         return round(
             number=st.mean(weekly_notes_efficiencies),

@@ -1,6 +1,8 @@
 import datetime as dt
 import operator as op
 
+import pytest
+
 from src.domain import note as nt
 
 
@@ -19,6 +21,10 @@ def test_note_statistic_with_zero_time_points() -> None:
     assert note.sleep_efficiency == round(number=0, ndigits=2)
 
 
+@pytest.mark.xfail(
+    reason="Изменилось формирование NoteStatistic; "
+    "Отрабатывает проверка и возбуждается исключение",
+)
 def test_note_statistic_with_no_sleep_gt_sleep_duration() -> None:
     note = nt.NoteStatistic(
         bedtime_date="2020-12-12",

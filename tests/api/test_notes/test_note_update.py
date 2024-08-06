@@ -5,6 +5,7 @@ from datetime import (
 from typing import Any
 
 import pytest
+
 from flask import url_for
 from flask.testing import FlaskClient
 from pydantic import ValidationError

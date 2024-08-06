@@ -1,6 +1,7 @@
 import io
 
 import pytest
+
 from flask import url_for
 from flask.testing import FlaskClient
 from werkzeug.datastructures import Authorization

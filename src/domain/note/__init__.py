@@ -1,13 +1,3 @@
-from src.domain.note.base import (
-    BaseNoSleepDurationValidator,
-    BaseNoteDateTimePoints,
-    BaseNoteDurations,
-    BaseNoteEntity,
-    BaseNoteStatistic,
-    BaseNoteValueObject,
-    BaseTimePointsSequencesValidator,
-)
-from src.domain.note.durations import NoteDurations
 from src.domain.note.entity import NoteEntity
 from src.domain.note.error import (
     NoSleepDurationError,
@@ -15,33 +5,21 @@ from src.domain.note.error import (
     TimePointsSequenceError,
 )
 from src.domain.note.statistic import NoteStatistic
+from src.domain.note.time_points import NoteTimePoints
 from src.domain.note.utils import (
     normalize_str_to_date,
     normalize_str_to_time,
     timedelta_seconds_to_time,
 )
-from src.domain.note.validators import (
-    NoSleepDurationValidator,
-    TimePointsSequencesValidator,
-)
 from src.domain.note.value_object import NoteValueObject
 
 
 __all__ = [
-    "BaseNoteDateTimePoints",
-    "BaseTimePointsSequencesValidator",
-    "BaseNoteDurations",
-    "BaseNoteEntity",
-    "BaseNoSleepDurationValidator",
-    "BaseNoteStatistic",
-    "BaseNoteValueObject",
-    "TimePointsSequencesValidator",
-    "NoteDurations",
-    "NoSleepDurationValidator",
+    "NoteTimePoints",
     "NoteStatistic",
     "NoteValueObject",
-    "NoteBaseError",
     "NoteEntity",
+    "NoteBaseError",
     "TimePointsSequenceError",
     "NoSleepDurationError",
     "normalize_str_to_date",

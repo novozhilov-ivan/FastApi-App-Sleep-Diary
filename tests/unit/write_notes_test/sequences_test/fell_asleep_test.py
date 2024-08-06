@@ -10,7 +10,7 @@ incorrect_time_points_sequence_message = (
 
 def test_fell_asleep_cannot_be_gt_woke_up() -> None:
     with pytest.raises(nt.TimePointsSequenceError) as error:
-        nt.TimePointsSequencesValidator(
+        nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="12:00",
@@ -22,7 +22,7 @@ def test_fell_asleep_cannot_be_gt_woke_up() -> None:
 
 def test_fell_asleep_cannot_be_gt_got_up() -> None:
     with pytest.raises(nt.TimePointsSequenceError) as error:
-        nt.TimePointsSequencesValidator(
+        nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
             fell_asleep="14:00",
@@ -36,7 +36,7 @@ def test_fell_asleep_cannot_be_gt_woke_up_with_one_time_points_after_midnight() 
     None
 ):
     with pytest.raises(nt.TimePointsSequenceError) as error:
-        nt.TimePointsSequencesValidator(
+        nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="10:00",
@@ -50,7 +50,7 @@ def test_fell_asleep_cannot_be_gt_woke_up_and_gt_got_up_with_two_time_points_aft
     None
 ):
     with pytest.raises(nt.TimePointsSequenceError) as error:
-        nt.TimePointsSequencesValidator(
+        nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
             fell_asleep="12:00",

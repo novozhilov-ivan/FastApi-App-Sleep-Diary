@@ -17,12 +17,12 @@ meta = {
 
 
 def test_create_diary_with_one_note() -> None:
-    note = nt.NoteEntity.model_validate(
-        {
-            "bedtime_date": "2024-01-01",
-            **times,
-            **meta,
-        },
+    note = nt.NoteValueObject(
+        bedtime_date="2024-01-01",
+        went_to_bed="01:00",
+        fell_asleep="03:00",
+        woke_up="11:00",
+        got_up="13:00",
     )
     diary = dr.Diary()
     week = wk.Week()

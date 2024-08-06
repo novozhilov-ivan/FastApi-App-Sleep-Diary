@@ -3,22 +3,17 @@ from typing_extensions import Self
 
 from pydantic import ConfigDict
 
-from src.domain.note import base, statistic, validators
+from src.domain.note.time_points import NoteTimePoints
 
 
-class NoteValueObject(
-    statistic.NoteStatistic,
-    validators.NoSleepDurationValidator,
-    validators.TimePointsSequencesValidator,
-    base.BaseNoteValueObject,
-):
+class NoteValueObject(NoteTimePoints):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True,
         extra="forbid",
     )
 
     def __eq__(self: Self, other: object) -> bool:
-        if not isinstance(other, base.BaseNoteDateTimePoints):
+        if not isinstance(other, NoteTimePoints):
             return NotImplemented
         return self.bedtime_date == other.bedtime_date
 

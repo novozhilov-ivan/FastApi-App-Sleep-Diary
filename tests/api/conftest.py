@@ -1,6 +1,7 @@
 from typing import Generator
 
 import pytest
+
 from _pytest.fixtures import FixtureRequest
 from flask import Flask
 from flask.testing import FlaskClient
