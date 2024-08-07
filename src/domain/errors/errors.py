@@ -1,0 +1,2 @@
+class NoteAlreadyExist(Exception):
+    pass

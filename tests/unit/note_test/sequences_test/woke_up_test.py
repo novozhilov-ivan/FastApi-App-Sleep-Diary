@@ -1,7 +1,7 @@
 import pytest
 
 from src.domain import note as nt
-from tests.unit.write_notes_test.sequences_test.fell_asleep_test import (
+from tests.unit.note_test.sequences_test.fell_asleep_test import (
     incorrect_time_points_sequence_message,
 )
 
