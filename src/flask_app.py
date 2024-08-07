@@ -16,25 +16,19 @@ from src.extension import (
 
 # TODO
 #     Рефакторинг
-#   - Удалить Base... классы Diary, Week, Note
+#   - Удалить Base... классы Week
 #   - Перенести логику из подклассов в основные
 #   - Поправить под все тесты
 #
 # TODO
-#   - Удалить Week из Diary. Нужно добавлять Note в Diary без участия weeks;
-#   А для формирования ответа с Note's разбитыми по неделям - сделать метод
+#   - Для формирования ответа из Diary с Note's разбитыми по неделям - сделать метод
 #   или как композицией внедрить класс Week(или прочее имя) чтоб он сформировал
 #   ответ с неделями со статистиками
-#   - NoteValueObject -> SleepTimePoints со всеми классами проверками, без абстракций
-#   - NoteEntity -> Note
-#   - Отделить Статистику у Notes от SleepTimePoints
 
 
 # TODO
 #           DDD
-#   - domain < Добавить метод в класс Diary - write(note)
 #   - domain < Добавить службу предметной области write()
-#   - tests/.../diary_write_note < Добавить тест Diary(...).write(note)
 #   - tests/.../test_orm.py < Протестировать orm.py
 #   - .../repo/fake.py удалить и переместить класс в tests_repo.py
 #   - src/.../services.py < Добавить службу сервисного слоя write(
