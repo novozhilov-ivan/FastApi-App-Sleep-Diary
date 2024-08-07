@@ -22,7 +22,7 @@ note_2 = nt.NoteValueObject(
 
 
 def test_average_weekly_sleep_duration_of_one_note_in_week() -> None:
-    week = wk.WeeklyAverageDurations({note_1})
+    week = wk.Week({note_1})
     assert week._duration_of_week == 1
     assert week._average_weekly_sleep_duration == dt.timedelta(seconds=8 * 60 * 60)
     assert week._average_weekly_in_bed_duration == dt.timedelta(seconds=12 * 60 * 60)
@@ -33,7 +33,7 @@ def test_average_weekly_sleep_duration_of_one_note_in_week() -> None:
 
 
 def test_average_weekly_sleep_duration() -> None:
-    week = wk.WeeklyAverageDurations({note_1, note_2})
+    week = wk.Week({note_1, note_2})
     assert week._duration_of_week == 2
     assert week._average_weekly_sleep_duration == dt.timedelta(
         seconds=(8 * 60 * 60 + 9 * 60 * 60) / 2,

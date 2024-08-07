@@ -36,7 +36,7 @@ note_3 = nt.NoteStatistic(
     "Теперь он мутабельный и не хэшируемый.",
 )
 def test_week_statistic_with_one_note() -> None:
-    week = wk.WeekStatistic({note_1})
+    week = wk.Week({note_1})
     assert week.weekly_notes_count == 1
     assert week.average_weekly_time_in_sleep == note_1.time_in_sleep
     assert week.average_weekly_time_in_bed == note_1.time_in_bed
@@ -53,7 +53,7 @@ def test_week_statistic_with_one_note() -> None:
     "Теперь он мутабельный и не хэшируемый.",
 )
 def test_week_statistic_with_two_notes() -> None:
-    week = wk.WeekStatistic({note_1, note_2})
+    week = wk.Week({note_1, note_2})
     assert week.weekly_notes_count == 2
     assert week.average_weekly_time_in_sleep == dt.time(hour=8, minute=30)
     assert week.average_weekly_time_in_bed == dt.time(hour=12, minute=30)
@@ -70,7 +70,7 @@ def test_week_statistic_with_two_notes() -> None:
     "Теперь он мутабельный и не хэшируемый.",
 )
 def test_week_statistic_with_three_notes_but_one_is_all_null() -> None:
-    week = wk.WeekStatistic({note_1, note_2, note_3})
+    week = wk.Week({note_1, note_2, note_3})
     assert week.weekly_notes_count == 3
     assert week.average_weekly_time_in_sleep == dt.time(hour=5, minute=40)
     assert week.average_weekly_time_in_bed == dt.time(hour=8, minute=20)

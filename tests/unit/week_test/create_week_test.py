@@ -17,7 +17,7 @@ def test_create_correct_week() -> None:
         )
         for day_number in range(1, 8)
     )
-    week = wk.BaseWeekStorage(notes)
+    week = wk.Week(notes)
     assert len(week) == 7
 
 
@@ -26,7 +26,7 @@ def test_adding_one_note_twice_to_week() -> None:
         bedtime_date="2024-01-01",
         **times,
     )
-    week = wk.BaseWeekStorage()
+    week = wk.Week()
     assert len(week) == 0
     week.add(test_note)
     assert len(week) == 1
