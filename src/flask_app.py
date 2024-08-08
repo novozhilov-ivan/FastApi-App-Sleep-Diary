@@ -16,7 +16,10 @@ from src.extension import (
 
 # TODO
 #           DDD
+#   - подумать над дефолт значениями у entity: назначать в orm или в domain?
+#   - подучать над типами данных в oid и в user.password
 #   - tests/.../test_orm.py < Протестировать orm.py
+#   -
 #   - .../repo/fake.py удалить и переместить класс в tests_repo.py
 #   - src/.../services.py < Добавить службу сервисного слоя write(
 #   note, repo, session).

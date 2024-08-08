@@ -1,5 +1,5 @@
 from src.domain import diary as dr, note as nt
-from src.domain.errors.errors import NoteAlreadyExist
+from src.domain.errors import NoteAlreadyExist
 
 
 def write(note: nt.NoteValueObject, diary: dr.Diary) -> nt.NoteEntity:

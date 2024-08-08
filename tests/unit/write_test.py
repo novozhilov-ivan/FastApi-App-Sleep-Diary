@@ -1,7 +1,7 @@
 import pytest
 
 from src.domain.diary import Diary
-from src.domain.errors.errors import NoteAlreadyExist
+from src.domain.errors import NoteAlreadyExist
 from src.domain.note import NoteEntity, NoteValueObject
 from src.domain.write import write
 
@@ -63,8 +63,7 @@ def test_write_different_note_in_diary() -> None:
     written_note_entity_2 = write(note_2, diary)
 
     assert len(diary.notes_list) == 2
-    note_in_diary_1, note_in_diary_2, *_ = diary.notes_list
-
+    note_in_diary_1, note_in_diary_2, *_ = sorted(diary.notes_list)
     assert note_in_diary_1 == written_note_entity_1
     assert note_in_diary_2 == written_note_entity_2
     assert isinstance(written_note_entity_1, NoteEntity)

@@ -1,3 +1,6 @@
+export COMPOSE_DOCKER_CLI_BUILD=1
+export DOCKER_BUILDKIT=1
+
 build:
 		docker compose -f flask_app.yml -f postgres.yml build
 up: build

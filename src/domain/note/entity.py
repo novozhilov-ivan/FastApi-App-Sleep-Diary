@@ -6,9 +6,10 @@ from typing import ClassVar
 from pydantic import ConfigDict, Field
 
 from src.domain.note.statistic import NoteStatistic
+from src.domain.note.value_object import NoteValueObject
 
 
-class NoteEntity(NoteStatistic):
+class NoteEntity(NoteValueObject, NoteStatistic):
     oid: str = Field(
         default_factory=lambda: str(uuid.uuid4()),
     )

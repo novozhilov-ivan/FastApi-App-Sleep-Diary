@@ -19,3 +19,8 @@ class NoteValueObject(NoteTimePoints):
 
     def __hash__(self: Self) -> int:
         return hash(self.bedtime_date)
+
+    def __gt__(self: Self, other: object) -> bool:
+        if not isinstance(other, NoteTimePoints):
+            return NotImplemented
+        return self.bedtime_date > other.bedtime_date
