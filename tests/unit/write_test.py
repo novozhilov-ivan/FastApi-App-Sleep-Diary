@@ -2,7 +2,7 @@ import pytest
 
 from src.domain.diary import Diary
 from src.domain.errors import NoteAlreadyExist
-from src.domain.note import NoteEntity, NoteValueObject
+from src.domain.note import NoteStatistic, NoteValueObject
 from src.domain.write import write
 
 
@@ -16,7 +16,7 @@ def test_write_one_note_in_diary() -> None:
         got_up="13:00",
     )
     written_note_entity = write(note, diary)
-    assert isinstance(written_note_entity, NoteEntity)
+    assert isinstance(written_note_entity, NoteStatistic)
     assert written_note_entity.bedtime_date == note.bedtime_date
     assert written_note_entity.went_to_bed == note.went_to_bed
     assert written_note_entity.fell_asleep == note.fell_asleep
@@ -66,8 +66,8 @@ def test_write_different_note_in_diary() -> None:
     note_in_diary_1, note_in_diary_2, *_ = sorted(diary.notes_list)
     assert note_in_diary_1 == written_note_entity_1
     assert note_in_diary_2 == written_note_entity_2
-    assert isinstance(written_note_entity_1, NoteEntity)
-    assert isinstance(written_note_entity_2, NoteEntity)
+    assert isinstance(written_note_entity_1, NoteStatistic)
+    assert isinstance(written_note_entity_2, NoteStatistic)
     assert written_note_entity_1.bedtime_date == note_1.bedtime_date
     assert written_note_entity_1.went_to_bed == note_1.went_to_bed
     assert written_note_entity_1.fell_asleep == note_1.fell_asleep

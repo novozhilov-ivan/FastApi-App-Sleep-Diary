@@ -1,24 +1,19 @@
-import datetime as dt
 import uuid
 
+from datetime import datetime
 from typing import ClassVar
 
-from pydantic import ConfigDict, Field
+from pydantic import ConfigDict
 
 from src.domain.note.statistic import NoteStatistic
 from src.domain.note.value_object import NoteValueObject
 
 
 class NoteEntity(NoteValueObject, NoteStatistic):
-    oid: str = Field(
-        default_factory=lambda: str(uuid.uuid4()),
-    )
-    created_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(tz=dt.UTC),
-    )
-    updated_at: dt.datetime = Field(
-        default_factory=lambda: dt.datetime.now(tz=dt.UTC),
-    )
+    oid: uuid.UUID
+    created_at: datetime
+    updated_at: datetime
+
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=False,
         extra="forbid",

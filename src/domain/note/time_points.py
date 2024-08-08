@@ -1,6 +1,6 @@
-import datetime as dt
 import operator as op
 
+from datetime import date, time, timedelta
 from typing_extensions import Self
 
 from pydantic import (
@@ -14,33 +14,33 @@ from src.domain.note.error import NoSleepDurationError, TimePointsSequenceError
 
 
 class NoteTimePoints(BaseModel):
-    bedtime_date: dt.date = Field(
+    bedtime_date: date = Field(
         title="Дата отхода ко сну",
         description="",
         examples=["2020-12-12", "2021-01-20"],
     )
-    went_to_bed: dt.time = Field(
+    went_to_bed: time = Field(
         title="Время отхода ко сну",
         description="",
         examples=["01:00", "13:00"],
     )
-    fell_asleep: dt.time = Field(
+    fell_asleep: time = Field(
         title="Время засыпания",
         description="",
         examples=["03:00", "15:00"],
     )
-    woke_up: dt.time = Field(
+    woke_up: time = Field(
         title="Время пробуждения",
         description="",
         examples=["11:00", "23:00"],
     )
-    got_up: dt.time = Field(
+    got_up: time = Field(
         title="Время подъема",
         description="",
         examples=["13:00", "01:00"],
     )
-    no_sleep: dt.time = Field(
-        default=dt.time(hour=0, minute=0),
+    no_sleep: time = Field(
+        default=time(hour=0, minute=0),
         title="Время отсутствия сна",
         description="",
         examples=["00:00", "00:20"],
@@ -79,41 +79,41 @@ class NoteTimePoints(BaseModel):
 
     @computed_field(title="Длительность сна")  # type: ignore[misc]
     @property
-    def _sleep_duration(self: Self) -> dt.timedelta:
-        sleep_duration = dt.timedelta(
+    def _sleep_duration(self: Self) -> timedelta:
+        sleep_duration = timedelta(
             hours=op.sub(self.woke_up.hour, self.fell_asleep.hour),
             minutes=op.sub(self.woke_up.minute, self.fell_asleep.minute),
         )
-        return dt.timedelta(seconds=sleep_duration.seconds)
+        return timedelta(seconds=sleep_duration.seconds)
 
     @computed_field(  # type: ignore[misc]
         title="Длительность сна за вычетом времени без сна",
     )
     @property
-    def _sleep_duration_minus_no_sleep(self: Self) -> dt.timedelta:
+    def _sleep_duration_minus_no_sleep(self: Self) -> timedelta:
         if self._no_sleep_duration >= self._sleep_duration:
-            return dt.timedelta(0)
+            return timedelta(0)
         sleep_duration_minus_no_sleep = op.sub(
             self._sleep_duration,
             self._no_sleep_duration,
         )
-        return dt.timedelta(seconds=sleep_duration_minus_no_sleep.seconds)
+        return timedelta(seconds=sleep_duration_minus_no_sleep.seconds)
 
     @computed_field(  # type: ignore[misc]
         title="Длительность времени, проведенного в постели.",
     )
     @property
-    def _in_bed_duration(self: Self) -> dt.timedelta:
-        sleep_duration = dt.timedelta(
+    def _in_bed_duration(self: Self) -> timedelta:
+        sleep_duration = timedelta(
             hours=op.sub(self.got_up.hour, self.went_to_bed.hour),
             minutes=op.sub(self.got_up.minute, self.went_to_bed.minute),
         )
-        return dt.timedelta(seconds=sleep_duration.seconds)
+        return timedelta(seconds=sleep_duration.seconds)
 
     @computed_field(title="Длительность отсутствия сна")  # type: ignore[misc]
     @property
-    def _no_sleep_duration(self: Self) -> dt.timedelta:
-        return dt.timedelta(
+    def _no_sleep_duration(self: Self) -> timedelta:
+        return timedelta(
             hours=self.no_sleep.hour,
             minutes=self.no_sleep.minute,
         )
