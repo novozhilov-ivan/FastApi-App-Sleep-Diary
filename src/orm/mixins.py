@@ -4,11 +4,9 @@ from uuid import UUID, uuid4
 from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.orm.base import BaseORM
 
-
-class MetaInfo(BaseORM):
-    __absract__ = True
+class MetaInfo:
+    # __abstract__ = True
 
     oid: Mapped[UUID] = mapped_column(
         primary_key=True,

@@ -1,32 +1,31 @@
 from datetime import date, time
-from uuid import UUID
 
-from sqlalchemy import ForeignKey, UniqueConstraint
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped
 
+from src.orm.base import BaseORM
 from src.orm.mixins import MetaInfo
 
 
-class NoteORM(MetaInfo):
-    __tablename__ = "sleep_note"
-    __table_args__ = (
-        UniqueConstraint(
-            "sleep_date",
-            "owner_id",
-            name="unique_sleep_date_for_user",
-        ),
-    )
+class NoteORM(BaseORM, MetaInfo):
+    __tablename__ = "notes"
+    # __table_args__ = (
+    #     UniqueConstraint(
+    #         "bedtime_date",
+    #         "owner_id",
+    #         name="unique_bedtime_date_for_user",
+    #     ),
+    # )
 
-    sleep_date: Mapped[date]
+    bedtime_date: Mapped[date]
     went_to_bed: Mapped[time]
     fell_asleep: Mapped[time]
     woke_up: Mapped[time]
     got_up: Mapped[time]
     no_sleep: Mapped[time]
 
-    owner_id: Mapped[UUID] = mapped_column(
-        ForeignKey(
-            column="user.id",
-            ondelete="CASCADE",
-        ),
-    )
+    # owner_id: Mapped[UUID] = mapped_column(
+    #     ForeignKey(
+    #         column="users.oid",
+    #         ondelete="CASCADE",
+    #     ),
+    # )

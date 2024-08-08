@@ -90,6 +90,7 @@ pyjwt = { extras = ["crypto"], version = "^2.8.0" }
 more-itertools = "^10.3.0"
 jsonref = "^1.1.0"
 psycopg2-binary = "^2.9.9"
+sqlalchemy = "^2.0.32"
 
 [tool.poetry.group.dev.dependencies]
 pytest-html = "^4.1.1"
