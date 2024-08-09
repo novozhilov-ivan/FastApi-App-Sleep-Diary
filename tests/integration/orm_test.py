@@ -1,3 +1,5 @@
+from uuid import UUID
+
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
@@ -5,7 +7,7 @@ from src.domain.note import NoteEntity
 from src.orm.note import NoteORM
 
 
-def test_mapping(memory_session: Session) -> None:
+def test_transfer_from_db_table_entry_to_entity(memory_session: Session) -> None:
     memory_session.execute(
         text(
             "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
@@ -16,12 +18,11 @@ def test_mapping(memory_session: Session) -> None:
     )
     db_note: NoteORM | None = memory_session.query(NoteORM).first()
     assert isinstance(db_note, NoteORM)
-    db_entity = db_note.to_entity()
-
+    entity_from_db = db_note.to_entity()
     expected = NoteEntity(
-        oid="a4c727fb-8c2b-4fc0-81ea-9c31ed64a4ff",
-        created_at=db_entity.created_at,
-        updated_at=db_entity.updated_at,
+        oid=UUID("a4c727fb-8c2b-4fc0-81ea-9c31ed64a4ff"),
+        created_at=entity_from_db.created_at,
+        updated_at=entity_from_db.updated_at,
         bedtime_date="2020-01-01",
         went_to_bed="01:00",
         fell_asleep="03:00",
@@ -29,4 +30,4 @@ def test_mapping(memory_session: Session) -> None:
         got_up="13:00",
         no_sleep="01:00",
     )
-    assert db_entity == expected
+    assert entity_from_db == expected

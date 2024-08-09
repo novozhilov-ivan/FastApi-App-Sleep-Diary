@@ -58,7 +58,7 @@ class NoteORM(BaseORM, MetaInfo):
 
     def __repr__(self: Self) -> str:
         return (
-            f"<NoteORM> "
+            f"<NoteORM "
             f"oid='{str(self.oid)[:3]}...{str(self.oid)[-3:]}' "
-            f"date='{self.bedtime_date}'"
+            f"date='{self.bedtime_date}'>"
         )
