@@ -2,6 +2,7 @@ import uuid
 
 from datetime import datetime
 from typing import ClassVar
+from typing_extensions import Self
 
 from pydantic import ConfigDict
 
@@ -18,3 +19,13 @@ class NoteEntity(NoteValueObject, NoteStatistic):
         frozen=False,
         extra="forbid",
     )
+
+    def __eq__(self: Self, other: object) -> bool:
+        if not isinstance(other, NoteEntity):
+            return NotImplemented
+        return (
+            self.oid == other.oid
+            and self.bedtime_date == other.bedtime_date
+            and self.created_at == other.created_at
+            and self.updated_at == other.updated_at
+        )

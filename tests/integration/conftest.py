@@ -10,8 +10,8 @@ from src.orm.base import metadata
 
 @pytest.fixture
 def in_memory_db() -> Engine:
-    engine = create_engine("sqlite:///:memory:")
-    engine.echo = True
+    engine = create_engine("sqlite://")
+    metadata.drop_all(engine)
     metadata.create_all(engine)
     return engine
 

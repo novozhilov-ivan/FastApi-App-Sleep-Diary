@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from datetime import datetime
 from uuid import UUID, uuid4
 
@@ -5,8 +6,8 @@ from sqlalchemy import func
 from sqlalchemy.orm import Mapped, mapped_column
 
 
+@dataclass
 class MetaInfo:
-    # __abstract__ = True
 
     oid: Mapped[UUID] = mapped_column(
         primary_key=True,
