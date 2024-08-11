@@ -16,27 +16,31 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - tests/.../test_orm.py < Протестировать orm.py
+#   - Определится с моделями для добавления/чтения записей
+#   - их атрибутами и наследованием;
 #   -
-#   - .../repo/fake.py удалить и переместить класс в tests_repo.py
+#   - tests/.../test_orm.py < Протестировать orm.py
+#   - from/to entity методы; добавление/получение записи;
+#   - ограничение unique_constraint; добавление/получение пользователя.
+#   -
+#   - Добавить сервисы/сервисный слой
 #   - src/.../services.py < Добавить службу сервисного слоя write(
-#   note, repo, session).
-#   - services.py < Добавить ошибки, службы для проверки, etc.
+#   note, repo, session);
+#   Добавить ошибки, службы для проверки, etc.
 #   - tests/.../test_services.py < Добавить тесты служб сервисов
+#   - tests/.../test_services.py < class FakeRepo
+#   -
+#   - Добавить репозиторий SQLAlchemy
+#   - Протестировать репозиторий Sqlalchemy с sqlite::memory
+#   -
 #   - Diary + Week взаимодействие
 #   - Diary < метод make_diary() для формирования словаря/json с записями
 #   разделенными неделями, со своими сортировками
+#   -
+#   - Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
+#   - Заменить на session = session_maker(session_options).
+#   - И вызов with session() as session: ...
 
-# TODO
-#   etc. Добавить абстрактный репозиторий, фейковый и SQLAlchemy
-#    2.1 Добавить тесты репозиториев.
-#    2.2 Протестировать репозиторий Sqlalchemy с sqlite::memory
-#    2.3 Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
-#       Заменить на session = session_maker(session_options).
-#       И вызов with session() as session: ...
-
-# TODO
-#   3.Добавить сервисы/сервисный слой
 
 # TODO
 #  0. Зависимости:
