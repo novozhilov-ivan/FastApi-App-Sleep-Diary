@@ -1,38 +1,76 @@
-from uuid import UUID
+from datetime import UTC, date, datetime, time
+from uuid import uuid4
 
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from src.domain.note import NoteEntity
 from src.orm.note import NoteORM
 from src.orm.user import UserORM
 
 
-def test_transfer_from_db_table_entry_to_entity(
+def test_get_note(
     memory_session: Session,
     create_user: UserORM,
 ) -> None:
-
+    expected_created_at = expected_updated_at = datetime.now(
+        tz=UTC,
+    ).replace(
+        microsecond=0,
+        tzinfo=None,
+    )
+    expected_note_oid = uuid4()
+    stmt = text(
+        "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
+        "woke_up, got_up, no_sleep, owner_id) "
+        "VALUES (:oid, :bedtime_date, :went_to_bed, :fell_asleep, :woke_up,"
+        ":got_up, :no_sleep, :owner_id);",
+    )
     memory_session.execute(
-        text(
-            "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
-            "woke_up, got_up, no_sleep, owner_id) "
-            'VALUES ("a4c727fb-8c2b-4fc0-81ea-9c31ed64a4ff", "2020-01-01", "01-00", '
-            f'"03-00", "11-00", "13-00", "01-00", "{create_user.oid}");',
+        statement=stmt,
+        params=(
+            {
+                "oid": f"{expected_note_oid}",
+                "bedtime_date": "2020-01-01",
+                "went_to_bed": "01-00",
+                "fell_asleep": "03-00",
+                "woke_up": "11-00",
+                "got_up": "13-00",
+                "no_sleep": "01-00",
+                "owner_id": f"{create_user.oid}",
+            },
+            {
+                "oid": f"{uuid4()}",
+                "bedtime_date": "2020-01-02",
+                "went_to_bed": "02-00",
+                "fell_asleep": "04-00",
+                "woke_up": "12-00",
+                "got_up": "14-00",
+                "no_sleep": "01-10",
+                "owner_id": f"{create_user.oid}",
+            },
+            {
+                "oid": f"{uuid4()}",
+                "bedtime_date": "2020-01-03",
+                "went_to_bed": "03-00",
+                "fell_asleep": "05-00",
+                "woke_up": "13-00",
+                "got_up": "15-00",
+                "no_sleep": "01-20",
+                "owner_id": f"{create_user.oid}",
+            },
         ),
     )
-    db_note: NoteORM | None = memory_session.query(NoteORM).first()
+    db_notes: list[NoteORM] = memory_session.query(NoteORM).all()
+    assert len(db_notes) == 3
+    db_note, *_ = db_notes
     assert isinstance(db_note, NoteORM)
-    entity_from_db = db_note.to_entity()
-    expected = NoteEntity(
-        oid=UUID("a4c727fb-8c2b-4fc0-81ea-9c31ed64a4ff"),
-        created_at=entity_from_db.created_at,
-        updated_at=entity_from_db.updated_at,
-        bedtime_date="2020-01-01",
-        went_to_bed="01:00",
-        fell_asleep="03:00",
-        woke_up="11:00",
-        got_up="13:00",
-        no_sleep="01:00",
-    )
-    assert entity_from_db == expected
+    assert db_note.oid == expected_note_oid
+    assert db_note.created_at >= expected_created_at
+    assert db_note.updated_at >= expected_updated_at
+    assert db_note.bedtime_date == date(2020, 1, 1)
+    assert db_note.went_to_bed.replace(tzinfo=None) == time(1, 0)
+    assert db_note.fell_asleep.replace(tzinfo=None) == time(3, 0)
+    assert db_note.woke_up.replace(tzinfo=None) == time(11, 0)
+    assert db_note.got_up.replace(tzinfo=None) == time(13, 0)
+    assert db_note.no_sleep.replace(tzinfo=None) == time(1, 0)
+    assert db_note.owner_id == create_user.oid

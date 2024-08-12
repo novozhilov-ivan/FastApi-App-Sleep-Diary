@@ -15,7 +15,6 @@ def in_memory_db() -> Engine:
     from src.orm.note import NoteORM  # noqa
     from src.orm.user import UserORM  # noqa
 
-    metadata.drop_all(engine)
     metadata.create_all(engine)
     return engine
 
