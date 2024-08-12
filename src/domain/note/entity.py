@@ -5,17 +5,15 @@ from uuid import UUID
 
 from pydantic import ConfigDict
 
-from src.domain.note.time_points import NoteTimePoints
+from src.domain.note.statistic import NoteStatistic
 
 
-class NoteEntity(NoteTimePoints):
+class NoteEntity(NoteStatistic):
     oid: UUID
     created_at: datetime
     updated_at: datetime
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(
-        extra="forbid",
-    )
+    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
 
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, NoteEntity):

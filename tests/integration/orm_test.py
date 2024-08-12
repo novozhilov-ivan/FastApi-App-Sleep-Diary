@@ -5,15 +5,20 @@ from sqlalchemy.orm import Session
 
 from src.domain.note import NoteEntity
 from src.orm.note import NoteORM
+from src.orm.user import UserORM
 
 
-def test_transfer_from_db_table_entry_to_entity(memory_session: Session) -> None:
+def test_transfer_from_db_table_entry_to_entity(
+    memory_session: Session,
+    create_user: UserORM,
+) -> None:
+
     memory_session.execute(
         text(
             "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
-            "woke_up, got_up, no_sleep) "
+            "woke_up, got_up, no_sleep, owner_id) "
             'VALUES ("a4c727fb-8c2b-4fc0-81ea-9c31ed64a4ff", "2020-01-01", "01-00", '
-            '"03-00", "11-00", "13-00", "01-00");',
+            f'"03-00", "11-00", "13-00", "01-00", "{create_user.oid}");',
         ),
     )
     db_note: NoteORM | None = memory_session.query(NoteORM).first()

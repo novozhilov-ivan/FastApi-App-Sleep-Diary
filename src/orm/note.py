@@ -1,40 +1,41 @@
 from datetime import date, time
+from typing import Type
 from typing_extensions import Self
+from uuid import UUID
 
-from sqlalchemy.orm import Mapped
+from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy.orm import Mapped, mapped_column
 
-from src.domain.note import NoteEntity, NoteValueObject
+from src.domain.note import NoteEntity, NoteTimePoints
 from src.orm.base import BaseORM
-from src.orm.mixins import MetaInfo
+from src.orm.mixins import MixinMetaInfo
 
 
-class NoteORM(BaseORM, MetaInfo):
+class NoteORM(BaseORM, MixinMetaInfo):
     __tablename__ = "notes"
-    # __table_args__ = (
-    #     UniqueConstraint(
-    #         "bedtime_date",
-    #         "owner_id",
-    #         name="unique_bedtime_date_for_user",
-    #     ),
-    # )
-
+    __table_args__ = (
+        UniqueConstraint(
+            "bedtime_date",
+            "owner_id",
+            name="unique_bedtime_date_for_user",
+        ),
+    )
     bedtime_date: Mapped[date]
     went_to_bed: Mapped[time]
     fell_asleep: Mapped[time]
     woke_up: Mapped[time]
     got_up: Mapped[time]
     no_sleep: Mapped[time]
+    owner_id: Mapped[UUID] = mapped_column(
+        ForeignKey(
+            column="users.oid",
+            ondelete="CASCADE",
+        ),
+    )
 
-    # owner_id: Mapped[UUID] = mapped_column(
-    #     ForeignKey(
-    #         column="users.oid",
-    #         ondelete="CASCADE",
-    #     ),
-    # )
-
-    @staticmethod
-    def from_entity(obj: NoteValueObject) -> "NoteORM":
-        return NoteORM(
+    @classmethod
+    def from_entity(cls: Type["NoteORM"], obj: NoteTimePoints) -> "NoteORM":
+        return cls(
             bedtime_date=obj.bedtime_date,
             went_to_bed=obj.went_to_bed,
             fell_asleep=obj.fell_asleep,

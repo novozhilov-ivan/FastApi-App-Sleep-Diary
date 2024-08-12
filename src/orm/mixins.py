@@ -7,7 +7,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 
 @dataclass
-class MetaInfo:
+class MixinMetaInfo:
 
     oid: Mapped[UUID] = mapped_column(
         primary_key=True,
