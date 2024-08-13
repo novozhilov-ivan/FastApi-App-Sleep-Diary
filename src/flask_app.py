@@ -16,10 +16,6 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - tests/.../test_orm.py < Протестировать orm.py
-#   - from/to entity методы; добавление/получение записи;
-#   - ограничение unique_constraint; добавление/получение пользователя.
-#   -
 #   - Добавить сервисы/сервисный слой
 #   - src/.../services.py < Добавить службу сервисного слоя write(
 #   note, repo, session);
