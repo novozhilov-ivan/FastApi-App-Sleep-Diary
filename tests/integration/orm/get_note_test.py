@@ -1,11 +1,11 @@
 from datetime import UTC, date, datetime, time
 from uuid import uuid4
 
-from sqlalchemy import text
 from sqlalchemy.orm import Session
 
 from src.orm.note import NoteORM
 from src.orm.user import UserORM
+from tests.integration.conftest import insert_note_stmt
 
 
 def test_get_note(
@@ -19,14 +19,8 @@ def test_get_note(
         tzinfo=None,
     )
     expected_note_oid = uuid4()
-    stmt = text(
-        "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
-        "woke_up, got_up, no_sleep, owner_id) "
-        "VALUES (:oid, :bedtime_date, :went_to_bed, :fell_asleep, :woke_up,"
-        ":got_up, :no_sleep, :owner_id);",
-    )
     memory_session.execute(
-        statement=stmt,
+        statement=insert_note_stmt,
         params=(
             {
                 "oid": f"{expected_note_oid}",

@@ -2,11 +2,19 @@ from typing import Generator
 
 import pytest
 
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
 from src.orm.base import metadata
 from src.orm.user import UserORM
+
+
+insert_note_stmt = text(
+    "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
+    "woke_up, got_up, no_sleep, owner_id) "
+    "VALUES (:oid, :bedtime_date, :went_to_bed, :fell_asleep, :woke_up,"
+    ":got_up, :no_sleep, :owner_id);",
+)
 
 
 @pytest.fixture
