@@ -25,8 +25,8 @@ def test_unique_bedtime_date_for_user(
         "no_sleep": "01-00",
         "owner_id": f"{create_user.oid}",
     }
-
     memory_session.execute(insert_note_stmt, note)
+    memory_session.commit()
     db_notes: list[NoteORM] = memory_session.query(NoteORM).all()
     assert len(db_notes) == 1
     [db_note] = db_notes

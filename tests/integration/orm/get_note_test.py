@@ -54,6 +54,7 @@ def test_get_note(
             },
         ),
     )
+    memory_session.commit()
     db_notes: list[NoteORM] = memory_session.query(NoteORM).all()
     assert len(db_notes) == 3
     db_note, *_ = db_notes
