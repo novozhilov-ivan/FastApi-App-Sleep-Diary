@@ -5,8 +5,7 @@ import pytest
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
-from src.orm.base import metadata
-from src.orm.user import UserORM
+from src.orm import UserORM, metadata
 
 
 insert_note_stmt = text(
@@ -20,9 +19,6 @@ insert_note_stmt = text(
 @pytest.fixture
 def in_memory_db() -> Engine:
     engine = create_engine("sqlite://")
-    from src.orm.note import NoteORM  # noqa
-    from src.orm.user import UserORM  # noqa
-
     metadata.create_all(engine)
     return engine
 
