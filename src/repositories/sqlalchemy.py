@@ -1,5 +1,5 @@
-from src.repositories.abstract import AbstractRepository
+from src.repositories.base import BaseDiaryRepository
 
 
-class SQLAlchemyRepository(AbstractRepository):
+class SQLAlchemyDiaryRepository(BaseDiaryRepository):
     ...  # fmt: skip

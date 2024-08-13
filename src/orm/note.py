@@ -1,5 +1,4 @@
 from datetime import date, time
-from typing import Type
 from typing_extensions import Self
 from uuid import UUID
 
@@ -34,7 +33,7 @@ class NoteORM(BaseORM, MixinMetaInfo):
     )
 
     @classmethod
-    def from_time_points(cls: Type["NoteORM"], obj: NoteTimePoints) -> "NoteORM":
+    def from_time_points(cls: type["NoteORM"], obj: NoteTimePoints) -> "NoteORM":
         return cls(
             bedtime_date=obj.bedtime_date,
             went_to_bed=obj.went_to_bed,
