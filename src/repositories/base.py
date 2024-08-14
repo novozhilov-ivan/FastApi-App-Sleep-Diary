@@ -2,6 +2,7 @@ import abc
 
 from typing_extensions import Self
 
+from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints
 
 
@@ -15,7 +16,7 @@ class BaseDiaryRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_all(self: Self) -> list[NoteEntity]:
+    def get_diary(self: Self) -> Diary:
         raise NotImplementedError
 
     # def get_by_sleep_date(self, sleep_date):

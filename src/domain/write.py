@@ -1,11 +1,16 @@
-from src.domain import diary as dr, note as nt
+from src.domain.diary import Diary
 from src.domain.errors import NoteAlreadyExist
+from src.domain.note import NoteTimePoints, NoteValueObject
 
 
-def write(note: nt.NoteValueObject, diary: dr.Diary) -> nt.NoteStatistic:
-    if diary.can_write(note):
-        diary.write(note)
-        return nt.NoteStatistic.model_validate(note, from_attributes=True)
+def write(note: NoteTimePoints, diary: Diary) -> NoteValueObject:
+    note_to_write = NoteValueObject.model_validate(
+        obj=note,
+        from_attributes=True,
+    )
+    if diary.can_write(note_to_write):
+        diary.write(note_to_write)
+        return note_to_write
     raise NoteAlreadyExist(
         f"Запись о сне с датой {note.bedtime_date} уже существует в дневнике.",
     )

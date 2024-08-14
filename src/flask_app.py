@@ -16,10 +16,6 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Добавить сервисы/сервисный слой
-#   - src/.../services.py < Добавить службу сервисного слоя write(
-#   note, repo, session);
-#   Добавить ошибки, службы для проверки, etc.
 #   - tests/.../test_services.py < Добавить тесты служб сервисов
 #   - tests/.../test_services.py < class FakeRepo
 #   -
