@@ -16,11 +16,17 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - tests/.../test_services.py < Добавить тесты служб сервисов
-#   - tests/.../test_services.py < class FakeRepo
-#   -
-#   - Добавить репозиторий SQLAlchemy
+#   - Добавить репозиторий SQLAlchemyDiaryRepo
 #   - Протестировать репозиторий Sqlalchemy с sqlite::memory
+#   -
+#   - Переделать/добавить альтернативную точку входа в приложение
+#   - src/entrypoints/api/flask_app < def web_app_factory(): ...
+#   - src/entrypoints/api/routes/ < Создать директорию с Роутами
+#   -
+#   - BaseDiaryRepo < разделить метод get() и другие на _get и get:
+#   - _get() будет определен в абстрактном классе;
+#   - get() будет абстрактным;
+#   - При наследовании в get() будет экземпляры будут маппиться в Base экземпляры.
 #   -
 #   - Diary + Week взаимодействие
 #   - Diary < метод make_diary() для формирования словаря/json с записями

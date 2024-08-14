@@ -3,12 +3,12 @@ import abc
 from typing_extensions import Self
 
 from src.domain.diary import Diary
-from src.domain.note import NoteEntity, NoteTimePoints
+from src.domain.note import NoteEntity, NoteValueObject
 
 
 class BaseDiaryRepository(abc.ABC):
     @abc.abstractmethod
-    def add(self: Self, note: NoteTimePoints) -> None:
+    def add(self: Self, note: NoteValueObject) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod

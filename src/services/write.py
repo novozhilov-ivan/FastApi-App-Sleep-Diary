@@ -13,6 +13,5 @@ def write(
     session: Session | Any,
 ) -> None:
     diary = repo.get_diary()
-    note_to_adding = domain.write(note_time_points, diary)
-    repo.add(note_to_adding)
+    domain.write(note_time_points, diary)
     session.commit()

@@ -3,7 +3,7 @@ from typing_extensions import Self
 
 from src import services
 from src.domain.diary import Diary
-from src.domain.note import NoteEntity, NoteTimePoints
+from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
 from src.repositories import BaseDiaryRepository
 
 
@@ -33,7 +33,7 @@ class FakeSession:
         self.committed = True
 
 
-def test_add_note() -> None:
+def test_service_write_note() -> None:
     repo, session = FakeDiaryRepo([]), FakeSession()
     note = NoteTimePoints(
         bedtime_date="2020-12-12",
@@ -43,5 +43,11 @@ def test_add_note() -> None:
         got_up="01:00",
     )
     services.write(note, repo, session)
-    assert repo.get_by_bedtime_date("2020-12-12")
+    assert repo.get_by_bedtime_date("2020-12-12") is not None
+    assert repo.get_by_bedtime_date(
+        bedtime_date="2020-12-12",
+    ) == NoteValueObject.model_validate(
+        obj=note,
+        from_attributes=True,
+    )
     assert session.committed
