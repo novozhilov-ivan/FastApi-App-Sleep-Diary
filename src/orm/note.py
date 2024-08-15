@@ -33,7 +33,11 @@ class NoteORM(BaseORM, MixinMetaInfo):
     )
 
     @classmethod
-    def from_time_points(cls: type["NoteORM"], obj: NoteTimePoints) -> "NoteORM":
+    def from_time_points(
+        cls: type["NoteORM"],
+        obj: NoteTimePoints,
+        owner_id: UUID | None = None,
+    ) -> "NoteORM":
         return cls(
             bedtime_date=obj.bedtime_date,
             went_to_bed=obj.went_to_bed,
@@ -41,6 +45,7 @@ class NoteORM(BaseORM, MixinMetaInfo):
             woke_up=obj.woke_up,
             got_up=obj.got_up,
             no_sleep=obj.no_sleep,
+            owner_id=owner_id,
         )
 
     def to_entity(self: Self) -> NoteEntity:

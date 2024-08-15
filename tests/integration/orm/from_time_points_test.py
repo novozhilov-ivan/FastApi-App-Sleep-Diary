@@ -16,8 +16,10 @@ def test_note_orm_from_time_points(
         woke_up="23:00",
         got_up="01:00",
     )
-    note_orm = NoteORM.from_time_points(note_time_points)
-    note_orm.owner_id = create_user.oid
+    note_orm = NoteORM.from_time_points(
+        obj=note_time_points,
+        owner_id=create_user.oid,
+    )
     memory_session.add(note_orm)
     memory_session.commit()
     memory_session.refresh(note_orm)
