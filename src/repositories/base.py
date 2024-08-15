@@ -1,6 +1,7 @@
 import abc
 
 from typing_extensions import Self
+from uuid import UUID
 
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteValueObject
@@ -12,7 +13,7 @@ class BaseDiaryRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get(self: Self, oid: int) -> NoteEntity:
+    def get(self: Self, oid: UUID) -> NoteEntity:
         raise NotImplementedError
 
     @abc.abstractmethod

@@ -16,7 +16,14 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Добавить репозиторий SQLAlchemyDiaryRepo
+#   - Добавить переменную с валидацией из pydantic для bedtime_date и oid;
+#   - для валидации данных и конвертации типа данных;
+#   - services_test < поправить тесты  после создания.
+#   -
+#   - Решить расхождения по типам данных в репозиториях
+#   - set[NoteValueObject vs NoteEntity].
+#   -
+#   - SQLAlchemyDiaryRepo < доделать get_diary()
 #   - Протестировать репозиторий Sqlalchemy с sqlite::memory
 #   -
 #   - Переделать/добавить альтернативную точку входа в приложение

@@ -19,3 +19,6 @@ class NoteEntity(NoteStatistic):
         if not isinstance(other, NoteEntity):
             return NotImplemented
         return self.oid == other.oid
+
+    def __hash__(self: Self) -> int:
+        return hash(self.oid)

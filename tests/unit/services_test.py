@@ -1,5 +1,6 @@
 from typing import Iterable
 from typing_extensions import Self
+from uuid import UUID
 
 from src import services
 from src.domain.diary import Diary
@@ -11,13 +12,14 @@ class FakeDiaryRepo(BaseDiaryRepository):
     def __init__(self: Self, notes: Iterable[NoteEntity]) -> None:
         self._notes: set = set(notes)
 
-    def add(self: Self, note: NoteTimePoints) -> None:
+    def add(self: Self, note: NoteTimePoints) -> None:  # not used, not tested
         self._notes.add(note)
 
-    def get(self: Self, oid: int) -> NoteEntity:
+    def get(self: Self, oid: UUID) -> NoteEntity:  # not used, not tested
         return next(n for n in self._notes if n.oid == oid)
 
     def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteEntity:
+        # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
         return next(n for n in self._notes if str(n.bedtime_date) == bedtime_date)
 
     def get_diary(self: Self) -> Diary:
