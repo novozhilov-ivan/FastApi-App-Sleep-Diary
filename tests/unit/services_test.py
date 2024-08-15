@@ -9,11 +9,15 @@ from src.repositories import BaseDiaryRepository
 
 
 class FakeDiaryRepo(BaseDiaryRepository):
-    def __init__(self: Self, notes: Iterable[NoteEntity]) -> None:
+    def __init__(self: Self, notes: Iterable[NoteValueObject]) -> None:
         self._notes: set = set(notes)
 
     def add(self: Self, note: NoteTimePoints) -> None:  # not used, not tested
-        self._notes.add(note)
+        new_note = NoteValueObject.model_validate(
+            obj=note,
+            from_attributes=True,
+        )
+        self._notes.add(new_note)
 
     def get(self: Self, oid: UUID) -> NoteEntity:  # not used, not tested
         return next(n for n in self._notes if n.oid == oid)
@@ -22,7 +26,7 @@ class FakeDiaryRepo(BaseDiaryRepository):
         # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
         return next(n for n in self._notes if str(n.bedtime_date) == bedtime_date)
 
-    def get_diary(self: Self) -> Diary:
+    def get_diary(self: Self) -> Diary:  # used, not tested
         diary = Diary()
         diary._notes = self._notes
         return diary

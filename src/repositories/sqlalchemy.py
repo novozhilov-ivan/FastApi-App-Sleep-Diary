@@ -6,7 +6,7 @@ from sqlalchemy import select
 from sqlalchemy.orm import Session
 
 from src.domain.diary import Diary
-from src.domain.note import NoteEntity, NoteValueObject
+from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
 from src.orm import NoteORM
 from src.repositories.base import BaseDiaryRepository
 
@@ -20,7 +20,7 @@ class SQLAlchemyDiaryRepository(BaseDiaryRepository):
         self.session: Session = session
         self.owner_id: UUID = owner_id
 
-    def add(self: Self, note: NoteValueObject) -> None:
+    def add(self: Self, note: NoteTimePoints) -> None:
         self.session.add(
             NoteORM.from_time_points(
                 obj=note,
@@ -50,7 +50,11 @@ class SQLAlchemyDiaryRepository(BaseDiaryRepository):
         diary = Diary()
         query = select(NoteORM).where(NoteORM.owner_id == self.owner_id)
         results: Sequence[NoteORM] = self.session.execute(query).scalars().all()
-        # diary._notes принимает и работает только с Iterable[NoteValueObject]
-        # mypy error. исправить
-        diary._notes = set(results)
+        diary._notes = {
+            NoteValueObject.model_validate(
+                obj=note,
+                from_attributes=True,
+            )
+            for note in results
+        }
         return diary

@@ -20,10 +20,6 @@ from src.extension import (
 #   - для валидации данных и конвертации типа данных;
 #   - services_test < поправить тесты  после создания.
 #   -
-#   - Решить расхождения по типам данных в репозиториях
-#   - set[NoteValueObject vs NoteEntity].
-#   -
-#   - SQLAlchemyDiaryRepo < доделать get_diary()
 #   - Протестировать репозиторий Sqlalchemy с sqlite::memory
 #   -
 #   - Переделать/добавить альтернативную точку входа в приложение
