@@ -5,7 +5,7 @@ from uuid import UUID
 from src import services
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.repositories import BaseDiaryRepository
+from src.repository import BaseDiaryRepository
 
 
 class FakeDiaryRepo(BaseDiaryRepository):

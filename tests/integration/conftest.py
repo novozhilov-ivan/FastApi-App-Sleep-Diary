@@ -24,19 +24,18 @@ def in_memory_db() -> Engine:
 
 
 @pytest.fixture
-def memory_session(in_memory_db: Engine) -> Generator[Session, None, None]:
-    mem_session = sessionmaker(bind=in_memory_db)
-    with mem_session() as session:
+def session(in_memory_db: Engine) -> Generator[Session, None, None]:
+    with sessionmaker(bind=in_memory_db)() as session:
         yield session
 
 
 @pytest.fixture
-def create_user(memory_session: Session) -> UserORM:
+def create_user(session: Session) -> UserORM:
     user = UserORM(
         username="test_user",
         password=b"test_password",
     )
-    memory_session.add(user)
-    memory_session.commit()
-    memory_session.refresh(user)
+    session.add(user)
+    session.commit()
+    session.refresh(user)
     return user

@@ -10,7 +10,7 @@ from tests.integration.conftest import insert_note_stmt
 
 
 def test_note_orm_t_entity(
-    memory_session: Session,
+    session: Session,
     create_user: UserORM,
 ) -> None:
     note = {
@@ -25,9 +25,9 @@ def test_note_orm_t_entity(
         "no_sleep": "01:00",
         "owner_id": f"{create_user.oid}",
     }
-    memory_session.execute(insert_note_stmt, note)
-    memory_session.commit()
-    db_note: NoteORM | None = memory_session.query(NoteORM).first()
+    session.execute(insert_note_stmt, note)
+    session.commit()
+    db_note: NoteORM | None = session.query(NoteORM).first()
     assert isinstance(db_note, NoteORM)
     db_note_entity = db_note.to_entity()
     assert isinstance(db_note_entity, NoteEntity)

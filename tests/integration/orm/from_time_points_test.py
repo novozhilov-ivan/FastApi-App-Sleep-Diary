@@ -6,7 +6,7 @@ from src.orm.user import UserORM
 
 
 def test_note_orm_from_time_points(
-    memory_session: Session,
+    session: Session,
     create_user: UserORM,
 ) -> None:
     note_time_points = NoteTimePoints(
@@ -20,9 +20,9 @@ def test_note_orm_from_time_points(
         obj=note_time_points,
         owner_id=create_user.oid,
     )
-    memory_session.add(note_orm)
-    memory_session.commit()
-    memory_session.refresh(note_orm)
+    session.add(note_orm)
+    session.commit()
+    session.refresh(note_orm)
 
     assert note_orm.oid
     assert note_orm.created_at

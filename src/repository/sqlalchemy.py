@@ -8,7 +8,7 @@ from sqlalchemy.orm import Session
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
 from src.orm import NoteORM
-from src.repositories.base import BaseDiaryRepository
+from src.repository.base import BaseDiaryRepository
 
 
 class SQLAlchemyDiaryRepository(BaseDiaryRepository):
@@ -28,13 +28,14 @@ class SQLAlchemyDiaryRepository(BaseDiaryRepository):
             ),
         )
 
-    def get(self: Self, oid: UUID) -> NoteEntity:  # or raise NoResult
+    def get(self: Self, oid: UUID) -> NoteEntity:
         query = (
             select(NoteORM)
             .where(NoteORM.owner_id == self.owner_id)
             .where(NoteORM.oid == oid)
         )
         result: NoteORM = self.session.execute(query).scalar_one()
+        # or raise NoResult
         return result.to_entity()
 
     def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteEntity:
@@ -44,6 +45,7 @@ class SQLAlchemyDiaryRepository(BaseDiaryRepository):
             .where(NoteORM.bedtime_date == bedtime_date)
         )
         result: NoteORM = self.session.execute(query).scalar_one()
+        # or raise NoResult
         return result.to_entity()
 
     def get_diary(self: Self) -> Diary:

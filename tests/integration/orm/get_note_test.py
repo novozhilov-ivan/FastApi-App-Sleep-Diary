@@ -9,7 +9,7 @@ from tests.integration.conftest import insert_note_stmt
 
 
 def test_get_note(
-    memory_session: Session,
+    session: Session,
     create_user: UserORM,
 ) -> None:
     expected_created_at = expected_updated_at = datetime.now(
@@ -19,7 +19,7 @@ def test_get_note(
         tzinfo=None,
     )
     expected_note_oid = uuid4()
-    memory_session.execute(
+    session.execute(
         statement=insert_note_stmt,
         params=(
             {
@@ -54,8 +54,8 @@ def test_get_note(
             },
         ),
     )
-    memory_session.commit()
-    db_notes: list[NoteORM] = memory_session.query(NoteORM).all()
+    session.commit()
+    db_notes: list[NoteORM] = session.query(NoteORM).all()
     assert len(db_notes) == 3
     db_note, *_ = db_notes
     assert isinstance(db_note, NoteORM)

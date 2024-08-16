@@ -16,28 +16,28 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Добавить переменную с валидацией из pydantic для bedtime_date и oid;
-#   - для валидации данных и конвертации типа данных;
-#   - services_test < поправить тесты  после создания.
-#   -
 #   - Протестировать репозиторий Sqlalchemy с sqlite::memory
 #   -
-#   - Переделать/добавить альтернативную точку входа в приложение
-#   - src/entrypoints/api/flask_app < def web_app_factory(): ...
-#   - src/entrypoints/api/routes/ < Создать директорию с Роутами
-#   -
 #   - BaseDiaryRepo < разделить метод get() и другие на _get и get:
-#   - _get() будет определен в абстрактном классе;
-#   - get() будет абстрактным;
-#   - При наследовании в get() будет экземпляры будут маппиться в Base экземпляры.
+#   _get() будет определен в абстрактном классе;
+#   get() будет абстрактным;
+#   При наследовании в get() будет экземпляры будут маппиться в Base экземпляры.
 #   -
 #   - Diary + Week взаимодействие
-#   - Diary < метод make_diary() для формирования словаря/json с записями
+#   Diary < метод make_diary() для формирования словаря/json с записями
 #   разделенными неделями, со своими сортировками
 #   -
+#   - Добавить переменную с валидацией из pydantic для bedtime_date и oid;
+#   для валидации данных и конвертации типа данных;
+#   services_test < поправить тесты  после создания.
+#   -
+#   - Переделать/добавить альтернативную точку входа в приложение
+#   src/entrypoints/api/flask_app < def web_app_factory(): ...
+#   src/entrypoints/api/routes/ < Создать директорию с Роутами
+#   -
 #   - Удалить зависимость Flask-SQLAlchemy и db.init_app(app).
-#   - Заменить на session = session_maker(session_options).
-#   - И вызов with session() as session: ...
+#   Заменить на session = session_maker(session_options).
+#   И вызов with session() as session: ...
 
 
 # TODO
