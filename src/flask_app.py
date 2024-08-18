@@ -16,8 +16,6 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Протестировать репозиторий Sqlalchemy с sqlite::memory
-#   -
 #   - BaseDiaryRepo < разделить метод get() и другие на _get и get:
 #   _get() будет определен в абстрактном классе;
 #   get() будет абстрактным;
