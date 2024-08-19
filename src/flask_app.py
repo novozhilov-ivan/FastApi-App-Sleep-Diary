@@ -16,8 +16,6 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Переделать/добавить альтернативную точку входа в приложение
-#   src/entrypoints/api/flask_app < def web_app_factory(): ...
 #   src/entrypoints/api/routes/ < Создать директорию с Роутами
 #   -
 #   - Добавить слой инфраструктуры т.е. api, авторизация(мб), фронт, swagger, etc
