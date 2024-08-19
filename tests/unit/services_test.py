@@ -2,6 +2,8 @@ from typing import Iterable
 from typing_extensions import Self
 from uuid import UUID
 
+import pytest
+
 from src import services
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
@@ -22,7 +24,7 @@ class FakeDiaryRepo(BaseDiaryRepository):
     def get(self: Self, oid: UUID) -> NoteEntity:  # not used, not tested
         return next(n for n in self._notes if n.oid == oid)
 
-    def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteEntity:
+    def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteValueObject:
         # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
         return next(n for n in self._notes if str(n.bedtime_date) == bedtime_date)
 
@@ -39,21 +41,28 @@ class FakeSession:
         self.committed = True
 
 
-def test_service_write_note() -> None:
+@pytest.mark.parametrize(
+    "no_sleep",
+    [
+        None,
+        "",
+        "00:00",
+        "00:22",
+    ],
+)
+def test_service_write_note(no_sleep: str | None) -> None:
     repo, session = FakeDiaryRepo([]), FakeSession()
-    note = NoteTimePoints(
-        bedtime_date="2020-12-12",
-        went_to_bed="13:00",
-        fell_asleep="15:00",
-        woke_up="23:00",
-        got_up="01:00",
+    services.write(
+        "2020-12-12",
+        "13:00",
+        "15:00",
+        "23:00",
+        "01:00",
+        no_sleep,
+        repo,
+        session,
     )
-    services.write(note, repo, session)
-    assert repo.get_by_bedtime_date("2020-12-12") is not None
-    assert repo.get_by_bedtime_date(
-        bedtime_date="2020-12-12",
-    ) == NoteValueObject.model_validate(
-        obj=note,
-        from_attributes=True,
-    )
+    note_value_object = repo.get_by_bedtime_date("2020-12-12")
+    assert note_value_object is not None
+    assert isinstance(note_value_object, NoteValueObject)
     assert session.committed

@@ -17,7 +17,7 @@ class BaseDiaryRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteEntity:
+    def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteTimePoints:
         raise NotImplementedError
 
     @abc.abstractmethod
