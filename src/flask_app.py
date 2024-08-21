@@ -16,10 +16,8 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Рассмотреть замену flask-restx.
-#   Иначе хорошо исправить придется писать свой код описания параметров
-#   для swagger
-#   - connexion(swagger v2), flask-openapi3
+#   - Протестировать каскадное удаление записей при удалении user.
+#   - (all, delete-orphan) в таблице 'users' мб нужно выставить.
 #   -
 #   - Добавить слой инфраструктуры т.е. api, авторизация(мб), фронт, swagger, etc
 #   - Добавить tests/e2e/; Добавить в Makefile
