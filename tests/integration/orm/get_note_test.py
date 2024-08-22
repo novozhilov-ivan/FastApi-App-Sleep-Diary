@@ -3,14 +3,14 @@ from uuid import uuid4
 
 from sqlalchemy.orm import Session
 
-from src.orm.note import NoteORM
-from src.orm.user import UserORM
+from src.orm.note import ORMNote
+from src.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 
 def test_get_note(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     expected_created_at = expected_updated_at = datetime.now(
         tz=UTC,
@@ -55,10 +55,10 @@ def test_get_note(
         ),
     )
     session.commit()
-    db_notes: list[NoteORM] = session.query(NoteORM).all()
+    db_notes: list[ORMNote] = session.query(ORMNote).all()
     assert len(db_notes) == 3
     db_note, *_ = db_notes
-    assert isinstance(db_note, NoteORM)
+    assert isinstance(db_note, ORMNote)
     assert db_note.oid == expected_note_oid
     assert db_note.created_at >= expected_created_at
     assert db_note.updated_at >= expected_updated_at

@@ -4,14 +4,14 @@ from uuid import uuid4
 from sqlalchemy.orm import Session
 
 from src.domain.note import NoteEntity
-from src.orm.note import NoteORM
-from src.orm.user import UserORM
+from src.orm.note import ORMNote
+from src.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 
 def test_note_orm_t_entity(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     note = {
         "oid": f"{uuid4()}",
@@ -27,8 +27,8 @@ def test_note_orm_t_entity(
     }
     session.execute(insert_note_stmt, note)
     session.commit()
-    db_note: NoteORM | None = session.query(NoteORM).first()
-    assert isinstance(db_note, NoteORM)
+    db_note: ORMNote | None = session.query(ORMNote).first()
+    assert isinstance(db_note, ORMNote)
     db_note_entity = db_note.to_entity()
     assert isinstance(db_note_entity, NoteEntity)
 

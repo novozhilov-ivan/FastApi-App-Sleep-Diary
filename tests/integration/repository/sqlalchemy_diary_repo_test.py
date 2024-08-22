@@ -7,12 +7,12 @@ from sqlalchemy.orm import Session
 from src import repository
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.orm import NoteORM, UserORM
+from src.orm import ORMNote, ORMUser
 
 
 def test_repo_can_add_and_save_note(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
@@ -43,7 +43,7 @@ def test_repo_can_add_and_save_note(
     )
 
 
-def insert_note(session: Session, user: UserORM) -> NoteORM:
+def insert_note(session: Session, user: ORMUser) -> ORMNote:
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -51,7 +51,7 @@ def insert_note(session: Session, user: UserORM) -> NoteORM:
         woke_up="23:00",
         got_up="01:00",
     )
-    note_orm = NoteORM.from_time_points(
+    note_orm = ORMNote.from_time_points(
         obj=note_time_points,
         owner_id=user.oid,
     )
@@ -63,7 +63,7 @@ def insert_note(session: Session, user: UserORM) -> NoteORM:
 
 def test_repo_can_retrieve_note_entity_by_oid(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     inserted_note_orm = insert_note(session, create_user)
 
@@ -87,7 +87,7 @@ def test_repo_can_retrieve_note_entity_by_oid(
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     insert_note(session, create_user)
     repo = repository.SQLAlchemyDiaryRepository(
@@ -109,7 +109,7 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
 
 def test_repo_can_retrieve_diary(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     insert_note(session, create_user)
     repo = repository.SQLAlchemyDiaryRepository(

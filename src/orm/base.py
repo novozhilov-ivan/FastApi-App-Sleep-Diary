@@ -5,5 +5,5 @@ from sqlalchemy.orm import DeclarativeBase
 metadata = MetaData()
 
 
-class BaseORM(DeclarativeBase):
+class ORMBase(DeclarativeBase):
     metadata = metadata

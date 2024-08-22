@@ -6,11 +6,11 @@ from sqlalchemy import ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.domain.note import NoteEntity, NoteTimePoints
-from src.orm.base import BaseORM
+from src.orm.base import ORMBase
 from src.orm.mixins import MixinMetaInfo
 
 
-class NoteORM(BaseORM, MixinMetaInfo):
+class ORMNote(ORMBase, MixinMetaInfo):
     __tablename__ = "notes"
     __table_args__ = (
         UniqueConstraint(
@@ -34,10 +34,10 @@ class NoteORM(BaseORM, MixinMetaInfo):
 
     @classmethod
     def from_time_points(
-        cls: type["NoteORM"],
+        cls: type["ORMNote"],
         obj: NoteTimePoints,
         owner_id: UUID | None = None,
-    ) -> "NoteORM":
+    ) -> "ORMNote":
         return cls(
             bedtime_date=obj.bedtime_date,
             went_to_bed=obj.went_to_bed,

@@ -5,7 +5,7 @@ import pytest
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
-from src.orm import UserORM, metadata
+from src.orm import ORMUser, metadata
 
 
 insert_note_stmt = text(
@@ -30,8 +30,8 @@ def session(in_memory_db: Engine) -> Generator[Session, None, None]:
 
 
 @pytest.fixture
-def create_user(session: Session) -> UserORM:
-    user = UserORM(
+def create_user(session: Session) -> ORMUser:
+    user = ORMUser(
         username="test_user",
         password=b"test_password",
     )

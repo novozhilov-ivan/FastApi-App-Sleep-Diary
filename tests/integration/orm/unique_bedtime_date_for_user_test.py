@@ -6,14 +6,14 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from src.orm.note import NoteORM
-from src.orm.user import UserORM
+from src.orm.note import ORMNote
+from src.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 
 def test_unique_bedtime_date_for_user(
     session: Session,
-    create_user: UserORM,
+    create_user: ORMUser,
 ) -> None:
     note = {
         "oid": f"{uuid4()}",
@@ -27,15 +27,15 @@ def test_unique_bedtime_date_for_user(
     }
     session.execute(insert_note_stmt, note)
     session.commit()
-    db_notes: list[NoteORM] = session.query(NoteORM).all()
+    db_notes: list[ORMNote] = session.query(ORMNote).all()
     assert len(db_notes) == 1
     [db_note] = db_notes
-    assert isinstance(db_note, NoteORM)
+    assert isinstance(db_note, ORMNote)
     assert db_note.bedtime_date == date(2020, 1, 1)
     with pytest.raises(
         expected_exception=IntegrityError,
         match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_id",
     ):
         session.execute(insert_note_stmt, note)
-    db_notes = session.query(NoteORM).all()
+    db_notes = session.query(ORMNote).all()
     assert len(db_notes) == 1

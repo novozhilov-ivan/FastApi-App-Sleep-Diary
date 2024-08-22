@@ -1,11 +1,11 @@
-from src.orm.base import BaseORM, metadata
-from src.orm.note import NoteORM
-from src.orm.user import UserORM
+from src.orm.base import metadata
+from src.orm.note import ORMNote
+from src.orm.user import ORMUser
 
 
 __all__ = [
-    "NoteORM",
-    "UserORM",
+    "ORMNote",
+    "ORMUser",
     "BaseORM",
     "metadata",
 ]
