@@ -1,11 +1,13 @@
 from flask import Blueprint
 from flask_restx import Api
 
+from src.application.api.namespaces.main import namespace_main
+
 
 # from src.application import auth
 
 
-def init_api() -> Blueprint:
+def init_api_blueprint() -> Blueprint:
     api_blueprint = Blueprint("sleep_diary_api", __name__)
     api = Api(
         app=api_blueprint,
@@ -21,5 +23,5 @@ def init_api() -> Blueprint:
         # ],
     )
 
-    # api.add_namespace()
+    api.add_namespace(namespace_main)
     return api_blueprint

@@ -13,13 +13,11 @@ services:
       - .env
     environment:
       SECRET_KEY: ${SECRET_KEY:?}
-      DB_DRIVER: ${DB_DRIVER:?}
-      DB_DRIVER_EXTENSION: ${DB_DRIVER_EXTENSION:?}
-      DB_USER: ${DB_USER:?}
-      DB_PASSWORD: ${DB_PASSWORD:?}
-      DB_HOST: ${DB_HOST:?}
-      DB_PORT: ${DB_PORT:?}
-      DB_NAME: ${DB_NAME:?}
+      POSTGRES_DB: ${POSTGRES_DB:?}
+      POSTGRES_USER: ${POSTGRES_USER:?}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
+      POSTGRES_HOST: ${POSTGRES_HOST:?}
+      POSTGRES_PORT: ${POSTGRES_PORT:?}
       PRIVATE_KEY: ${PRIVATE_KEY:?}
       PUBLIC_KEY: ${PUBLIC_KEY:?}
     ports:
@@ -29,7 +27,9 @@ services:
     working_dir: /app
     entrypoint:
       - flask
-      - --app=src.flask_app:create_app
+      - --debug
+      - --app=src.application.app:init_app
+#      - --app=src.flask_app:create_app
       - run
       - --reload
       - --host=0.0.0.0

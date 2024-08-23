@@ -25,7 +25,7 @@ class PostgresSettings(BaseSettings):
         port = values.get("POSTGRES_PORT")
         db_name = values.get("POSTGRES_DB")
         values["POSTGRES_DB_URL"] = (
-            f"postgresql+asyncpg://{username}:{password}@{host}:{port}/{db_name}"
+            f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{db_name}"
         )
 
         return values
