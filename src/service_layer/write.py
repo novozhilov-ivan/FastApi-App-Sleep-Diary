@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 
 from src import domain
 from src.domain.note import NoteTimePoints
-from src.repository.base import BaseDiaryRepository
+from src.infrastructure.repository.base import BaseDiaryRepository
 
 
 def write(

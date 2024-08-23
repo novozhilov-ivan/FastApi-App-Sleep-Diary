@@ -7,8 +7,8 @@ from sqlalchemy.orm import Session
 
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.orm import ORMNote
-from src.repository.base import BaseDiaryRepository
+from src.infrastructure.orm import ORMNote
+from src.infrastructure.repository.base import BaseDiaryRepository
 
 
 class SQLAlchemyDiaryRepository(BaseDiaryRepository):

@@ -4,10 +4,10 @@ from uuid import UUID
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from src import repository
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.orm import ORMNote, ORMUser
+from src.infrastructure import repository
+from src.infrastructure.orm import ORMNote, ORMUser
 
 
 def test_repo_can_add_and_save_note(

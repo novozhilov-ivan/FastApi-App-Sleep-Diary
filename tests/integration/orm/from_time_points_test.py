@@ -1,8 +1,8 @@
 from sqlalchemy.orm import Session
 
 from src.domain.note import NoteTimePoints
-from src.orm.note import ORMNote
-from src.orm.user import ORMUser
+from src.infrastructure.orm import ORMNote
+from src.infrastructure.orm.user import ORMUser
 
 
 def test_note_orm_from_time_points(

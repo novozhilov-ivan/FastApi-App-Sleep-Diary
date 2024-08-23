@@ -6,8 +6,8 @@ import pytest
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
-from src.orm.note import ORMNote
-from src.orm.user import ORMUser
+from src.infrastructure.orm import ORMNote
+from src.infrastructure.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 

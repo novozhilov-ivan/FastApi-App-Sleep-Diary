@@ -4,10 +4,10 @@ from uuid import UUID
 
 import pytest
 
-from src import services
+from src import service_layer
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.repository import BaseDiaryRepository
+from src.infrastructure.repository import BaseDiaryRepository
 
 
 class FakeDiaryRepo(BaseDiaryRepository):
@@ -52,7 +52,7 @@ class FakeSession:
 )
 def test_service_write_note(no_sleep: str | None) -> None:
     repo, session = FakeDiaryRepo([]), FakeSession()
-    services.write(
+    service_layer.write(
         "2020-12-12",
         "13:00",
         "15:00",

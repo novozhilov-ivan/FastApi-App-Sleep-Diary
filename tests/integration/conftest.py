@@ -5,7 +5,7 @@ import pytest
 from sqlalchemy import Engine, create_engine, text
 from sqlalchemy.orm import Session, sessionmaker
 
-from src.orm import ORMUser, metadata
+from src.infrastructure.orm import ORMUser, metadata
 
 
 insert_note_stmt = text(

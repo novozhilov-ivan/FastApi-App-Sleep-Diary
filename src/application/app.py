@@ -1,7 +1,7 @@
 from flask import Flask
 
-from src.configs import Settings
-from src.entrypoints.api import init_api
+from src.application.api.api import init_api
+from src.settings import Settings
 
 
 def init_app() -> Flask:

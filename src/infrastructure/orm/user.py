@@ -1,8 +1,8 @@
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.orm.base import ORMBase
-from src.orm.mixins import MixinMetaInfo
+from src.infrastructure.orm.base import ORMBase
+from src.infrastructure.orm.mixins import MixinMetaInfo
 
 
 class ORMUser(ORMBase, MixinMetaInfo):

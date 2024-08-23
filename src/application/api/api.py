@@ -2,7 +2,7 @@ from flask import Blueprint
 from flask_restx import Api
 
 
-# from src.entrypoints import auth
+# from src.application import auth
 
 
 def init_api() -> Blueprint:

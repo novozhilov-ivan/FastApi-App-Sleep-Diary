@@ -2,10 +2,10 @@ from typing import ClassVar
 
 from pydantic_settings import SettingsConfigDict
 
-from src.configs.authentication import AuthJWTSettings
-from src.configs.database import PostgresSettings
-from src.configs.flask import FlaskSettings
-from src.configs.flask_restx import FlaskRestXSettings
+from src.settings.authentication import AuthJWTSettings
+from src.settings.database import PostgresSettings
+from src.settings.flask import FlaskSettings
+from src.settings.flask_restx import FlaskRestXSettings
 
 
 class Settings(
