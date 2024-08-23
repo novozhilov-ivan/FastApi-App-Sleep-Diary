@@ -1,5 +1,5 @@
 bearer: str = "Bearer"
-oauth2: str = "oauth2"
+oauth2: str = "OAuth2"
 authorizations: dict[str, dict[str, str]] = {
     bearer: {
         "type": "apiKey",

@@ -16,8 +16,6 @@ from src.extension import (
 
 # TODO
 #           DDD
-#   - Добавить tests/e2e/; Добавить в Makefile
-#   -
 #   - Протестировать каскадное удаление записей при удалении user.
 #   - (all, delete-orphan) в таблице 'users' мб нужно выставить.
 #   -
@@ -49,7 +47,6 @@ from src.extension import (
 #  0. Зависимости:
 #   dev+ pre-committer
 #   dev+ ipython
-#   dev+ sqlite driver
 #   prod-+ Flask-SQLAlchemy -> SQLAlchemy
 
 # TODO

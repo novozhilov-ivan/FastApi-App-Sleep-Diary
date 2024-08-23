@@ -8,7 +8,6 @@ def init_app() -> Flask:
     app = Flask("sleep_diary_app")
     app.config.from_object(obj=Settings())
     # metadata.create_all(engine)
-
     app.register_blueprint(
         blueprint=init_api_blueprint(),
         url_prefix="/api",

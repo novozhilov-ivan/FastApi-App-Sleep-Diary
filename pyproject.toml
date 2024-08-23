@@ -46,7 +46,7 @@ statistics = true
 max-complexity = 8
 no-print-logs = true
 per-file-ignores = [
-#    "__init__.py:F811", # Повторный импорт объекта / переопределение
+    "tests/*test*:ANN201",
 ]
 unused-arguments-ignore-abstract-functions = true
 unused-arguments-ignore-dunder = true

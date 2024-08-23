@@ -19,6 +19,7 @@ insert_note_stmt = text(
 @pytest.fixture
 def in_memory_db() -> Engine:
     engine = create_engine("sqlite://")
+    metadata.drop_all(engine)
     metadata.create_all(engine)
     return engine
 

@@ -15,6 +15,10 @@ unit: up
 		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/unit" api
 integration: up
 		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/integration" api
+e2e: up
+		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/e2e" api
+all: up
+		docker compose -f flask_app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/unit tests/integration tests/e2e" api
 logs:
 		docker compose -f flask_app.yml -f postgres.yml logs --tail=25 api postgres pgadmin
 sh:
