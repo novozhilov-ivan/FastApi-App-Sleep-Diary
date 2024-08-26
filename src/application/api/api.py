@@ -3,6 +3,7 @@ from flask_restx import Api
 
 from src.application import authentication
 from src.application.api.namespaces.main import namespace_main
+from src.application.api.namespaces.notes.namespace import namespace_notes
 
 
 def init_api_blueprint() -> Blueprint:
@@ -20,4 +21,5 @@ def init_api_blueprint() -> Blueprint:
         ],
     )
     api.add_namespace(namespace_main)
+    api.add_namespace(namespace_notes)
     return api_blueprint

@@ -2,12 +2,12 @@ from http import HTTPStatus
 
 from flask_restx import Resource
 
-from src.application.api.namespaces.main.schemas import MainEndpointSchema
+from src.application.api.namespaces.main.schemas import MainEndPointSchema
 
 
-class MainEndpoint(Resource):
+class MainEndPoint(Resource):
     NAME: str = "main"
 
     @staticmethod
     def get() -> tuple[dict, HTTPStatus]:
-        return MainEndpointSchema().model_dump(), HTTPStatus.OK
+        return MainEndPointSchema().model_dump(), HTTPStatus.OK

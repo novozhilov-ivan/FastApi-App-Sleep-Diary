@@ -1,8 +1,10 @@
-from src.application.api.namespaces.main.endpoint import MainEndpoint
+from src.application.api.namespaces.main.endpoint import MainEndPoint
 from src.application.api.namespaces.main.namespace import namespace_main
+from src.application.api.namespaces.notes.namespace import namespace_notes
 
 
 __all__ = [
-    "MainEndpoint",
+    "MainEndPoint",
     "namespace_main",
+    "namespace_notes",
 ]

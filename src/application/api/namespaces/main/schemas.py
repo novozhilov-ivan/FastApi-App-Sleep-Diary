@@ -1,7 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class MainEndpointSchema(BaseModel):
+class MainEndPointSchema(BaseModel):
     """Основная информация на главной странице"""
 
     main_info: str = Field(
