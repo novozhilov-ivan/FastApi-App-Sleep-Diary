@@ -9,7 +9,7 @@ from src.domain.note.time_points import NoteTimePoints
 class NoteValueObject(NoteTimePoints):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True,
-        extra="forbid",
+        extra="ignore",
     )
 
     def __eq__(self: Self, other: object) -> bool:

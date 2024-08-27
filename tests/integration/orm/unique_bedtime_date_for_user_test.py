@@ -4,17 +4,17 @@ from uuid import uuid4
 import pytest
 
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
 
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 
 def test_unique_bedtime_date_for_user(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
+    memory_database: Database,
+    exist_user: ORMUser,
+):
     note = {
         "oid": f"{uuid4()}",
         "bedtime_date": "2020-01-01",
@@ -23,10 +23,12 @@ def test_unique_bedtime_date_for_user(
         "woke_up": "11-00",
         "got_up": "13-00",
         "no_sleep": "01-00",
-        "owner_id": f"{create_user.oid}",
+        "owner_id": f"{exist_user.oid}",
     }
-    session.execute(insert_note_stmt, note)
-    session.commit()
+
+    with memory_database.get_session() as session:
+        session.execute(insert_note_stmt, note)
+
     db_notes: list[ORMNote] = session.query(ORMNote).all()
     assert len(db_notes) == 1
     [db_note] = db_notes

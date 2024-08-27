@@ -1,14 +1,13 @@
-from sqlalchemy.orm import Session
-
 from src.domain.note import NoteTimePoints
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser
 
 
 def test_note_orm_from_time_points(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
+    memory_database: Database,
+    exist_user: ORMUser,
+):
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -18,11 +17,13 @@ def test_note_orm_from_time_points(
     )
     note_orm = ORMNote.from_time_points(
         obj=note_time_points,
-        owner_id=create_user.oid,
+        owner_id=exist_user.oid,
     )
-    session.add(note_orm)
-    session.commit()
-    session.refresh(note_orm)
+
+    with memory_database.get_session() as session:
+        session.add(note_orm)
+        session.commit()
+        session.refresh(note_orm)
 
     assert note_orm.oid
     assert note_orm.created_at

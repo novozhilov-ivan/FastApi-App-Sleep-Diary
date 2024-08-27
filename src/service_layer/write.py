@@ -1,10 +1,8 @@
-from typing import Any
-
-from sqlalchemy.orm import Session
+from uuid import UUID
 
 from src import domain
 from src.domain.note import NoteTimePoints
-from src.infrastructure.repository.base import BaseDiaryRepository
+from src.infrastructure.repository.base import IDiaryRepository
 
 
 def write(
@@ -14,10 +12,10 @@ def write(
     woke_up: str,
     got_up: str,
     no_sleep: str | None,
-    repo: BaseDiaryRepository,
-    session: Session | Any,
+    owner_id: UUID,
+    repo: IDiaryRepository,
 ) -> None:
-    diary = repo.get_diary()
+    diary = repo.get_diary(owner_id)
     domain.write(
         NoteTimePoints(
             bedtime_date=bedtime_date,
@@ -29,4 +27,3 @@ def write(
         ),
         diary,
     )
-    session.commit()

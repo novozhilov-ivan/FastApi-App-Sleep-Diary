@@ -1,10 +1,8 @@
-from typing import Generator
-
 import pytest
 
-from sqlalchemy import Engine, create_engine, text
-from sqlalchemy.orm import Session, sessionmaker
+from sqlalchemy import text
 
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMUser, metadata
 
 
@@ -17,26 +15,21 @@ insert_note_stmt = text(
 
 
 @pytest.fixture
-def in_memory_db() -> Engine:
-    engine = create_engine("sqlite://")
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
-    return engine
+def memory_database() -> Database:
+    database = Database(url="sqlite://")
+    metadata.drop_all(database.engine)
+    metadata.create_all(database.engine)
+    return database
 
 
 @pytest.fixture
-def session(in_memory_db: Engine) -> Generator[Session, None, None]:
-    with sessionmaker(bind=in_memory_db)() as session:
-        yield session
-
-
-@pytest.fixture
-def create_user(session: Session) -> ORMUser:
+def exist_user(memory_database: Database) -> ORMUser:
     user = ORMUser(
         username="test_user",
         password=b"test_password",
     )
-    session.add(user)
-    session.commit()
-    session.refresh(user)
+    with memory_database.get_session() as session:
+        session.add(user)
+        session.commit()
+        session.refresh(user)
     return user

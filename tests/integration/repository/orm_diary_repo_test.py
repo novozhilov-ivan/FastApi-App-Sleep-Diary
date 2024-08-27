@@ -2,18 +2,15 @@ from datetime import date, datetime, time
 from uuid import UUID
 
 from sqlalchemy import text
-from sqlalchemy.orm import Session
 
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
 from src.infrastructure import repository
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote, ORMUser
 
 
-def test_repo_can_add_and_save_note(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
+def test_repo_can_add_and_save_note(memory_database: Database, exist_user: ORMUser):
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -21,19 +18,16 @@ def test_repo_can_add_and_save_note(
         woke_up="23:00",
         got_up="01:00",
     )
-    repo = repository.SQLAlchemyDiaryRepository(
-        session=session,
-        owner_id=create_user.oid,
-    )
-    repo.add(note_time_points)
-    session.commit()
+    repo = repository.ORMDiaryRepository(memory_database)
+    repo.add(ORMNote.from_time_points(note_time_points, exist_user.oid))
 
-    [result] = session.execute(
-        text(
-            "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up "
-            'FROM "notes";',
-        ),
-    )
+    with memory_database.get_session() as session:
+        [result] = session.execute(
+            text(
+                "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up "
+                'FROM "notes";',
+            ),
+        )
     assert result == (
         "2020-12-12",
         "13:00:00.000000",
@@ -43,7 +37,7 @@ def test_repo_can_add_and_save_note(
     )
 
 
-def insert_note(session: Session, user: ORMUser) -> ORMNote:
+def insert_note(memory_database: Database, user: ORMUser) -> ORMNote:
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -55,23 +49,21 @@ def insert_note(session: Session, user: ORMUser) -> ORMNote:
         obj=note_time_points,
         owner_id=user.oid,
     )
-    session.add(note_orm)
-    session.commit()
-    session.refresh(note_orm)
+    with memory_database.get_session() as session:
+        session.add(note_orm)
+        session.commit()
+        session.refresh(note_orm)
     return note_orm
 
 
 def test_repo_can_retrieve_note_entity_by_oid(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
-    inserted_note_orm = insert_note(session, create_user)
+    memory_database: Database,
+    exist_user: ORMUser,
+):
+    inserted_note_orm = insert_note(memory_database, exist_user)
 
-    repo = repository.SQLAlchemyDiaryRepository(
-        session=session,
-        owner_id=create_user.oid,
-    )
-    retrieved = repo.get(oid=inserted_note_orm.oid)
+    repo = repository.ORMDiaryRepository(memory_database)
+    retrieved = repo.get(inserted_note_orm.oid).to_entity()
 
     assert isinstance(retrieved, NoteEntity)
     assert isinstance(retrieved.oid, UUID)
@@ -86,15 +78,14 @@ def test_repo_can_retrieve_note_entity_by_oid(
 
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
-    insert_note(session, create_user)
-    repo = repository.SQLAlchemyDiaryRepository(
-        session=session,
-        owner_id=create_user.oid,
-    )
-    retrieved = repo.get_by_bedtime_date(bedtime_date="2020-12-12")
+    memory_database: Database,
+    exist_user: ORMUser,
+):
+    insert_note(memory_database, exist_user)
+
+    repo = repository.ORMDiaryRepository(memory_database)
+    retrieved = repo.get_by_bedtime_date("2020-12-12", exist_user.oid).to_entity()
+
     assert isinstance(retrieved, NoteEntity)
     assert isinstance(retrieved.oid, UUID)
     assert isinstance(retrieved.created_at, datetime)
@@ -108,15 +99,13 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
 
 
 def test_repo_can_retrieve_diary(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
-    insert_note(session, create_user)
-    repo = repository.SQLAlchemyDiaryRepository(
-        session=session,
-        owner_id=create_user.oid,
-    )
-    retrieved = repo.get_diary()
+    memory_database: Database,
+    exist_user: ORMUser,
+):
+    insert_note(memory_database, exist_user)
+
+    repo = repository.ORMDiaryRepository(memory_database)
+    retrieved = repo.get_diary(exist_user.oid)
     assert isinstance(retrieved, Diary)
     assert len(retrieved.notes_list) == 1
     assert retrieved.notes_list == {

@@ -1,18 +1,17 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from sqlalchemy.orm import Session
-
 from src.domain.note import NoteEntity
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser
 from tests.integration.conftest import insert_note_stmt
 
 
 def test_note_orm_t_entity(
-    session: Session,
-    create_user: ORMUser,
-) -> None:
+    memory_database: Database,
+    exist_user: ORMUser,
+):
     note = {
         "oid": f"{uuid4()}",
         "created_at": datetime.now(UTC).replace(microsecond=0, tzinfo=None),
@@ -23,10 +22,10 @@ def test_note_orm_t_entity(
         "woke_up": "11:00",
         "got_up": "13:00",
         "no_sleep": "01:00",
-        "owner_id": f"{create_user.oid}",
+        "owner_id": f"{exist_user.oid}",
     }
-    session.execute(insert_note_stmt, note)
-    session.commit()
+    with memory_database.get_session() as session:
+        session.execute(insert_note_stmt, note)
     db_note: ORMNote | None = session.query(ORMNote).first()
     assert isinstance(db_note, ORMNote)
     db_note_entity = db_note.to_entity()

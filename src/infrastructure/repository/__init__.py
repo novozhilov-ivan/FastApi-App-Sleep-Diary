@@ -1,8 +1,8 @@
-from src.infrastructure.repository.base import BaseDiaryRepository
-from src.infrastructure.repository.sqlalchemy import SQLAlchemyDiaryRepository
+from src.infrastructure.repository.base import IDiaryRepository
+from src.infrastructure.repository.sqlalchemy import ORMDiaryRepository
 
 
 __all__ = [
-    "BaseDiaryRepository",
-    "SQLAlchemyDiaryRepository",
+    "IDiaryRepository",
+    "ORMDiaryRepository",
 ]

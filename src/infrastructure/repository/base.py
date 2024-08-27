@@ -4,24 +4,28 @@ from typing_extensions import Self
 from uuid import UUID
 
 from src.domain.diary import Diary
-from src.domain.note import NoteEntity, NoteTimePoints
+from src.infrastructure.orm import ORMNote
 
 
-class BaseDiaryRepository(abc.ABC):
+class IDiaryRepository(abc.ABC):
     @abc.abstractmethod
-    def add(self: Self, note: NoteTimePoints) -> None:
+    def add(self: Self, note: ORMNote) -> None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get(self: Self, oid: UUID) -> NoteEntity:
+    def get(self: Self, oid: UUID) -> ORMNote | None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_by_bedtime_date(self: Self, bedtime_date: str) -> NoteTimePoints:
+    def get_by_bedtime_date(
+        self: Self,
+        bedtime_date: str,
+        owner_id: UUID,
+    ) -> ORMNote | None:
         raise NotImplementedError
 
     @abc.abstractmethod
-    def get_diary(self: Self) -> Diary:
+    def get_diary(self: Self, owner_id: UUID) -> Diary:
         raise NotImplementedError
 
     # def add_all(self, note):
