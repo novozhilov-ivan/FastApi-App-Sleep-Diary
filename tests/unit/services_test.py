@@ -9,6 +9,7 @@ import pytest
 
 from src import service_layer
 from src.domain.diary import Diary
+from src.domain.note import NoteValueObject
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.repository import IDiaryRepository
 
@@ -17,21 +18,22 @@ class FakeORMError(Exception):
     pass
 
 
+@dataclass
 class FakeDatabase:
     committed: bool = False
-    _session: set = set()
+    session: list[ORMNote] = field(default_factory=lambda: list())  # noqa: C408
 
-    def __commit(self: Self) -> None:
+    def commit(self: Self) -> None:
         self.committed = True
 
     @contextlib.contextmanager
-    def get_session(self: Self) -> Generator[set, None, None]:
+    def get_session(self: Self) -> Generator[list[ORMNote], None, None]:
         try:
-            yield self._session
+            yield self.session
         except FakeORMError:
             ...
         else:
-            self.__commit()
+            self.commit()
         finally:
             ...
 
@@ -39,13 +41,14 @@ class FakeDatabase:
 @dataclass
 class FakeDiaryRepo(IDiaryRepository):
     database: FakeDatabase
-    notes: set[ORMNote] = field(default_factory=lambda: set())
 
-    def add(self: Self, note: ORMNote) -> None:  # not used, not tested
-        self.notes.add(note)
+    def add(self: Self, note: ORMNote) -> None:  # used, not tested
+        with self.database.get_session() as session:
+            session.append(note)
 
     def get(self: Self, oid: UUID) -> ORMNote | None:  # not used, not tested
-        return next(n for n in self.notes if n.oid == oid)
+        with self.database.get_session() as session:
+            return next(note for note in session if note.oid == oid)
 
     def get_by_bedtime_date(
         self: Self,
@@ -53,15 +56,28 @@ class FakeDiaryRepo(IDiaryRepository):
         owner_id: UUID,
     ) -> ORMNote | None:
         # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
-        return next(
-            n
-            for n in self.notes
-            if (str(n.bedtime_date) == bedtime_date and n.owner_id == owner_id)
-        )
+        with self.database.get_session() as session:
+            return next(
+                note
+                for note in session
+                if (
+                    str(note.bedtime_date) == bedtime_date
+                    and note.owner_id == owner_id
+                )
+            )
 
     def get_diary(self: Self, owner_id: UUID) -> Diary:  # used, not tested
         diary = Diary()
-        diary._notes = {n for n in self.notes if n.owner_id == owner_id}
+        with self.database.get_session() as session:
+            notes = session
+        diary._notes = {
+            NoteValueObject.model_validate(
+                obj=note,
+                from_attributes=True,
+            )
+            for note in notes
+            if notes and note.owner_id == owner_id
+        }
         return diary
 
 
@@ -74,7 +90,7 @@ class FakeDiaryRepo(IDiaryRepository):
         "00:22",
     ],
 )
-def test_service_write_note(no_sleep: str | None) -> None:
+def test_service_write_note(no_sleep: str | None):
     fake_owner_id = uuid4()
     database = FakeDatabase()
     repo = FakeDiaryRepo(database)

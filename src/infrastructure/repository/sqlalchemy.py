@@ -5,6 +5,7 @@ from uuid import UUID
 from sqlalchemy import select
 
 from src.domain.diary import Diary
+from src.domain.note import NoteValueObject
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.repository.base import IDiaryRepository
@@ -40,6 +41,16 @@ class ORMDiaryRepository(IDiaryRepository):
     def get_diary(self: Self, owner_id: UUID) -> Diary:
         diary = Diary()
         stmt = select(ORMNote).where(ORMNote.owner_id == owner_id)
+
         with self.database.get_session() as session:
-            diary._notes = session.scalars(stmt).all()
+            results = session.scalars(stmt).all()
+
+        diary._notes = {
+            NoteValueObject.model_validate(
+                obj=note,
+                from_attributes=True,
+            )
+            for note in results
+            if results
+        }
         return diary

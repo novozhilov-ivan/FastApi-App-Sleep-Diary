@@ -63,18 +63,21 @@ def test_repo_can_retrieve_note_entity_by_oid(
     inserted_note_orm = insert_note(memory_database, exist_user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved = repo.get(inserted_note_orm.oid).to_entity()
+    retrieved: ORMNote | None = repo.get(inserted_note_orm.oid)
 
-    assert isinstance(retrieved, NoteEntity)
-    assert isinstance(retrieved.oid, UUID)
-    assert isinstance(retrieved.created_at, datetime)
-    assert isinstance(retrieved.updated_at, datetime)
-    assert retrieved.bedtime_date == date(2020, 12, 12)
-    assert retrieved.went_to_bed == time(13, 0)
-    assert retrieved.fell_asleep == time(15, 0)
-    assert retrieved.woke_up == time(23, 0)
-    assert retrieved.got_up == time(1, 0)
-    assert retrieved.no_sleep == time(0, 0)
+    assert retrieved
+    assert isinstance(retrieved, ORMNote)
+    entity = retrieved.to_entity()
+    assert isinstance(entity, NoteEntity)
+    assert isinstance(entity.oid, UUID)
+    assert isinstance(entity.created_at, datetime)
+    assert isinstance(entity.updated_at, datetime)
+    assert entity.bedtime_date == date(2020, 12, 12)
+    assert entity.went_to_bed == time(13, 0)
+    assert entity.fell_asleep == time(15, 0)
+    assert entity.woke_up == time(23, 0)
+    assert entity.got_up == time(1, 0)
+    assert entity.no_sleep == time(0, 0)
 
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
@@ -84,18 +87,24 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
     insert_note(memory_database, exist_user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved = repo.get_by_bedtime_date("2020-12-12", exist_user.oid).to_entity()
+    retrieved: ORMNote | None = repo.get_by_bedtime_date(
+        "2020-12-12",
+        exist_user.oid,
+    )
 
-    assert isinstance(retrieved, NoteEntity)
-    assert isinstance(retrieved.oid, UUID)
-    assert isinstance(retrieved.created_at, datetime)
-    assert isinstance(retrieved.updated_at, datetime)
-    assert retrieved.bedtime_date == date(2020, 12, 12)
-    assert retrieved.went_to_bed == time(13, 0)
-    assert retrieved.fell_asleep == time(15, 0)
-    assert retrieved.woke_up == time(23, 0)
-    assert retrieved.got_up == time(1, 0)
-    assert retrieved.no_sleep == time(0, 0)
+    assert retrieved
+    assert isinstance(retrieved, ORMNote)
+    entity = retrieved.to_entity()
+    assert isinstance(entity, NoteEntity)
+    assert isinstance(entity.oid, UUID)
+    assert isinstance(entity.created_at, datetime)
+    assert isinstance(entity.updated_at, datetime)
+    assert entity.bedtime_date == date(2020, 12, 12)
+    assert entity.went_to_bed == time(13, 0)
+    assert entity.fell_asleep == time(15, 0)
+    assert entity.woke_up == time(23, 0)
+    assert entity.got_up == time(1, 0)
+    assert entity.no_sleep == time(0, 0)
 
 
 def test_repo_can_retrieve_diary(
