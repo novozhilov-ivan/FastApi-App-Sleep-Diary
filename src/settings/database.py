@@ -8,7 +8,7 @@ class PostgresSettings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_PORT: str
-    POSTGRES_DB_URL: PostgresDsn | None = None
+    POSTGRES_DB_URL: PostgresDsn
 
     @model_validator(mode="before")
     @classmethod

@@ -3,15 +3,16 @@ import contextlib
 from typing import Generator
 from typing_extensions import Self
 
+from pydantic import PostgresDsn
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
 
 class Database:
-    def __init__(self: Self, url: str) -> None:
+    def __init__(self: Self, url: str | PostgresDsn) -> None:
         self._engine: Engine = create_engine(
-            url=url,
+            url=str(url),
             echo=False,
         )
         self._session = sessionmaker(
