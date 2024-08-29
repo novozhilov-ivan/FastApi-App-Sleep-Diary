@@ -7,7 +7,7 @@ from tests.unit.domain.note_test.sequences_test.fell_asleep_test import (
 
 
 def test_got_up_cannot_be_lt_only_woke_up() -> None:
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
@@ -21,7 +21,7 @@ def test_got_up_cannot_be_lt_only_woke_up() -> None:
 def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight() -> (
     None
 ):
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
@@ -35,7 +35,7 @@ def test_got_up_cannot_be_lt_only_woke_up_with_some_time_points_after_midnight()
 def test_got_up_cannot_be_gt_woke_up_and_lt_other_points_with_some_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",

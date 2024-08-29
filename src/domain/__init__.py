@@ -1,8 +1,8 @@
-from src.domain.errors import NoteAlreadyExist
+from src.domain.errors import ErrorNoteAlreadyExist
 from src.domain.write import write
 
 
 __all__ = [
     "write",
-    "NoteAlreadyExist",
+    "ErrorNoteAlreadyExist",
 ]

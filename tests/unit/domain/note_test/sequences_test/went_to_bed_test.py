@@ -7,7 +7,7 @@ from tests.unit.domain.note_test.sequences_test.fell_asleep_test import (
 
 
 def test_went_to_bed_cannot_be_gt_fell_asleep_and_lt_other_time_points() -> None:
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="04:00",
@@ -19,7 +19,7 @@ def test_went_to_bed_cannot_be_gt_fell_asleep_and_lt_other_time_points() -> None
 
 
 def test_went_to_bed_cannot_be_gt_fell_asleep_with_points_after_midnight() -> None:
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="14:00",
@@ -31,7 +31,7 @@ def test_went_to_bed_cannot_be_gt_fell_asleep_with_points_after_midnight() -> No
 
 
 def test_went_to_bed_cannot_be_gt_fell_asleep_and_woke_up() -> None:
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="12:00",
@@ -45,7 +45,7 @@ def test_went_to_bed_cannot_be_gt_fell_asleep_and_woke_up() -> None:
 def test_went_to_bed_cannot_be_gt_woke_up_and_lt_others_points_with_some_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(nt.TimePointsSequenceError) as error:
+    with pytest.raises(nt.ErrorTimePointsSequence) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="08:00",

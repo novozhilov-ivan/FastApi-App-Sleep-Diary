@@ -1,5 +1,5 @@
 from src.infrastructure.repository.base import IDiaryRepository
-from src.infrastructure.repository.sqlalchemy import ORMDiaryRepository
+from src.infrastructure.repository.orm_diary import ORMDiaryRepository
 
 
 __all__ = [

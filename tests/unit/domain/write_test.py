@@ -1,7 +1,7 @@
 import pytest
 
 from src.domain.diary import Diary
-from src.domain.errors import NoteAlreadyExist
+from src.domain.errors import ErrorNoteAlreadyExist
 from src.domain.note import NoteTimePoints, NoteValueObject
 from src.domain.write import write
 
@@ -36,7 +36,7 @@ def test_write_note_in_diary_twice() -> None:
     write(note, diary)
 
     with pytest.raises(
-        expected_exception=NoteAlreadyExist,
+        expected_exception=ErrorNoteAlreadyExist,
         match=f"Запись о сне с датой {note.bedtime_date} "
         f"уже существует в дневнике.",
     ):

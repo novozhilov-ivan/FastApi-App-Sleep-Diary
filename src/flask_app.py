@@ -16,6 +16,11 @@ from src.extension import (
 
 # TODO
 #           DDD
+#   - Создать ErrorSchema - схема для ответа http
+#   при возникновении Error из domain и services_layer
+#   - определить общий интерфейс Base Error/Exception для создания
+#   других ошибок. поправить имеющиеся схемы
+#   -
 #   - Протестировать каскадное удаление записей при удалении user.
 #   - (all, delete-orphan) в таблице 'users' мб нужно выставить.
 #   -

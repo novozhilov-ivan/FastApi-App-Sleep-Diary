@@ -16,16 +16,14 @@ def write(
     owner_id: UUID,
     repo: IDiaryRepository,
 ) -> None:
-    diary = repo.get_diary(owner_id)
-    new_note = domain.write(
-        NoteTimePoints(
-            bedtime_date=bedtime_date,
-            went_to_bed=went_to_bed,
-            fell_asleep=fell_asleep,
-            woke_up=woke_up,
-            got_up=got_up,
-            no_sleep=no_sleep or "00:00",
-        ),
-        diary,
+    note = NoteTimePoints(
+        bedtime_date=bedtime_date,
+        went_to_bed=went_to_bed,
+        fell_asleep=fell_asleep,
+        woke_up=woke_up,
+        got_up=got_up,
+        no_sleep=no_sleep or "00:00",
     )
+    diary = repo.get_diary(owner_id)
+    new_note = domain.write(note, diary)
     repo.add(ORMNote.from_time_points(new_note, owner_id))

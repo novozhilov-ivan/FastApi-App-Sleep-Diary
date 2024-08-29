@@ -10,7 +10,7 @@ from pydantic import (
     model_validator,
 )
 
-from src.domain.note.error import NoSleepDurationError, TimePointsSequenceError
+from src.domain.note.errors import ErrorNoSleepDuration, ErrorTimePointsSequence
 
 
 class NoteTimePoints(BaseModel):
@@ -69,13 +69,13 @@ class NoteTimePoints(BaseModel):
             ),
         ):
             return self
-        raise TimePointsSequenceError
+        raise ErrorTimePointsSequence
 
     @model_validator(mode="after")
     def validate_no_sleep_duration(self: Self) -> Self:
         if self._no_sleep_duration <= self._sleep_duration:
             return self
-        raise NoSleepDurationError
+        raise ErrorNoSleepDuration
 
     @computed_field(title="Длительность сна")  # type: ignore[misc]
     @property

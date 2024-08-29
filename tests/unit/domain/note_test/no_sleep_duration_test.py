@@ -9,7 +9,7 @@ incorrect_sleep_duration_error_message = (
 
 
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points() -> None:
-    with pytest.raises(nt.NoSleepDurationError) as error:
+    with pytest.raises(nt.ErrorNoSleepDuration) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="01:00",
@@ -24,7 +24,7 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_increases_time_points() -> N
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(nt.NoSleepDurationError) as error:
+    with pytest.raises(nt.ErrorNoSleepDuration) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="13:00",
@@ -39,7 +39,7 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_one_time_points_after_midnig
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(nt.NoSleepDurationError) as error:
+    with pytest.raises(nt.ErrorNoSleepDuration) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="15:00",
@@ -54,7 +54,7 @@ def test_no_sleep_time_cannot_be_gt_sleep_time_with_two_time_points_after_midnig
 def test_no_sleep_time_cannot_be_gt_sleep_time_with_three_time_points_after_midnight() -> (  # noqa
     None
 ):
-    with pytest.raises(nt.NoSleepDurationError) as error:
+    with pytest.raises(nt.ErrorNoSleepDuration) as error:
         nt.NoteTimePoints(
             bedtime_date="2020-12-12",
             went_to_bed="23:00",
