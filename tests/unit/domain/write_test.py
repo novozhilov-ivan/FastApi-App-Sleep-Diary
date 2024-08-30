@@ -1,12 +1,12 @@
 import pytest
 
 from src.domain.diary import Diary
-from src.domain.errors import ErrorNoteAlreadyExist
+from src.domain.exceptions import NonUniqueNoteBedtimeDateException
 from src.domain.note import NoteTimePoints, NoteValueObject
 from src.domain.write import write
 
 
-def test_write_one_note_in_diary() -> None:
+def test_write_one_note_in_diary():
     diary = Diary()
     note = NoteTimePoints(
         bedtime_date="2024-01-01",
@@ -24,7 +24,7 @@ def test_write_one_note_in_diary() -> None:
     assert written_note.got_up == note.got_up
 
 
-def test_write_note_in_diary_twice() -> None:
+def test_write_note_in_diary_twice():
     diary = Diary()
     note = NoteTimePoints(
         bedtime_date="2024-01-01",
@@ -35,15 +35,11 @@ def test_write_note_in_diary_twice() -> None:
     )
     write(note, diary)
 
-    with pytest.raises(
-        expected_exception=ErrorNoteAlreadyExist,
-        match=f"Запись о сне с датой {note.bedtime_date} "
-        f"уже существует в дневнике.",
-    ):
+    with pytest.raises(NonUniqueNoteBedtimeDateException):
         write(note, diary)
 
 
-def test_write_different_note_in_diary() -> None:
+def test_write_different_note_in_diary():
     diary = Diary()
     note_1 = NoteValueObject(
         bedtime_date="2024-01-01",

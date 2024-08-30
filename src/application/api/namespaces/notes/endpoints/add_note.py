@@ -8,13 +8,9 @@ from werkzeug import Response
 from werkzeug.exceptions import BadRequest
 
 from src import service_layer
+from src.application.api.schemas import ErrorSchema
 from src.application.services import DictFromJsonPayload
-from src.domain import ErrorNoteAlreadyExist
-from src.domain.note import (
-    ErrorNoSleepDuration,
-    ErrorNoteBase,
-    ErrorTimePointsSequence,
-)
+from src.domain.exceptions import ApplicationException
 from src.infrastructure.database import Database
 from src.infrastructure.repository import ORMDiaryRepository
 from src.settings import Settings
@@ -42,17 +38,12 @@ class AddNoteEndPoint(Resource):
                 owner_id,
                 repo,
             )
-        except (
-            ErrorNoteBase,
-            ErrorTimePointsSequence,
-            ErrorNoSleepDuration,
-            ErrorNoteAlreadyExist,
-        ) as exception:
+        except ApplicationException as exception:
             raise BadRequest(
                 description=HTTPStatus.BAD_REQUEST.description,
                 response=Response(
                     status=HTTPStatus.BAD_REQUEST,
-                    response=exception.message,
+                    response=ErrorSchema(error=exception.message).model_dump_json(),
                 ),
             )
         return None, HTTPStatus.CREATED

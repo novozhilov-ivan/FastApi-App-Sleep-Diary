@@ -1,4 +1,5 @@
-from src.domain import note as nt, week as wk
+from src.domain.note import NoteValueObject
+from src.domain.week import Week
 
 
 times = {
@@ -11,22 +12,22 @@ times = {
 
 def test_create_correct_week() -> None:
     notes = (
-        nt.NoteValueObject(
+        NoteValueObject(
             bedtime_date=f"2024-01-0{day_number}",
             **times,
         )
         for day_number in range(1, 8)
     )
-    week = wk.Week(notes)
+    week = Week(notes)
     assert len(week) == 7
 
 
 def test_adding_one_note_twice_to_week() -> None:
-    test_note = nt.NoteValueObject(
+    test_note = NoteValueObject(
         bedtime_date="2024-01-01",
         **times,
     )
-    week = wk.Week()
+    week = Week()
     assert len(week) == 0
     week.add(test_note)
     assert len(week) == 1

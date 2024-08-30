@@ -1,5 +1,5 @@
 from src.domain.diary import Diary
-from src.domain.errors import ErrorNoteAlreadyExist
+from src.domain.exceptions import NonUniqueNoteBedtimeDateException
 from src.domain.note import NoteTimePoints, NoteValueObject
 
 
@@ -11,6 +11,4 @@ def write(note: NoteTimePoints, diary: Diary) -> NoteValueObject:
     if diary.can_write(note_to_write):
         diary.write(note_to_write)
         return note_to_write
-    raise ErrorNoteAlreadyExist(
-        f"Запись о сне с датой {note.bedtime_date} уже существует в дневнике.",
-    )
+    raise NonUniqueNoteBedtimeDateException(bedtime_date=note.bedtime_date)

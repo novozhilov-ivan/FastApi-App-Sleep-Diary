@@ -46,7 +46,7 @@ statistics = true
 max-complexity = 8
 no-print-logs = true
 per-file-ignores = [
-    "tests/*test*:ANN201",
+    "tests/*test*:ANN201,TAE001",  # аннотации возвращаемых типов тестов
 ]
 unused-arguments-ignore-abstract-functions = true
 unused-arguments-ignore-dunder = true
