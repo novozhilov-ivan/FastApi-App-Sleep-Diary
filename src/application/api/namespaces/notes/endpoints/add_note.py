@@ -2,7 +2,7 @@ from http import HTTPStatus
 from typing import Any
 from uuid import UUID
 
-from flask import request
+from flask import current_app, request
 from flask_restx import Resource
 from werkzeug import Response
 from werkzeug.exceptions import BadRequest
@@ -13,7 +13,6 @@ from src.application.services import DictFromJsonPayload
 from src.domain.exceptions import ApplicationException
 from src.infrastructure.database import Database
 from src.infrastructure.repository import ORMDiaryRepository
-from src.settings import Settings
 
 
 class AddNoteEndPoint(Resource):
@@ -23,7 +22,7 @@ class AddNoteEndPoint(Resource):
 
     @staticmethod
     def post() -> tuple[Any, HTTPStatus]:
-        database = Database(Settings().POSTGRES_DB_URL)
+        database = Database(current_app.config["POSTGRES_DB_URL"])
         repo = ORMDiaryRepository(database)
         payload: dict[str, str] = DictFromJsonPayload(request).json
         try:

@@ -1,13 +1,10 @@
 from http import HTTPStatus
 
-import pytest
-
 from flask.testing import FlaskClient
 
 from src.infrastructure.orm import ORMUser
 
 
-@pytest.mark.usefixtures("database")
 def test_add_note_201(client: FlaskClient, user: ORMUser):
     data = {
         "bedtime_date": "2020-12-12",

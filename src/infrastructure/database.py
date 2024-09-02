@@ -1,12 +1,11 @@
 import contextlib
-
 from typing import Generator
-from typing_extensions import Self
 
 from pydantic import PostgresDsn
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
+from typing_extensions import Self
 
 
 class Database:
@@ -15,7 +14,7 @@ class Database:
             url=str(url),
             echo=False,
         )
-        self._session = sessionmaker(
+        self._session: sessionmaker[Session] = sessionmaker(
             bind=self._engine,
             expire_on_commit=False,
         )
