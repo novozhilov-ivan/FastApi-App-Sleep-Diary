@@ -18,4 +18,5 @@ class Settings(
         case_sensitive=True,
         env_file=".env",
         use_enum_values=True,
+        extra="ignore",
     )

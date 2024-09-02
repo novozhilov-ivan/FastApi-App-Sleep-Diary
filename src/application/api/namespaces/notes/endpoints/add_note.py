@@ -1,6 +1,6 @@
 from http import HTTPStatus
 from typing import Any
-from uuid import uuid4
+from uuid import UUID
 
 from flask import request
 from flask_restx import Resource
@@ -25,7 +25,6 @@ class AddNoteEndPoint(Resource):
     def post() -> tuple[Any, HTTPStatus]:
         database = Database(Settings().POSTGRES_DB_URL)
         repo = ORMDiaryRepository(database)
-        owner_id = uuid4()
         payload: dict[str, str] = DictFromJsonPayload(request).json
         try:
             service_layer.write(
@@ -35,7 +34,7 @@ class AddNoteEndPoint(Resource):
                 payload["woke_up"],
                 payload["got_up"],
                 payload["no_sleep"],
-                owner_id,
+                UUID(payload["owner_id"]),
                 repo,
             )
         except ApplicationException as exception:

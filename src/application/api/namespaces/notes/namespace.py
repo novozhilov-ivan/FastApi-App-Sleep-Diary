@@ -6,32 +6,32 @@ from src.application.api.namespaces.notes import endpoints
 namespace_notes = Namespace(
     name="Notes",
     description="Действия с записями дневника",
-    path="/note",
+    path="/notes",
     # decorators=[validate_auth_token],
 )
 
 namespace_notes.add_resource(
     endpoints.AddNoteEndPoint,
-    "/add_note",
+    "",
     endpoint=endpoints.AddNoteEndPoint.NAME,
 )
 namespace_notes.add_resource(
     endpoints.GetNoteByOidEndPoint,
-    "/<uuid:oid>",
+    "/<uuid:note_id>",
     endpoint=endpoints.GetNoteByOidEndPoint.NAME,
 )
 namespace_notes.add_resource(
     endpoints.GetNoteByBedtimeDateEndPoint,
-    "/<string:bedtime_date>",
+    "/<string:note_bedtime_date>",
     endpoint=endpoints.GetNoteByBedtimeDateEndPoint.NAME,
 )
 namespace_notes.add_resource(
     endpoints.UpdateNoteEndPoint,
-    "/update_note",
+    "/<uuid:note_id>",
     endpoint=endpoints.UpdateNoteEndPoint.NAME,
 )
 namespace_notes.add_resource(
     endpoints.DeleteNoteEndPoint,
-    "/delete_note",
+    "/<uuid:note_id>",
     endpoint=endpoints.DeleteNoteEndPoint.NAME,
 )
