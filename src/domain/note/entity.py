@@ -13,7 +13,10 @@ class NoteEntity(NoteStatistic):
     created_at: datetime
     updated_at: datetime
 
-    model_config: ClassVar[ConfigDict] = ConfigDict(extra="forbid")
+    model_config: ClassVar[ConfigDict] = ConfigDict(
+        extra="ignore",
+        from_attributes=True,
+    )
 
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, NoteEntity):

@@ -1,6 +1,7 @@
 import contextlib
 
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from typing import Generator
 from typing_extensions import Self
 from uuid import UUID, uuid4
@@ -8,29 +9,31 @@ from uuid import UUID, uuid4
 import pytest
 
 from src import service_layer
-from src.domain.diary import Diary
-from src.domain.note import NoteValueObject
-from src.infrastructure.orm import ORMNote
-from src.infrastructure.repository import IDiaryRepository
+from src.domain.note import NoteEntity, NoteValueObject
+from src.infrastructure.repository import BaseDiaryRepository
 
 
-class FakeORMError(Exception):
+class FakeDatabaseError(Exception):
     pass
 
 
 @dataclass
 class FakeDatabase:
     committed: bool = False
-    session: list[ORMNote] = field(default_factory=lambda: list())  # noqa: C408
+    session: set[tuple[NoteValueObject, UUID]] = field(
+        default_factory=lambda: set(),
+    )  # noqa: C408
 
     def commit(self: Self) -> None:
         self.committed = True
 
     @contextlib.contextmanager
-    def get_session(self: Self) -> Generator[list[ORMNote], None, None]:
+    def get_session(
+        self: Self,
+    ) -> Generator[set[tuple[NoteValueObject, UUID]], None, None]:
         try:
             yield self.session
-        except FakeORMError:
+        except FakeDatabaseError:
             ...
         else:
             self.commit()
@@ -39,46 +42,41 @@ class FakeDatabase:
 
 
 @dataclass
-class FakeDiaryRepo(IDiaryRepository):
+class FakeDiaryRepo(BaseDiaryRepository):
     database: FakeDatabase
 
-    def add(self: Self, note: ORMNote) -> None:  # used, not tested
+    def _add(self: Self, note: NoteValueObject, owner_id: UUID) -> None:
         with self.database.get_session() as session:
-            session.append(note)
+            session.add((note, owner_id))
 
-    def get(self: Self, oid: UUID) -> ORMNote | None:  # not used, not tested
-        with self.database.get_session() as session:
-            return next(note for note in session if note.oid == oid)
+    def _get(self: Self, oid: UUID) -> None:
+        raise NotImplementedError
 
-    def get_by_bedtime_date(
+    def _get_by_bedtime_date(
         self: Self,
         bedtime_date: str,
         owner_id: UUID,
-    ) -> ORMNote | None:
+    ) -> dict | None:
         # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
         with self.database.get_session() as session:
-            return next(
-                note
-                for note in session
-                if (
-                    str(note.bedtime_date) == bedtime_date
-                    and note.owner_id == owner_id
-                )
-            )
+            for note, oid in session:
+                if str(note.bedtime_date) == bedtime_date and oid == owner_id:
+                    break
+            return {
+                **note.model_dump(),
+                "oid": uuid4(),
+                "created_at": datetime.now(UTC),
+                "updated_at": datetime.now(UTC),
+            }
 
-    def get_diary(self: Self, owner_id: UUID) -> Diary:  # used, not tested
-        diary = Diary()
+    def _get_diary(self: Self, owner_id: UUID) -> set:
         with self.database.get_session() as session:
-            notes = session
-        diary._notes = {
-            NoteValueObject.model_validate(
-                obj=note,
-                from_attributes=True,
-            )
-            for note in notes
-            if notes and note.owner_id == owner_id
-        }
-        return diary
+            notes: set = set()
+            for note_and_oid in session:
+                note, oid = note_and_oid
+                if oid == owner_id:
+                    notes.add(note)
+            return notes
 
 
 @pytest.mark.parametrize(
@@ -93,7 +91,7 @@ class FakeDiaryRepo(IDiaryRepository):
 def test_service_write_note(no_sleep: str | None):
     fake_owner_id = uuid4()
     database = FakeDatabase()
-    repo = FakeDiaryRepo(database)
+    repo: BaseDiaryRepository = FakeDiaryRepo(database)
     service_layer.write(
         "2020-12-12",
         "13:00",
@@ -106,5 +104,5 @@ def test_service_write_note(no_sleep: str | None):
     )
     retrieved = repo.get_by_bedtime_date("2020-12-12", fake_owner_id)
     assert retrieved is not None
-    assert isinstance(retrieved, ORMNote)
+    assert isinstance(retrieved, NoteEntity)
     assert database.committed

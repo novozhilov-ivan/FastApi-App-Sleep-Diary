@@ -2,8 +2,7 @@ from uuid import UUID
 
 from src import domain
 from src.domain.note import NoteTimePoints
-from src.infrastructure.orm import ORMNote
-from src.infrastructure.repository.base import IDiaryRepository
+from src.infrastructure.repository.base import BaseDiaryRepository
 
 
 def write(
@@ -14,7 +13,7 @@ def write(
     got_up: str,
     no_sleep: str | None,
     owner_id: UUID,
-    repo: IDiaryRepository,
+    repo: BaseDiaryRepository,
 ) -> None:
     note = NoteTimePoints(
         bedtime_date=bedtime_date,
@@ -26,4 +25,4 @@ def write(
     )
     diary = repo.get_diary(owner_id)
     new_note = domain.write(note, diary)
-    repo.add(ORMNote.from_time_points(new_note, owner_id))
+    repo.add(new_note, owner_id)

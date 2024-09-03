@@ -36,7 +36,7 @@ class ORMNote(ORMBase, MixinMetaInfo):
     def from_time_points(
         cls: type["ORMNote"],
         obj: NoteTimePoints,
-        owner_id: UUID | None = None,
+        owner_id: UUID,
     ) -> "ORMNote":
         return cls(
             bedtime_date=obj.bedtime_date,

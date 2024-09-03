@@ -10,6 +10,7 @@ class NoteValueObject(NoteTimePoints):
     model_config: ClassVar[ConfigDict] = ConfigDict(
         frozen=True,
         extra="ignore",
+        from_attributes=True,
     )
 
     def __eq__(self: Self, other: object) -> bool:

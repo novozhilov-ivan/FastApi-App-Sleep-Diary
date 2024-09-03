@@ -19,7 +19,7 @@ def test_repo_can_add_and_save_note(memory_database: Database, exist_user: ORMUs
         got_up="01:00",
     )
     repo = repository.ORMDiaryRepository(memory_database)
-    repo.add(ORMNote.from_time_points(note_time_points, exist_user.oid))
+    repo.add(note_time_points, exist_user.oid)
 
     with memory_database.get_session() as session:
         [result] = session.execute(
@@ -63,21 +63,19 @@ def test_repo_can_retrieve_note_entity_by_oid(
     inserted_note_orm = insert_note(memory_database, exist_user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved: ORMNote | None = repo.get(inserted_note_orm.oid)
+    retrieved_entity: NoteEntity | None = repo.get(inserted_note_orm.oid)
 
-    assert retrieved
-    assert isinstance(retrieved, ORMNote)
-    entity = retrieved.to_entity()
-    assert isinstance(entity, NoteEntity)
-    assert isinstance(entity.oid, UUID)
-    assert isinstance(entity.created_at, datetime)
-    assert isinstance(entity.updated_at, datetime)
-    assert entity.bedtime_date == date(2020, 12, 12)
-    assert entity.went_to_bed == time(13, 0)
-    assert entity.fell_asleep == time(15, 0)
-    assert entity.woke_up == time(23, 0)
-    assert entity.got_up == time(1, 0)
-    assert entity.no_sleep == time(0, 0)
+    assert retrieved_entity
+    assert isinstance(retrieved_entity, NoteEntity)
+    assert isinstance(retrieved_entity.oid, UUID)
+    assert isinstance(retrieved_entity.created_at, datetime)
+    assert isinstance(retrieved_entity.updated_at, datetime)
+    assert retrieved_entity.bedtime_date == date(2020, 12, 12)
+    assert retrieved_entity.went_to_bed == time(13, 0)
+    assert retrieved_entity.fell_asleep == time(15, 0)
+    assert retrieved_entity.woke_up == time(23, 0)
+    assert retrieved_entity.got_up == time(1, 0)
+    assert retrieved_entity.no_sleep == time(0, 0)
 
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
@@ -87,24 +85,22 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
     insert_note(memory_database, exist_user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved: ORMNote | None = repo.get_by_bedtime_date(
+    retrieved_entity: NoteEntity | None = repo.get_by_bedtime_date(
         "2020-12-12",
         exist_user.oid,
     )
 
-    assert retrieved
-    assert isinstance(retrieved, ORMNote)
-    entity = retrieved.to_entity()
-    assert isinstance(entity, NoteEntity)
-    assert isinstance(entity.oid, UUID)
-    assert isinstance(entity.created_at, datetime)
-    assert isinstance(entity.updated_at, datetime)
-    assert entity.bedtime_date == date(2020, 12, 12)
-    assert entity.went_to_bed == time(13, 0)
-    assert entity.fell_asleep == time(15, 0)
-    assert entity.woke_up == time(23, 0)
-    assert entity.got_up == time(1, 0)
-    assert entity.no_sleep == time(0, 0)
+    assert retrieved_entity
+    assert isinstance(retrieved_entity, NoteEntity)
+    assert isinstance(retrieved_entity.oid, UUID)
+    assert isinstance(retrieved_entity.created_at, datetime)
+    assert isinstance(retrieved_entity.updated_at, datetime)
+    assert retrieved_entity.bedtime_date == date(2020, 12, 12)
+    assert retrieved_entity.went_to_bed == time(13, 0)
+    assert retrieved_entity.fell_asleep == time(15, 0)
+    assert retrieved_entity.woke_up == time(23, 0)
+    assert retrieved_entity.got_up == time(1, 0)
+    assert retrieved_entity.no_sleep == time(0, 0)
 
 
 def test_repo_can_retrieve_diary(
@@ -114,10 +110,10 @@ def test_repo_can_retrieve_diary(
     insert_note(memory_database, exist_user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved = repo.get_diary(exist_user.oid)
-    assert isinstance(retrieved, Diary)
-    assert len(retrieved.notes_list) == 1
-    assert retrieved.notes_list == {
+    retrieved_diary = repo.get_diary(exist_user.oid)
+    assert isinstance(retrieved_diary, Diary)
+    assert len(retrieved_diary.notes_list) == 1
+    assert retrieved_diary.notes_list == {
         NoteValueObject(
             bedtime_date="2020-12-12",
             went_to_bed="13:00",
