@@ -1,11 +1,12 @@
 import contextlib
+
 from typing import Generator
+from typing_extensions import Self
 
 from pydantic import PostgresDsn
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
-from typing_extensions import Self
 
 
 class Database:

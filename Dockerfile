@@ -1,4 +1,4 @@
-FROM python:3.12.4-slim-bookworm AS builder
+FROM python:3.12.5-slim-bookworm AS builder
 
 COPY poetry.lock pyproject.toml ./
 
@@ -6,12 +6,13 @@ RUN python -m pip install poetry>=1.8.2 && \
     poetry export -o requirements.prod.txt --without-hashes && \
     poetry export --with=dev -o requirements.dev.txt --without-hashes
 
-FROM python:3.12.4-slim-bookworm AS dev
+FROM python:3.12.5-slim-bookworm AS dev
 
 WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV PYTHONUNBUFFERED 1
+
 COPY --from=builder requirements.dev.txt /app
 
 RUN apt clean && apt update -y && apt install --no-install-recommends -y \
