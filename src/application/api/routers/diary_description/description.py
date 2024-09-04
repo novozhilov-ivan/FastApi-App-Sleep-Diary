@@ -14,5 +14,5 @@ router = APIRouter(tags=["Description"])
     status_code=status.HTTP_200_OK,
     response_model=SleepDiaryDescriptionSchema,
 )
-def get_sleep_diary_description():
+def get_sleep_diary_description() -> SleepDiaryDescriptionSchema:
     return SleepDiaryDescriptionSchema()
