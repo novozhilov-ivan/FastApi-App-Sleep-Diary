@@ -1,5 +1,7 @@
 import io
 
+from legacy_tests.generators.diary import SleepDiaryGenerator
+
 import pytest
 
 from flask import url_for
@@ -17,7 +19,6 @@ from src.routes.edit.import_file import (
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
 from tests.api.response import Response
-from tests.generators.diary import SleepDiaryGenerator
 
 
 @pytest.mark.xfail(reason="DDD Рефакторинг. Убрал Field(title=...) из " "SleepNote.")

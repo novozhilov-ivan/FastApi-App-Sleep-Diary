@@ -1,3 +1,6 @@
+from legacy_tests.generators.diary import SleepDiaryGenerator
+from legacy_tests.generators.note import SleepNoteGenerator
+
 import pytest
 
 from flask import url_for
@@ -15,8 +18,6 @@ from src.pydantic_schemas.sleep.notes import (
 from src.routes.notes import note_endpoint
 from src.utils.status_codes import HTTP
 from tests.api.response import Response
-from tests.generators.diary import SleepDiaryGenerator
-from tests.generators.note import SleepNoteGenerator
 
 
 @pytest.mark.note

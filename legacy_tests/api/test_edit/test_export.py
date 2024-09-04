@@ -1,4 +1,5 @@
 from legacy_src.extension import bearer
+from legacy_tests.generators.diary import SleepDiaryGenerator
 
 import pytest
 
@@ -15,7 +16,6 @@ from src.utils.jwt import create_access_jwt
 from src.utils.manage_notes import FileDataConverter
 from src.utils.status_codes import HTTP
 from tests.api.response import Response
-from tests.generators.diary import SleepDiaryGenerator
 
 
 @pytest.mark.edit_diary

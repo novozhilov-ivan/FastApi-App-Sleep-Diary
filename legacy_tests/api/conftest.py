@@ -9,6 +9,7 @@ from legacy_tests.api.config import (
     test_flask_config,
     test_flask_sqlalchemy_config,
 )
+from legacy_tests.generators.diary import SleepDiaryGenerator
 
 import pytest
 
@@ -31,7 +32,6 @@ from src.utils.jwt import (
     create_access_jwt,
     create_refresh_jwt,
 )
-from tests.generators.diary import SleepDiaryGenerator
 
 
 # @pytest.fixture(scope="session")

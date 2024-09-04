@@ -1,3 +1,5 @@
+from legacy_tests.generators.diary import SleepDiaryGenerator
+
 import pytest
 
 from flask import url_for
@@ -14,7 +16,6 @@ from src.pydantic_schemas.user import User
 from src.routes.diary import diary_endpoint
 from src.utils.status_codes import HTTP
 from tests.api.response import Response
-from tests.generators.diary import SleepDiaryGenerator
 
 
 @pytest.mark.diary

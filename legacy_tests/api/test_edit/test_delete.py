@@ -1,4 +1,5 @@
 from legacy_src.extension import db
+from legacy_tests.generators.diary import SleepDiaryGenerator
 
 import pytest
 
@@ -14,7 +15,6 @@ from src.models import (
 from src.routes.edit.delete_diary import delete_notes_endpoint
 from src.utils.status_codes import HTTP
 from tests.api.response import Response
-from tests.generators.diary import SleepDiaryGenerator
 
 
 @pytest.mark.edit_diary
