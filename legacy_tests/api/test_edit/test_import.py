@@ -126,7 +126,7 @@ class TestImportNotes:
         client: FlaskClient,
         jwt_access: Authorization,
     ):
-        diary_generator = SleepDiaryGenerator(owner_id=exist_user.id)
+        diary_generator = SleepDiaryGenerator(owner_oid=exist_user.id)
         str_file = FileDataConverter(
             data=diary_generator.notes,
         ).to_csv_str()

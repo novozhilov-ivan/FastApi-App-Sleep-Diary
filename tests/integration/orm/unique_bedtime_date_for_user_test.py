@@ -13,7 +13,7 @@ from tests.integration.conftest import insert_note_stmt
 
 def test_unique_bedtime_date_for_user(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
     note = {
         "oid": f"{uuid4()}",
@@ -23,7 +23,7 @@ def test_unique_bedtime_date_for_user(
         "woke_up": "11-00",
         "got_up": "13-00",
         "no_sleep": "01-00",
-        "owner_id": f"{exist_user.oid}",
+        "owner_oid": f"{user.oid}",
     }
 
     with memory_database.get_session() as session:
@@ -36,7 +36,7 @@ def test_unique_bedtime_date_for_user(
     assert db_note.bedtime_date == date(2020, 1, 1)
     with pytest.raises(
         expected_exception=IntegrityError,
-        match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_id",
+        match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_oid",
     ):
         session.execute(insert_note_stmt, note)
     db_notes = session.query(ORMNote).all()

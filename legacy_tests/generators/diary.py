@@ -15,8 +15,8 @@ from src.utils.manage_notes import slice_on_week
 
 
 class SleepDiaryGenerator:
-    def __init__(self, owner_id: int = 1, notes_count: int = 1):
-        self.owner_id: int = owner_id
+    def __init__(self, owner_oid: int = 1, notes_count: int = 1):
+        self.owner_oid: int = owner_oid
         self.notes_count: int = notes_count
         self.notes: list[SleepNoteWithStats] = self._create_notes()
         self.diary: SleepDiaryModel = self._build_sleep_diary()
@@ -61,7 +61,7 @@ class SleepDiaryGenerator:
         )
         return SleepNoteWithStats(
             id=note_id,
-            owner_id=self.owner_id,
+            owner_oid=self.owner_oid,
             sleep_date=date.fromtimestamp(date_of_note),
             went_to_bed=rand_went_to_bed,
             fell_asleep=rand_fell_asleep,

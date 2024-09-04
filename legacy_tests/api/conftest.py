@@ -145,7 +145,7 @@ def generated_diary(
 ) -> SleepDiaryGenerator:
     notes_count = request.param
     return SleepDiaryGenerator(
-        owner_id=exist_user.id,
+        owner_oid=exist_user.id,
         notes_count=notes_count,
     )
 

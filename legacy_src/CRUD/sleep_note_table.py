@@ -19,7 +19,7 @@ def find_all_user_notes(user_id: int) -> Iterable[SleepNoteOrm]:
     """Получает все записи пользователя и сортирует их по дате"""
     db_response = db.session.execute(
         select(SleepNoteOrm)
-        .where(SleepNoteOrm.owner_id == user_id)
+        .where(SleepNoteOrm.owner_oid == user_id)
         .order_by(SleepNoteOrm.sleep_date),
     )
     return db_response.scalars().all()
@@ -32,7 +32,7 @@ def find_user_note_by_calendar_date(
     """Поиск записи сна пользователя по дате"""
     db_response = db.session.execute(
         select(SleepNoteOrm)
-        .where(SleepNoteOrm.owner_id == user_id)
+        .where(SleepNoteOrm.owner_oid == user_id)
         .where(SleepNoteOrm.sleep_date == sleep_date),
     )
     return db_response.scalar_one_or_none()
@@ -42,7 +42,7 @@ def find_user_note_by_note_id(id: int, user_id: int) -> SleepNoteOrm | None:
     """Поиск записи сна пользователя по id записи"""
     db_response = db.session.execute(
         select(SleepNoteOrm)
-        .where(SleepNoteOrm.owner_id == user_id)
+        .where(SleepNoteOrm.owner_oid == user_id)
         .where(SleepNoteOrm.id == id),
     )
     return db_response.scalar_one_or_none()
@@ -51,7 +51,7 @@ def find_user_note_by_note_id(id: int, user_id: int) -> SleepNoteOrm | None:
 def delete_user_note(id: int, user_id: int) -> None:
     db.session.execute(
         delete(SleepNoteOrm)
-        .where(SleepNoteOrm.owner_id == user_id)
+        .where(SleepNoteOrm.owner_oid == user_id)
         .where(SleepNoteOrm.id == id),
     )
     db.session.commit()
@@ -77,7 +77,7 @@ def update_user_note(
 
 
 def delete_all_user_notes(user_id: int) -> None:
-    db.session.execute(delete(SleepNoteOrm).where(SleepNoteOrm.owner_id == user_id))
+    db.session.execute(delete(SleepNoteOrm).where(SleepNoteOrm.owner_oid == user_id))
     db.session.commit()
 
 

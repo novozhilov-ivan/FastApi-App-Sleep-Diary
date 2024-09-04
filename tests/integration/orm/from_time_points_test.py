@@ -6,7 +6,7 @@ from src.infrastructure.orm.user import ORMUser
 
 def test_note_orm_from_time_points(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
@@ -17,7 +17,7 @@ def test_note_orm_from_time_points(
     )
     note_orm = ORMNote.from_time_points(
         obj=note_time_points,
-        owner_id=exist_user.oid,
+        owner_oid=user.oid,
     )
 
     with memory_database.get_session() as session:

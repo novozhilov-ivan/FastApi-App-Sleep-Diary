@@ -40,7 +40,7 @@ class UpdateNote(UserActions):
     )
     def patch(self):
         note_meta = SleepNoteMeta(
-            owner_id=self.current_user_id,
+            owner_oid=self.current_user_id,
             **request.args,
         )
         payload: Any | dict = request.json
@@ -48,7 +48,7 @@ class UpdateNote(UserActions):
 
         updated_db_note: SleepNoteOrm | None = update_user_note(
             id=note_meta.id,
-            user_id=note_meta.owner_id,
+            user_id=note_meta.owner_oid,
             note_values=note.model_dump(exclude_none=True),
         )
         if updated_db_note is None:

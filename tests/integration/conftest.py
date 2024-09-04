@@ -8,9 +8,9 @@ from src.infrastructure.orm import ORMUser, metadata
 
 insert_note_stmt = text(
     "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
-    "woke_up, got_up, no_sleep, owner_id) "
+    "woke_up, got_up, no_sleep, owner_oid) "
     "VALUES (:oid, :bedtime_date, :went_to_bed, :fell_asleep, :woke_up,"
-    ":got_up, :no_sleep, :owner_id);",
+    ":got_up, :no_sleep, :owner_oid);",
 )
 
 
@@ -23,7 +23,7 @@ def memory_database() -> Database:
 
 
 @pytest.fixture
-def exist_user(memory_database: Database) -> ORMUser:
+def user(memory_database: Database) -> ORMUser:
     user = ORMUser(
         username="test_user",
         password=b"test_password",

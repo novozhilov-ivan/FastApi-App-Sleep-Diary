@@ -9,7 +9,7 @@ from tests.integration.conftest import insert_note_stmt
 
 def test_get_note(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
     expected_created_at = expected_updated_at = datetime.now(
         tz=UTC,
@@ -31,7 +31,7 @@ def test_get_note(
                     "woke_up": "11-00",
                     "got_up": "13-00",
                     "no_sleep": "01-00",
-                    "owner_id": f"{exist_user.oid}",
+                    "owner_oid": f"{user.oid}",
                 },
                 {
                     "oid": f"{uuid4()}",
@@ -41,7 +41,7 @@ def test_get_note(
                     "woke_up": "12-00",
                     "got_up": "14-00",
                     "no_sleep": "01-10",
-                    "owner_id": f"{exist_user.oid}",
+                    "owner_oid": f"{user.oid}",
                 },
                 {
                     "oid": f"{uuid4()}",
@@ -51,7 +51,7 @@ def test_get_note(
                     "woke_up": "13-00",
                     "got_up": "15-00",
                     "no_sleep": "01-20",
-                    "owner_id": f"{exist_user.oid}",
+                    "owner_oid": f"{user.oid}",
                 },
             ),
         )
@@ -68,4 +68,4 @@ def test_get_note(
     assert db_note.woke_up.replace(tzinfo=None) == time(11, 0)
     assert db_note.got_up.replace(tzinfo=None) == time(13, 0)
     assert db_note.no_sleep.replace(tzinfo=None) == time(1, 0)
-    assert db_note.owner_id == exist_user.oid
+    assert db_note.owner_oid == user.oid

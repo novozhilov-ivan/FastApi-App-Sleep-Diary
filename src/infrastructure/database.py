@@ -8,6 +8,8 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
+from src.settings import Settings
+
 
 class Database:
     def __init__(self: Self, url: str | PostgresDsn) -> None:
@@ -36,3 +38,7 @@ class Database:
     @property
     def engine(self: Self) -> Engine:
         return self._engine
+
+
+async def get_db() -> Database:
+    return Database(Settings().POSTGRES_DB_URL)

@@ -10,7 +10,7 @@ from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote, ORMUser
 
 
-def test_repo_can_add_and_save_note(memory_database: Database, exist_user: ORMUser):
+def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
     note_time_points = NoteTimePoints(
         bedtime_date="2020-12-12",
         went_to_bed="13:00",
@@ -19,7 +19,7 @@ def test_repo_can_add_and_save_note(memory_database: Database, exist_user: ORMUs
         got_up="01:00",
     )
     repo = repository.ORMDiaryRepository(memory_database)
-    repo.add(note_time_points, exist_user.oid)
+    repo.add(note_time_points, user.oid)
 
     with memory_database.get_session() as session:
         [result] = session.execute(
@@ -47,7 +47,7 @@ def insert_note(memory_database: Database, user: ORMUser) -> ORMNote:
     )
     note_orm = ORMNote.from_time_points(
         obj=note_time_points,
-        owner_id=user.oid,
+        owner_oid=user.oid,
     )
     with memory_database.get_session() as session:
         session.add(note_orm)
@@ -58,9 +58,9 @@ def insert_note(memory_database: Database, user: ORMUser) -> ORMNote:
 
 def test_repo_can_retrieve_note_entity_by_oid(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
-    inserted_note_orm = insert_note(memory_database, exist_user)
+    inserted_note_orm = insert_note(memory_database, user)
 
     repo = repository.ORMDiaryRepository(memory_database)
     retrieved_entity: NoteEntity | None = repo.get(inserted_note_orm.oid)
@@ -80,14 +80,14 @@ def test_repo_can_retrieve_note_entity_by_oid(
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
-    insert_note(memory_database, exist_user)
+    insert_note(memory_database, user)
 
     repo = repository.ORMDiaryRepository(memory_database)
     retrieved_entity: NoteEntity | None = repo.get_by_bedtime_date(
         "2020-12-12",
-        exist_user.oid,
+        user.oid,
     )
 
     assert retrieved_entity
@@ -105,12 +105,12 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
 
 def test_repo_can_retrieve_diary(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
-    insert_note(memory_database, exist_user)
+    insert_note(memory_database, user)
 
     repo = repository.ORMDiaryRepository(memory_database)
-    retrieved_diary = repo.get_diary(exist_user.oid)
+    retrieved_diary = repo.get_diary(user.oid)
     assert isinstance(retrieved_diary, Diary)
     assert len(retrieved_diary.notes_list) == 1
     assert retrieved_diary.notes_list == {

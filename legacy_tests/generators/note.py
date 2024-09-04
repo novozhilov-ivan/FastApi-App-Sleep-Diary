@@ -76,7 +76,7 @@ class SleepNoteGenerator:
         )
         return model(
             id=note_id,
-            owner_id=user_id,
+            owner_oid=user_id,
             sleep_date=date.fromtimestamp(date_of_note),
             went_to_bed=rand_bedtime,
             fell_asleep=rand_asleep,

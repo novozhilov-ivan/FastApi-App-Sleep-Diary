@@ -10,7 +10,7 @@ from tests.integration.conftest import insert_note_stmt
 
 def test_note_orm_t_entity(
     memory_database: Database,
-    exist_user: ORMUser,
+    user: ORMUser,
 ):
     note = {
         "oid": f"{uuid4()}",
@@ -22,7 +22,7 @@ def test_note_orm_t_entity(
         "woke_up": "11:00",
         "got_up": "13:00",
         "no_sleep": "01:00",
-        "owner_id": f"{exist_user.oid}",
+        "owner_oid": f"{user.oid}",
     }
     with memory_database.get_session() as session:
         session.execute(insert_note_stmt, note)
@@ -31,7 +31,7 @@ def test_note_orm_t_entity(
     db_note_entity = db_note.to_entity()
     assert isinstance(db_note_entity, NoteEntity)
 
-    note.pop("owner_id")
+    note.pop("owner_oid")
     expected_note = NoteEntity.model_validate(note)
     assert expected_note == db_note_entity
     assert expected_note.created_at == db_note_entity.created_at

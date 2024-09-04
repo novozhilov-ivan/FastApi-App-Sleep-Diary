@@ -15,7 +15,7 @@ class ORMNote(ORMBase, MixinMetaInfo):
     __table_args__ = (
         UniqueConstraint(
             "bedtime_date",
-            "owner_id",
+            "owner_oid",
             name="unique_bedtime_date_for_user",
         ),
     )
@@ -25,7 +25,7 @@ class ORMNote(ORMBase, MixinMetaInfo):
     woke_up: Mapped[time]
     got_up: Mapped[time]
     no_sleep: Mapped[time]
-    owner_id: Mapped[UUID] = mapped_column(
+    owner_oid: Mapped[UUID] = mapped_column(
         ForeignKey(
             column="users.oid",
             ondelete="CASCADE",
@@ -36,7 +36,7 @@ class ORMNote(ORMBase, MixinMetaInfo):
     def from_time_points(
         cls: type["ORMNote"],
         obj: NoteTimePoints,
-        owner_id: UUID,
+        owner_oid: UUID,
     ) -> "ORMNote":
         return cls(
             bedtime_date=obj.bedtime_date,
@@ -45,7 +45,7 @@ class ORMNote(ORMBase, MixinMetaInfo):
             woke_up=obj.woke_up,
             got_up=obj.got_up,
             no_sleep=obj.no_sleep,
-            owner_id=owner_id,
+            owner_oid=owner_oid,
         )
 
     def to_entity(self: Self) -> NoteEntity:

@@ -1,11 +1,12 @@
-from http import HTTPStatus
-
-from flask.testing import FlaskClient
+from fastapi import FastAPI
+from httpx import Response
+from starlette import status
+from starlette.testclient import TestClient
 
 from src.infrastructure.orm import ORMUser
 
 
-def test_add_note_201(client: FlaskClient, user: ORMUser):
+def test_write_note_201(app: FastAPI, client: TestClient, user: ORMUser):
     data = {
         "bedtime_date": "2020-12-12",
         "went_to_bed": "01:00",
@@ -13,12 +14,13 @@ def test_add_note_201(client: FlaskClient, user: ORMUser):
         "woke_up": "11:00",
         "got_up": "13:00",
         "no_sleep": "01:00",
-        "owner_id": f"{user.oid}",
     }
-    response = client.post(
-        path="api/notes",
+    url = app.url_path_for("write_note")
+    response: Response = client.post(
+        url=url,
         json=data,
+        headers={"owner_oid": str(user.oid)},
         # auth=jwt_access,
     )
-    assert response.status_code == HTTPStatus.CREATED
-    assert response.json is None
+    assert response.status_code == status.HTTP_201_CREATED, response.json()
+    assert response.json() is None

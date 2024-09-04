@@ -36,7 +36,7 @@ class AddNote(UserActions):
         payload: Any | dict = request.json
         new_note = SleepNote(**payload)
         new_db_note = SleepNoteOrm(
-            owner_id=self.current_user_id,
+            owner_oid=self.current_user_id,
             **new_note.model_dump(),
         )
         new_db_note = create_one_note(new_db_note)

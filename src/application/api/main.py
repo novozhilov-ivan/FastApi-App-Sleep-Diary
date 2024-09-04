@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.application.api.routers import about
+from src.application.api.routers import about, notes
 
 
 def create_app() -> FastAPI:
@@ -12,4 +12,5 @@ def create_app() -> FastAPI:
     )
     app.include_router(about.router)
     app.include_router(about.router, prefix="/about")
+    app.include_router(notes.router, prefix="/notes")
     return app

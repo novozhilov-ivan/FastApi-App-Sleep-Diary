@@ -195,7 +195,7 @@ class TestNoteUpdate:
         )
         with pytest.raises(ValidationError) as exc_info:
             SleepNoteMeta(
-                owner_id=exist_user.id,
+                owner_oid=exist_user.id,
                 **raw_response.request.args,
             )
         response = Response(raw_response)

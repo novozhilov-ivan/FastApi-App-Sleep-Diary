@@ -34,7 +34,7 @@ class SleepNoteOrm(MetaInfoBaseModel):
     __table_args__ = (
         UniqueConstraint(
             "sleep_date",
-            "owner_id",
+            "owner_oid",
             name="unique_sleep_date_for_user",
         ),
     )
@@ -45,7 +45,7 @@ class SleepNoteOrm(MetaInfoBaseModel):
     woke_up: Mapped[time]
     got_up: Mapped[time]
     no_sleep: Mapped[time]
-    owner_id: Mapped[int] = mapped_column(
+    owner_oid: Mapped[int] = mapped_column(
         ForeignKey(
             column="user.id",
             ondelete="CASCADE",

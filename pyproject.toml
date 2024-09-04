@@ -47,6 +47,13 @@ no-print-logs = true
 per-file-ignores = [
     "tests/*test*:ANN201,TAE001",  # аннотации возвращаемых типов тестов
 ]
+extend-immutable-calls = [
+    "Depends",
+    "fastapi.Depends",
+    "fastapi.params.Depends",
+    "fastapi.Query",
+    "fastapi.params.Query",
+]
 unused-arguments-ignore-abstract-functions = true
 unused-arguments-ignore-dunder = true
 

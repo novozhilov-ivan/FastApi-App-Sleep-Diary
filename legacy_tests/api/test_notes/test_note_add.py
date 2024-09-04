@@ -33,7 +33,7 @@ class TestNoteAdd:
         client: FlaskClient,
     ):
         notes_generator: SleepDiaryGenerator
-        notes_generator = SleepDiaryGenerator(owner_id=exist_user.id)
+        notes_generator = SleepDiaryGenerator(owner_oid=exist_user.id)
         new_note_with_stat: SleepNoteWithStats
         new_note_with_stat, *_ = notes_generator.notes
         new_note = SleepNote.model_validate(new_note_with_stat)

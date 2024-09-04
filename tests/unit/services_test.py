@@ -45,9 +45,9 @@ class FakeDatabase:
 class FakeDiaryRepo(BaseDiaryRepository):
     database: FakeDatabase
 
-    def _add(self: Self, note: NoteValueObject, owner_id: UUID) -> None:
+    def _add(self: Self, note: NoteValueObject, owner_oid: UUID) -> None:
         with self.database.get_session() as session:
-            session.add((note, owner_id))
+            session.add((note, owner_oid))
 
     def _get(self: Self, oid: UUID) -> None:
         raise NotImplementedError
@@ -55,12 +55,12 @@ class FakeDiaryRepo(BaseDiaryRepository):
     def _get_by_bedtime_date(
         self: Self,
         bedtime_date: str,
-        owner_id: UUID,
+        owner_oid: UUID,
     ) -> dict | None:
         # 'str(n.bedtime_date)' - str(...) тут как заглушка. нужно переделать
         with self.database.get_session() as session:
             for note, oid in session:
-                if str(note.bedtime_date) == bedtime_date and oid == owner_id:
+                if str(note.bedtime_date) == bedtime_date and oid == owner_oid:
                     break
             return {
                 **note.model_dump(),
@@ -69,12 +69,12 @@ class FakeDiaryRepo(BaseDiaryRepository):
                 "updated_at": datetime.now(UTC),
             }
 
-    def _get_diary(self: Self, owner_id: UUID) -> set:
+    def _get_diary(self: Self, owner_oid: UUID) -> set:
         with self.database.get_session() as session:
             notes: set = set()
             for note_and_oid in session:
                 note, oid = note_and_oid
-                if oid == owner_id:
+                if oid == owner_oid:
                     notes.add(note)
             return notes
 
@@ -89,7 +89,7 @@ class FakeDiaryRepo(BaseDiaryRepository):
     ],
 )
 def test_service_write_note(no_sleep: str | None):
-    fake_owner_id = uuid4()
+    fake_owner_oid = uuid4()
     database = FakeDatabase()
     repo: BaseDiaryRepository = FakeDiaryRepo(database)
     service_layer.write(
@@ -99,10 +99,10 @@ def test_service_write_note(no_sleep: str | None):
         "23:00",
         "01:00",
         no_sleep,
-        fake_owner_id,
+        fake_owner_oid,
         repo,
     )
-    retrieved = repo.get_by_bedtime_date("2020-12-12", fake_owner_id)
+    retrieved = repo.get_by_bedtime_date("2020-12-12", fake_owner_oid)
     assert retrieved is not None
     assert isinstance(retrieved, NoteEntity)
     assert database.committed

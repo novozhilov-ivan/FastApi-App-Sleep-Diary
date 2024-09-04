@@ -56,7 +56,7 @@ class EditRouteImport(Resource, UserActions):
         new_notes = FileDataConverter(file=file)
         new_notes.to_model(
             as_model=SleepNoteOrm,
-            owner_id=self.current_user_id,
+            owner_oid=self.current_user_id,
         )
 
         if create_many_notes(new_notes.data):
