@@ -25,6 +25,9 @@ services:
     networks:
       - backend
     working_dir: /app
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
     entrypoint:
       - uvicorn
       - --factory

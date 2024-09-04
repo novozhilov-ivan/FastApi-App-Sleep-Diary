@@ -1,9 +1,7 @@
 from pydantic import BaseModel, Field
 
 
-class SleepDiaryDescriptionSchema(BaseModel):
-    """Основная информация на главной странице"""
-
+class AboutSleepDiarySchema(BaseModel):
     description: str = Field(
         default="Ежедневный учет времени отхода ко сну, засыпания, пробуждения и "
         "подъема, а также времени нахождения в кровати без сна. "

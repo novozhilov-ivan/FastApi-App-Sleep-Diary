@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 
-from src.application.api.routers import diary_description
+from src.application.api.routers import about
 
 
 def create_app() -> FastAPI:
@@ -10,6 +10,6 @@ def create_app() -> FastAPI:
         docs_url="/api/docs",
         debug=True,
     )
-    app.include_router(diary_description.router)
-    app.include_router(diary_description.router, prefix="/description")
+    app.include_router(about.router)
+    app.include_router(about.router, prefix="/about")
     return app
