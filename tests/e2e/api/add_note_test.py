@@ -15,7 +15,7 @@ def test_write_note_201(app: FastAPI, client: TestClient, user: ORMUser):
         "got_up": "13:00",
         "no_sleep": "01:00",
     }
-    url = app.url_path_for("write_note")
+    url = app.url_path_for("Добавить запись")
     response: Response = client.post(
         url=url,
         json=data,

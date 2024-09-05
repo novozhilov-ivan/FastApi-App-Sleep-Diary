@@ -9,3 +9,43 @@ openssl genrsa -out jwt-private.pem 2048
 # Extract the public key from the key pair, which can be used in a certificate
 openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
 ```
+
+
+# TODO
+## DDD
+   - FastApi:
+        - endpoints:
+          - Тест /note_add Определить форму ответа:
+          - body с сообщением(каким? общая схема для всех ответов нужна.);
+          - header location '/api/notes/<uuid:43fgf...>';
+          - Тест /note_add для ошибок; Тест с параметрами;
+   - Сервис авторизации:
+     - Переписать;
+     - UserRepo;
+     - Схемы User'а;
+     - Как использовать с application?;
+     - Реализация sign-out, через хранилище в cache и RedisCache;
+     - Создание в памяти public и private keys для шифрования при тестировании;
+   - BaseDatabase и тесты для FakeDatabase.
+   - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
+   - Протестировать каскадное удаление записей при удалении user. (all, 
+     delete-orphan) в таблице 'users' мб нужно выставить.
+   - Mypy error: str | time в NoteValueObject
+   - (мб провалидировать строки сразу. Зачем? 
+     - В каком слое размещать эти переменные?)
+     - Добавить pydantic валидацию переменных bedtime_date, oid и временных точек,
+     для валидации данных и конвертации типа данных;
+     services_test < поправить тесты  после создания.
+   - Добавить валидацию аргументов службы предметной области и мб служб сервисного 
+слоя
+   - Добавить зависимость для реализации Dependency Injection Container.
+     - Заменить вызовы переиспользуемых объектов.
+   - Diary + Week взаимодействие.
+     - Diary < метод make_diary() для формирования словаря/json с записями
+     разделенными неделями, со своими сортировками
+
+  - Зависимости:
+    - dev+ pre-committer
+    - dev+ ipython
+
+  - CI/CD

@@ -20,7 +20,8 @@ router = APIRouter(
 
 @router.post(
     path="/",
-    description="Добавление новой записи в дневник.",
+    name="Добавить запись",
+    description="Добавление новой записи в дневник сна.",
     status_code=status.HTTP_201_CREATED,
     response_model=None,
     responses={
@@ -28,7 +29,7 @@ router = APIRouter(
         status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
     },
 )
-def write_note(
+def add_note(
     time_points: NoteTimePoints,
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
