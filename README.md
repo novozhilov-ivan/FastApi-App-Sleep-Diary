@@ -13,39 +13,61 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
 
 # TODO
 ## DDD
-   - FastApi:
-        - endpoints:
-          - Тест /note_add Определить форму ответа:
-          - body с сообщением(каким? общая схема для всех ответов нужна.);
-          - header location '/api/notes/<uuid:43fgf...>';
-          - Тест /note_add для ошибок; Тест с параметрами;
+- FastApi:
+    - General response schemas:
+      - 400: 
+      - 401:
+      - 404:
+      - 415:
+      - 422:
+    - Endpoints:
+      - /add_note
+        - Определить форму ответа для 201
+          - body +-?
+          - header location '/api/notes/<uuid:43fgf...>'
+        - Тесты:
+          - 201: Проверка body/location
+          - 400: Тест-функция для всех ошибок одна, объекты передать через 
+            параметры
+   - ValueObject + Generic'и
+       - Generic
+       - @dataclass Value's 
+         - Base
+           - frozen=True
+           - __post_init__
+           - Шаблонный метод validate()
+           - as_generic_type()
+         - BedtimeDate
+           - validate()
+           - __eq__ ?
+           - __hash__ ?
+         - TimePoint
+           - validate()
+           - __eq__ ?
+           - __hash__ ?
+         - Note
+           - validate()
+             - вызов спецификаций
+           - __eq__ ?
+           - __hash__ ?
    - Сервис авторизации:
-     - Переписать;
-     - UserRepo;
-     - Схемы User'а;
-     - Как использовать с application?;
-     - Реализация sign-out, через хранилище в cache и RedisCache;
-     - Создание в памяти public и private keys для шифрования при тестировании;
-   - BaseDatabase и тесты для FakeDatabase.
-   - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
-   - Протестировать каскадное удаление записей при удалении user. (all, 
-     delete-orphan) в таблице 'users' мб нужно выставить.
-   - Mypy error: str | time в NoteValueObject
-   - (мб провалидировать строки сразу. Зачем? 
-     - В каком слое размещать эти переменные?)
-     - Добавить pydantic валидацию переменных bedtime_date, oid и временных точек,
-     для валидации данных и конвертации типа данных;
-     services_test < поправить тесты  после создания.
-   - Добавить валидацию аргументов службы предметной области и мб служб сервисного 
-слоя
-   - Добавить зависимость для реализации Dependency Injection Container.
-     - Заменить вызовы переиспользуемых объектов.
+     - Переписать
+     - UserRepo
+     - Схемы User'ов
+     - Как использовать с application?
+     - Реализация sign-out, через хранилище в cache и RedisCache
+     - Создание в памяти public и private keys для шифрования при тестировании
+   - Рефакторинг
+     - BaseDatabase и тесты для FakeDatabase.
+     - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
+     - Протестировать каскадное удаление записей при удалении user. (all, 
+       delete-orphan) в таблице 'users' мб нужно выставить.
+     - Заменить вызовы переиспользуемых объектов Dependency Injector Container.
    - Diary + Week взаимодействие.
      - Diary < метод make_diary() для формирования словаря/json с записями
      разделенными неделями, со своими сортировками
-
   - Зависимости:
+    - prod+ Dependency Injector
     - dev+ pre-committer
     - dev+ ipython
-
   - CI/CD
