@@ -13,7 +13,7 @@ def write(
     got_up: str,
     no_sleep: str | None,
     owner_oid: UUID,
-    repo: BaseDiaryRepository,
+    repository: BaseDiaryRepository,
 ) -> None:
     note = NoteTimePoints(
         bedtime_date=bedtime_date,
@@ -23,6 +23,6 @@ def write(
         got_up=got_up,
         no_sleep=no_sleep or "00:00",
     )
-    diary = repo.get_diary(owner_oid)
+    diary = repository.get_diary(owner_oid)
     new_note = domain.write(note, diary)
-    repo.add(new_note, owner_oid)
+    repository.add(new_note, owner_oid)

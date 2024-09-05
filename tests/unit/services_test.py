@@ -91,7 +91,7 @@ class FakeDiaryRepo(BaseDiaryRepository):
 def test_service_write_note(no_sleep: str | None):
     fake_owner_oid = uuid4()
     database = FakeDatabase()
-    repo: BaseDiaryRepository = FakeDiaryRepo(database)
+    repository: BaseDiaryRepository = FakeDiaryRepo(database)
     service_layer.write(
         "2020-12-12",
         "13:00",
@@ -100,9 +100,9 @@ def test_service_write_note(no_sleep: str | None):
         "01:00",
         no_sleep,
         fake_owner_oid,
-        repo,
+        repository,
     )
-    retrieved = repo.get_by_bedtime_date("2020-12-12", fake_owner_oid)
+    retrieved = repository.get_by_bedtime_date("2020-12-12", fake_owner_oid)
     assert retrieved is not None
     assert isinstance(retrieved, NoteEntity)
     assert database.committed

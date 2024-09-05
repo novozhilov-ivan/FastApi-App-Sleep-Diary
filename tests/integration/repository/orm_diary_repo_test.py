@@ -5,9 +5,9 @@ from sqlalchemy import text
 
 from src.domain.diary import Diary
 from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
-from src.infrastructure import repository
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote, ORMUser
+from src.infrastructure.repository import BaseDiaryRepository, ORMDiaryRepository
 
 
 def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
@@ -18,8 +18,8 @@ def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
         woke_up="23:00",
         got_up="01:00",
     )
-    repo = repository.ORMDiaryRepository(memory_database)
-    repo.add(note_time_points, user.oid)
+    repository: BaseDiaryRepository = ORMDiaryRepository(memory_database)
+    repository.add(note_time_points, user.oid)
 
     with memory_database.get_session() as session:
         [result] = session.execute(
@@ -62,8 +62,8 @@ def test_repo_can_retrieve_note_entity_by_oid(
 ):
     inserted_note_orm = insert_note(memory_database, user)
 
-    repo = repository.ORMDiaryRepository(memory_database)
-    retrieved_entity: NoteEntity | None = repo.get(inserted_note_orm.oid)
+    repository: BaseDiaryRepository = ORMDiaryRepository(memory_database)
+    retrieved_entity: NoteEntity | None = repository.get(inserted_note_orm.oid)
 
     assert retrieved_entity
     assert isinstance(retrieved_entity, NoteEntity)
@@ -84,8 +84,8 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
 ):
     insert_note(memory_database, user)
 
-    repo = repository.ORMDiaryRepository(memory_database)
-    retrieved_entity: NoteEntity | None = repo.get_by_bedtime_date(
+    repository: BaseDiaryRepository = ORMDiaryRepository(memory_database)
+    retrieved_entity: NoteEntity | None = repository.get_by_bedtime_date(
         "2020-12-12",
         user.oid,
     )
@@ -109,8 +109,8 @@ def test_repo_can_retrieve_diary(
 ):
     insert_note(memory_database, user)
 
-    repo = repository.ORMDiaryRepository(memory_database)
-    retrieved_diary = repo.get_diary(user.oid)
+    repository: BaseDiaryRepository = ORMDiaryRepository(memory_database)
+    retrieved_diary = repository.get_diary(user.oid)
     assert isinstance(retrieved_diary, Diary)
     assert len(retrieved_diary.notes_list) == 1
     assert retrieved_diary.notes_list == {

@@ -1,3 +1,4 @@
+from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, HTTPException
@@ -5,9 +6,8 @@ from pydantic import UUID4
 from starlette import status
 
 from src import service_layer
-from src.application.api.schemas import ErrorSchema
 from src.domain.exceptions import ApplicationException
-from src.domain.note import NoteTimePoints
+from src.domain.note import NoteEntity, NoteTimePoints
 from src.infrastructure.database import Database, get_db
 from src.infrastructure.repository import ORMDiaryRepository
 
@@ -15,6 +15,9 @@ from src.infrastructure.repository import ORMDiaryRepository
 HeaderOwnerOid = Annotated[UUID4, Header(convert_underscores=False)]
 router = APIRouter(
     tags=["Notes"],
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": None},
+    },
 )
 
 
@@ -26,7 +29,6 @@ router = APIRouter(
     response_model=None,
     responses={
         status.HTTP_201_CREATED: {"model": None},
-        status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
     },
 )
 def add_note(
@@ -34,7 +36,7 @@ def add_note(
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
 ) -> None:
-    repo = ORMDiaryRepository(database)
+    repository = ORMDiaryRepository(database)
     try:
         service_layer.write(
             time_points.bedtime_date,
@@ -44,7 +46,7 @@ def add_note(
             time_points.got_up,
             time_points.no_sleep,
             owner_oid,
-            repo,
+            repository,
         )
     except ApplicationException as exception:
         raise HTTPException(
@@ -53,23 +55,101 @@ def add_note(
         )
 
 
-# namespace_notes.add_resource(
-#     endpoints.GetNoteByOidEndPoint,
-#     "/<uuid:note_id>",
-#     endpoint=endpoints.GetNoteByOidEndPoint.NAME,
-# )
-# namespace_notes.add_resource(
-#     endpoints.GetNoteByBedtimeDateEndPoint,
-#     "/<string:note_bedtime_date>",
-#     endpoint=endpoints.GetNoteByBedtimeDateEndPoint.NAME,
-# )
-# namespace_notes.add_resource(
-#     endpoints.UpdateNoteEndPoint,
-#     "/<uuid:note_id>",
-#     endpoint=endpoints.UpdateNoteEndPoint.NAME,
-# )
-# namespace_notes.add_resource(
-#     endpoints.DeleteNoteEndPoint,
-#     "/<uuid:note_id>",
-#     endpoint=endpoints.DeleteNoteEndPoint.NAME,
-# )
+@router.get(
+    path="/{note_oid}",
+    name="Получить запись по oid",
+    description="Получение записи о сне из дневника по идентификатору объекта.",
+    status_code=status.HTTP_200_OK,
+    response_model=NoteEntity,
+    responses={
+        status.HTTP_200_OK: {"model": NoteEntity},
+        status.HTTP_404_NOT_FOUND: {"model": None},
+    },
+)
+def get_note_by_oid(
+    note_oid: UUID4,
+    owner_oid: HeaderOwnerOid,
+    database: Database = Depends(get_db),
+) -> NoteEntity: ...
+
+
+# repository = ORMDiaryRepository(database)
+# try:
+#     return service_layer.get_note_by_note_oid(
+#         note_oid,
+#         owner_oid,
+#         repository,
+#     )
+# except NoteNotFound as exception:
+#     raise HTTPException(
+#         status_code=status.HTTP_404_NOT_FOUND,
+#         detail={"error": exception.message},
+#     )
+
+
+@router.get(
+    path="/{note_bedtime_date}",
+    name="Получить запись по bedtime_date",
+    description="Получение записи о сне из дневника по дате записи.",
+    status_code=status.HTTP_200_OK,
+    response_model=None,
+    responses={
+        status.HTTP_200_OK: {"model": None},
+        status.HTTP_404_NOT_FOUND: {"model": None},
+    },
+)
+def get_note_by_bedtime_date(
+    bedtime_date: date,
+    owner_oid: HeaderOwnerOid,
+    database: Database = Depends(get_db),
+) -> None: ...
+
+
+# repository = ORMDiaryRepository(database)
+# try:
+#     return service_layer.get_note_by_bedtime_date(
+#         bedtime_date,
+#         owner_oid,
+#         repository,
+#     )
+# except NoteNotFound as exception:
+#     raise HTTPException(
+#         status_code=status.HTTP_404_NOT_FOUND,
+#         detail={"error": exception.message},
+#     )
+
+
+@router.patch(
+    path="/{note_oid}",
+    name="Обновить запись",
+    description="Обновление значений полей записи дневника сна.",
+    status_code=status.HTTP_200_OK,
+    response_model=None,
+    responses={
+        status.HTTP_200_OK: {"model": None},
+        status.HTTP_404_NOT_FOUND: {"model": None},
+    },
+)
+def update_note(
+    note_oid: UUID4,
+    owner_oid: HeaderOwnerOid,
+    database: Database = Depends(get_db),
+) -> None: ...
+
+
+@router.delete(
+    path="/{note_oid}",
+    name="Удалить запись",
+    description="Удалить записи дневника сна.",
+    status_code=status.HTTP_204_NO_CONTENT,
+    response_model=None,
+    responses={
+        status.HTTP_204_NO_CONTENT: {"model": None},
+        status.HTTP_404_NOT_FOUND: {"model": None},
+    },
+)
+def delete_note(
+    note_oid: UUID4,
+    owner_oid: HeaderOwnerOid,
+    database: Database = Depends(get_db),
+) -> None: ...

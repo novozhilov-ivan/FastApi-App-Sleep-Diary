@@ -13,7 +13,6 @@ from src.pydantic_schemas.sleep.notes import (
 from src.routes.account import response_model_401
 from src.routes.edit import response_model_422
 from src.routes.notes import ns_notes
-from src.routes.notes.note_delete import note_id_params
 from src.routes.notes.note_find_by_id import (
     response_model_200,
     response_model_404,
