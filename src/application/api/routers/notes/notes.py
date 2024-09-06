@@ -6,8 +6,9 @@ from pydantic import UUID4
 from starlette import status
 
 from src import service_layer
+from src.application.api.routers.notes.schemas import NoteTimePointsSchema
 from src.domain.exceptions import ApplicationException
-from src.domain.note import NoteEntity, NoteTimePoints
+from src.domain.note import NoteEntity
 from src.infrastructure.database import Database, get_db
 from src.infrastructure.repository import ORMDiaryRepository
 
@@ -32,7 +33,7 @@ router = APIRouter(
     },
 )
 def add_note(
-    time_points: NoteTimePoints,
+    time_points: NoteTimePointsSchema,
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
 ) -> None:

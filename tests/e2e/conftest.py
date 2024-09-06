@@ -9,6 +9,7 @@ from starlette.testclient import TestClient
 from src.application.api.main import create_app
 from src.infrastructure.database import Database, get_db
 from src.infrastructure.orm import ORMUser, metadata
+from src.infrastructure.repository import BaseDiaryRepository, ORMDiaryRepository
 from src.settings import AuthJWTSettings
 
 
@@ -53,6 +54,11 @@ def memory_database(database: Database) -> Database:
     metadata.drop_all(database.engine)
     metadata.create_all(database.engine)
     return database
+
+
+@pytest.fixture
+def repository(database: Database) -> BaseDiaryRepository:
+    return ORMDiaryRepository(database)
 
 
 @pytest.fixture

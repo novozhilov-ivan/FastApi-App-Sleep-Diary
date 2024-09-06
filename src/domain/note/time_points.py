@@ -5,7 +5,6 @@ from typing_extensions import Self
 
 from pydantic import (
     BaseModel,
-    Field,
     computed_field,
     model_validator,
 )
@@ -17,31 +16,12 @@ from src.domain.exceptions import (
 
 
 class NoteTimePoints(BaseModel):
-    bedtime_date: date = Field(
-        title="Дата отхода ко сну",
-        examples=["2020-12-12", "2021-01-20"],
-    )
-    went_to_bed: time = Field(
-        title="Время отхода ко сну",
-        examples=["01:00", "13:00"],
-    )
-    fell_asleep: time = Field(
-        title="Время засыпания",
-        examples=["03:00", "15:00"],
-    )
-    woke_up: time = Field(
-        title="Время пробуждения",
-        examples=["11:00", "23:00"],
-    )
-    got_up: time = Field(
-        title="Время подъема",
-        examples=["13:00", "01:00"],
-    )
-    no_sleep: time = Field(
-        default=time(hour=0, minute=0),
-        title="Время отсутствия сна",
-        examples=["00:00", "00:20"],
-    )
+    bedtime_date: date
+    went_to_bed: time
+    fell_asleep: time
+    woke_up: time
+    got_up: time
+    no_sleep: time = time(0, 0)
 
     @model_validator(mode="after")
     def validate_time_points_sequences(self: Self) -> Self:
