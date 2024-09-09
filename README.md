@@ -27,45 +27,29 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
           - header location '/api/notes/<uuid:43fgf...>'
         - Тесты:
           - 201: Проверка body/location
-   - ValueObject + Generic'и
-       - Generic
-       - @dataclass Value's 
-         - Base
-           - frozen=True
-           - __post_init__
-           - Шаблонный метод validate()
-           - as_generic_type()
-         - BedtimeDate
-           - validate()
-           - __eq__ ?
-           - __hash__ ?
-         - TimePoint
-           - validate()
-           - __eq__ ?
-           - __hash__ ?
-         - Note
-           - validate()
-             - вызов спецификаций
-           - __eq__ ?
-           - __hash__ ?
-   - Сервис авторизации:
-     - Переписать
-     - UserRepo
-     - Схемы User'ов
-     - Как использовать с application?
-     - Реализация sign-out, через хранилище в cache и RedisCache
-     - Создание в памяти public и private keys для шифрования при тестировании
-   - Рефакторинг
-     - BaseDatabase и тесты для FakeDatabase.
-     - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
-     - Протестировать каскадное удаление записей при удалении user. (all, 
-       delete-orphan) в таблице 'users' мб нужно выставить.
-     - Заменить вызовы переиспользуемых объектов Dependency Injector Container.
-   - Diary + Week взаимодействие.
-     - Diary < метод make_diary() для формирования словаря/json с записями
-     разделенными неделями, со своими сортировками
+    - Note (Value или Entity ???)
+      - validate()
+        - вызов спецификаций
+      - __eq__ ?
+      - __hash__ ?
+    - Сервис авторизации:
+      - Переписать
+      - UserRepo
+      - Схемы User'ов
+      - Как использовать с application?
+      - Реализация sign-out, через хранилище в cache и RedisCache
+      - Создание в памяти public и private keys для шифрования при тестировании
+  - Рефакторинг
+    - BaseDatabase и тесты для FakeDatabase.
+    - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
+    - Протестировать каскадное удаление записей при удалении user. (all, 
+      delete-orphan) в таблице 'users' мб нужно выставить.
+    - Заменить вызовы переиспользуемых объектов Dependency Injector Container.
+  - Diary + Week взаимодействие.
+    - Diary < метод make_diary() для формирования словаря/json с записями
+    разделенными неделями, со своими сортировками
   - Зависимости:
-    - prod+ Dependency Injector
-    - dev+ pre-committer
-    - dev+ ipython
+   - prod+ Dependency Injector
+   - dev+ pre-committer
+   - dev+ ipython
   - CI/CD
