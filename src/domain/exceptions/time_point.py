@@ -19,7 +19,7 @@ class TimePointTypeException(TimePointException):
 
 
 @dataclass(eq=False)
-class TimePointFormatException(TimePointException):
+class TimePointFormatIsoException(TimePointException):
     @property
     def message(self: Self) -> str:
-        return "Недопустимый формат временной точки, используйте iso-формат."
+        return "Недопустимый iso-формат временной точки."

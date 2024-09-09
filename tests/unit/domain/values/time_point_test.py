@@ -6,7 +6,7 @@ from typing import Any
 import pytest
 
 from src.domain.exceptions.time_point import (
-    TimePointFormatException,
+    TimePointFormatIsoException,
     TimePointTypeException,
 )
 from src.domain.values.time_point import TimePoint
@@ -66,5 +66,5 @@ def test_create_time_point_from_forbidden_type(hhmm: Any):
     ],
 )
 def test_create_time_point_from_forbidden_str_format(hhmm: str):
-    with pytest.raises(TimePointFormatException):
+    with pytest.raises(TimePointFormatIsoException):
         TimePoint(hhmm)

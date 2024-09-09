@@ -3,7 +3,7 @@ from datetime import time
 from typing_extensions import Self
 
 from src.domain.exceptions.time_point import (
-    TimePointFormatException,
+    TimePointFormatIsoException,
     TimePointTypeException,
 )
 from src.domain.values.base import BaseValueObject
@@ -18,7 +18,7 @@ class TimePoint[VTI: str | time, VTO: time](BaseValueObject):
             try:
                 time.fromisoformat(self.value)
             except ValueError:
-                raise TimePointFormatException
+                raise TimePointFormatIsoException
         else:
             raise TimePointTypeException
 
