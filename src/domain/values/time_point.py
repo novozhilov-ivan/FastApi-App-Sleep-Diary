@@ -12,15 +12,14 @@ from src.domain.values.base import BaseValueObject
 @dataclass(frozen=True)
 class TimePoint[VTI: str | time, VTO: time](BaseValueObject):
     def validate(self: Self) -> None:
-        if isinstance(self.value, time):
-            return
+        if not isinstance(self.value, (time, str)):
+            raise TimePointTypeException
+
         if isinstance(self.value, str):
             try:
                 time.fromisoformat(self.value)
             except ValueError:
                 raise TimePointFormatIsoException
-        else:
-            raise TimePointTypeException
 
     def as_generic_type(self: Self) -> time:
         if isinstance(self.value, str):
