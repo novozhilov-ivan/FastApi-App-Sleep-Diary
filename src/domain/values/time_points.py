@@ -2,21 +2,27 @@ from dataclasses import dataclass
 from datetime import date, time
 from typing_extensions import Self
 
+from src.domain.exceptions import (
+    TimePointsSequenceException,
+)
+from src.domain.specifications.duration import NoSleepHasValidTime
 from src.domain.values.base import BaseValueObject
+from src.domain.values.date_point import DatePoint
+from src.domain.values.time_point import TimePoint
 
 
-@dataclass
-class TimePointsIn:
-    bedtime_date: date | str
-    went_to_bed: time | str
-    fell_asleep: time | str
-    woke_up: time | str
-    got_up: time | str
-    no_sleep: time | str
+@dataclass(frozen=True)
+class PointsIn:
+    bedtime_date: DatePoint
+    went_to_bed: TimePoint
+    fell_asleep: TimePoint
+    woke_up: TimePoint
+    got_up: TimePoint
+    no_sleep: TimePoint
 
 
-@dataclass
-class TimePointsOut:
+@dataclass(frozen=True)
+class PointsOut:
     bedtime_date: date
     went_to_bed: time
     fell_asleep: time
@@ -26,20 +32,23 @@ class TimePointsOut:
 
 
 @dataclass(frozen=True)
-class TimePoints[
-    VTI: TimePointsIn,
-    VTO: TimePointsOut,
+class Points[
+    VTI: PointsIn,
+    VTO: PointsOut,
 ](BaseValueObject):
     def validate(self: Self) -> None:
-        # specs(self)
-        ...
+        if not NoSleepHasValidTime(self):
+            raise TimePointsSequenceException
 
-    def as_generic_type(self: Self) -> TimePointsOut:
-        return TimePointsOut(
-            self.value.bedtime_date,
-            self.value.went_to_bed,
-            self.value.fell_asleep,
-            self.value.woke_up,
-            self.value.got_up,
-            self.value.no_sleep,
+        # if not AnyOfAllowedPointsSequences(self.as_generic_type()):
+        #     raise NoSleepDurationException
+
+    def as_generic_type(self: Self) -> PointsOut:
+        return PointsOut(
+            self.value.bedtime_date.as_generic_type(),
+            self.value.went_to_bed.as_generic_type(),
+            self.value.fell_asleep.as_generic_type(),
+            self.value.woke_up.as_generic_type(),
+            self.value.got_up.as_generic_type(),
+            self.value.no_sleep.as_generic_type(),
         )
