@@ -27,18 +27,18 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
           - header location '/api/notes/<uuid:43fgf...>'
         - Тесты:
           - 201: Проверка body/location
-    - Note (Value или Entity ???)
-      - validate()
-        - вызов спецификаций
-      - __eq__ ?
-      - __hash__ ?
+    - Note Durations
+    - Specifications
+      - Последовательности
+      - Длительности
+    - Note Entity
     - Сервис авторизации:
-      - Переписать
-      - UserRepo
-      - Схемы User'ов
-      - Как использовать с application?
-      - Реализация sign-out, через хранилище в cache и RedisCache
-      - Создание в памяти public и private keys для шифрования при тестировании
+    - Переписать
+    - UserRepo
+    - Схемы User'ов
+    - Как использовать с application?
+    - Реализация sign-out, через хранилище в cache и RedisCache
+    - Создание в памяти public и private keys для шифрования при тестировании
   - Рефакторинг
     - BaseDatabase и тесты для FakeDatabase.
     - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
