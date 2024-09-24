@@ -1,6 +1,5 @@
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import date, time
-from typing import TYPE_CHECKING
 from typing_extensions import Self
 
 from src.domain.exceptions import (
@@ -11,21 +10,19 @@ from src.domain.specifications import (
     NoSleepHasValidTime,
     PointsHasValidAnyAllowedSortedSequences,
 )
-from src.domain.values import BaseValueObject, DatePoint
-
-
-if TYPE_CHECKING:
-    from src.domain.values import TimePoint
+from src.domain.values.base import BaseValueObject
+from src.domain.values.date_point import DatePoint
+from src.domain.values.time_point import TimePoint
 
 
 @dataclass(frozen=True)
 class PointsIn:
     bedtime_date: DatePoint
-    went_to_bed: "TimePoint"
-    fell_asleep: "TimePoint"
-    woke_up: "TimePoint"
-    got_up: "TimePoint"
-    no_sleep: "TimePoint"
+    went_to_bed: TimePoint
+    fell_asleep: TimePoint
+    woke_up: TimePoint
+    got_up: TimePoint
+    no_sleep: TimePoint = field(default=TimePoint("00:00"))
 
 
 @dataclass(frozen=True)

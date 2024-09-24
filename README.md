@@ -29,8 +29,6 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
           - 201: Проверка body/location
     - NoteDurations
       - Протестировать
-    - Points(ValueObject)
-      - Протестировать
     - Specifications
       - PointsHasValidAnyAllowedSortedSequences
         - Протестировать
