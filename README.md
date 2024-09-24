@@ -30,13 +30,11 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
     - NoteDurations
       - Протестировать
     - Points(ValueObject)
-      - Дописать спецификацию в validate()
       - Протестировать
     - Specifications
-      - Последовательности
-        - Написать
+      - PointsHasValidAnyAllowedSortedSequences
         - Протестировать
-      - Длительности
+      - NoSleepHasValidTime
         - Протестировать
     - NoteEntity
     - Сервис авторизации:

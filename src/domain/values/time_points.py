@@ -3,9 +3,13 @@ from datetime import date, time
 from typing_extensions import Self
 
 from src.domain.exceptions import (
+    NoSleepDurationException,
     TimePointsSequenceException,
 )
 from src.domain.specifications.duration import NoSleepHasValidTime
+from src.domain.specifications.sequences import (
+    PointsHasValidAnyAllowedSortedSequences,
+)
 from src.domain.values.base import BaseValueObject
 from src.domain.values.date_point import DatePoint
 from src.domain.values.time_point import TimePoint
@@ -37,11 +41,11 @@ class Points[
     VTO: PointsOut,
 ](BaseValueObject):
     def validate(self: Self) -> None:
-        if not NoSleepHasValidTime(self):
+        if not NoSleepHasValidTime(self.as_generic_type()):
             raise TimePointsSequenceException
 
-        # if not AnyOfAllowedPointsSequences(self.as_generic_type()):
-        #     raise NoSleepDurationException
+        if not PointsHasValidAnyAllowedSortedSequences(self.as_generic_type()):
+            raise NoSleepDurationException
 
     def as_generic_type(self: Self) -> PointsOut:
         return PointsOut(
