@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from typing_extensions import Self
 
-from src.domain.exceptions import ApplicationException
+from src.domain.exceptions.base import ApplicationException
 
 
 @dataclass(eq=False)

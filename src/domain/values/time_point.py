@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import time
 from typing_extensions import Self
 
-from src.domain.exceptions.time_point import (
+from src.domain.exceptions import (
     TimePointFormatIsoException,
     TimePointTypeException,
 )

@@ -2,14 +2,17 @@ import operator as op
 
 from dataclasses import dataclass
 from datetime import timedelta
+from typing import TYPE_CHECKING
 from typing_extensions import Self
 
-from src.domain.values.time_points import PointsOut
+
+if TYPE_CHECKING:
+    from src.domain.values import PointsOut
 
 
 @dataclass
 class NoteDurations:
-    points: PointsOut
+    points: "PointsOut"
 
     @property
     def sleep(self: Self) -> timedelta:

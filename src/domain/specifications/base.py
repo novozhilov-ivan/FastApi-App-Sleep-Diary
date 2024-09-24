@@ -1,13 +1,16 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
+from typing import TYPE_CHECKING
 from typing_extensions import Self
 
-from src.domain.values.time_points import PointsOut
+
+if TYPE_CHECKING:
+    from src.domain.values import PointsOut
 
 
 @dataclass
 class BaseSpecification(ABC):
-    points: PointsOut
+    points: "PointsOut"
 
     @abstractmethod
     def __bool__(self: Self) -> bool:
