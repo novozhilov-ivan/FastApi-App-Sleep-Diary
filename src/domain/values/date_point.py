@@ -6,11 +6,11 @@ from src.domain.exceptions import (
     DatePointIsoFormatException,
     DatePointTypeException,
 )
-from src.domain.values.base import BaseValueObject
+from src.domain.values.base import BaseDateTimeValueObject
 
 
 @dataclass(frozen=True)
-class DatePoint[VTI: str | date, VTO: date](BaseValueObject):
+class DatePoint[VTDI: str | date, VTDO: date](BaseDateTimeValueObject):
     def validate(self: Self) -> None:
         if not isinstance(self.value, (date, str)):
             raise DatePointTypeException

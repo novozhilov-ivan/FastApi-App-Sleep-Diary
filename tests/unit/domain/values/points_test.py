@@ -2,53 +2,44 @@ from datetime import date, time
 
 import pytest
 
-from src.domain.values import DatePoint, Points, PointsIn, PointsOut, TimePoint
-from tests.unit.domain.values.conftest import (
-    points_in_with_fell_asleep_is_first,
-    points_in_with_got_up_is_first,
+from src.domain.values.points import Points
+from tests.unit.domain.conftest import (
+    correct_points_ins_4_different_order_of_sequences,
     points_in_with_went_to_bed_is_first,
-    points_in_with_woke_up_is_first,
 )
 
 
 def test_points_in_can_create_no_sleep_field_by_default():
-    points = PointsIn(
-        bedtime_date=DatePoint("2020-12-12"),
-        went_to_bed=TimePoint("01:00"),
-        fell_asleep=TimePoint("03:00"),
-        woke_up=TimePoint("11:00"),
-        got_up=TimePoint("13:00"),
+    points = Points[str, str, date, time](
+        "2020-12-12",
+        "01:00",
+        "03:00",
+        "11:00",
+        "13:00",
     )
-    no_sleep = points.no_sleep.as_generic_type()
-    assert isinstance(no_sleep, time)
-    assert no_sleep == time(0, 0)
+    assert isinstance(points.no_sleep, time)
+    assert points.no_sleep == time(0, 0)
 
 
 @pytest.mark.parametrize(
     "points_in",
-    [
-        points_in_with_went_to_bed_is_first,
-        points_in_with_got_up_is_first,
-        points_in_with_woke_up_is_first,
-        points_in_with_fell_asleep_is_first,
-    ],
+    correct_points_ins_4_different_order_of_sequences,
 )
-def test_create_points_with_different_first_point(points_in: PointsIn):
-    points = Points[PointsIn, PointsOut](points_in)
+def test_create_points_with_different_first_point(
+    points_in: tuple[str, str, str, str, str],
+):
+    points = Points[str, str, date, time](*points_in)
     assert points
-    assert points.value
-    assert isinstance(points.value, PointsIn)
-    assert isinstance(points.as_generic_type(), PointsOut)
+    assert isinstance(points, Points)
 
 
 def test_points_as_generic_type_returned_type_fields_of_points():
-    points = Points[PointsIn, PointsOut](points_in_with_went_to_bed_is_first)
-    points_out: PointsOut = points.as_generic_type()
+    points = Points[str, str, date, time](*points_in_with_went_to_bed_is_first)
 
-    assert isinstance(points_out, PointsOut)
-    assert isinstance(points_out.bedtime_date, date)
-    assert isinstance(points_out.went_to_bed, time)
-    assert isinstance(points_out.fell_asleep, time)
-    assert isinstance(points_out.woke_up, time)
-    assert isinstance(points_out.got_up, time)
-    assert isinstance(points_out.no_sleep, time)
+    assert isinstance(points, Points)
+    assert isinstance(points.bedtime_date, date)
+    assert isinstance(points.went_to_bed, time)
+    assert isinstance(points.fell_asleep, time)
+    assert isinstance(points.woke_up, time)
+    assert isinstance(points.got_up, time)
+    assert isinstance(points.no_sleep, time)
