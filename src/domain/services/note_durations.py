@@ -6,12 +6,12 @@ from typing_extensions import Self
 
 
 if TYPE_CHECKING:
-    from src.domain.values.points import Points
+    from src.domain.values.points import PointsOut
 
 
 @dataclass
 class NoteDurations:
-    points: "Points"
+    points: "PointsOut"
 
     @property
     def sleep(self: Self) -> timedelta:

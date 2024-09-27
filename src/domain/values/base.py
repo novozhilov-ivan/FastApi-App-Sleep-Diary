@@ -14,6 +14,10 @@ class BaseValueObject[VTDI: Any, VTTI: Any, VTDO: Any, VTTO: Any](ABC):
     def validate(self: Self) -> None:
         raise NotImplementedError
 
+    @abstractmethod
+    def as_generic_type(self: Self) -> VTDO | VTTO:
+        raise NotImplementedError
+
 
 @dataclass(frozen=True)
 class BaseDateTimeValueObject[
@@ -23,7 +27,3 @@ class BaseDateTimeValueObject[
     VTTO: time,
 ](BaseValueObject, ABC):
     value: VTDI | VTTI
-
-    @abstractmethod
-    def as_generic_type(self: Self) -> VTDO | VTTO:
-        raise NotImplementedError

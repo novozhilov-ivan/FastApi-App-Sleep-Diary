@@ -16,12 +16,22 @@ from src.domain.values.time_point import TimePoint
 
 
 @dataclass(frozen=True)
+class PointsOut:
+    bedtime_date: date
+    went_to_bed: time
+    fell_asleep: time
+    woke_up: time
+    got_up: time
+    no_sleep: time = time(0, 0)
+
+
+@dataclass(frozen=True)
 class Points[
     VTDI: (str, date),
     VTTI: (str, time),
     VTDO: date,
     VTTO: time,
-](BaseValueObject):
+](BaseValueObject, PointsOut):
     value_bedtime_date: InitVar[VTDI] = field(repr=False)
     value_went_to_bed: InitVar[VTTI] = field(repr=False)
     value_fell_asleep: InitVar[VTTI] = field(repr=False)
@@ -78,8 +88,18 @@ class Points[
         super().__post_init__()
 
     def validate(self: Self) -> None:
-        if not NoSleepHasValidTime(self):
+        if not NoSleepHasValidTime(self.as_generic_type()):
             raise TimePointsSequenceException
 
-        if not PointsHasValidAnyAllowedSortedSequences(self):
+        if not PointsHasValidAnyAllowedSortedSequences(self.as_generic_type()):
             raise NoSleepDurationException
+
+    def as_generic_type(self: Self) -> PointsOut:
+        return PointsOut(
+            bedtime_date=self.bedtime_date,
+            went_to_bed=self.went_to_bed,
+            fell_asleep=self.fell_asleep,
+            woke_up=self.woke_up,
+            got_up=self.got_up,
+            no_sleep=self.no_sleep,
+        )

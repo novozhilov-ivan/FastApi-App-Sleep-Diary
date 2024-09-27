@@ -4,8 +4,8 @@ import pytest
 
 from src.domain.values.points import Points
 from tests.unit.domain.conftest import (
-    correct_points_ins_4_different_order_of_sequences,
-    points_in_with_went_to_bed_is_first,
+    correct_points_4_different_order_of_sequences,
+    points_with_went_to_bed_is_first,
 )
 
 
@@ -22,19 +22,19 @@ def test_points_in_can_create_no_sleep_field_by_default():
 
 
 @pytest.mark.parametrize(
-    "points_in",
-    correct_points_ins_4_different_order_of_sequences,
+    "correct_points",
+    correct_points_4_different_order_of_sequences,
 )
 def test_create_points_with_different_first_point(
-    points_in: tuple[str, str, str, str, str],
+    correct_points: tuple[str, str, str, str, str],
 ):
-    points = Points[str, str, date, time](*points_in)
+    points = Points[str, str, date, time](*correct_points)
     assert points
     assert isinstance(points, Points)
 
 
 def test_points_as_generic_type_returned_type_fields_of_points():
-    points = Points[str, str, date, time](*points_in_with_went_to_bed_is_first)
+    points = Points[str, str, date, time](*points_with_went_to_bed_is_first)
 
     assert isinstance(points, Points)
     assert isinstance(points.bedtime_date, date)
