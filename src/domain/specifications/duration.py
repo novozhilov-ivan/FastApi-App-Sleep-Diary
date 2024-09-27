@@ -1,6 +1,5 @@
-import operator
-
 from dataclasses import dataclass, field
+from operator import le
 from typing_extensions import Self
 
 from src.domain.services import NoteDurations
@@ -15,4 +14,4 @@ class NoSleepHasValidTime(BaseSpecification):
         self.durations: NoteDurations = NoteDurations(self.points)
 
     def __bool__(self: Self) -> bool:
-        return operator.le(self.durations.without_sleep, self.durations.sleep)
+        return le(self.durations.without_sleep, self.durations.sleep)
