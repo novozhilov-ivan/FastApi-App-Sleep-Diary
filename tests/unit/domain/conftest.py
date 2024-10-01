@@ -1,4 +1,5 @@
 from datetime import date, time
+from itertools import chain
 from typing import TypeAlias
 
 
@@ -47,7 +48,7 @@ correct_points_4_different_order_of_sequences: TT = (
     points_with_fell_asleep_is_first,
 )
 
-# went_to_bed
+# went_to_bed is wrong
 wrong_points_went_to_bed_gt_fell_asleep_and_lt_other_time_points: T = (
     date_point,
     time(4, 0),
@@ -69,7 +70,6 @@ wrong_points_went_to_bed_gt_fell_asleep_and_woke_up: T = (
     time(11, 0),
     time(13, 0),
 )
-
 wrong_points_went_to_bed_gt_woke_up_and_lt_others_points: T = (
     date_point,
     time(8, 0),
@@ -77,9 +77,123 @@ wrong_points_went_to_bed_gt_woke_up_and_lt_others_points: T = (
     time(7, 0),
     time(9, 0),
 )
-wrong_points_where_wen_to_bed_is_wrong: TT = (
+wrong_points_where_went_to_bed_is_wrong: TT = (
     wrong_points_went_to_bed_gt_fell_asleep_and_lt_other_time_points,
     wrong_points_went_to_bed_gt_fell_asleep_with_points_after_midnight,
     wrong_points_went_to_bed_gt_fell_asleep_and_woke_up,
     wrong_points_went_to_bed_gt_woke_up_and_lt_others_points,
+)
+# fell_asleep is wrong
+wrong_points_fell_asleep_gt_wok_up_and_lt_got_up: T = (
+    date_point,
+    time(1, 0),
+    time(12, 0),
+    time(11, 0),
+    time(13, 0),
+)
+wrong_points_fell_asleep_gt_got_up_and_got_up_lt_went_to_bed: T = (
+    date_point,
+    time(1, 0),
+    time(14, 0),
+    time(11, 0),
+    time(13, 0),
+)
+wrong_points_fell_asleep_gt_woke_up_and_lt_went_to_bed: T = (
+    date_point,
+    time(23, 0),
+    time(10, 0),
+    time(9, 0),
+    time(11, 0),
+)
+wrong_points_fell_asleep_gt_got_up_and_lt_went_to_bed: T = (
+    date_point,
+    time(23, 0),
+    time(12, 0),
+    time(9, 0),
+    time(11, 0),
+)
+wrong_points_where_fell_asleep_is_wrong: TT = (
+    wrong_points_fell_asleep_gt_wok_up_and_lt_got_up,
+    wrong_points_fell_asleep_gt_got_up_and_got_up_lt_went_to_bed,
+    wrong_points_fell_asleep_gt_woke_up_and_lt_went_to_bed,
+    wrong_points_fell_asleep_gt_got_up_and_lt_went_to_bed,
+)
+# woke_up is wrong
+wrong_points_woke_up_gt_got_up_while_got_up_gt_other_points: T = (
+    date_point,
+    time(1, 0),
+    time(3, 0),
+    time(14, 0),
+    time(13, 0),
+)
+wrong_points_woke_up_gt_got_up_while_got_up_gt_fell_asleep_and_lt_went_to_bed: T = (
+    date_point,
+    time(23, 0),
+    time(1, 0),
+    time(12, 0),
+    time(11, 0),
+)
+wrong_points_woke_up_gt_got_up_and_lt_other_points: T = (
+    date_point,
+    time(13, 0),
+    time(15, 0),
+    time(2, 0),
+    time(1, 0),
+)
+wrong_points_woke_up_lt_other_points: T = (
+    date_point,
+    time(13, 0),
+    time(15, 0),
+    time(1, 0),
+    time(23, 0),
+)
+wrong_points_where_woke_up_is_wrong: TT = (
+    wrong_points_woke_up_gt_got_up_while_got_up_gt_other_points,
+    wrong_points_woke_up_gt_got_up_while_got_up_gt_fell_asleep_and_lt_went_to_bed,
+    wrong_points_woke_up_gt_got_up_and_lt_other_points,
+    wrong_points_woke_up_lt_other_points,
+)
+# got up is wrong
+wrong_points_got_up_lt_woke_up_and_gt_other_points: T = (
+    date_point,
+    time(1, 0),
+    time(3, 0),
+    time(11, 0),
+    time(10, 0),
+)
+wrong_points_got_up_gt_fell_asleep_and_lt_other_points: T = (
+    date_point,
+    time(23, 0),
+    time(1, 0),
+    time(7, 0),
+    time(6, 0),
+)
+wrong_points_got_up_lt_woke_up_while_woke_up_lt_other_points: T = (
+    date_point,
+    time(15, 0),
+    time(17, 0),
+    time(2, 0),
+    time(1, 0),
+)
+wrong_points_got_up_lt_fell_asleep_and_gt_other_points: T = (
+    date_point,
+    time(21, 0),
+    time(23, 0),
+    time(7, 0),
+    time(22, 0),
+)
+wrong_points_where_got_up_is_wrong: TT = (
+    wrong_points_got_up_lt_woke_up_and_gt_other_points,
+    wrong_points_got_up_gt_fell_asleep_and_lt_other_points,
+    wrong_points_got_up_lt_woke_up_while_woke_up_lt_other_points,
+    wrong_points_got_up_lt_fell_asleep_and_gt_other_points,
+)
+
+all_wrong_points_sequences: chain[TT] = chain.from_iterable(
+    (
+        wrong_points_where_went_to_bed_is_wrong,
+        wrong_points_where_fell_asleep_is_wrong,
+        wrong_points_where_woke_up_is_wrong,
+        wrong_points_where_got_up_is_wrong,
+    ),
 )

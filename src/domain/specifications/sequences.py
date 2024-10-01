@@ -19,8 +19,11 @@ class PointsSequenceIsSortedAsc(BaseSpecification, ABC):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         raise NotImplementedError
 
-    def __bool__(self: Self) -> bool:
+    def is_sorted(self: Self) -> bool:
         return is_sorted(self.sequence_of_points())
+
+    def __bool__(self: Self) -> bool:
+        return self.is_sorted()
 
 
 @dataclass(eq=False)
@@ -35,13 +38,13 @@ class WentToBedPointFirstInOrder(PointsSequenceIsSortedAsc):
 
 
 @dataclass(eq=False)
-class GotUpPointFirstInOrder(PointsSequenceIsSortedAsc):
+class FellAsleepPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.got_up,
-            self.points.went_to_bed,
             self.points.fell_asleep,
             self.points.woke_up,
+            self.points.got_up,
+            self.points.went_to_bed,
         )
 
 
@@ -57,13 +60,13 @@ class WokUpPointFirstInOrder(PointsSequenceIsSortedAsc):
 
 
 @dataclass(eq=False)
-class FellAsleepPointFirstInOrder(PointsSequenceIsSortedAsc):
+class GotUpPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.fell_asleep,
-            self.points.woke_up,
             self.points.got_up,
             self.points.went_to_bed,
+            self.points.fell_asleep,
+            self.points.woke_up,
         )
 
 
