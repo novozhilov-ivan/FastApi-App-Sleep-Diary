@@ -5,12 +5,12 @@ from typing_extensions import Self
 
 
 if TYPE_CHECKING:
-    from src.domain.values.points import PointsOut
+    from src.domain.values.points import Points
 
 
 @dataclass(eq=False)
 class BaseSpecification(ABC):
-    points: "PointsOut"
+    points: "Points"
 
     @abstractmethod
     def __bool__(self: Self) -> bool:
