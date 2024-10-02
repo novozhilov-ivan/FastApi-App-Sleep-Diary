@@ -1,4 +1,4 @@
-from src.domain.services.note_durations import NoteDurations
+from src.domain.services.durations import Durations
 
 
-__all__ = ["NoteDurations"]
+__all__ = ["Durations"]

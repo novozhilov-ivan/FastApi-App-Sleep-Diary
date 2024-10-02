@@ -1,6 +1,13 @@
 from datetime import date, time
 from itertools import chain
 from typing import TypeAlias
+from typing_extensions import Self
+
+from src.domain.values.points import Points
+
+
+class FakePoints(Points):
+    def validate(self: Self) -> None: ...
 
 
 date_point: date = date(220, 12, 12)
@@ -12,29 +19,35 @@ TT: TypeAlias = tuple[
     tuple[date, time, time, time, time],
     tuple[date, time, time, time, time],
 ]
-
-points_with_went_to_bed_is_first: T = (
+# 4 Корректных, последовательных и отсортированных данных для временных точек.
+# Все имеют:
+# 8 часов сна [fell_asleep:woke_up]
+# 2 часа между отходом ко сну и засыпанием [went_to_bed:fell_asleep]
+# 2 часа между  пробуждением и подъемом [woke_up:got_up]
+# 12 часов между отходом ко сну и подъемом [went_to_bed:got_up]
+# Время без сна отсутствует
+points_order_desc_from_went_to_bed: T = (
     date_point,
     time(1, 0),
     time(3, 0),
     time(11, 0),
     time(13, 0),
 )
-points_with_got_up_is_first: T = (
+points_order_desc_from_got_up: T = (
     date_point,
     time(13, 0),
     time(15, 0),
     time(23, 0),
     time(1, 0),
 )
-points_with_woke_up_is_first: T = (
+points_order_desc_from_woke_up: T = (
     date_point,
     time(15, 0),
     time(17, 0),
     time(1, 0),
     time(3, 0),
 )
-points_with_fell_asleep_is_first: T = (
+points_order_desc_from_fell_asleep: T = (
     date_point,
     time(23, 0),
     time(1, 0),
@@ -42,10 +55,10 @@ points_with_fell_asleep_is_first: T = (
     time(11, 0),
 )
 correct_points_4_different_order_of_sequences: TT = (
-    points_with_went_to_bed_is_first,
-    points_with_got_up_is_first,
-    points_with_woke_up_is_first,
-    points_with_fell_asleep_is_first,
+    points_order_desc_from_went_to_bed,
+    points_order_desc_from_got_up,
+    points_order_desc_from_woke_up,
+    points_order_desc_from_fell_asleep,
 )
 
 # went_to_bed is wrong

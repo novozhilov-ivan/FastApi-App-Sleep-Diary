@@ -27,8 +27,6 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
           - header location '/api/notes/<uuid:43fgf...>'
         - Тесты:
           - 201: Проверка body/location
-    - NoteDurations
-      - Протестировать
     - NoteEntity
     - Сервис авторизации:
     - Переписать

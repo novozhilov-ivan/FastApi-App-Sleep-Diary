@@ -20,7 +20,7 @@ class Points(BaseValueObject):
     fell_asleep: time
     woke_up: time
     got_up: time
-    no_sleep: time = field(default=time(0, 0))
+    no_sleep: time = field(default=time())
 
     def validate(self: Self) -> None:
         if not NoSleepHasValidTime(self):

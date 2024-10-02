@@ -8,13 +8,13 @@ from src.domain.specifications import (
     WokUpPointFirstInOrder,
 )
 from tests.unit.domain.conftest import (
+    FakePoints,
     all_wrong_points_sequences,
     wrong_points_where_fell_asleep_is_wrong,
     wrong_points_where_got_up_is_wrong,
     wrong_points_where_went_to_bed_is_wrong,
     wrong_points_where_woke_up_is_wrong,
 )
-from tests.unit.domain.specifications.conftest import FakePoints
 
 
 @pytest.mark.parametrize(

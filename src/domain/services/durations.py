@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import timedelta
-from operator import sub
+from operator import ge, sub
 from typing import TYPE_CHECKING
 from typing_extensions import Self
 
@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class NoteDurations:
+class Durations:
     points: "Points"
 
     @property
@@ -29,7 +29,7 @@ class NoteDurations:
 
     @property
     def sleep_minus_without_sleep(self: Self) -> timedelta:
-        if self.without_sleep >= self.sleep:
+        if ge(self.without_sleep, self.sleep):
             return timedelta(seconds=0)
         duration = sub(self.sleep, self.without_sleep)
         return timedelta(seconds=duration.seconds)
