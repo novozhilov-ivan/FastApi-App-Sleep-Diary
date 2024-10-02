@@ -1,5 +1,3 @@
-from typing_extensions import Self
-
 import pytest
 
 from src.domain.specifications import (
@@ -9,7 +7,6 @@ from src.domain.specifications import (
     WentToBedPointFirstInOrder,
     WokUpPointFirstInOrder,
 )
-from src.domain.values.points import Points
 from tests.unit.domain.conftest import (
     all_wrong_points_sequences,
     wrong_points_where_fell_asleep_is_wrong,
@@ -17,10 +14,7 @@ from tests.unit.domain.conftest import (
     wrong_points_where_went_to_bed_is_wrong,
     wrong_points_where_woke_up_is_wrong,
 )
-
-
-class FakePoints(Points):
-    def validate(self: Self) -> None: ...
+from tests.unit.domain.specifications.conftest import FakePoints
 
 
 @pytest.mark.parametrize(
@@ -28,8 +22,8 @@ class FakePoints(Points):
     wrong_points_where_went_to_bed_is_wrong,
 )
 def test_sequence_where_went_to_bed_is_wrong(wrong_points: tuple):
-    points_out = FakePoints(*wrong_points)
-    specification = WentToBedPointFirstInOrder(points_out)
+    points = FakePoints(*wrong_points)
+    specification = WentToBedPointFirstInOrder(points)
     assert not specification.is_sorted()
     assert bool(specification) is False
     assert not specification
@@ -40,8 +34,8 @@ def test_sequence_where_went_to_bed_is_wrong(wrong_points: tuple):
     wrong_points_where_fell_asleep_is_wrong,
 )
 def test_sequence_where_fell_asleep_is_wrong(wrong_points: tuple):
-    points_out = FakePoints(*wrong_points)
-    specification = FellAsleepPointFirstInOrder(points_out)
+    points = FakePoints(*wrong_points)
+    specification = FellAsleepPointFirstInOrder(points)
     assert not specification.is_sorted()
     assert bool(specification) is False
     assert not specification
@@ -52,8 +46,8 @@ def test_sequence_where_fell_asleep_is_wrong(wrong_points: tuple):
     wrong_points_where_woke_up_is_wrong,
 )
 def test_sequence_where_woke_up_is_wrong(wrong_points: tuple):
-    points_out = FakePoints(*wrong_points)
-    specification = WokUpPointFirstInOrder(points_out)
+    points = FakePoints(*wrong_points)
+    specification = WokUpPointFirstInOrder(points)
     assert not specification.is_sorted()
     assert bool(specification) is False
     assert not specification
@@ -64,8 +58,8 @@ def test_sequence_where_woke_up_is_wrong(wrong_points: tuple):
     wrong_points_where_got_up_is_wrong,
 )
 def test_sequence_where_got_up_is_wrong(wrong_points: tuple):
-    points_out = FakePoints(*wrong_points)
-    specification = GotUpPointFirstInOrder(points_out)
+    points = FakePoints(*wrong_points)
+    specification = GotUpPointFirstInOrder(points)
     assert not specification.is_sorted()
     assert bool(specification) is False
     assert not specification
@@ -76,7 +70,7 @@ def test_sequence_where_got_up_is_wrong(wrong_points: tuple):
     all_wrong_points_sequences,
 )
 def test_sequence_all_time_point_can_be_wrong(wrong_points: tuple):
-    points_out = FakePoints(*wrong_points)
-    specification = PointsHasValidAnyAllowedSortedSequences(points_out)
+    points = FakePoints(*wrong_points)
+    specification = PointsHasValidAnyAllowedSortedSequences(points)
     assert bool(specification) is False
     assert not specification

@@ -188,7 +188,7 @@ wrong_points_where_got_up_is_wrong: TT = (
     wrong_points_got_up_lt_woke_up_while_woke_up_lt_other_points,
     wrong_points_got_up_lt_fell_asleep_and_gt_other_points,
 )
-
+# Все point'ы, в которых не корректная сортировка
 all_wrong_points_sequences: chain[TT] = chain.from_iterable(
     (
         wrong_points_where_went_to_bed_is_wrong,
@@ -196,4 +196,50 @@ all_wrong_points_sequences: chain[TT] = chain.from_iterable(
         wrong_points_where_woke_up_is_wrong,
         wrong_points_where_got_up_is_wrong,
     ),
+)
+#  Point'ы, в которых время без сна больше времени сна
+TN: TypeAlias = tuple[date, time, time, time, time, time]
+TTN: TypeAlias = tuple[
+    tuple[date, time, time, time, time, time],
+    tuple[date, time, time, time, time, time],
+    tuple[date, time, time, time, time, time],
+    tuple[date, time, time, time, time, time],
+]
+wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed: TN = (
+    date_point,
+    time(1, 0),
+    time(3, 0),
+    time(11, 0),
+    time(13, 0),
+    time(9, 0),
+)
+wrong_points_no_sleep_gt_sleep_order_asc_from_got_up: TN = (
+    date_point,
+    time(13, 0),
+    time(15, 0),
+    time(23, 0),
+    time(1, 0),
+    time(9, 0),
+)
+wrong_points_no_sleep_gt_sleep_order_asc_from_woke_up: TN = (
+    date_point,
+    time(15, 0),
+    time(17, 0),
+    time(1, 0),
+    time(3, 0),
+    time(9, 0),
+)
+wrong_points_no_sleep_gt_sleep_order_asc_from_fell_asleep: TN = (
+    date_point,
+    time(23, 0),
+    time(1, 0),
+    time(9, 0),
+    time(11, 0),
+    time(9, 0),
+)
+wrong_points_where_no_sleep_gt_sleep: TTN = (
+    wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed,
+    wrong_points_no_sleep_gt_sleep_order_asc_from_got_up,
+    wrong_points_no_sleep_gt_sleep_order_asc_from_woke_up,
+    wrong_points_no_sleep_gt_sleep_order_asc_from_fell_asleep,
 )

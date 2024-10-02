@@ -13,5 +13,8 @@ class NoSleepHasValidTime(BaseSpecification):
     def __post_init__(self: Self) -> None:
         self.durations: NoteDurations = NoteDurations(self.points)
 
-    def __bool__(self: Self) -> bool:
+    def no_sleep_duration_le_sleep_duration(self: Self) -> bool:
         return le(self.durations.without_sleep, self.durations.sleep)
+
+    def __bool__(self: Self) -> bool:
+        return self.no_sleep_duration_le_sleep_duration()

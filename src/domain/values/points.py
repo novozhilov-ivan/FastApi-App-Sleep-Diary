@@ -24,7 +24,7 @@ class Points(BaseValueObject):
 
     def validate(self: Self) -> None:
         if not NoSleepHasValidTime(self):
-            raise TimePointsSequenceException
+            raise NoSleepDurationException
 
         if not PointsHasValidAnyAllowedSortedSequences(self):
-            raise NoSleepDurationException
+            raise TimePointsSequenceException
