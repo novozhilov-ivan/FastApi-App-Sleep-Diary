@@ -28,6 +28,12 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
         - Тесты:
           - 201: Проверка body/location
     - NoteEntity
+    - Duration
+      - Переписать на post_init
+      - Атрибут points сделать InitVar
+    - Statistic
+      - Добавить
+      - Переписать на post_init
     - Сервис авторизации:
     - Переписать
     - UserRepo

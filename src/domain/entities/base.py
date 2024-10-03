@@ -5,17 +5,11 @@ from typing_extensions import Self
 from uuid import UUID, uuid4
 
 
-@dataclass
+@dataclass(kw_only=True)
 class BaseEntity(ABC):
-    oid: UUID = field(default_factory=uuid4, kw_only=True)
-    created_at: datetime = field(
-        default_factory=lambda: datetime.now(UTC),
-        kw_only=True,
-    )
-    updated_at: datetime = field(
-        default_factory=lambda: datetime.now(UTC),
-        kw_only=True,
-    )
+    oid: UUID = field(default_factory=uuid4)
+    created_at: datetime = field(default_factory=lambda: datetime.now(UTC))
+    updated_at: datetime = field(default_factory=lambda: datetime.now(UTC))
 
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, BaseEntity):
