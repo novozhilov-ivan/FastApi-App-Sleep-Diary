@@ -10,7 +10,7 @@ class FakePoints(Points):
     def validate(self: Self) -> None: ...
 
 
-date_point: date = date(220, 12, 12)
+date_point: date = date(2020, 12, 12)
 
 T: TypeAlias = tuple[date, time, time, time, time]
 TT: TypeAlias = tuple[
