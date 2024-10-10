@@ -1,4 +1,4 @@
-FROM python:3.12.5-slim-bookworm AS builder
+FROM python:3.12.7-slim-bookworm AS builder
 
 COPY poetry.lock pyproject.toml ./
 
@@ -10,8 +10,7 @@ FROM python:3.12.5-slim-bookworm AS dev
 
 WORKDIR /app
 
-ENV PYTHONDONTWRITEBYTECODE 1
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
 
 COPY --from=builder requirements.dev.txt /app
 
