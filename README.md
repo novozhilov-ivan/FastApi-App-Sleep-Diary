@@ -28,12 +28,12 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
         - Тесты:
           - 201: Проверка body/location
     - NoteEntity
-    - Statistic
-      - Добавить
-      - Переписать на post_init
     - Сервис авторизации:
     - Переписать
     - UserRepo
+    - Схема Note
+      - Отделить owner_id 
+      - Отделить мета информацию
     - Схемы User'ов
     - Как использовать с application?
     - Реализация sign-out, через хранилище в cache и RedisCache

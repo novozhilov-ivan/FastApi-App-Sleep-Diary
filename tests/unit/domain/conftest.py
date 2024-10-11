@@ -256,3 +256,58 @@ wrong_points_where_no_sleep_gt_sleep: TTN = (
     wrong_points_no_sleep_gt_sleep_order_asc_from_woke_up,
     wrong_points_no_sleep_gt_sleep_order_asc_from_fell_asleep,
 )
+# Временные точки с нулевыми значениями
+points_all_zero: T = (
+    date_point,
+    time(0, 0),
+    time(0, 0),
+    time(0, 0),
+    time(0, 0),
+)
+points_with_zeros_and_some_big_no_sleep: TN = (
+    date_point,
+    time(0, 0),
+    time(0, 0),
+    time(0, 0),
+    time(0, 0),
+    time(10, 0),
+)
+# Корректные временные точки с разными последовательностями и 1 часов без сна
+points_order_desc_from_went_to_bed_and_one_hour_no_sleep: TN = (
+    date_point,
+    time(1, 0),
+    time(3, 0),
+    time(11, 0),
+    time(13, 0),
+    time(1, 0),
+)
+points_order_desc_from_got_up_and_one_hour_no_sleep: TN = (
+    date_point,
+    time(13, 0),
+    time(15, 0),
+    time(23, 0),
+    time(1, 0),
+    time(1, 0),
+)
+points_order_desc_from_woke_up_and_one_hour_no_sleep: TN = (
+    date_point,
+    time(15, 0),
+    time(17, 0),
+    time(1, 0),
+    time(3, 0),
+    time(1, 0),
+)
+points_order_desc_from_fell_asleep_and_one_hour_no_sleep: TN = (
+    date_point,
+    time(23, 0),
+    time(1, 0),
+    time(9, 0),
+    time(11, 0),
+    time(1, 0),
+)
+correct_points_4_different_order_of_sequences_and_one_hour_no_sleep: TTN = (
+    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
+    points_order_desc_from_got_up_and_one_hour_no_sleep,
+    points_order_desc_from_woke_up_and_one_hour_no_sleep,
+    points_order_desc_from_fell_asleep_and_one_hour_no_sleep,
+)

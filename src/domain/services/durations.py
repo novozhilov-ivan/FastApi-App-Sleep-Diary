@@ -1,8 +1,10 @@
-from dataclasses import InitVar, dataclass, field
+from dataclasses import dataclass
 from datetime import time, timedelta
 from operator import ge, sub
 from typing import TYPE_CHECKING
 from typing_extensions import Self
+
+from src.domain.services.base import BaseDurations
 
 
 if TYPE_CHECKING:
@@ -10,14 +12,7 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class Durations:
-    points: InitVar["Points"]
-
-    sleep: timedelta = field(init=False)
-    sleep_minus_without_sleep: timedelta = field(init=False)
-    in_bed: timedelta = field(init=False)
-    without_sleep: timedelta = field(init=False)
-
+class Durations(BaseDurations):
     def __post_init__(self: Self, points: "Points") -> None:
         self.sleep = self._get_duration(points.woke_up, points.fell_asleep)
         self.in_bed = self._get_duration(points.got_up, points.went_to_bed)
