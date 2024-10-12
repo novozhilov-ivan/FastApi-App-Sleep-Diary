@@ -8,10 +8,13 @@ if TYPE_CHECKING:
     from src.domain.values.points import Points
 
 
-@dataclass(eq=False)
+@dataclass
 class BaseSpecification(ABC):
-    points: "Points"
-
     @abstractmethod
     def __bool__(self: Self) -> bool:
         raise NotImplementedError
+
+
+@dataclass
+class BasePointsSpecification(BaseSpecification, ABC):
+    points: "Points"

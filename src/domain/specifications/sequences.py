@@ -5,11 +5,11 @@ from typing_extensions import Self
 
 from more_itertools import is_sorted
 
-from src.domain.specifications.base import BaseSpecification
+from src.domain.specifications.base import BasePointsSpecification
 
 
-@dataclass(eq=False)
-class PointsSequenceIsSortedAsc(BaseSpecification, ABC):
+@dataclass
+class PointsSequenceIsSortedAsc(BasePointsSpecification, ABC):
     """
     True если каждая временная точка из последовательности меньше или равна
     следующей.
@@ -26,7 +26,7 @@ class PointsSequenceIsSortedAsc(BaseSpecification, ABC):
         return self.is_sorted()
 
 
-@dataclass(eq=False)
+@dataclass
 class WentToBedPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
@@ -37,7 +37,7 @@ class WentToBedPointFirstInOrder(PointsSequenceIsSortedAsc):
         )
 
 
-@dataclass(eq=False)
+@dataclass
 class FellAsleepPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
@@ -48,7 +48,7 @@ class FellAsleepPointFirstInOrder(PointsSequenceIsSortedAsc):
         )
 
 
-@dataclass(eq=False)
+@dataclass
 class WokUpPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
@@ -59,7 +59,7 @@ class WokUpPointFirstInOrder(PointsSequenceIsSortedAsc):
         )
 
 
-@dataclass(eq=False)
+@dataclass
 class GotUpPointFirstInOrder(PointsSequenceIsSortedAsc):
     def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
@@ -71,7 +71,7 @@ class GotUpPointFirstInOrder(PointsSequenceIsSortedAsc):
 
 
 @dataclass(eq=True)
-class PointsHasValidAnyAllowedSortedSequences(BaseSpecification):
+class PointsHasValidAnyAllowedSortedSequences(BasePointsSpecification):
     def __bool__(self: Self) -> bool:
         return any(
             (

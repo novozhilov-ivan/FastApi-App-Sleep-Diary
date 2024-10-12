@@ -6,6 +6,7 @@ from src.domain.exceptions import (
     NoSleepDurationException,
     TimePointsSequenceException,
 )
+from src.domain.services import Durations
 from src.domain.specifications import (
     NoSleepHasValidTime,
     PointsHasValidAnyAllowedSortedSequences,
@@ -23,7 +24,7 @@ class Points(BaseValueObject):
     no_sleep: time = field(default=time())
 
     def validate(self: Self) -> None:
-        if not NoSleepHasValidTime(self):
+        if not NoSleepHasValidTime(Durations(self)):
             raise NoSleepDurationException
 
         if not PointsHasValidAnyAllowedSortedSequences(self):
