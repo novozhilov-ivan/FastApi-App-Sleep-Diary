@@ -3,7 +3,7 @@ from datetime import date, time
 import pytest
 
 from src.domain.values.points import Points
-from tests.unit.domain.conftest import (
+from tests.unit.conftest import (
     correct_points_4_different_order_of_sequences,
 )
 

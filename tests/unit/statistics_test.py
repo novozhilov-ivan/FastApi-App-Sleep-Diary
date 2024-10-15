@@ -7,7 +7,7 @@ from src.domain.services import Durations
 from src.domain.services.base import BaseStatistics
 from src.domain.services.points_statistics import Statistics
 from src.domain.values.points import Points
-from tests.unit.domain.conftest import (
+from tests.unit.conftest import (
     FakePoints,
     correct_points_4_different_order_of_sequences_and_one_hour_no_sleep,
     date_point,

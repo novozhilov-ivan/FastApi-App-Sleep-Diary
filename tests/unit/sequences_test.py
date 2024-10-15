@@ -7,7 +7,7 @@ from src.domain.specifications import (
     WentToBedPointFirstInOrder,
     WokUpPointFirstInOrder,
 )
-from tests.unit.domain.conftest import (
+from tests.unit.conftest import (
     FakePoints,
     all_wrong_points_sequences,
     wrong_points_where_fell_asleep_is_wrong,

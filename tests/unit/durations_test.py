@@ -3,7 +3,7 @@ from datetime import time, timedelta
 import pytest
 
 from src.domain.services import Durations
-from tests.unit.domain.conftest import (
+from tests.unit.conftest import (
     FakePoints,
     correct_points_4_different_order_of_sequences,
 )
