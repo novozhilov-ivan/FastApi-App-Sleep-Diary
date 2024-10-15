@@ -1,5 +1,4 @@
-import contextlib
-
+from contextlib import contextmanager
 from typing import Generator
 from typing_extensions import Self
 
@@ -22,7 +21,7 @@ class Database:
             expire_on_commit=False,
         )
 
-    @contextlib.contextmanager
+    @contextmanager
     def get_session(self: Self) -> Generator[Session, None, None]:
         session: Session = self._session()
         try:
@@ -40,5 +39,5 @@ class Database:
         return self._engine
 
 
-async def get_db() -> Database:
+def get_db() -> Database:
     return Database(Settings().POSTGRES_DB_URL)

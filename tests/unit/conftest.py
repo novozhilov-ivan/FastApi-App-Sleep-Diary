@@ -2,8 +2,12 @@ from datetime import date, time
 from itertools import chain
 from typing import TypeAlias
 from typing_extensions import Self
+from uuid import uuid4
 
 from src.domain.values.points import Points
+
+
+user_oid = uuid4()
 
 
 class FakePoints(Points):

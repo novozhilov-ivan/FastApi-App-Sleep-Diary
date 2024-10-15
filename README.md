@@ -28,6 +28,8 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
         - Тесты:
           - 201: Проверка body/location
     - NoteEntity
+    - Infra
+      - FiltersNote
     - Сервис авторизации:
     - Переписать
     - UserRepo

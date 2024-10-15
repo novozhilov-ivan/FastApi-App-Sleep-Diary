@@ -1,82 +1,82 @@
-import abc
-
-from typing import Collection
+from abc import ABC, abstractmethod
+from dataclasses import dataclass
+from datetime import date
+from typing import Sequence
 from typing_extensions import Self
 from uuid import UUID
 
-from src.domain.diary import Diary
-from src.domain.note import NoteEntity, NoteTimePoints, NoteValueObject
+from src.domain.entities.note import NoteEntity
+from src.infrastructure.orm import ORMNote
 
 
-class IDiaryRepository(abc.ABC):
-    @abc.abstractmethod
-    def add(self: Self, note: NoteTimePoints, owner_oid: UUID) -> None:
+@dataclass
+class INoteRepository(ABC):
+    @abstractmethod
+    def add(self: Self, note: NoteEntity) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def get(self: Self, oid: UUID) -> NoteEntity | None:
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def get_by_bedtime_date(
         self: Self,
-        bedtime_date: str,
+        bedtime_date: date,
         owner_oid: UUID,
     ) -> NoteEntity | None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def get_diary(self: Self, owner_oid: UUID) -> Diary:
+    @abstractmethod
+    def get_all(self: Self, owner_oid: UUID) -> set[NoteEntity]:
         raise NotImplementedError
 
 
-class BaseDiaryRepository(IDiaryRepository, abc.ABC):
-    @abc.abstractmethod
-    def _add(self: Self, note: NoteValueObject, owner_oid: UUID) -> None:
+@dataclass
+class BaseNoteRepository(INoteRepository, ABC):
+    @abstractmethod
+    def _add(self: Self, note: NoteEntity) -> None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def _get(self: Self, oid: UUID) -> object | None:
+    @abstractmethod
+    def _get(self: Self, oid: UUID) -> ORMNote | None:
         raise NotImplementedError
 
-    @abc.abstractmethod
+    @abstractmethod
     def _get_by_bedtime_date(
         self: Self,
-        bedtime_date: str,
+        bedtime_date: date,
         owner_oid: UUID,
-    ) -> object | None:
+    ) -> ORMNote | None:
         raise NotImplementedError
 
-    @abc.abstractmethod
-    def _get_diary(self: Self, owner_oid: UUID) -> Collection:
+    @abstractmethod
+    def _get_all(self: Self, owner_oid: UUID) -> Sequence[ORMNote]:
         raise NotImplementedError
 
-    def add(self: Self, note: NoteTimePoints, owner_oid: UUID) -> None:
-        self._add(NoteValueObject.model_validate(note), owner_oid)
+    def add(self: Self, note: NoteEntity) -> None:
+        self._add(note)
 
     def get(self: Self, oid: UUID) -> NoteEntity | None:
-        return NoteEntity.model_validate(self._get(oid))
+        note = self._get(oid)
+        if isinstance(note, ORMNote):
+            return note.to_entity()
+        return None
 
     def get_by_bedtime_date(
         self: Self,
-        bedtime_date: str,
+        bedtime_date: date,
         owner_oid: UUID,
     ) -> NoteEntity | None:
-        return NoteEntity.model_validate(
-            obj=self._get_by_bedtime_date(bedtime_date, owner_oid),
-        )
+        note = self._get_by_bedtime_date(bedtime_date, owner_oid)
+        if isinstance(note, ORMNote):
+            return note.to_entity()
+        return None
 
-    def get_diary(self: Self, owner_oid: UUID) -> Diary:
-        diary = Diary()
-        diary_notes = self._get_diary(owner_oid)
-        diary._notes = {
-            NoteValueObject.model_validate(note)
-            for note in diary_notes
-            if diary_notes
-        }
-        return diary
+    def get_all(self: Self, owner_oid: UUID) -> set[NoteEntity]:
+        return {note.to_entity() for note in self._get_all(owner_oid)}
 
-    # def add_all(self, note):
-    # def update(self):
-    # def delete(self, oid):
-    # def delete_all(self):
+
+@dataclass
+class IUserRepository(ABC):
+    pass

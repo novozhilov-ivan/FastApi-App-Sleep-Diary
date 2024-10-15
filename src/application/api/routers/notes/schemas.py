@@ -1,9 +1,9 @@
-from datetime import date, time
+from datetime import date, datetime, time
 
-from pydantic import BaseModel, Field
+from pydantic import UUID4, BaseModel, Field
 
 
-class NoteTimePointsSchema(BaseModel):
+class CreatePointsSchema(BaseModel):
     bedtime_date: date = Field(
         title="Дата отхода ко сну",
         examples=["2020-12-12", "2021-01-20"],
@@ -29,3 +29,11 @@ class NoteTimePointsSchema(BaseModel):
         title="Время отсутствия сна",
         examples=["00:00", "00:20"],
     )
+
+
+class NoteResponseSchema(BaseModel):
+    oid: UUID4
+    created_at: datetime
+    updated_at: datetime
+    owner_oid: UUID4
+    points: CreatePointsSchema

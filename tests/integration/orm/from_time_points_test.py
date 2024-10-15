@@ -1,4 +1,3 @@
-from src.domain.note import NoteTimePoints
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser
@@ -15,10 +14,7 @@ def test_note_orm_from_time_points(
         woke_up="23:00",
         got_up="01:00",
     )
-    note_orm = ORMNote.from_time_points(
-        obj=note_time_points,
-        owner_oid=user.oid,
-    )
+    note_orm = ORMNote.from_entity(note_time_points)
 
     with memory_database.get_session() as session:
         session.add(note_orm)

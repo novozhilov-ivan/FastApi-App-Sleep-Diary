@@ -1,7 +1,6 @@
 from datetime import UTC, datetime
 from uuid import uuid4
 
-from src.domain.note import NoteEntity
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser

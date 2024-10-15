@@ -5,12 +5,14 @@ from fastapi import APIRouter, Depends, Header, HTTPException
 from pydantic import UUID4
 from starlette import status
 
-from src import service_layer
-from src.application.api.routers.notes.schemas import NoteTimePointsSchema
+from src.application.api.routers.notes.schemas import (
+    CreatePointsSchema,
+    NoteResponseSchema,
+)
 from src.domain.exceptions import ApplicationException
-from src.domain.note import NoteEntity
 from src.infrastructure.database import Database, get_db
-from src.infrastructure.repository import ORMDiaryRepository
+from src.infrastructure.repository import ORMNoteRepository
+from src.service_layer.diary import Diary
 
 
 HeaderOwnerOid = Annotated[UUID4, Header(convert_underscores=False)]
@@ -33,22 +35,28 @@ router = APIRouter(
     },
 )
 def add_note(
-    time_points: NoteTimePointsSchema,
+    points: CreatePointsSchema,
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
 ) -> None:
-    repository = ORMDiaryRepository(database)
+    notes_repository = ORMNoteRepository(database)
+    users_repository = ORMUserRepository(database, user_oid=owner_oid)
     try:
-        service_layer.write(
-            time_points.bedtime_date,
-            time_points.went_to_bed,
-            time_points.fell_asleep,
-            time_points.woke_up,
-            time_points.got_up,
-            time_points.no_sleep,
-            owner_oid,
-            repository,
+        diary = Diary(
+            notes_repository=notes_repository,
+            users_repository=users_repository,
         )
+        diary.write(points)
+        # service_layer.write(
+        #     time_points.bedtime_date,
+        #     time_points.went_to_bed,
+        #     time_points.fell_asleep,
+        #     time_points.woke_up,
+        #     time_points.got_up,
+        #     time_points.no_sleep,
+        #     owner_oid,
+        #     repository,
+        # )
     except ApplicationException as exception:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -61,9 +69,9 @@ def add_note(
     name="Получить запись по oid",
     description="Получение записи о сне из дневника по идентификатору объекта.",
     status_code=status.HTTP_200_OK,
-    response_model=NoteEntity,
+    response_model=NoteResponseSchema,
     responses={
-        status.HTTP_200_OK: {"model": NoteEntity},
+        status.HTTP_200_OK: {"model": NoteResponseSchema},
         status.HTTP_404_NOT_FOUND: {"model": None},
     },
 )
@@ -71,7 +79,7 @@ def get_note_by_oid(
     note_oid: UUID4,
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
-) -> NoteEntity: ...
+) -> NoteResponseSchema: ...
 
 
 # repository = ORMDiaryRepository(database)
