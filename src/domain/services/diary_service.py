@@ -8,11 +8,14 @@ if TYPE_CHECKING:
 
 
 @dataclass
-class Diary:
+class DiaryService:
     _notes: set["NoteEntity"] = field(default_factory=set, init=False)
 
     @classmethod
-    def create(cls: type["Diary"], notes: set["NoteEntity"]) -> "Diary":
+    def create(
+        cls: type["DiaryService"],
+        notes: set["NoteEntity"],
+    ) -> "DiaryService":
         diary = cls()
         diary._notes = set(notes)
         return diary

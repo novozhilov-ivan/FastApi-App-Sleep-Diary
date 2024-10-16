@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from operator import eq
+from functools import total_ordering
+from operator import eq, gt
 from typing import TYPE_CHECKING
 from typing_extensions import Self
-from uuid import UUID
 
 from src.domain.entities.base import BaseEntity
 from src.domain.services.base import BaseDurations, BaseStatistics
@@ -12,9 +12,9 @@ if TYPE_CHECKING:
     from src.domain.values.points import Points
 
 
+@total_ordering
 @dataclass(eq=False, kw_only=True)
 class NoteEntity(BaseEntity):
-    owner_oid: UUID
     points: "Points"
     durations: BaseDurations | None = None
     statistics_of_points: BaseStatistics | None = None
@@ -22,10 +22,12 @@ class NoteEntity(BaseEntity):
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, NoteEntity):
             return NotImplemented
-        return eq(
-            (self.points.bedtime_date, self.owner_oid),
-            (other.points.bedtime_date, other.owner_oid),
-        )
+        return eq(self.points.bedtime_date, other.points.bedtime_date)
 
     def __hash__(self: Self) -> int:
-        return hash((self.points.bedtime_date, self.owner_oid))
+        return hash(self.points.bedtime_date)
+
+    def __gt__(self: Self, other: object) -> bool:
+        if not isinstance(other, NoteEntity):
+            return NotImplemented
+        return gt(self.points.bedtime_date, other.points.bedtime_date)

@@ -11,7 +11,7 @@ from src.application.api.routers.notes.schemas import (
 )
 from src.domain.exceptions import ApplicationException
 from src.infrastructure.database import Database, get_db
-from src.infrastructure.repository import ORMNoteRepository
+from src.infrastructure.repository import ORMUserNotesRepository
 from src.service_layer.diary import Diary
 
 
@@ -39,24 +39,17 @@ def add_note(
     owner_oid: HeaderOwnerOid,
     database: Database = Depends(get_db),
 ) -> None:
-    notes_repository = ORMNoteRepository(database)
-    users_repository = ORMUserRepository(database, user_oid=owner_oid)
+    repository = ORMUserNotesRepository(owner_oid, database)
+    diary = Diary(repository)
     try:
-        diary = Diary(
-            notes_repository=notes_repository,
-            users_repository=users_repository,
+        diary.write(
+            points.bedtime_date,
+            points.went_to_bed,
+            points.fell_asleep,
+            points.woke_up,
+            points.got_up,
+            points.no_sleep,
         )
-        diary.write(points)
-        # service_layer.write(
-        #     time_points.bedtime_date,
-        #     time_points.went_to_bed,
-        #     time_points.fell_asleep,
-        #     time_points.woke_up,
-        #     time_points.got_up,
-        #     time_points.no_sleep,
-        #     owner_oid,
-        #     repository,
-        # )
     except ApplicationException as exception:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,

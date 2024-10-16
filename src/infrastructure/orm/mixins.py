@@ -7,18 +7,25 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 
 @dataclass
-class MixinMetaInfo:
-
+class MixinUUIDOid:
     oid: Mapped[UUID] = mapped_column(
         primary_key=True,
         unique=True,
         default=uuid4,
     )
+
+
+@dataclass
+class MixinCreatedAtOnly:
     created_at: Mapped[datetime] = mapped_column(
         default=func.now(),
         server_default=func.now(),
         comment="Дата создания записи",
     )
+
+
+@dataclass
+class MixinUpdatedAt(MixinCreatedAtOnly):
     updated_at: Mapped[datetime] = mapped_column(
         default=func.now(),
         server_default=func.now(),

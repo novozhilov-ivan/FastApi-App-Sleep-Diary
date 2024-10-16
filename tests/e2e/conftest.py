@@ -9,7 +9,10 @@ from starlette.testclient import TestClient
 from src.application.api.main import create_app
 from src.infrastructure.database import Database, get_db
 from src.infrastructure.orm import ORMUser, metadata
-from src.infrastructure.repository import BaseNoteRepository, ORMNoteRepository
+from src.infrastructure.repository import (
+    BaseUserNotesRepository,
+    ORMUserNotesRepository,
+)
 from src.settings import AuthJWTSettings
 
 
@@ -57,8 +60,8 @@ def memory_database(database: Database) -> Database:
 
 
 @pytest.fixture
-def repository(database: Database) -> BaseNoteRepository:
-    return ORMNoteRepository(database)
+def repository(database: Database, user: ORMUser) -> BaseUserNotesRepository:
+    return ORMUserNotesRepository(user.oid, database)
 
 
 @pytest.fixture

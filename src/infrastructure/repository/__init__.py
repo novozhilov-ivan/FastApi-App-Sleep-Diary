@@ -1,5 +1,8 @@
-from src.infrastructure.repository.base import BaseNoteRepository
-from src.infrastructure.repository.orm_diary import ORMNoteRepository
+from src.infrastructure.repository.base import BaseUserNotesRepository
+from src.infrastructure.repository.orm_diary import ORMUserNotesRepository
 
 
-__all__ = ["BaseNoteRepository", "ORMNoteRepository"]
+__all__ = [
+    "BaseUserNotesRepository",
+    "ORMUserNotesRepository",
+]

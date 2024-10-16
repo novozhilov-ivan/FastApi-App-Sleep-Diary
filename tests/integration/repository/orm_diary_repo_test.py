@@ -5,7 +5,9 @@ from sqlalchemy import text
 
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote, ORMUser
-from src.infrastructure.repository import BaseNoteRepository, ORMNoteRepository
+from src.infrastructure.repository import (
+    ORMUserNotesRepository,
+)
 
 
 def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
@@ -16,7 +18,7 @@ def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
         woke_up="23:00",
         got_up="01:00",
     )
-    repository: BaseNoteRepository = ORMNoteRepository(memory_database)
+    repository = ORMUserNotesRepository(memory_database)
     repository.add(note_time_points, user.oid)
 
     with memory_database.get_session() as session:
@@ -60,7 +62,7 @@ def test_repo_can_retrieve_note_entity_by_oid(
 ):
     inserted_note_orm = insert_note(memory_database, user)
 
-    repository: BaseNoteRepository = ORMNoteRepository(memory_database)
+    repository = ORMUserNotesRepository(memory_database)
     retrieved_entity: NoteEntity | None = repository.get(inserted_note_orm.oid)
 
     assert retrieved_entity
@@ -82,7 +84,7 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
 ):
     insert_note(memory_database, user)
 
-    repository: BaseNoteRepository = ORMNoteRepository(memory_database)
+    repository = ORMUserNotesRepository(memory_database)
     retrieved_entity: NoteEntity | None = repository.get_by_bedtime_date(
         "2020-12-12",
         user.oid,
@@ -107,7 +109,7 @@ def test_repo_can_retrieve_diary(
 ):
     insert_note(memory_database, user)
 
-    repository: BaseNoteRepository = ORMNoteRepository(memory_database)
+    repository = ORMUserNotesRepository(memory_database)
     retrieved_diary = repository.get_all(user.oid)
     assert isinstance(retrieved_diary, Diary)
     assert len(retrieved_diary.notes_list) == 1
