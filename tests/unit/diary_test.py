@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 from src.domain.entities.note import NoteEntity
 from src.domain.services import DiaryService
 from src.domain.values.points import Points
@@ -8,8 +10,9 @@ from tests.unit.conftest import (
 )
 
 
+owner_oid = uuid4()
 points = Points(*points_order_desc_from_went_to_bed)
-note = NoteEntity(points=points)
+note = NoteEntity(owner_oid=owner_oid, points=points)
 
 
 def test_write_one_note():
@@ -31,8 +34,12 @@ def test_write_is_idempotent() -> None:
 def test_write_is_idempotent_by_bedtime_date_only() -> None:
     diary = DiaryService()
     diary.write(note)
+
     _, *other_time_points = points_order_desc_from_got_up
-    note_2 = NoteEntity(points=Points(date_point, *other_time_points))
+    note_2 = NoteEntity(
+        owner_oid=owner_oid,
+        points=Points(date_point, *other_time_points),
+    )
     diary.write(note_2)
 
     assert len(diary.notes_list) == 1

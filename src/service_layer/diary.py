@@ -23,6 +23,7 @@ class Diary:
         no_sleep: time | None = None,
     ) -> None:
         note = NoteEntity(
+            owner_oid=self.repository.owner_oid,
             points=Points(
                 bedtime_date=bedtime_date,
                 went_to_bed=went_to_bed,
