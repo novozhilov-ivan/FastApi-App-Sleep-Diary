@@ -4,6 +4,8 @@ from src.domain.services import Durations
 from src.domain.specifications import NoSleepHasValidTime
 from tests.unit.conftest import (
     FakePoints,
+)
+from tests.use_cases import (
     wrong_points_where_no_sleep_gt_sleep,
 )
 

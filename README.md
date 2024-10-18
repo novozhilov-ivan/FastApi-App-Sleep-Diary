@@ -28,8 +28,8 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
         - Тесты:
           - 201: Проверка body/location
     - ORMNote
-      - Перенести owner_oid в отдельную таблицу
-      - Перенести UniqueConstraint в отдельную таблицу
+      - Протестировать каскадное удаление всех записей пользователя при удалении 
+        пользователя
     - Add Requirements - punq
     - Infra
       - FiltersNote

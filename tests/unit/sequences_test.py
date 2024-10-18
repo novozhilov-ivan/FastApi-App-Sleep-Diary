@@ -9,6 +9,8 @@ from src.domain.specifications import (
 )
 from tests.unit.conftest import (
     FakePoints,
+)
+from tests.use_cases import (
     all_wrong_points_sequences,
     wrong_points_where_fell_asleep_is_wrong,
     wrong_points_where_got_up_is_wrong,

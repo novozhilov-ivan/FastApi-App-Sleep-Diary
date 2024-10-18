@@ -9,6 +9,8 @@ from src.domain.services.points_statistics import Statistics
 from src.domain.values.points import Points
 from tests.unit.conftest import (
     FakePoints,
+)
+from tests.use_cases import (
     correct_points_4_different_order_of_sequences_and_one_hour_no_sleep,
     date_point,
     points_all_zero,

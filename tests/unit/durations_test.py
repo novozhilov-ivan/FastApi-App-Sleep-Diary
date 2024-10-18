@@ -5,6 +5,8 @@ import pytest
 from src.domain.services import Durations
 from tests.unit.conftest import (
     FakePoints,
+)
+from tests.use_cases import (
     correct_points_4_different_order_of_sequences,
 )
 

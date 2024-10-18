@@ -11,7 +11,9 @@ from src import service_layer
 from src.domain.entities.note import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
 from src.infrastructure.repository import BaseUserNotesRepository
-from tests.unit.conftest import points_order_desc_from_went_to_bed
+from tests.use_cases import (
+    points_order_desc_from_went_to_bed,
+)
 
 
 class FakeDatabaseError(Exception):

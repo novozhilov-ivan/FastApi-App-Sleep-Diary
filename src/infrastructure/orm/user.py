@@ -8,5 +8,5 @@ from src.infrastructure.orm.mixins import MixinUpdatedAt, MixinUUIDOid
 class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):
     __tablename__ = "users"
 
-    username: Mapped[str] = mapped_column(String(128), unique=True)
+    username: Mapped[str] = mapped_column(String(128), primary_key=True, unique=True)
     password: Mapped[bytes]

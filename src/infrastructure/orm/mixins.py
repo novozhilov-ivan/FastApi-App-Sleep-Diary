@@ -8,11 +8,7 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 @dataclass
 class MixinUUIDOid:
-    oid: Mapped[UUID] = mapped_column(
-        primary_key=True,
-        unique=True,
-        default=uuid4,
-    )
+    oid: Mapped[UUID] = mapped_column(default=uuid4, unique=True)
 
 
 @dataclass

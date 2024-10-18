@@ -6,11 +6,11 @@ from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMUser, metadata
 
 
-insert_note_stmt = text(
-    "INSERT INTO notes (oid, bedtime_date, went_to_bed, fell_asleep, "
-    "woke_up, got_up, no_sleep, owner_oid) "
-    "VALUES (:oid, :bedtime_date, :went_to_bed, :fell_asleep, :woke_up,"
-    ":got_up, :no_sleep, :owner_oid);",
+stmt_insert_note = text(
+    "INSERT INTO notes (oid, bedtime_date, owner_oid, went_to_bed, fell_asleep, "
+    "woke_up, got_up, no_sleep) "
+    "VALUES (:oid, :bedtime_date, :owner_oid, "
+    ":went_to_bed, :fell_asleep, :woke_up, :got_up, :no_sleep);",
 )
 
 

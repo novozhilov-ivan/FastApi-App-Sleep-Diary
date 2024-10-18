@@ -2,28 +2,24 @@ from datetime import date, time
 from typing_extensions import Self
 from uuid import UUID
 
-from sqlalchemy import ForeignKey, UniqueConstraint
+from sqlalchemy import ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.domain.entities.note import NoteEntity
 from src.domain.values.points import Points
 from src.infrastructure.orm.base import ORMBase
-from src.infrastructure.orm.mixins import MixinUUIDOid
+from src.infrastructure.orm.mixins import MixinUpdatedAt, MixinUUIDOid
 
 
-class ORMNote(ORMBase, MixinUUIDOid):
+class ORMNote(ORMBase, MixinUUIDOid, MixinUpdatedAt):
     __tablename__ = "notes"
     __table_args__ = (
-        UniqueConstraint(
+        PrimaryKeyConstraint(
             "bedtime_date",
             "owner_oid",
             name="unique_bedtime_date_for_user",
         ),
     )
-    # TODO Сделать 'bedtime_date' и 'owner_oid' - PK
-    #  Схема таблицы будет соответствовать 3НФ или БКНФ
-    #  (не ключевые атрибуты зависят полностью от первичного ключа)
-    #  oid лишить PK и оставить unique
 
     bedtime_date: Mapped[date]
     owner_oid: Mapped[UUID] = mapped_column(
@@ -53,8 +49,10 @@ class ORMNote(ORMBase, MixinUUIDOid):
 
     def to_entity(self: Self) -> NoteEntity:
         return NoteEntity(
-            owner_oid=self.owner_oid,
             oid=self.oid,
+            owner_oid=self.owner_oid,
+            created_at=self.created_at.replace(microsecond=0),
+            updated_at=self.updated_at.replace(microsecond=0),
             points=Points(
                 self.bedtime_date,
                 self.went_to_bed.replace(tzinfo=None),

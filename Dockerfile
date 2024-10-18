@@ -1,4 +1,4 @@
-FROM python:3.12-slim AS builder
+FROM python:3.12.7-slim AS builder
 
 COPY poetry.lock pyproject.toml ./
 

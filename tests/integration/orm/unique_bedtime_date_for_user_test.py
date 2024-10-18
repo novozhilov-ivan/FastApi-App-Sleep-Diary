@@ -1,4 +1,3 @@
-from datetime import date
 from uuid import uuid4
 
 import pytest
@@ -8,36 +7,49 @@ from sqlalchemy.exc import IntegrityError
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.orm.user import ORMUser
-from tests.integration.conftest import insert_note_stmt
+from tests.integration.conftest import stmt_insert_note
+from tests.use_cases import (
+    TN,
+    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
+)
 
 
-def test_unique_bedtime_date_for_user(
-    memory_database: Database,
-    user: ORMUser,
-):
+def test_unique_bedtime_date_for_user(memory_database: Database, user: ORMUser):
+    points: TN = points_order_desc_from_went_to_bed_and_one_hour_no_sleep
+    bedtime_date, went_to_bed, fell_asleep, woke_up, got_up, no_sleep = points
+    note_oid = uuid4()
     note = {
-        "oid": f"{uuid4()}",
-        "bedtime_date": "2020-01-01",
-        "went_to_bed": "01-00",
-        "fell_asleep": "03-00",
-        "woke_up": "11-00",
-        "got_up": "13-00",
-        "no_sleep": "01-00",
-        "owner_oid": f"{user.oid}",
+        "oid": str(note_oid),
+        "bedtime_date": bedtime_date.isoformat(),
+        "owner_oid": str(user.oid),
+        "went_to_bed": went_to_bed.isoformat(),
+        "fell_asleep": fell_asleep.isoformat(),
+        "woke_up": woke_up.isoformat(),
+        "got_up": got_up.isoformat(),
+        "no_sleep": no_sleep.isoformat(),
     }
 
     with memory_database.get_session() as session:
-        session.execute(insert_note_stmt, note)
+        session.execute(stmt_insert_note, note)
+        db_notes: list[ORMNote] = session.query(ORMNote).all()
 
-    db_notes: list[ORMNote] = session.query(ORMNote).all()
     assert len(db_notes) == 1
     [db_note] = db_notes
+
     assert isinstance(db_note, ORMNote)
-    assert db_note.bedtime_date == date(2020, 1, 1)
-    with pytest.raises(
-        expected_exception=IntegrityError,
-        match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_oid",
-    ):
-        session.execute(insert_note_stmt, note)
-    db_notes = session.query(ORMNote).all()
+    assert db_note.bedtime_date == bedtime_date
+
+    note["oid"] = str(uuid4())
+
+    with memory_database.get_session() as session:
+        with pytest.raises(
+            expected_exception=IntegrityError,
+            match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_oid",
+        ):
+            session.execute(stmt_insert_note, note)
+        db_notes = session.query(ORMNote).all()
+
     assert len(db_notes) == 1
+    [expected_first_note] = db_notes
+    assert isinstance(expected_first_note, ORMNote)
+    assert expected_first_note.oid == db_note.oid
