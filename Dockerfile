@@ -6,7 +6,7 @@ RUN python -m pip install poetry>=1.8.2 && \
     poetry export -o requirements.prod.txt --without-hashes && \
     poetry export --with=dev -o requirements.dev.txt --without-hashes
 
-FROM python:3.12-slim AS dev
+FROM python:3.12.7-slim AS dev
 
 WORKDIR /app
 
