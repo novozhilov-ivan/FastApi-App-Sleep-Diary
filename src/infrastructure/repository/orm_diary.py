@@ -9,12 +9,12 @@ from src.domain.entities.note import NoteEntity
 from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMNote
 from src.infrastructure.repository.base import (
-    BaseUserNotesRepository,
+    BaseDiaryRepository,
 )
 
 
 @dataclass
-class ORMUserNotesRepository(BaseUserNotesRepository):
+class ORMDiaryRepository(BaseDiaryRepository):
     database: Database
 
     def add(self: Self, note: NoteEntity) -> None:
@@ -31,10 +31,14 @@ class ORMUserNotesRepository(BaseUserNotesRepository):
             return result.to_entity()
         return None
 
-    def get_by_bedtime_date(self: Self, bedtime_date: date) -> NoteEntity | None:
+    def get_by_bedtime_date(
+        self: Self,
+        bedtime_date: date,
+        owner_oid: UUID,
+    ) -> NoteEntity | None:
         stmt = (
             select(ORMNote)
-            .where(ORMNote.owner_oid == self.owner_oid)
+            .where(ORMNote.owner_oid == owner_oid)
             .where(ORMNote.bedtime_date == bedtime_date)
             .limit(1)
         )
@@ -45,8 +49,8 @@ class ORMUserNotesRepository(BaseUserNotesRepository):
             return result.to_entity()
         return None
 
-    def get_all(self: Self) -> set[NoteEntity]:
-        stmt = select(ORMNote).where(ORMNote.owner_oid == self.owner_oid)
+    def get_all_notes(self: Self, owner_oid: UUID) -> set[NoteEntity]:
+        stmt = select(ORMNote).where(ORMNote.owner_oid == owner_oid)
 
         with self.database.get_session() as session:
             result = session.scalars(stmt).all()

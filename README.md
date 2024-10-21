@@ -30,7 +30,8 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
     - ORMNote
       - Протестировать каскадное удаление всех записей пользователя при удалении 
         пользователя
-    - Add Requirements - punq
+    - Docker Volume
+      - Сделать постоянный volume
     - Infra
       - FiltersNote
     - Сервис авторизации:
@@ -53,7 +54,6 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
     - Diary < метод make_diary() для формирования словаря/json с записями
     разделенными неделями, со своими сортировками
   - Зависимости:
-   - prod+ Dependency Injector
    - dev+ pre-committer
    - dev+ ipython
   - CI/CD

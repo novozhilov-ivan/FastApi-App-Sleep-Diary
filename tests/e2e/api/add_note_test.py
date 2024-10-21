@@ -14,7 +14,7 @@ from src.domain.exceptions import (
     TimePointsSequenceException,
 )
 from src.infrastructure.orm import ORMUser
-from src.infrastructure.repository import BaseUserNotesRepository
+from src.infrastructure.repository import BaseDiaryRepository
 
 
 def test_add_note_201(app: FastAPI, client: TestClient, user: ORMUser):
@@ -89,7 +89,7 @@ def test_add_note_400_write_note_twice_exception(
     app: FastAPI,
     client: TestClient,
     user: ORMUser,
-    repository: BaseUserNotesRepository,
+    repository: BaseDiaryRepository,
 ):
     data = {
         "bedtime_date": "2020-12-12",

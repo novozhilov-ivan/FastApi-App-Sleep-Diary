@@ -1,4 +1,5 @@
 from contextlib import contextmanager
+from dataclasses import InitVar, dataclass, field
 from typing import Generator
 from typing_extensions import Self
 
@@ -7,16 +8,20 @@ from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 
-from src.settings import Settings
 
-
+@dataclass
 class Database:
-    def __init__(self: Self, url: str | PostgresDsn) -> None:
-        self._engine: Engine = create_engine(
+    url: InitVar[str | PostgresDsn]
+
+    _engine: Engine = field(init=False)
+    _session: sessionmaker[Session] = field(init=False)
+
+    def __post_init__(self: Self, url: str | PostgresDsn) -> None:
+        self._engine = create_engine(
             url=str(url),
             echo=False,
         )
-        self._session: sessionmaker[Session] = sessionmaker(
+        self._session = sessionmaker(
             bind=self._engine,
             expire_on_commit=False,
         )
@@ -37,7 +42,3 @@ class Database:
     @property
     def engine(self: Self) -> Engine:
         return self._engine
-
-
-def get_db() -> Database:
-    return Database(Settings().POSTGRES_DB_URL)

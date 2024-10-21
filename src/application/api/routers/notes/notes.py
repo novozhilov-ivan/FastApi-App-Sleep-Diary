@@ -2,6 +2,7 @@ from datetime import date
 from typing import Annotated
 
 from fastapi import APIRouter, Depends, Header, HTTPException
+from punq import Container
 from pydantic import UUID4
 from starlette import status
 
@@ -10,8 +11,7 @@ from src.application.api.routers.notes.schemas import (
     NoteResponseSchema,
 )
 from src.domain.exceptions import ApplicationException
-from src.infrastructure.database import Database, get_db
-from src.infrastructure.repository import ORMUserNotesRepository
+from src.project.containers import get_container
 from src.service_layer.diary import Diary
 
 
@@ -35,20 +35,21 @@ router = APIRouter(
     },
 )
 def add_note(
-    points: CreatePointsSchema,
+    schema: CreatePointsSchema,
     owner_oid: HeaderOwnerOid,
-    database: Database = Depends(get_db),
+    container: Container = Depends(get_container),
 ) -> None:
-    repository = ORMUserNotesRepository(owner_oid, database)
-    diary = Diary(repository)
+    diary: Diary = container.resolve(Diary)
+
     try:
         diary.write(
-            points.bedtime_date,
-            points.went_to_bed,
-            points.fell_asleep,
-            points.woke_up,
-            points.got_up,
-            points.no_sleep,
+            owner_oid,
+            schema.bedtime_date,
+            schema.went_to_bed,
+            schema.fell_asleep,
+            schema.woke_up,
+            schema.got_up,
+            schema.no_sleep,
         )
     except ApplicationException as exception:
         raise HTTPException(
@@ -71,7 +72,6 @@ def add_note(
 def get_note_by_oid(
     note_oid: UUID4,
     owner_oid: HeaderOwnerOid,
-    database: Database = Depends(get_db),
 ) -> NoteResponseSchema: ...
 
 
@@ -103,7 +103,6 @@ def get_note_by_oid(
 def get_note_by_bedtime_date(
     bedtime_date: date,
     owner_oid: HeaderOwnerOid,
-    database: Database = Depends(get_db),
 ) -> None: ...
 
 
@@ -135,7 +134,6 @@ def get_note_by_bedtime_date(
 def update_note(
     note_oid: UUID4,
     owner_oid: HeaderOwnerOid,
-    database: Database = Depends(get_db),
 ) -> None: ...
 
 
@@ -153,5 +151,4 @@ def update_note(
 def delete_note(
     note_oid: UUID4,
     owner_oid: HeaderOwnerOid,
-    database: Database = Depends(get_db),
 ) -> None: ...

@@ -7,13 +7,14 @@ from pydantic_settings import SettingsConfigDict
 from starlette.testclient import TestClient
 
 from src.application.api.main import create_app
-from src.infrastructure.database import Database, get_db
+from src.infrastructure.database import Database
 from src.infrastructure.orm import ORMUser, metadata
 from src.infrastructure.repository import (
-    BaseUserNotesRepository,
-    ORMUserNotesRepository,
+    BaseDiaryRepository,
+    ORMDiaryRepository,
 )
-from src.settings import AuthJWTSettings
+from src.project.containers import get_container
+from src.project.settings import AuthJWTSettings
 
 
 class TestSettings(AuthJWTSettings):
@@ -32,6 +33,9 @@ test_settings = TestSettings()
 
 
 def _database() -> Database:
+    # TODO Переделать тестовую бд на
+    #  postgresql | sqlite в памяти | либо в файле db.sqlite,
+    #  но чтобы удалялся после тестов
     return Database(test_settings.POSTGRES_DB_URL)
 
 
@@ -43,7 +47,7 @@ def database() -> Database:
 @pytest.fixture(scope="session")
 def app() -> FastAPI:
     app = create_app()
-    app.dependency_overrides[get_db] = _database
+    app.dependency_overrides[get_container] = _database
     return app
 
 
@@ -60,8 +64,8 @@ def memory_database(database: Database) -> Database:
 
 
 @pytest.fixture
-def repository(database: Database, user: ORMUser) -> BaseUserNotesRepository:
-    return ORMUserNotesRepository(user.oid, database)
+def repository(database: Database, user: ORMUser) -> BaseDiaryRepository:
+    return ORMDiaryRepository(database)
 
 
 @pytest.fixture
