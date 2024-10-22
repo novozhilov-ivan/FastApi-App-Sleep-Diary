@@ -7,10 +7,6 @@ up: build
 		docker compose -f app.yml -f postgres.yml up -d
 down:
 		docker compose -f app.yml -f postgres.yml down --remove-orphans
-test: up
-		docker compose -f app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/" api
-api: up
-		docker compose -f app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/api" api
 unit: up
 		docker compose -f app.yml -f postgres.yml run --rm --no-deps --entrypoint="pytest tests/unit" api
 integration: up

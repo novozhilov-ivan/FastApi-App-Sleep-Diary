@@ -1,3 +1,5 @@
+from typing_extensions import Self
+
 from pydantic import PostgresDsn, model_validator
 from pydantic_settings import BaseSettings
 
@@ -29,3 +31,14 @@ class PostgresSettings(BaseSettings):
         )
 
         return values
+
+    @property
+    def test_postgres_db(self: Self) -> str:
+        return f"test_{self.POSTGRES_DB}"
+
+    @property
+    def test_postgres_url(self: Self) -> str:
+        return (
+            f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
+            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.test_postgres_db}"
+        )

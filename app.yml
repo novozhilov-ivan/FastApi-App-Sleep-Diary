@@ -1,6 +1,10 @@
-services:
+networks:
+  backend:
+    driver: bridge
 
+services:
   api:
+    container_name: api
     build:
       context: .
       dockerfile: Dockerfile
@@ -35,8 +39,3 @@ services:
       - --host=0.0.0.0
       - --port=8000
       - --reload
-
-
-networks:
-  backend:
-    driver: bridge

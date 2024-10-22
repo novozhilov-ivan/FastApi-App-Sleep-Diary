@@ -2,6 +2,8 @@ from datetime import date, time
 from itertools import chain
 from typing import TypeAlias
 
+from src.domain.values.points import Points
+
 
 date_point: date = date(2020, 12, 12)
 
@@ -304,3 +306,7 @@ correct_points_4_different_order_of_sequences_and_one_hour_no_sleep: TTN = (
     points_order_desc_from_woke_up_and_one_hour_no_sleep,
     points_order_desc_from_fell_asleep_and_one_hour_no_sleep,
 )
+
+all_correct_points_sequences: list[Points] = [
+    Points(*points) for points in correct_points_4_different_order_of_sequences
+]
