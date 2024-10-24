@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from starlette import status
 
-from src.application.api.routers import about, notes
+from src.application.api.routers import about, auth, notes
 from src.application.api.schemas import ErrorSchema
 
 
@@ -18,4 +18,5 @@ def create_app() -> FastAPI:
     app.include_router(about.router)
     app.include_router(about.router, prefix="/about")
     app.include_router(notes.router, prefix="/notes")
+    app.include_router(auth.router)
     return app

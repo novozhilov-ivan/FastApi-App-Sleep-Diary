@@ -1,7 +1,7 @@
-bearer: str = "Bearer"
-oauth2: str = "OAuth2"
+BEARER_TOKEN_TYPE: str = "Bearer"
+AUTH_TYPE_OAUTH2: str = "OAuth2"
 authorizations: dict[str, dict[str, str]] = {
-    bearer: {
+    BEARER_TOKEN_TYPE: {
         "type": "apiKey",
         "in": "header",
         "name": "Authorization",
@@ -9,10 +9,10 @@ authorizations: dict[str, dict[str, str]] = {
             "Enter the token with the `Bearer` prefix, e.g. 'Bearer abcde12345'"
         ),
     },
-    oauth2: {
+    AUTH_TYPE_OAUTH2: {
         "type": "oauth2",
         "flow": "password",
-        "tokenUrl": "api/signin",
-        "authorizationUrl": "api/signin",
+        "tokenUrl": "api/login/",
+        "authorizationUrl": "api/login/",
     },
 }

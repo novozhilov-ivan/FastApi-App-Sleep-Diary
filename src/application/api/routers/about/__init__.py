@@ -4,4 +4,7 @@ from src.application.api.routers.about.schemas import (
 )
 
 
-__all__ = ["router", "AboutSleepDiarySchema"]
+__all__ = (
+    "router",
+    "AboutSleepDiarySchema",
+)

@@ -7,7 +7,7 @@ from pydantic import UUID4
 from starlette import status
 
 from src.application.api.routers.notes.schemas import (
-    CreatePointsSchema,
+    CreatePointsRequestSchema,
     NoteResponseSchema,
 )
 from src.domain.exceptions import ApplicationException
@@ -35,7 +35,7 @@ router = APIRouter(
     },
 )
 def add_note(
-    schema: CreatePointsSchema,
+    schema: CreatePointsRequestSchema,
     owner_oid: HeaderOwnerOid,
     container: Container = Depends(get_container),
 ) -> None:
