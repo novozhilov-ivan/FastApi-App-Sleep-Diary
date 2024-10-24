@@ -75,11 +75,13 @@ def container(database: Database) -> Container:
 
 
 @pytest.fixture
-def user(database: Database) -> ORMUser:
+def user(container: Container) -> ORMUser:
     user = ORMUser(
         username="test_user",
         password=b"test_password",
     )
+    database: Database = container.resolve(Database)
+
     with database.get_session() as session:
         session.add(user)
         session.commit()
@@ -98,7 +100,7 @@ def diary(container: Container) -> Diary:
 
 
 @pytest.fixture
-def app() -> FastAPI:
+def app(container: Container) -> FastAPI:  # noqa: U100
     app = create_app()
     app.dependency_overrides[get_container] = init_dummy_container
     return app
