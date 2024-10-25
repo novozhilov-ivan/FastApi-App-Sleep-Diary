@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing_extensions import Self
 
-from src.service_layer.exceptions.base import AuthorizationException
+from src.service_layer.exceptions.base import AuthenticationException
 
 
 @dataclass
-class LogInException(AuthorizationException):
+class LogInException(AuthenticationException):
     wrong_credentials: str
 
     @property

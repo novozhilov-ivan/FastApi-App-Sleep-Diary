@@ -3,7 +3,7 @@ from typing_extensions import Self
 
 
 @dataclass(eq=False)
-class AuthorizationException(Exception):
+class AuthenticationException(Exception):
     @property
     def message(self: Self) -> str:
         return "Произошла ошибка авторизации."

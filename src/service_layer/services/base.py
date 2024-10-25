@@ -11,9 +11,9 @@ from src.service_layer.exceptions.login import LogInException
 
 
 @dataclass
-class BaseUserAuthorizationService(ABC):
-    default_encoding: ClassVar[str] = "utf-8"
-    invalid_credentials_message: ClassVar[str] = (
+class BaseUserAuthenticationService(ABC):
+    DEFAULT_ENCODING: ClassVar[str] = "utf-8"
+    INVALID_CREDENTIALS_MESSAGE: ClassVar[str] = (
         "Неверное имя пользователя или пароль."
     )
 
@@ -26,7 +26,7 @@ class BaseUserAuthorizationService(ABC):
         return self._user
 
     @staticmethod
-    def _hash_password(pwd_bytes: bytes, decode_from: str = default_encoding) -> str:
+    def _hash_password(pwd_bytes: bytes, decode_from: str = DEFAULT_ENCODING) -> str:
         return hashpw(pwd_bytes, gensalt()).decode(decode_from)
 
     @staticmethod
@@ -44,18 +44,18 @@ class BaseUserAuthorizationService(ABC):
         user: UserEntity | None = self._get_user(username)
 
         if user is None:
-            raise LogInException(self.invalid_credentials_message)
+            raise LogInException(self.INVALID_CREDENTIALS_MESSAGE)
 
         self._user = user
         cast(UserEntity, self._user)
 
     def _validate_user_password(self: Self, password: str) -> None:
         if not self._compare_passwords(
-            password=password.encode(self.default_encoding),
+            password=password.encode(self.DEFAULT_ENCODING),
             hashed_password=self._user.password,
         ):
-            raise LogInException(self.invalid_credentials_message)
+            raise LogInException(self.INVALID_CREDENTIALS_MESSAGE)
 
     @abstractmethod
-    def login(self: Self, username: str, password: str) -> UserEntity:
+    def login(self: Self, username: str, password: str) -> None:
         raise NotImplementedError

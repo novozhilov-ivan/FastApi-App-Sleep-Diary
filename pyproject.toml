@@ -96,6 +96,7 @@ sqlalchemy = "^2.0.32"
 fastapi = {extras = ["standard"], version = "^0.112.2"}
 httpx = "^0.27.2"
 punq = "^0.7.0"
+python-multipart = "^0.0.12"
 
 [tool.poetry.group.dev.dependencies]
 pytest-html = "^4.1.1"
