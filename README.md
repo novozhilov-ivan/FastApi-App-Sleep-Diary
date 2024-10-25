@@ -20,40 +20,27 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
       - 404:
       - 415:
       - 422:
-    - Endpoints:
-      - /add_note
-        - Определить форму ответа для 201
-          - body +-?
-          - header location '/api/notes/<uuid:43fgf...>'
-        - Тесты:
-          - 201: Проверка body/location
-    - ORMNote
-      - Протестировать каскадное удаление всех записей пользователя при удалении 
-        пользователя
-    - Docker Volume
-      - Сделать постоянный volume
-    - Infra
-      - FiltersNote
-    - Сервис авторизации:
-    - Переписать
-    - UserRepo
-    - Схема Note
-      - Отделить owner_id 
-      - Отделить мета информацию
-    - Схемы User'ов
-    - Как использовать с application?
-    - Реализация sign-out, через хранилище в cache и RedisCache
-    - Создание в памяти public и private keys для шифрования при тестировании
-  - Рефакторинг
-    - BaseDatabase и тесты для FakeDatabase.
-    - Установить Аннотацию типа у session в Database. Сейчас pycharm не понимает.
-    - Протестировать каскадное удаление записей при удалении user. (all, 
-      delete-orphan) в таблице 'users' мб нужно выставить.
-    - Заменить вызовы переиспользуемых объектов Dependency Injector Container.
-  - Diary + Week взаимодействие.
-    - Diary < метод make_diary() для формирования словаря/json с записями
-    разделенными неделями, со своими сортировками
-  - Зависимости:
-   - dev+ pre-committer
-   - dev+ ipython
-  - CI/CD
+    - Аутентификация | эндпоинты
+      - вход
+      - аккаунт пользователя
+      - регистрация
+      - выход (активный токен должен быть забанен)
+        - Реализация sign-out, через хранилище в cache и RedisCache
+
+- Alembic
+  - Добавить зависимость
+  - Создание/Upgrade до Head при запуске приложения
+- ORMNote
+  - Протестировать каскадное удаление всех записей пользователя при удалении 
+    пользователя (all, delete-orphan)
+- Docker Volume
+  - Сделать постоянный volume
+- Кеширование запросов
+- Создание ключей public и private keys для jwt 
+  - при тестировании
+  - при развертывании на windows
+
+- Зависимости:
+- dev+ pre-committer
+- dev+ ipython
+- CI/CD
