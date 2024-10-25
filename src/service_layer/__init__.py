@@ -1,6 +1,4 @@
-from src.service_layer.diary import Diary
+from src.service_layer.services.diary import Diary
 
 
-__all__ = [
-    "Diary",
-]
+__all__ = ("Diary",)

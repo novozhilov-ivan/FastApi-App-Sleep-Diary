@@ -2,18 +2,17 @@ from fastapi import APIRouter, Depends, HTTPException
 from punq import Container
 from starlette import status
 
-from src.application.api.routers.auth.schema import (
-    AccessAuthTokenInfoResponseSchema,
-    AuthUserRequestSchema,
+from src.application.api.routers.auth.schemas import (
+    AccessJWTResponseSchema,
+    LogInUserRequestSchema,
 )
 from src.project.containers import get_container
+from src.service_layer.exceptions.base import AuthorizationException
+from src.service_layer.services.base import BaseUserAuthorizationService
 
 
 router = APIRouter(
-    tags=["Authentication"],
-    # responses={
-    #     status.HTTP_401_UNAUTHORIZED: {"model": None},
-    # },
+    tags=["Authorization"],
 )
 
 
@@ -23,22 +22,26 @@ router = APIRouter(
         "Эндпоинт для авторизации пользователя по имени пользователя и паролю."
     ),
     status_code=status.HTTP_200_OK,
-    response_model=AccessAuthTokenInfoResponseSchema,
+    response_model=AccessJWTResponseSchema,
+    responses={
+        status.HTTP_401_UNAUTHORIZED: {"model": AuthorizationException},
+    },
 )
-def authenticate_user(
-    schema: AuthUserRequestSchema,
+def login_user(
+    schema: LogInUserRequestSchema,
     container: Container = Depends(get_container),
-) -> AccessAuthTokenInfoResponseSchema:
-    auth_mediator: AuthenticationService
-    auth_mediator = container.resolve(AuthenticationService)
+) -> AccessJWTResponseSchema:
+    authorization_service: BaseUserAuthorizationService
+    authorization_service = container.resolve(BaseUserAuthorizationService)
     try:
-        tokens_etc = auth_mediator.auth_user(
+        user = authorization_service.login(
             username=schema.username,
             password=schema.password,
         )
-    except AuthenticationException as exception:
+    except AuthorizationException as exception:
         HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": exception.message},
         )
-    return AccessAuthTokenInfoResponseSchema(**tokens_etc)
+
+    return AccessJWTResponseSchema(user).tokens

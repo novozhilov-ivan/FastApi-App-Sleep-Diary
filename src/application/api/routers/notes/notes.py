@@ -12,7 +12,7 @@ from src.application.api.routers.notes.schemas import (
 )
 from src.domain.exceptions import ApplicationException
 from src.project.containers import get_container
-from src.service_layer.diary import Diary
+from src.service_layer.services.diary import Diary
 
 
 HeaderOwnerOid = Annotated[UUID4, Header(convert_underscores=False)]
