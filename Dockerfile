@@ -9,16 +9,18 @@ RUN python -m pip install poetry>=1.8.2 && \
 FROM python:3.12.7-slim AS dev
 
 WORKDIR /app
-
-ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1
-
 COPY --from=builder requirements.dev.txt /app
 
-RUN apt clean && apt update -y && apt install --no-install-recommends -y \
+RUN apt update -y && apt install --no-install-recommends -y \
     python3-dev && \
-    pip install --upgrade pip --no-cache-dir -r \
-    requirements.dev.txt && \
-    rm requirements.dev.txt
+    pip install --upgrade pip --no-cache-dir --user -r requirements.dev.txt && \
+    apt clean && rm -rf /var/lib/apt/lists/* requirements.dev.txt
 
+FROM python:3.12.7-slim AS runtime-image
+
+WORKDIR /app
+ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PATH=/root/.local/bin:$PATH
+
+COPY --from=dev /root/.local /root/.local
 COPY src/ /app/src
 COPY tests/ /app/tests

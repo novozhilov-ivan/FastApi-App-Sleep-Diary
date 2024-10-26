@@ -7,6 +7,7 @@ __pycache__/
 *.pem
 certs
 *.sqlite
+postgres-data/
 
 # Coverage
 coverage_re/

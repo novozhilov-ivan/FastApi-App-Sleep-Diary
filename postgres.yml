@@ -20,22 +20,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB:?}
     ports:
       - "5432:5432"
-    networks:
-      - backend
-
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4:8.4
-    restart: always
-    depends_on:
-      postgres:
-        condition: service_healthy
-    env_file:
-      - .env
-    environment:
-      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:?}
-      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?}
-    ports:
-      - "5050:80"
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
     networks:
       - backend
