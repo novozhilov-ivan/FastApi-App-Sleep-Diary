@@ -28,9 +28,6 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
         - Реализация sign-out, через хранилище в cache и RedisCache
         - 
 - в абстракциях сделать только абстрактные методы - это будет интерфейсом
-- Alembic
-  - Добавить зависимость
-  - Создание таблиц/схем основной БД [Вручную]
 - ORMNote
   - Протестировать каскадное удаление всех записей пользователя при удалении 
     пользователя (all, delete-orphan)
@@ -41,5 +38,4 @@ openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
 
 - Зависимости:
 - dev+ pre-committer
-- dev+ ipython
 - CI/CD

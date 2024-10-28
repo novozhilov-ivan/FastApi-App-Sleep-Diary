@@ -1,6 +1,6 @@
 from typing_extensions import Self
 
-from pydantic import PostgresDsn, model_validator
+from pydantic import model_validator
 from pydantic_settings import BaseSettings
 
 
@@ -10,7 +10,7 @@ class PostgresSettings(BaseSettings):
     POSTGRES_PASSWORD: str
     POSTGRES_HOST: str
     POSTGRES_PORT: str
-    POSTGRES_DB_URL: PostgresDsn
+    POSTGRES_DB_URL: str
 
     @model_validator(mode="before")
     @classmethod

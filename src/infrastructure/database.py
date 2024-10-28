@@ -3,7 +3,6 @@ from dataclasses import InitVar, dataclass, field
 from typing import Generator
 from typing_extensions import Self
 
-from pydantic import PostgresDsn
 from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
@@ -11,14 +10,14 @@ from sqlalchemy.orm import Session, sessionmaker
 
 @dataclass
 class Database:
-    url: InitVar[str | PostgresDsn]
+    url: InitVar[str]
 
     _engine: Engine = field(init=False)
     _session: sessionmaker[Session] = field(init=False)
 
-    def __post_init__(self: Self, url: str | PostgresDsn) -> None:
+    def __post_init__(self: Self, url: str) -> None:
         self._engine = create_engine(
-            url=str(url),
+            url=url,
             echo=False,
         )
         self._session = sessionmaker(
