@@ -6,8 +6,7 @@ from src.application.api.routers.auth.schemas import (
     AuthUserSelfInfoResponse,
     oauth2_scheme,
 )
-from src.infra.authorization.base import BaseTokenService
-from src.infra.authorization.exceptions import JWTAuthorizationException
+from src.infra.authorization import IUserTokenService, JWTAuthorizationException
 from src.project.containers import get_container
 
 
@@ -28,7 +27,7 @@ def auth_user_check_self_info(
     credentials: str = Depends(oauth2_scheme),
     container: Container = Depends(get_container),
 ) -> dict:
-    token_service: BaseTokenService = container.resolve(BaseTokenService)
+    token_service: IUserTokenService = container.resolve(IUserTokenService)
     try:
         return token_service.get_token_payload(credentials)
     except JWTAuthorizationException as exception:

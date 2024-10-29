@@ -4,12 +4,11 @@ from datetime import date
 from typing_extensions import Self
 from uuid import UUID
 
-from src.domain.entities.note import NoteEntity
-from src.domain.entities.user import UserEntity
+from src.domain.entities import NoteEntity, UserEntity
 
 
 @dataclass
-class BaseNotesRepository(ABC):
+class INotesRepository(ABC):
     @abstractmethod
     def add(self: Self, note: NoteEntity) -> None:
         raise NotImplementedError
@@ -32,7 +31,7 @@ class BaseNotesRepository(ABC):
 
 
 @dataclass
-class BaseUsersRepository(ABC):
+class IUsersRepository(ABC):
     @abstractmethod
     def get_by_username(self: Self, username: str) -> UserEntity | None:
         raise NotImplementedError

@@ -9,7 +9,7 @@ from src.application.api.main import create_app
 from src.infra.database import Database
 from src.infra.orm import ORMUser, metadata
 from src.infra.repository import (
-    BaseNotesRepository,
+    INotesRepository,
 )
 from src.project.containers import get_container
 from src.project.settings import Settings
@@ -90,8 +90,8 @@ def user(container: Container) -> ORMUser:
 
 
 @pytest.fixture
-def repository(container: Container) -> BaseNotesRepository:
-    return container.resolve(BaseNotesRepository)
+def repository(container: Container) -> INotesRepository:
+    return container.resolve(INotesRepository)
 
 
 @pytest.fixture

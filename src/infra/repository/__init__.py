@@ -1,6 +1,6 @@
 from src.infra.repository.base import (
-    BaseNotesRepository,
-    BaseUsersRepository,
+    INotesRepository,
+    IUsersRepository,
 )
 from src.infra.repository.memory_notes import MemoryNotesRepository
 from src.infra.repository.orm_notes import ORMNotesRepository
@@ -8,8 +8,8 @@ from src.infra.repository.orm_user import ORMUsersRepository
 
 
 __all__ = (
-    "BaseNotesRepository",
-    "BaseUsersRepository",
+    "INotesRepository",
+    "IUsersRepository",
     "ORMNotesRepository",
     "ORMUsersRepository",
     "MemoryNotesRepository",

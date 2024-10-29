@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.services import DiaryService
 from src.domain.values.points import Points
 from tests.use_cases import (

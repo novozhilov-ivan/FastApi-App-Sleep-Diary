@@ -4,7 +4,7 @@ from fastapi.security import (
 )
 from pydantic import UUID4, BaseModel, Field
 
-from src.infra.authorization.base import JWTTypes
+from src.infra.authorization import JWTTypes
 
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")

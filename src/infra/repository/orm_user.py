@@ -3,14 +3,14 @@ from typing_extensions import Self
 
 from sqlalchemy import select
 
-from src.domain.entities.user import UserEntity
+from src.domain.entities import UserEntity
 from src.infra.database import Database
 from src.infra.orm import ORMUser
-from src.infra.repository.base import BaseUsersRepository
+from src.infra.repository.base import IUsersRepository
 
 
 @dataclass
-class ORMUsersRepository(BaseUsersRepository):
+class ORMUsersRepository(IUsersRepository):
     database: Database
 
     def get_by_username(self: Self, username: str) -> UserEntity | None:

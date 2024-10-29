@@ -4,7 +4,7 @@ from typing_extensions import Self
 
 
 if TYPE_CHECKING:
-    from src.domain.entities.note import NoteEntity
+    from src.domain.entities import NoteEntity
 
 
 @dataclass

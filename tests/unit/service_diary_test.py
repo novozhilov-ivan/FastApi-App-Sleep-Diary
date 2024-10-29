@@ -3,13 +3,11 @@ from uuid import uuid4
 
 import pytest
 
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
-from src.infra.repository import BaseNotesRepository
+from src.infra.repository import INotesRepository
 from src.service_layer import Diary
-from tests.use_cases import (
-    points_order_desc_from_went_to_bed,
-)
+from tests.use_cases import points_order_desc_from_went_to_bed
 
 
 @pytest.mark.parametrize(
@@ -22,7 +20,7 @@ from tests.use_cases import (
 )
 def test_service_diary_can_write_with_different_value_in_no_sleep(
     diary: Diary,
-    notes_repository: BaseNotesRepository,
+    notes_repository: INotesRepository,
     no_sleep: time | None,
 ):
     fake_owner_oid = uuid4()
@@ -41,7 +39,7 @@ def test_service_diary_can_write_with_different_value_in_no_sleep(
 
 def test_write_one_note_in_diary(
     diary: Diary,
-    notes_repository: BaseNotesRepository,
+    notes_repository: INotesRepository,
 ):
     fake_owner_oid = uuid4()
     points = points_order_desc_from_went_to_bed
@@ -72,7 +70,7 @@ def test_write_note_in_diary_twice(diary: Diary):
 
 def test_write_different_note_in_diary(
     diary: Diary,
-    notes_repository: BaseNotesRepository,
+    notes_repository: INotesRepository,
 ):
     fake_owner_oid = uuid4()
     first_bedtime_date: date

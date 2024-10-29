@@ -5,7 +5,7 @@ from uuid import UUID
 from sqlalchemy import ForeignKey, PrimaryKeyConstraint
 from sqlalchemy.orm import Mapped, mapped_column
 
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.values.points import Points
 from src.infra.orm.base import ORMBase
 from src.infra.orm.mixins import MixinUpdatedAt, MixinUUIDOid

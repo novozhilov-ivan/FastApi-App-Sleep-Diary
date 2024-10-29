@@ -4,15 +4,15 @@ from typing_extensions import Self
 from uuid import UUID
 
 from src.domain import services
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
 from src.domain.values.points import Points
-from src.infra.repository.base import BaseNotesRepository
+from src.infra.repository.base import INotesRepository
 
 
 @dataclass
 class Diary:
-    repository: BaseNotesRepository
+    repository: INotesRepository
 
     # user_service: InitVar[UserAuthenticationService]
     # owner_oid: UUID = field(init=False)

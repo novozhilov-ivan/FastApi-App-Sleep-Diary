@@ -3,12 +3,12 @@ from datetime import date
 from typing_extensions import Self
 from uuid import UUID
 
-from src.domain.entities.note import NoteEntity
-from src.infra.repository import BaseNotesRepository
+from src.domain.entities import NoteEntity
+from src.infra.repository import INotesRepository
 
 
 @dataclass
-class MemoryNotesRepository(BaseNotesRepository):
+class MemoryNotesRepository(INotesRepository):
     _saved_notes: set[NoteEntity] = field(default_factory=set)
 
     def add(self: Self, note: NoteEntity) -> None:

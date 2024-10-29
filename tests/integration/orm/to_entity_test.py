@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.values.points import Points
 from src.infra.database import Database
 from src.infra.orm import ORMNote, ORMUser

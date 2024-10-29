@@ -1,10 +1,9 @@
 from uuid import uuid4
 
-from src.domain.entities.note import NoteEntity
+from src.domain.entities import NoteEntity
 from src.domain.values.points import Points
 from src.infra.database import Database
-from src.infra.orm import ORMNote
-from src.infra.orm.user import ORMUser
+from src.infra.orm import ORMNote, ORMUser
 from tests.use_cases import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )

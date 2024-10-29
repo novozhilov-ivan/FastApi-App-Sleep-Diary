@@ -7,10 +7,10 @@ from src.application.api.routers.auth.schemas import (
     PasswordForm,
     UserNameForm,
 )
-from src.infra.authorization.base import BaseTokenService
+from src.infra.authorization import IUserTokenService
 from src.project.containers import get_container
 from src.service_layer.exceptions.base import AuthenticationException
-from src.service_layer.services.base import BaseUserAuthenticationService
+from src.service_layer.services.base import IUserAuthenticationService
 
 
 router = APIRouter(
@@ -31,8 +31,8 @@ def auth_user_issue_jwt(
     password: str = PasswordForm,
     container: Container = Depends(get_container),
 ) -> dict:
-    authentication_service: BaseUserAuthenticationService
-    authentication_service = container.resolve(BaseUserAuthenticationService)
+    authentication_service: IUserAuthenticationService
+    authentication_service = container.resolve(IUserAuthenticationService)
     try:
         authentication_service.login(username, password)
     except AuthenticationException as exception:
@@ -41,5 +41,5 @@ def auth_user_issue_jwt(
             detail={"error": exception.message},
         )
 
-    token_service: BaseTokenService = container.resolve(BaseTokenService)
+    token_service: IUserTokenService = container.resolve(IUserTokenService)
     return token_service.create_access(authentication_service.user)
