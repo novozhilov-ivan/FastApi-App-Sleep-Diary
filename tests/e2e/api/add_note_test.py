@@ -13,8 +13,8 @@ from src.domain.exceptions import (
     TimePointsSequenceException,
 )
 from src.domain.values.points import Points
-from src.infrastructure.converters import convert_points_to_json
-from src.infrastructure.orm import ORMUser
+from src.infra.converters import convert_points_to_json
+from src.infra.orm import ORMUser
 from src.service_layer import Diary
 from tests.unit.conftest import FakePoints
 from tests.use_cases import (

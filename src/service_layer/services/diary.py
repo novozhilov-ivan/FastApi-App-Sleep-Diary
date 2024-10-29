@@ -7,12 +7,12 @@ from src.domain import services
 from src.domain.entities.note import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
 from src.domain.values.points import Points
-from src.infrastructure.repository.base import BaseDiaryRepository
+from src.infra.repository.base import BaseNotesRepository
 
 
 @dataclass
 class Diary:
-    repository: BaseDiaryRepository
+    repository: BaseNotesRepository
 
     # user_service: InitVar[UserAuthenticationService]
     # owner_oid: UUID = field(init=False)

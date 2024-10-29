@@ -2,12 +2,15 @@ from functools import lru_cache
 
 from punq import Container, Scope
 
-from src.infrastructure.authorization.base import BaseTokenService
-from src.infrastructure.authorization.jwt import JWTService
-from src.infrastructure.database import Database
-from src.infrastructure.repository import BaseDiaryRepository, ORMDiaryRepository
-from src.infrastructure.repository.base import BaseUserRepository
-from src.infrastructure.repository.orm_user import ORMUserRepository
+from src.infra.authorization.base import BaseTokenService
+from src.infra.authorization.jwt import JWTService
+from src.infra.database import Database
+from src.infra.repository import (
+    BaseNotesRepository,
+    BaseUsersRepository,
+    ORMNotesRepository,
+    ORMUsersRepository,
+)
 from src.project.settings import Settings
 from src.service_layer import Diary
 from src.service_layer.services.base import BaseUserAuthenticationService
@@ -32,20 +35,20 @@ def _init_container() -> Container:
         settings = container.resolve(Settings)
         return Database(url=settings.POSTGRES_DB_URL)
 
-    def init_diary_repository() -> ORMDiaryRepository:
+    def init_notes_repository() -> BaseNotesRepository:
         database = container.resolve(Database)
-        return ORMDiaryRepository(database)
+        return ORMNotesRepository(database)
 
-    def init_user_repository() -> BaseUserRepository:
+    def init_users_repository() -> BaseUsersRepository:
         database = container.resolve(Database)
-        return ORMUserRepository(database)
+        return ORMUsersRepository(database)
 
     def init_authentication_service() -> BaseUserAuthenticationService:
-        repository = container.resolve(BaseUserRepository)
+        repository = container.resolve(BaseUsersRepository)
         return UserAuthenticationService(repository)
 
-    def init_diary() -> Diary:
-        repository = container.resolve(BaseDiaryRepository)
+    def init_diary_service() -> Diary:
+        repository = container.resolve(BaseNotesRepository)
         return Diary(repository)
 
     container.register(
@@ -59,16 +62,16 @@ def _init_container() -> Container:
         scope=Scope.singleton,
     )
     container.register(
-        BaseDiaryRepository,
-        factory=init_diary_repository,
+        BaseNotesRepository,
+        factory=init_notes_repository,
         scope=Scope.singleton,
     )
     container.register(
-        BaseUserRepository,
-        factory=init_user_repository,
+        BaseUsersRepository,
+        factory=init_users_repository,
         scope=Scope.singleton,
     )
-    container.register(Diary, factory=init_diary, scope=Scope.singleton)
+    container.register(Diary, factory=init_diary_service, scope=Scope.singleton)
     container.register(
         BaseUserAuthenticationService,
         factory=init_authentication_service,

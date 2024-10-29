@@ -1,83 +1,93 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import time
+from typing import TYPE_CHECKING
 from typing_extensions import Self
 
 from more_itertools import is_sorted
 
-from src.domain.specifications.base import BasePointsSpecification
+from src.domain.specifications.base import BaseSpecification
+
+
+if TYPE_CHECKING:
+    from src.domain.values.points import Points
 
 
 @dataclass
-class PointsSequenceIsSortedAsc(BasePointsSpecification, ABC):
+class PointsSpecification(BaseSpecification, ABC):
+    _points: "Points"
+
+
+@dataclass
+class PointsSequenceIsSortedAsc(PointsSpecification, ABC):
     """
     True если каждая временная точка из последовательности меньше или равна
     следующей.
     """
 
     @abstractmethod
-    def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
+    def _sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         raise NotImplementedError
 
-    def is_sorted(self: Self) -> bool:
-        return is_sorted(self.sequence_of_points())
+    def _is_sorted(self: Self) -> bool:
+        return is_sorted(self._sequence_of_points())
 
     def __bool__(self: Self) -> bool:
-        return self.is_sorted()
+        return self._is_sorted()
 
 
 @dataclass
 class WentToBedPointFirstInOrder(PointsSequenceIsSortedAsc):
-    def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
+    def _sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.went_to_bed,
-            self.points.fell_asleep,
-            self.points.woke_up,
-            self.points.got_up,
+            self._points.went_to_bed,
+            self._points.fell_asleep,
+            self._points.woke_up,
+            self._points.got_up,
         )
 
 
 @dataclass
 class FellAsleepPointFirstInOrder(PointsSequenceIsSortedAsc):
-    def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
+    def _sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.fell_asleep,
-            self.points.woke_up,
-            self.points.got_up,
-            self.points.went_to_bed,
+            self._points.fell_asleep,
+            self._points.woke_up,
+            self._points.got_up,
+            self._points.went_to_bed,
         )
 
 
 @dataclass
 class WokUpPointFirstInOrder(PointsSequenceIsSortedAsc):
-    def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
+    def _sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.woke_up,
-            self.points.got_up,
-            self.points.went_to_bed,
-            self.points.fell_asleep,
+            self._points.woke_up,
+            self._points.got_up,
+            self._points.went_to_bed,
+            self._points.fell_asleep,
         )
 
 
 @dataclass
 class GotUpPointFirstInOrder(PointsSequenceIsSortedAsc):
-    def sequence_of_points(self: Self) -> tuple[time, time, time, time]:
+    def _sequence_of_points(self: Self) -> tuple[time, time, time, time]:
         return (
-            self.points.got_up,
-            self.points.went_to_bed,
-            self.points.fell_asleep,
-            self.points.woke_up,
+            self._points.got_up,
+            self._points.went_to_bed,
+            self._points.fell_asleep,
+            self._points.woke_up,
         )
 
 
-@dataclass(eq=True)
-class PointsHasValidAnyAllowedSortedSequences(BasePointsSpecification):
+@dataclass
+class PointsHasValidAnyAllowedSortedSequences(PointsSpecification):
     def __bool__(self: Self) -> bool:
         return any(
             (
-                WentToBedPointFirstInOrder(self.points),
-                GotUpPointFirstInOrder(self.points),
-                WokUpPointFirstInOrder(self.points),
-                FellAsleepPointFirstInOrder(self.points),
+                WentToBedPointFirstInOrder(self._points),
+                GotUpPointFirstInOrder(self._points),
+                WokUpPointFirstInOrder(self._points),
+                FellAsleepPointFirstInOrder(self._points),
             ),
         )

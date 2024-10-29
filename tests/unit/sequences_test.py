@@ -26,7 +26,7 @@ from tests.use_cases import (
 def test_sequence_where_went_to_bed_is_wrong(wrong_points: tuple):
     points = FakePoints(*wrong_points)
     specification = WentToBedPointFirstInOrder(points)
-    assert not specification.is_sorted()
+    assert not specification._is_sorted()
     assert bool(specification) is False
     assert not specification
 
@@ -38,7 +38,7 @@ def test_sequence_where_went_to_bed_is_wrong(wrong_points: tuple):
 def test_sequence_where_fell_asleep_is_wrong(wrong_points: tuple):
     points = FakePoints(*wrong_points)
     specification = FellAsleepPointFirstInOrder(points)
-    assert not specification.is_sorted()
+    assert not specification._is_sorted()
     assert bool(specification) is False
     assert not specification
 
@@ -50,7 +50,7 @@ def test_sequence_where_fell_asleep_is_wrong(wrong_points: tuple):
 def test_sequence_where_woke_up_is_wrong(wrong_points: tuple):
     points = FakePoints(*wrong_points)
     specification = WokUpPointFirstInOrder(points)
-    assert not specification.is_sorted()
+    assert not specification._is_sorted()
     assert bool(specification) is False
     assert not specification
 
@@ -62,7 +62,7 @@ def test_sequence_where_woke_up_is_wrong(wrong_points: tuple):
 def test_sequence_where_got_up_is_wrong(wrong_points: tuple):
     points = FakePoints(*wrong_points)
     specification = GotUpPointFirstInOrder(points)
-    assert not specification.is_sorted()
+    assert not specification._is_sorted()
     assert bool(specification) is False
     assert not specification
 

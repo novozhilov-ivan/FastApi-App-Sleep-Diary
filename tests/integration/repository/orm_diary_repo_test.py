@@ -6,10 +6,10 @@ from sqlalchemy import text
 from src.domain.entities.note import NoteEntity
 from src.domain.services import DiaryService
 from src.domain.values.points import Points
-from src.infrastructure.database import Database
-from src.infrastructure.orm import ORMNote, ORMUser
-from src.infrastructure.repository import (
-    ORMDiaryRepository,
+from src.infra.database import Database
+from src.infra.orm import ORMNote, ORMUser
+from src.infra.repository import (
+    ORMNotesRepository,
 )
 from tests.use_cases import points_order_desc_from_went_to_bed
 
@@ -23,7 +23,7 @@ def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
         points=points,
     )
 
-    repository = ORMDiaryRepository(memory_database)
+    repository = ORMNotesRepository(memory_database)
     repository.add(note)
 
     with memory_database.get_session() as session:
@@ -65,7 +65,7 @@ def test_repo_can_retrieve_note_entity_by_oid(
     points = Points(*points_order_desc_from_went_to_bed)
     inserted_note_orm = insert_note(memory_database, user, points)
 
-    repository = ORMDiaryRepository(memory_database)
+    repository = ORMNotesRepository(memory_database)
     retrieved_entity: NoteEntity | None = repository.get(inserted_note_orm.oid)
 
     assert retrieved_entity
@@ -88,7 +88,7 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
     points = Points(*points_order_desc_from_went_to_bed)
     insert_note(memory_database, user, points)
 
-    repository = ORMDiaryRepository(memory_database)
+    repository = ORMNotesRepository(memory_database)
     retrieved_entity: NoteEntity | None = repository.get_by_bedtime_date(
         points.bedtime_date,
         user.oid,
@@ -111,7 +111,7 @@ def test_repo_can_retrieve_diary(memory_database: Database, user: ORMUser):
     points = Points(*points_order_desc_from_went_to_bed)
     insert_note(memory_database, user, points)
 
-    repository = ORMDiaryRepository(memory_database)
+    repository = ORMNotesRepository(memory_database)
     retrieved_notes = repository.get_all_notes(user.oid)
     diary = DiaryService.create(retrieved_notes)
 

@@ -9,7 +9,7 @@ from uuid import uuid4
 from jwt import DecodeError, decode, encode
 
 from src.domain.entities.user import UserEntity
-from src.infrastructure.authorization.exceptions import (
+from src.infra.authorization.exceptions import (
     JWTAuthorizationException,
     JWTTypeException,
 )

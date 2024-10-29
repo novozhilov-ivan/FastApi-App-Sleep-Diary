@@ -4,8 +4,8 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.domain.entities.user import UserEntity
-from src.infrastructure.orm.base import ORMBase
-from src.infrastructure.orm.mixins import MixinUpdatedAt, MixinUUIDOid
+from src.infra.orm.base import ORMBase
+from src.infra.orm.mixins import MixinUpdatedAt, MixinUUIDOid
 
 
 class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):

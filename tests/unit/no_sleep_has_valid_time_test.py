@@ -17,6 +17,6 @@ from tests.use_cases import (
 def test_create_points_with_no_sleep_time_gt_sleep_time(wrong_points: tuple):
     points = FakePoints(*wrong_points)
     specification = NoSleepHasValidTime(Durations(points))
-    assert not specification.no_sleep_duration_le_sleep_duration()
+    assert not specification._no_sleep_duration_le_sleep_duration()
     assert bool(specification) is False
     assert not specification

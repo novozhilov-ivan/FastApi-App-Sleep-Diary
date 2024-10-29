@@ -6,8 +6,8 @@ from src.application.api.routers.auth.schemas import (
     AuthUserSelfInfoResponse,
     oauth2_scheme,
 )
-from src.infrastructure.authorization.base import BaseTokenService
-from src.infrastructure.authorization.exceptions import JWTAuthorizationException
+from src.infra.authorization.base import BaseTokenService
+from src.infra.authorization.exceptions import JWTAuthorizationException
 from src.project.containers import get_container
 
 

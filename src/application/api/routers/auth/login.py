@@ -7,7 +7,7 @@ from src.application.api.routers.auth.schemas import (
     PasswordForm,
     UserNameForm,
 )
-from src.infrastructure.authorization.base import BaseTokenService
+from src.infra.authorization.base import BaseTokenService
 from src.project.containers import get_container
 from src.service_layer.exceptions.base import AuthenticationException
 from src.service_layer.services.base import BaseUserAuthenticationService

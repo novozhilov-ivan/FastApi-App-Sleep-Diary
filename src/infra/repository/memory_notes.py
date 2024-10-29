@@ -4,18 +4,21 @@ from typing_extensions import Self
 from uuid import UUID
 
 from src.domain.entities.note import NoteEntity
-from src.infrastructure.repository import BaseDiaryRepository
+from src.infra.repository import BaseNotesRepository
 
 
 @dataclass
-class MemoryDiaryRepository(BaseDiaryRepository):
+class MemoryNotesRepository(BaseNotesRepository):
     _saved_notes: set[NoteEntity] = field(default_factory=set)
 
     def add(self: Self, note: NoteEntity) -> None:
         self._saved_notes.add(note)
 
-    def get(self: Self, oid: UUID) -> None:
-        raise NotImplementedError
+    def get(self: Self, oid: UUID) -> NoteEntity | None:
+        try:
+            return next(note for note in self._saved_notes if note.oid == oid)
+        except StopIteration:
+            return None
 
     def get_by_bedtime_date(
         self: Self,

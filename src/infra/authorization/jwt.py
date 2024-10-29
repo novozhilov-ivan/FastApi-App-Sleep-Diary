@@ -3,7 +3,7 @@ from datetime import timedelta
 from typing_extensions import Self
 
 from src.domain.entities.user import UserEntity
-from src.infrastructure.authorization.base import BaseTokenService, JWTTypes
+from src.infra.authorization.base import BaseTokenService, JWTTypes
 
 
 @dataclass

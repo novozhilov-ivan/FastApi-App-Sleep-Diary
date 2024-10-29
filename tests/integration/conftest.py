@@ -2,8 +2,8 @@ import pytest
 
 from sqlalchemy import text
 
-from src.infrastructure.database import Database
-from src.infrastructure.orm import ORMUser, metadata
+from src.infra.database import Database
+from src.infra.orm import ORMUser, metadata
 
 
 stmt_insert_note = text(

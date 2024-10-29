@@ -6,7 +6,7 @@ from typing_extensions import Self
 from bcrypt import checkpw, gensalt, hashpw
 
 from src.domain.entities.user import UserEntity
-from src.infrastructure.repository.base import BaseUserRepository
+from src.infra.repository.base import BaseUsersRepository
 from src.service_layer.exceptions.login import LogInException
 
 
@@ -17,7 +17,7 @@ class BaseUserAuthenticationService(ABC):
         "Неверное имя пользователя или пароль."
     )
 
-    repository: BaseUserRepository
+    repository: BaseUsersRepository
 
     _user: UserEntity = field(init=False)
 

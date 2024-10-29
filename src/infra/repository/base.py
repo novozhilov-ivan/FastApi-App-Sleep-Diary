@@ -9,7 +9,7 @@ from src.domain.entities.user import UserEntity
 
 
 @dataclass
-class BaseDiaryRepository(ABC):
+class BaseNotesRepository(ABC):
     @abstractmethod
     def add(self: Self, note: NoteEntity) -> None:
         raise NotImplementedError
@@ -32,7 +32,7 @@ class BaseDiaryRepository(ABC):
 
 
 @dataclass
-class BaseUserRepository(ABC):
+class BaseUsersRepository(ABC):
     @abstractmethod
     def get_by_username(self: Self, username: str) -> UserEntity | None:
         raise NotImplementedError

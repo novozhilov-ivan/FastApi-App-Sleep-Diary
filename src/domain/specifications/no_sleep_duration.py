@@ -8,10 +8,10 @@ from src.domain.specifications.base import BaseSpecification
 
 @dataclass
 class NoSleepHasValidTime(BaseSpecification):
-    durations: BaseDurations
+    _durations: BaseDurations
 
-    def no_sleep_duration_le_sleep_duration(self: Self) -> bool:
-        return le(self.durations.without_sleep, self.durations.sleep)
+    def _no_sleep_duration_le_sleep_duration(self: Self) -> bool:
+        return le(self._durations.without_sleep, self._durations.sleep)
 
     def __bool__(self: Self) -> bool:
-        return self.no_sleep_duration_le_sleep_duration()
+        return self._no_sleep_duration_le_sleep_duration()

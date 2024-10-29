@@ -6,10 +6,10 @@ from sqlalchemy import Engine, create_engine, text
 from starlette.testclient import TestClient
 
 from src.application.api.main import create_app
-from src.infrastructure.database import Database
-from src.infrastructure.orm import ORMUser, metadata
-from src.infrastructure.repository import (
-    BaseDiaryRepository,
+from src.infra.database import Database
+from src.infra.orm import ORMUser, metadata
+from src.infra.repository import (
+    BaseNotesRepository,
 )
 from src.project.containers import get_container
 from src.project.settings import Settings
@@ -68,8 +68,8 @@ def container(database: Database) -> Container:
 
     container.register(
         Database,
-        scope=Scope.singleton,
         instance=database,
+        scope=Scope.singleton,
     )
     return container
 
@@ -90,8 +90,8 @@ def user(container: Container) -> ORMUser:
 
 
 @pytest.fixture
-def repository(container: Container) -> BaseDiaryRepository:
-    return container.resolve(BaseDiaryRepository)
+def repository(container: Container) -> BaseNotesRepository:
+    return container.resolve(BaseNotesRepository)
 
 
 @pytest.fixture

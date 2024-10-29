@@ -2,9 +2,8 @@ from uuid import uuid4
 
 from src.domain.entities.note import NoteEntity
 from src.domain.values.points import Points
-from src.infrastructure.database import Database
-from src.infrastructure.orm import ORMNote
-from src.infrastructure.orm.user import ORMUser
+from src.infra.database import Database
+from src.infra.orm import ORMNote, ORMUser
 from tests.integration.conftest import stmt_insert_note
 from tests.use_cases import (
     TN,

@@ -6,15 +6,15 @@ from uuid import UUID
 from sqlalchemy import select
 
 from src.domain.entities.note import NoteEntity
-from src.infrastructure.database import Database
-from src.infrastructure.orm import ORMNote
-from src.infrastructure.repository.base import (
-    BaseDiaryRepository,
+from src.infra.database import Database
+from src.infra.orm import ORMNote
+from src.infra.repository.base import (
+    BaseNotesRepository,
 )
 
 
 @dataclass
-class ORMDiaryRepository(BaseDiaryRepository):
+class ORMNotesRepository(BaseNotesRepository):
     database: Database
 
     def add(self: Self, note: NoteEntity) -> None:

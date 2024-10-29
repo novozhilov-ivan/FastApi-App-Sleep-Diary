@@ -4,7 +4,7 @@ from typing_extensions import Self
 
 
 if TYPE_CHECKING:
-    from src.infrastructure.authorization.base import JWTTypes
+    from src.infra.authorization.base import JWTTypes
 
 
 @dataclass(eq=False)
