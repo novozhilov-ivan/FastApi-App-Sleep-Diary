@@ -3,20 +3,30 @@ from datetime import time, timedelta
 from operator import floordiv, mod, truediv
 from typing_extensions import Self
 
-from src.domain.services.base import BaseDurations, BaseStatistics
+from src.domain.entities import IStatistics
 
 
 @dataclass
-class Statistics(BaseStatistics):
-    def __post_init__(self: Self, durations: BaseDurations) -> None:
-        self.sleep = self._convert_timedelta_seconds_to_time(durations.sleep)
-        self.in_bed = self._convert_timedelta_seconds_to_time(durations.in_bed)
-        self.sleep_minus_no_sleep = self._convert_timedelta_seconds_to_time(
-            durations.sleep_minus_without_sleep,
+class Statistics(IStatistics):
+    @property
+    def sleep(self: Self) -> time:
+        return self._convert_timedelta_seconds_to_time(self.durations.sleep)
+
+    @property
+    def in_bed(self: Self) -> time:
+        return self._convert_timedelta_seconds_to_time(self.durations.in_bed)
+
+    @property
+    def sleep_minus_no_sleep(self: Self) -> time:
+        return self._convert_timedelta_seconds_to_time(
+            self.durations.sleep_minus_without_sleep,
         )
-        self.sleep_efficiency = self._compute_efficiency(
-            durations.sleep_minus_without_sleep,
-            durations.in_bed,
+
+    @property
+    def sleep_efficiency(self: Self) -> float:
+        return self._compute_efficiency(
+            self.durations.sleep_minus_without_sleep,
+            self.durations.in_bed,
         )
 
     @staticmethod

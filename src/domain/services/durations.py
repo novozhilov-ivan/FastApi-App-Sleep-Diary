@@ -1,26 +1,28 @@
 from dataclasses import dataclass
 from datetime import time, timedelta
 from operator import ge, sub
-from typing import TYPE_CHECKING
 from typing_extensions import Self
 
-from src.domain.services.base import BaseDurations
-
-
-if TYPE_CHECKING:
-    from src.domain.values.points import Points
+from src.domain.entities import IDurations
 
 
 @dataclass
-class Durations(BaseDurations):
-    def __post_init__(self: Self, points: "Points") -> None:
-        self.sleep = self._get_duration(points.woke_up, points.fell_asleep)
-        self.in_bed = self._get_duration(points.got_up, points.went_to_bed)
-        self.without_sleep = self._get_duration(points.no_sleep)
-        self.sleep_minus_without_sleep = self._get_sub_of_durations(
-            self.sleep,
-            self.without_sleep,
-        )
+class Durations(IDurations):
+    @property
+    def sleep(self: Self) -> timedelta:
+        return self._get_duration(self.points.woke_up, self.points.fell_asleep)
+
+    @property
+    def in_bed(self: Self) -> timedelta:
+        return self._get_duration(self.points.got_up, self.points.went_to_bed)
+
+    @property
+    def without_sleep(self: Self) -> timedelta:
+        return self._get_duration(self.points.no_sleep)
+
+    @property
+    def sleep_minus_without_sleep(self: Self) -> timedelta:
+        return self._get_sub_of_durations(self.sleep, self.without_sleep)
 
     @staticmethod
     def _point_time_to_duration(point: time) -> timedelta:

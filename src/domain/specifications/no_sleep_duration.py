@@ -2,13 +2,13 @@ from dataclasses import dataclass
 from operator import le
 from typing_extensions import Self
 
-from src.domain.services.base import BaseDurations
+from src.domain.entities import IDurations
 from src.domain.specifications.base import BaseSpecification
 
 
 @dataclass
 class NoSleepHasValidTime(BaseSpecification):
-    _durations: BaseDurations
+    _durations: IDurations
 
     def _no_sleep_duration_le_sleep_duration(self: Self) -> bool:
         return le(self._durations.without_sleep, self._durations.sleep)

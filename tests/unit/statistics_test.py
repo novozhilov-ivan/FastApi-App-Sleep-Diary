@@ -3,13 +3,10 @@ from operator import truediv
 
 import pytest
 
-from src.domain.services import Durations
-from src.domain.services.base import BaseStatistics
-from src.domain.services.points_statistics import Statistics
+from src.domain.entities import IStatistics
+from src.domain.services import Durations, Statistics
 from src.domain.values.points import Points
-from tests.unit.conftest import (
-    FakePoints,
-)
+from tests.unit.conftest import FakePoints
 from tests.use_cases import (
     correct_points_4_different_order_of_sequences_and_one_hour_no_sleep,
     date_point,
@@ -27,7 +24,7 @@ from tests.use_cases import (
 )
 def test_statistics_with_all_zero_points(points_in: tuple):
     points = FakePoints(*points_in)
-    statistics_: BaseStatistics = Statistics(Durations(points))
+    statistics_: IStatistics = Statistics(Durations(points))
 
     assert statistics_.sleep == time()
     assert statistics_.in_bed == time()
@@ -44,7 +41,7 @@ def test_note_statistic_some_correct_points():
         time(10, 9),
         time(0, 11),
     )
-    statistics_: BaseStatistics = Statistics(Durations(points))
+    statistics_: IStatistics = Statistics(Durations(points))
 
     assert statistics_.sleep == time(hour=8, minute=8)
     assert statistics_.in_bed == time(hour=8, minute=44)
@@ -66,7 +63,7 @@ def test_statistics_of_correct_points_with_different_order_and_same_durations(
     points_in: tuple,
 ):
     points = Points(*points_in)
-    statistics_: BaseStatistics = Statistics(Durations(points))
+    statistics_: IStatistics = Statistics(Durations(points))
 
     assert statistics_.sleep == time(8)
     assert statistics_.in_bed == time(12)
