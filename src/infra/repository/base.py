@@ -35,3 +35,11 @@ class IUsersRepository(ABC):
     @abstractmethod
     def get_by_username(self: Self, username: str) -> UserEntity | None:
         raise NotImplementedError
+
+    @abstractmethod
+    def add_user(self: Self, username: str, password: str) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def delete_user(self: Self, username: str) -> None:
+        raise NotImplementedError

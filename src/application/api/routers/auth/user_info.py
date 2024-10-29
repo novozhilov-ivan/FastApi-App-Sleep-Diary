@@ -3,7 +3,7 @@ from punq import Container
 from starlette import status
 
 from src.application.api.routers.auth.schemas import (
-    AuthUserSelfInfoResponse,
+    MeInfoResponse,
     oauth2_scheme,
 )
 from src.infra.authorization import IUserTokenService, JWTAuthorizationException
@@ -11,7 +11,7 @@ from src.project.containers import get_container
 
 
 router = APIRouter(
-    tags=["Authorization"],
+    tags=["Authentication"],
     responses={
         status.HTTP_401_UNAUTHORIZED: {"model": JWTAuthorizationException},
     },
@@ -20,10 +20,14 @@ router = APIRouter(
 
 @router.get(
     path="/me/",
+    description=(
+        "Эндпоинт для получения информации авторизованному пользователю о себе из "
+        "токена."
+    ),
     status_code=status.HTTP_200_OK,
-    response_model=AuthUserSelfInfoResponse,
+    response_model=MeInfoResponse,
 )
-def auth_user_check_self_info(
+def me_info(
     credentials: str = Depends(oauth2_scheme),
     container: Container = Depends(get_container),
 ) -> dict:

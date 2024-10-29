@@ -12,7 +12,7 @@ class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):
     __tablename__ = "users"
 
     username: Mapped[str] = mapped_column(String(128), primary_key=True, unique=True)
-    password: Mapped[bytes]
+    password: Mapped[str]
 
     def to_entity(self: Self) -> UserEntity:
         return UserEntity(

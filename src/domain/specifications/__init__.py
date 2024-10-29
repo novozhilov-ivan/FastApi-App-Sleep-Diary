@@ -6,6 +6,7 @@ from src.domain.specifications.sequences import (
     WentToBedPointFirstInOrder,
     WokUpPointFirstInOrder,
 )
+from src.domain.specifications.user_credentials import UserCredentialsSpecification
 
 
 __all__ = [
@@ -15,4 +16,5 @@ __all__ = [
     "WokUpPointFirstInOrder",
     "FellAsleepPointFirstInOrder",
     "PointsHasValidAnyAllowedSortedSequences",
+    "UserCredentialsSpecification",
 ]

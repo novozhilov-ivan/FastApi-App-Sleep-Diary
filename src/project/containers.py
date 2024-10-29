@@ -76,7 +76,7 @@ def _init_container() -> Container:
     container.register(
         IUserAuthenticationService,
         factory=init_authentication_service,
-        scope=Scope.singleton,
+        scope=Scope.transient,
     )
 
     return container

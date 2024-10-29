@@ -22,3 +22,7 @@ class ORMUsersRepository(IUsersRepository):
         if isinstance(result, ORMUser):
             return result.to_entity()
         return None
+
+    def add_user(self: Self, username: str, password: str) -> None: ...
+
+    def delete_user(self: Self, username: str) -> None: ...

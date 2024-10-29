@@ -1,8 +1,6 @@
 from fastapi import Form
-from fastapi.security import (
-    OAuth2PasswordBearer,
-)
-from pydantic import UUID4, BaseModel, Field
+from fastapi.security import OAuth2PasswordBearer
+from pydantic import UUID4, BaseModel
 
 from src.infra.authorization import JWTTypes
 
@@ -29,17 +27,6 @@ PasswordForm: str = Form(
 )
 
 
-class LogInUserRequestSchema(BaseModel):
-    username: str = Field(
-        title="User name",
-        description="Имя пользователя для входа",
-    )
-    password: str = Field(
-        title="Password",
-        description="Пароль пользователя",
-    )
-
-
-class AuthUserSelfInfoResponse(BaseModel):
+class MeInfoResponse(BaseModel):
     oid: UUID4
     username: str

@@ -24,7 +24,7 @@ all: up
 	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest" api
 
 logs:
-	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres pgadmin
+	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
 sh:
 	docker exec -it api bash
 bi:
