@@ -142,6 +142,7 @@ flake8-annotations-coverage = "^0.0.6"
 flake8-annotations = "^3.1.1"
 flake8-isort = "^6.1.1"
 ipython = "^8.29.0"
+pytest-mypy = "^0.10.3"
 
 [build-system]
 requires = ["poetry-core"]
