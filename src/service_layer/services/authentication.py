@@ -32,7 +32,7 @@ class UserAuthenticationService(IUserAuthenticationService):
         cast(UserEntity, self._user)
 
     def logout(self: Self) -> None:
-        if not isinstance(self._user, NotAuthenticated):
+        if isinstance(self._user, NotAuthenticated):
             raise NotAuthenticatedException
 
         self._user = NotAuthenticated()
@@ -42,32 +42,29 @@ class UserAuthenticationService(IUserAuthenticationService):
         if self.repository.get_by_username(username) is not None:
             raise UserNameAlreadyExistException
 
-        if specification := UserCredentialsSpecification(username, password):
+        if not (specification := UserCredentialsSpecification(username, password)):
             raise UserCredentialsFormatException(specification)
 
         self.repository.add_user(
             UserEntity(
                 username=username,
-                password=self._hash_password(password),
+                password=self.hash_password(password),
             ),
         )
 
-    def unregister(self: Self, username: str) -> None:
-        if not isinstance(self._user, NotAuthenticated):
-            raise NotAuthenticatedException
-
-        self.repository.delete_user(username)
+    def unregister(self: Self) -> None:
+        self.repository.delete_user(self.user.username)
         self.logout()
 
     @staticmethod
-    def _hash_password(pwd_bytes: str, encoding: str = DEFAULT_ENCODING) -> str:
+    def hash_password(pwd: str, encoding: str = DEFAULT_ENCODING) -> str:
         return hashpw(
-            password=pwd_bytes.encode(encoding),
+            password=pwd.encode(encoding),
             salt=gensalt(),
         ).decode(encoding)
 
     @staticmethod
-    def _compare_passwords(
+    def compare_passwords(
         password: str,
         hashed_password: str,
         encoding: str = DEFAULT_ENCODING,
@@ -87,7 +84,7 @@ class UserAuthenticationService(IUserAuthenticationService):
         return user
 
     def _validate_user_password(self: Self, user: UserEntity, password: str) -> None:
-        if not self._compare_passwords(
+        if not self.compare_passwords(
             password=password,
             hashed_password=user.password,
         ):

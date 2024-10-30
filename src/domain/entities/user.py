@@ -14,3 +14,6 @@ class UserEntity(BaseEntity):
         if not isinstance(other, UserEntity):
             return NotImplemented
         return eq(self.username, other.username)
+
+    def __hash__(self: Self) -> int:
+        return hash(self.username)

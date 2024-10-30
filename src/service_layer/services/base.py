@@ -41,5 +41,5 @@ class IUserAuthenticationService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def unregister(self: Self, username: str) -> None:
+    def unregister(self: Self) -> None:
         raise NotImplementedError

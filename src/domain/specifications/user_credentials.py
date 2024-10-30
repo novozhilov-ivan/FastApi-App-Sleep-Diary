@@ -20,7 +20,7 @@ class UserCredentialsSpecification(BaseSpecification):
         return self.MIN_LEN_USERNAME < len(self.username) < self.MAX_LEN_USERNAME
 
     def _validate_password(self: Self) -> bool:
-        return self.MIN_LEN_PASSWORD < len(self.username) < self.MAX_LEN_PASSWORD
+        return self.MIN_LEN_PASSWORD < len(self.password) < self.MAX_LEN_PASSWORD
 
     def __bool__(self: Self) -> bool:
         return and_(self._validate_password(), self._validate_username())
