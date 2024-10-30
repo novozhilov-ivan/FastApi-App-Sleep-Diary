@@ -21,7 +21,7 @@ integration: up
 e2e: up
 	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" api
 all: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
 
 logs:
 	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
