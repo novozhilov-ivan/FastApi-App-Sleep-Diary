@@ -1,0 +1,18 @@
+networks:
+  backend:
+    driver: bridge
+
+services:
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:8.4
+    restart: always
+    env_file:
+      - .env
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_DEFAULT_EMAIL:?}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_DEFAULT_PASSWORD:?}
+    ports:
+      - "5050:80"
+    networks:
+      - backend
