@@ -4,7 +4,7 @@ from typing_extensions import Self
 from uuid import UUID
 
 from src.domain.entities import NoteEntity
-from src.infra.repository import INotesRepository
+from src.domain.services import INotesRepository
 
 
 @dataclass
@@ -14,7 +14,7 @@ class MemoryNotesRepository(INotesRepository):
     def add(self: Self, note: NoteEntity) -> None:
         self._saved_notes.add(note)
 
-    def get(self: Self, oid: UUID) -> NoteEntity | None:
+    def get_by_oid(self: Self, oid: UUID) -> NoteEntity | None:
         try:
             return next(note for note in self._saved_notes if note.oid == oid)
         except StopIteration:

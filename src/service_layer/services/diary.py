@@ -6,8 +6,8 @@ from uuid import UUID
 from src.domain import services
 from src.domain.entities import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
+from src.domain.services import INotesRepository
 from src.domain.values.points import Points
-from src.infra.repository.base import INotesRepository
 
 
 @dataclass

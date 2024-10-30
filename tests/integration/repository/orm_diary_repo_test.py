@@ -64,7 +64,9 @@ def test_repo_can_retrieve_note_entity_by_oid(
     inserted_note_orm = insert_note(memory_database, user, points)
 
     repository = ORMNotesRepository(memory_database)
-    retrieved_entity: NoteEntity | None = repository.get(inserted_note_orm.oid)
+    retrieved_entity: NoteEntity | None = repository.get_by_oid(
+        inserted_note_orm.oid,
+    )
 
     assert retrieved_entity
     assert isinstance(retrieved_entity, NoteEntity)

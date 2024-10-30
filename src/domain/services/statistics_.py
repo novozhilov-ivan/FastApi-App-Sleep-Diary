@@ -3,7 +3,7 @@ from datetime import time, timedelta
 from operator import floordiv, mod, truediv
 from typing_extensions import Self
 
-from src.domain.entities import IStatistics
+from src.domain.services import IStatistics
 
 
 @dataclass

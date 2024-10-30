@@ -5,8 +5,8 @@ from typing_extensions import Self
 from bcrypt import checkpw, gensalt, hashpw
 
 from src.domain.entities import UserEntity
+from src.domain.services import IUsersRepository
 from src.domain.specifications import UserCredentialsSpecification
-from src.infra.repository import IUsersRepository
 from src.service_layer.exceptions import (
     LogInException,
     NotAuthenticatedException,
@@ -39,13 +39,18 @@ class UserAuthenticationService(IUserAuthenticationService):
         cast(NotAuthenticated, self._user)
 
     def register(self: Self, username: str, password: str) -> None:
-        if self.repository.get_by_username(username):
+        if self.repository.get_by_username(username) is not None:
             raise UserNameAlreadyExistException
 
         if specification := UserCredentialsSpecification(username, password):
             raise UserCredentialsFormatException(specification)
 
-        self.repository.add_user(username, self._hash_password(password))
+        self.repository.add_user(
+            UserEntity(
+                username=username,
+                password=self._hash_password(password),
+            ),
+        )
 
     def unregister(self: Self, username: str) -> None:
         if not isinstance(self._user, NotAuthenticated):

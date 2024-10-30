@@ -2,9 +2,14 @@ from typing_extensions import Self
 
 import pytest
 
+from src.domain.services import INotesRepository, IUsersRepository
 from src.domain.values.points import Points
-from src.infra.repository import INotesRepository, MemoryNotesRepository
+from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
 from src.service_layer import Diary
+from src.service_layer.services import (
+    IUserAuthenticationService,
+    UserAuthenticationService,
+)
 
 
 class FakePoints(Points):
@@ -14,6 +19,18 @@ class FakePoints(Points):
 @pytest.fixture
 def notes_repository() -> INotesRepository:
     return MemoryNotesRepository()
+
+
+@pytest.fixture
+def user_repository() -> IUsersRepository:
+    return MemoryUsersRepository()
+
+
+@pytest.fixture
+def authentication_service(
+    user_repository: IUsersRepository,
+) -> IUserAuthenticationService:
+    return UserAuthenticationService(user_repository)
 
 
 @pytest.fixture

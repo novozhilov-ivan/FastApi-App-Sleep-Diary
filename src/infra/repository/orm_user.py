@@ -4,9 +4,9 @@ from typing_extensions import Self
 from sqlalchemy import select
 
 from src.domain.entities import UserEntity
+from src.domain.services import IUsersRepository
 from src.infra.database import Database
 from src.infra.orm import ORMUser
-from src.infra.repository.base import IUsersRepository
 
 
 @dataclass
@@ -23,6 +23,6 @@ class ORMUsersRepository(IUsersRepository):
             return result.to_entity()
         return None
 
-    def add_user(self: Self, username: str, password: str) -> None: ...
+    def add_user(self: Self, user: UserEntity) -> None: ...
 
     def delete_user(self: Self, username: str) -> None: ...

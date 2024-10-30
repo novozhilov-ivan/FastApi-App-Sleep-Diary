@@ -5,7 +5,7 @@ import pytest
 
 from src.domain.entities import NoteEntity
 from src.domain.exceptions import NonUniqueNoteBedtimeDateException
-from src.infra.repository import INotesRepository
+from src.domain.services import INotesRepository
 from src.service_layer import Diary
 from tests.use_cases import points_order_desc_from_went_to_bed
 

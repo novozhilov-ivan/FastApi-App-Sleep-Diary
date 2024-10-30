@@ -2,11 +2,10 @@ from functools import lru_cache
 
 from punq import Container, Scope
 
+from src.domain.services import INotesRepository, IUsersRepository
 from src.infra.authorization import IUserTokenService, UserJWTService
 from src.infra.database import Database
 from src.infra.repository import (
-    INotesRepository,
-    IUsersRepository,
     ORMNotesRepository,
     ORMUsersRepository,
 )

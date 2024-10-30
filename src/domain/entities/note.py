@@ -5,10 +5,11 @@ from typing import TYPE_CHECKING
 from typing_extensions import Self
 from uuid import UUID
 
-from src.domain.entities import BaseEntity, IDurations, IStatistics
+from src.domain.entities import BaseEntity
 
 
 if TYPE_CHECKING:
+    from src.domain.services import IDurations, IStatistics
     from src.domain.values.points import Points
 
 
@@ -17,8 +18,8 @@ if TYPE_CHECKING:
 class NoteEntity(BaseEntity):
     owner_oid: UUID
     points: "Points"
-    durations: IDurations | None = None
-    statistics_of_points: IStatistics | None = None
+    durations: "IDurations" = None
+    statistics_of_points: "IStatistics" = None
 
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, NoteEntity):

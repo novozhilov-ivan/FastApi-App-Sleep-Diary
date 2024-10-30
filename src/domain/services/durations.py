@@ -3,7 +3,7 @@ from datetime import time, timedelta
 from operator import ge, sub
 from typing_extensions import Self
 
-from src.domain.entities import IDurations
+from src.domain.services import IDurations
 
 
 @dataclass

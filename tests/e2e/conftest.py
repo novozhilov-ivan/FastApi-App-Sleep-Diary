@@ -6,11 +6,9 @@ from sqlalchemy import Engine, create_engine, text
 from starlette.testclient import TestClient
 
 from src.application.api.main import create_app
+from src.domain.services import INotesRepository
 from src.infra.database import Database
 from src.infra.orm import ORMUser, metadata
-from src.infra.repository import (
-    INotesRepository,
-)
 from src.project.containers import get_container
 from src.project.settings import Settings
 from src.service_layer import Diary

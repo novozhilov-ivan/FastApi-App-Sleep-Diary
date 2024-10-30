@@ -3,8 +3,7 @@ from operator import truediv
 
 import pytest
 
-from src.domain.entities import IStatistics
-from src.domain.services import Durations, Statistics
+from src.domain.services import Durations, IStatistics, Statistics
 from src.domain.values.points import Points
 from tests.unit.conftest import FakePoints
 from tests.use_cases import (

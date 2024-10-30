@@ -6,9 +6,9 @@ from uuid import UUID
 from sqlalchemy import select
 
 from src.domain.entities import NoteEntity
+from src.domain.services import INotesRepository
 from src.infra.database import Database
 from src.infra.orm import ORMNote
-from src.infra.repository import INotesRepository
 
 
 @dataclass
@@ -19,7 +19,7 @@ class ORMNotesRepository(INotesRepository):
         with self.database.get_session() as session:
             session.add(ORMNote.from_entity(note))
 
-    def get(self: Self, oid: UUID) -> NoteEntity | None:
+    def get_by_oid(self: Self, oid: UUID) -> NoteEntity | None:
         stmt = select(ORMNote).where(ORMNote.oid == oid).limit(1)
 
         with self.database.get_session() as session:

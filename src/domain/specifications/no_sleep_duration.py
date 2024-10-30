@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from operator import le
 from typing_extensions import Self
 
-from src.domain.entities import IDurations
+from src.domain.services import IDurations
 from src.domain.specifications.base import BaseSpecification
 
 
