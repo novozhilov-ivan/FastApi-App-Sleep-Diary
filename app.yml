@@ -13,10 +13,11 @@ services:
     networks:
       - backend
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
-      PRIVATE_KEY: ${PRIVATE_KEY}
-      PUBLIC_KEY: ${PUBLIC_KEY}
+      PRIVATE_KEY: ${PRIVATE_KEY:?"Приватный ключ обязателен"}
+      PUBLIC_KEY: ${PUBLIC_KEY:?"Публичный ключ обязателен"}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
