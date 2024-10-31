@@ -27,13 +27,13 @@ down-all:
 	docker compose -f app.yml -f postgres.yml down --remove-orphans
 
 unit: up
-	docker compose -f app.yml run --rm --entrypoint="pytest tests/unit" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/unit" api
 integration: up
-	docker compose -f app.yml run --rm --entrypoint="pytest tests/integration" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/integration" api
 e2e: up
-	docker compose -f app.yml run --rm --entrypoint="pytest tests/e2e" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" api
 all: up
-	docker compose -f app.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
 
 logs:
 	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
