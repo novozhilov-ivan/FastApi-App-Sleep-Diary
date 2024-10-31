@@ -6,35 +6,37 @@ on:
   pull_request:
     branches: [master, development]
 
-jobs:
-  env:
-    PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-    PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-    POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-    POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-    POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-    POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-    POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
 
-  up-postgresql-server:
-    name: Поднятие сервера PostgreSQL
-    runs-on: ubuntu-22.04
-    services:
-      postgres:
-        container_name: postgres
-        image: postgres:16
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - ${POSTGRES_PORT}:${POSTGRES_PORT}
+jobs:
+  runs-on: ubuntu-22.04
+  services:
+    postgres:
+      container_name: postgres
+      image: postgres:16
+      env:
+        POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+        POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+        POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      options: >-
+        --health-cmd pg_isready
+        --health-interval 10s
+        --health-timeout 5s
+        --health-retries 5
+      ports:
+        - ${POSTGRES_PORT}:${POSTGRES_PORT}
+
 
   build-sleep-diary-app-image:
     name: Сборка образа Sleep Diary Python приложения
     runs-on: ubuntu-22.04
-
+    env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
