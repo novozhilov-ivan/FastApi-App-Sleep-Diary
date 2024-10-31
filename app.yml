@@ -15,8 +15,8 @@ services:
     env_file:
       - .env
     environment:
-      PRIVATE_KEY: ${PRIVATE_KEY:?}
-      PUBLIC_KEY: ${PUBLIC_KEY:?}
+      PRIVATE_KEY: ${PRIVATE_KEY}
+      PUBLIC_KEY: ${PUBLIC_KEY}
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
