@@ -49,24 +49,24 @@ jobs:
     runs-on: ubuntu-22.04
     needs: [build-sleep-diary-app-image]
     steps:
-      run: |
-        make unit
+      - run: |
+          make unit
 
   run-integration-tests:
     name: Прогон integration тестов
     runs-on: ubuntu-22.04
     needs: [build-sleep-diary-app-image]
     steps:
-      run: |
-        make integration
+      - run: |
+          make integration
 
   run-e2e-tests:
     name: Прогон e2e тестов
     runs-on: ubuntu-22.04
     needs: [build-sleep-diary-app-image]
     steps:
-      run: |
-        make e2e
+      - run: |
+          make e2e
 
 
 
