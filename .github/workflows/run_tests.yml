@@ -1,4 +1,4 @@
-name: Run tests
+name: CI
 
 on:
   push:
@@ -11,20 +11,6 @@ jobs:
   build-sleep-diary-app-image:
     name: Сборка образа и запуск сервиса PostgreSQL
     runs-on: ubuntu-22.04
-#    services:
-#      postgres:
-#        image: postgres:16
-#        env:
-#          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-#          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-#          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-#        options: >-
-#          --health-cmd pg_isready
-#          --health-interval 10s
-#          --health-timeout 5s
-#          --health-retries 5
-#        ports:
-#          - 5432:5432
     env:
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
@@ -40,15 +26,18 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: ls
+      - name: Скачивание PostgreSQL
         run: |
-          ls -la
-      - name: Запуск пг
+          make pull-postgres
+      - name: Запуск PostgreSQL
         run: |
           make up-postgres
-      - name: Сборка образа Sleep Diary Python приложения
+      - name: Сборка Sleep Diary
         run: |
           make build
+      - name: Запуск Sleep Diary
+        run: |
+          make up
       - name: Запуск unit тестов
         run: |
           make unit
@@ -61,3 +50,6 @@ jobs:
       - name: Запуск всех тестов
         run: |
           make all
+      - name: Остановка всех контейнеров
+        run: |
+          make down-all

@@ -10,6 +10,9 @@ services:
       dockerfile: Dockerfile
     image: sleep-diary-app-image
     restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
     networks:
       - backend
     env_file:
