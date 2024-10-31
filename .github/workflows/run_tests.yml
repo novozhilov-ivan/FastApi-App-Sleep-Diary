@@ -26,6 +26,8 @@ jobs:
         ports:
           - 5432:5432
     env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
@@ -41,47 +43,15 @@ jobs:
       - name: Сборка образа Sleep Diary Python приложения
         run: |
           make build
-
-  run-unit-tests:
-    name: Прогон unit тестов
-    runs-on: ubuntu-22.04
-    env:
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-    needs: [build-sleep-diary-app-image]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - run: |
+      - name: Запуск unit тестов
+        run: |
           make unit
-
-  run-integration-tests:
-    name: Прогон integration тестов
-    runs-on: ubuntu-22.04
-    env:
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-    needs: [build-sleep-diary-app-image]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - run: |
+      - name: Запуск integration тестов
+        run: |
           make integration
-
-  run-e2e-tests:
-    name: Прогон e2e тестов
-    runs-on: ubuntu-22.04
-    env:
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-    needs: [build-sleep-diary-app-image]
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - run: |
+      - name: Запуск e2e тестов
+        run: |
           make e2e
-
-
-
-
-
+      - name: Запуск всех тестов
+        run: |
+          make all
