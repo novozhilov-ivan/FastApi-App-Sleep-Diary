@@ -5,9 +5,15 @@ export COMPOSE_IGNORE_ORPHANS=1
 
 build:
 	docker compose -f app.yml -f postgres.yml build
+pull:
+	docker compose -f postgres.yml pull
+
 pgadmin:
 	docker compose -f pgadmin.yml up -d --no-recreate
-up: build pgadmin
+
+up: build pull
+	docker compose -f app.yml -f postgres.yml up -d
+up-all: build pgadmin
 	docker compose -f app.yml -f postgres.yml up -d
 down:
 	docker compose -f app.yml -f postgres.yml down
