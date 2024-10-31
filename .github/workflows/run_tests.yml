@@ -43,30 +43,30 @@ jobs:
       - name: Сборка
         run: |
           make build
-      - name: Сборка
-        run: |
-          docker images
 
-#  run-unit-tests:
-#    name: Прогон unit тестов
-#    runs-on: ubuntu-22.04
-#    needs: [build-sleep-diary-app-image]
-#    steps:
-#        uses: pytest tests/unit
-#
-#  run-integration-tests:
-#    name: Прогон integration тестов
-#    runs-on: ubuntu-22.04
-#    needs: [build-sleep-diary-app-image]
-#    steps:
-#      uses: pytest tests/integration
-#
-#  run-e2e-tests:
-#    name: Прогон e2e тестов
-#    runs-on: ubuntu-22.04
-#    needs: [up-postgresql-server, build-sleep-diary-app-image]
-#    steps:
-#      uses: pytest tests/e2e
+  run-unit-tests:
+    name: Прогон unit тестов
+    runs-on: ubuntu-22.04
+    needs: [build-sleep-diary-app-image]
+    steps:
+      run: |
+        make unit
+
+  run-integration-tests:
+    name: Прогон integration тестов
+    runs-on: ubuntu-22.04
+    needs: [build-sleep-diary-app-image]
+    steps:
+      run: |
+        make integration
+
+  run-e2e-tests:
+    name: Прогон e2e тестов
+    runs-on: ubuntu-22.04
+    needs: [build-sleep-diary-app-image]
+    steps:
+      run: |
+        make e2e
 
 
 
