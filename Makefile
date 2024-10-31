@@ -4,14 +4,14 @@ export COMPOSE_IGNORE_ORPHANS=1
 
 
 build:
-	docker compose -f app.yml -f postgres.yml build
+	docker compose -f app.yml build
 up-postgres:
 	docker compose -f postgres.yml up -d
-pgadmin:
+up-pgadmin:
 	docker compose -f pgadmin.yml up -d --no-recreate
 up: build
-	docker compose -f app.yml -f postgres.yml up -d
-up-all: build pgadmin
+	docker compose -f app.yml up -d
+up-all: build up-pgadmin
 	docker compose -f app.yml -f postgres.yml up -d
 down: down-postgres
 	docker compose -f app.yml down
@@ -20,13 +20,13 @@ down-postgres:
 down-all:
 	docker compose -f app.yml -f postgres.yml down --remove-orphans
 unit: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/unit" api
+	docker compose -f app.yml run --rm --entrypoint="pytest tests/unit" api
 integration: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/integration" api
+	docker compose -f app.yml run --rm --entrypoint="pytest tests/integration" api
 e2e: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" api
+	docker compose -f app.yml run --rm --entrypoint="pytest tests/e2e" api
 all: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
+	docker compose -f app.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
 logs:
 	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
 sh:
