@@ -1,0 +1,57 @@
+name: Run tests
+
+on:
+  push:
+    branches:
+      - "master"
+      - "development"
+  pull_request:
+    branches:
+      - "master"
+      - "development"
+
+jobs:
+  run-tests:
+    name: Прогон тестов в контейнере
+    runs-on: ubuntu-22.04
+    env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Pull PostgreSQL server image
+        run: | 
+          make pull
+
+      - name: Sleep Diary app docker image build from Dockerfile
+        run: | 
+          make build
+
+      - name: Up App with PostgreSQL
+        run: | 
+          make up
+
+      - name: Run unit tests
+        run: | 
+          make unit
+
+      - name: Run integration tests
+        run: | 
+          make integration
+
+      - name: Run e2e tests
+        run: | 
+          make e2e
+
+      - name: Run all tests
+        run: | 
+          make all
