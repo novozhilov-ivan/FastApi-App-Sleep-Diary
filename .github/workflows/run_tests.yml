@@ -13,7 +13,6 @@ jobs:
     runs-on: ubuntu-22.04
     services:
       postgres:
-        container_name: postgres
         image: postgres:16
         options: >-
           --health-cmd pg_isready
