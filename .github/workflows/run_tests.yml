@@ -25,6 +25,14 @@ jobs:
 #          --health-retries 5
 #        ports:
 #          - 5432:5432
+    env:
+      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
+      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
+      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
+      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -32,17 +40,7 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Create env file
-        run: |
-          touch .env
-          echo ${{ secrets.PRIVATE_KEY }} >> .env
-          echo ${{ secrets.PUBLIC_KEY }} >> .env
-          echo ${{ secrets.POSTGRES_DB }} >> .env
-          echo ${{ secrets.POSTGRES_USER }} >> .env
-          echo ${{ secrets.POSTGRES_PASSWORD }} >> .env
-          echo ${{ secrets.POSTGRES_HOST }} >> .env
-          echo ${{ secrets.POSTGRES_PORT }} >> .env
-      - name: Сборка образа Sleep Diary Python приложения
+      - name: Запуск пг
         run: |
           make up-postgres
       - name: Сборка образа Sleep Diary Python приложения
