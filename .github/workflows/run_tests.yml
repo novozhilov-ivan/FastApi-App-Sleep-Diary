@@ -9,7 +9,7 @@ on:
 
 jobs:
   build-sleep-diary-app-image:
-    name: Сборка образа и запуск сервиса PostgreSQL
+    name: Сборка образа Приложения, запуск сервиса PostgreSQL и запуск тестов приложения
     runs-on: ubuntu-22.04
     env:
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
