@@ -11,28 +11,20 @@ jobs:
   build-sleep-diary-app-image:
     name: Сборка образа и запуск сервиса PostgreSQL
     runs-on: ubuntu-22.04
-    services:
-      postgres:
-        image: postgres:16
-        env:
-          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    env:
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
-      POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
-      POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
-      POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
-      POSTGRES_HOST: ${{ secrets.POSTGRES_HOST }}
-      POSTGRES_PORT: ${{ secrets.POSTGRES_PORT }}
+#    services:
+#      postgres:
+#        image: postgres:16
+#        env:
+#          POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
+#          POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
+#          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+#        options: >-
+#          --health-cmd pg_isready
+#          --health-interval 10s
+#          --health-timeout 5s
+#          --health-retries 5
+#        ports:
+#          - 5432:5432
     steps:
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -40,6 +32,19 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Create env file
+        run: |
+          touch .env
+          echo ${{ secrets.PRIVATE_KEY }} >> .env
+          echo ${{ secrets.PUBLIC_KEY }} >> .env
+          echo ${{ secrets.POSTGRES_DB }} >> .env
+          echo ${{ secrets.POSTGRES_USER }} >> .env
+          echo ${{ secrets.POSTGRES_PASSWORD }} >> .env
+          echo ${{ secrets.POSTGRES_HOST }} >> .env
+          echo ${{ secrets.POSTGRES_PORT }} >> .env
+      - name: Сборка образа Sleep Diary Python приложения
+        run: |
+          make up-postgres
       - name: Сборка образа Sleep Diary Python приложения
         run: |
           make build
