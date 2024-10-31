@@ -20,7 +20,7 @@ jobs:
           --health-timeout 5s
           --health-retries 5
         ports:
-          - ${POSTGRES_PORT}:${POSTGRES_PORT}
+          - 5432:5432
     env:
       PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
       PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
