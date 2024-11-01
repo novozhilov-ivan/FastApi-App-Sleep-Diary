@@ -4,14 +4,14 @@ from starlette import status
 
 from src.application.api.routers.auth.schemas import (
     MeInfoResponse,
-    oauth2_scheme,
 )
 from src.infra.authorization import IUserTokenService, JWTAuthorizationException
+from src.infra.authorization.base import UserJWTPayload
 from src.project.containers import get_container
 
 
 router = APIRouter(
-    tags=["Authentication"],
+    tags=["JWT"],
     responses={
         status.HTTP_401_UNAUTHORIZED: {"model": JWTAuthorizationException},
     },
@@ -28,14 +28,13 @@ router = APIRouter(
     response_model=MeInfoResponse,
 )
 def me_info(
-    credentials: str = Depends(oauth2_scheme),
     container: Container = Depends(get_container),
-) -> dict:
+) -> UserJWTPayload:
     token_service: IUserTokenService = container.resolve(IUserTokenService)
     try:
-        return token_service.get_token_payload(credentials)
+        return token_service.payload
     except JWTAuthorizationException as exception:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": exception.message},
         )

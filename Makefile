@@ -36,7 +36,7 @@ all: up
 	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
 
 logs:
-	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
+	docker compose -f app.yml -f postgres.yml logs --tail=25 api
 sh:
 	docker exec -it api bash
 bi:

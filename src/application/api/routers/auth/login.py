@@ -3,11 +3,12 @@ from punq import Container
 from starlette import status
 
 from src.application.api.routers.auth.schemas import (
-    JWTResponseSchema,
+    AccessJWTResponseSchema,
     PasswordForm,
     UserNameForm,
 )
 from src.infra.authorization import IUserTokenService
+from src.infra.authorization.base import AccessToken
 from src.project.containers import get_container
 from src.service_layer.exceptions import (
     AuthenticationException,
@@ -17,9 +18,9 @@ from src.service_layer.services import IUserAuthenticationService
 
 
 router = APIRouter(
-    tags=["Authentication"],
+    tags=["Authentication", "JWT"],
     responses={
-        status.HTTP_201_CREATED: {"model": JWTResponseSchema},
+        status.HTTP_201_CREATED: {"model": AccessJWTResponseSchema},
     },
 )
 
@@ -31,13 +32,13 @@ router = APIRouter(
         "И выпуска JWT токена для дальнейшей авторизации пользователя."
     ),
     status_code=status.HTTP_201_CREATED,
-    response_model=JWTResponseSchema,
+    response_model=AccessJWTResponseSchema,
 )
 def authenticate_user_and_issue_jwt(
     username: str = UserNameForm,
     password: str = PasswordForm,
     container: Container = Depends(get_container),
-) -> dict:
+) -> AccessToken:
     authentication_service: IUserAuthenticationService
     authentication_service = container.resolve(IUserAuthenticationService)
 
@@ -47,12 +48,12 @@ def authenticate_user_and_issue_jwt(
         authentication_service.login(username, password)
         return token_service.create_access(authentication_service.user)
     except UserCredentialsFormatException as exception:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={"error": exception.message},
         )
     except AuthenticationException as exception:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail={"error": exception.message},
         )
