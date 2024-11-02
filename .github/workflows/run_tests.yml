@@ -26,6 +26,10 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Создание ключей шифрования
+        run: |
+          openssl genrsa -out jwt-private.pem 2048 &&
+          openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
       - name: Скачивание PostgreSQL
         run: |
           make pull-postgres

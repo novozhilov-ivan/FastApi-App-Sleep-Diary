@@ -35,7 +35,7 @@ class UserJWTService(IUserTokenService):
     def _encode_payload(self: Self, payload: IPayload) -> str:
         return encode(
             payload=payload.convert_to_dict(),
-            key=self.settings.PRIVATE_KEY.read_text(),
+            key=self.settings.PRIVATE_KEY,
             algorithm=self.settings.ALGORITHM,
         )
 
@@ -44,7 +44,7 @@ class UserJWTService(IUserTokenService):
             return UserJWTPayload(
                 **decode(
                     jwt=token,
-                    key=self.settings.PUBLIC_KEY.read_text(),
+                    key=self.settings.PUBLIC_KEY,
                     algorithms=[self.settings.ALGORITHM],
                 ),
             )
