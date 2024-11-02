@@ -14,9 +14,9 @@ class UserCredentialsFormatException(AuthenticationException):
         return (
             f"Неправильный формат данных пользователя: "
             f"Имя пользователя должно быть больше "
-            f"{self.specification.MIN_LEN_USERNAME} символов и меньше"
+            f"{self.specification.MIN_LEN_USERNAME} символов и меньше "
             f"{self.specification.MAX_LEN_USERNAME} символов. "
             f"Пароль должен быть больше "
-            f"{self.specification.MIN_LEN_PASSWORD} символов и меньше"
+            f"{self.specification.MIN_LEN_PASSWORD} символов и меньше "
             f"{self.specification.MAX_LEN_PASSWORD} символов."
         )

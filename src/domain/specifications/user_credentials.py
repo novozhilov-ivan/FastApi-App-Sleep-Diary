@@ -10,7 +10,7 @@ from src.domain.specifications.base import BaseSpecification
 class UserCredentialsSpecification(BaseSpecification):
     MIN_LEN_USERNAME: ClassVar[int] = 3
     MAX_LEN_USERNAME: ClassVar[int] = 25
-    MIN_LEN_PASSWORD: ClassVar[int] = 7
+    MIN_LEN_PASSWORD: ClassVar[int] = 5
     MAX_LEN_PASSWORD: ClassVar[int] = 25
 
     username: str

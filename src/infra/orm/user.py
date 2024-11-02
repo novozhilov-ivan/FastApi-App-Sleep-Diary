@@ -22,3 +22,13 @@ class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):
             username=self.username,
             password=self.password,
         )
+
+    @classmethod
+    def from_entity(cls: type["ORMUser"], user: UserEntity) -> "ORMUser":
+        return cls(
+            oid=user.oid,
+            created_at=user.created_at,
+            updated_at=user.updated_at,
+            username=user.username,
+            password=user.password,
+        )

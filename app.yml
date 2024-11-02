@@ -2,6 +2,12 @@ networks:
   backend:
     driver: bridge
 
+secrets:
+   private_key:
+     file: ./jwt-private.pem
+   public_key:
+     file: ./jwt-public.pem
+
 services:
   api:
     container_name: api
@@ -16,15 +22,20 @@ services:
     networks:
       - backend
     env_file:
-      - .env
+      - path: .env
+        required: false
+    secrets:
+      - source: private_key
+        target: /app/jwt-private.pem
+      - source: public_key
+        target: /app/jwt-public.pem
+
     environment:
-      PRIVATE_KEY: ${PRIVATE_KEY:?}
-      PUBLIC_KEY: ${PUBLIC_KEY:?}
-      POSTGRES_DB: ${POSTGRES_DB:?}
-      POSTGRES_USER: ${POSTGRES_USER:?}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
-      POSTGRES_HOST: ${POSTGRES_HOST:?}
-      POSTGRES_PORT: ${POSTGRES_PORT:?}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_HOST: ${POSTGRES_HOST}
+      POSTGRES_PORT: ${POSTGRES_PORT}
     ports:
       - "8000:8000"
     working_dir: /app

@@ -35,12 +35,12 @@ def register_user(
     try:
         authentication_service.register(username, password)
     except UserCredentialsFormatException as exception:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
             detail={"error": exception.message},
         )
     except UserRegisterException as exception:
-        HTTPException(
+        raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail={"error": exception.message},
         )
