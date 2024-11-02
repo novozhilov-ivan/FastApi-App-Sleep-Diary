@@ -23,6 +23,8 @@ class ORMUsersRepository(IUsersRepository):
             return result.to_entity()
         return None
 
-    def add_user(self: Self, user: UserEntity) -> None: ...
+    def add_user(self: Self, user: UserEntity) -> None:
+        with self.database.get_session() as session:
+            session.add(ORMUser.from_entity(user))
 
     def delete_user(self: Self, username: str) -> None: ...

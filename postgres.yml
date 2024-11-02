@@ -2,25 +2,30 @@ networks:
   backend:
     driver: bridge
 
+volumes:
+  postgres-data:
+    name: postgres-data
+
 services:
   postgres:
     container_name: postgres
     image: postgres:16
     restart: always
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready"]
-      interval: 1s
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 3s
       timeout: 5s
       retries: 10
     env_file:
-      - .env
+      - path: .env
+        required: false
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:?}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?}
-      POSTGRES_DB: ${POSTGRES_DB:?}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     ports:
       - "5432:5432"
     volumes:
-      - ./postgres-data:/var/lib/postgresql/data
+      - postgres-data:/var/lib/postgresql/data
     networks:
       - backend

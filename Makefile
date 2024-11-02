@@ -5,10 +5,22 @@ export COMPOSE_IGNORE_ORPHANS=1
 
 build:
 	docker compose -f app.yml -f postgres.yml build
-pgadmin:
+
+pull-postgres:
+	docker compose -f postgres.yml pull
+pull-pgadmin:
+	docker compose -f pgadmin.yml up pull
+pull-all: pull-postgres pull-pgadmin
+
+up-postgres:
+	docker compose -f postgres.yml up -d
+up-pgadmin:
 	docker compose -f pgadmin.yml up -d --no-recreate
-up: build pgadmin
+up: build
 	docker compose -f app.yml -f postgres.yml up -d
+up-all: build up-postgres up-pgadmin
+	docker compose -f app.yml -f postgres.yml up -d
+
 down:
 	docker compose -f app.yml -f postgres.yml down
 down-all:
@@ -21,10 +33,10 @@ integration: up
 e2e: up
 	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" api
 all: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest" api
+	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
 
 logs:
-	docker compose -f app.yml -f postgres.yml logs --tail=25 api postgres
+	docker compose -f app.yml -f postgres.yml logs --tail=25 api
 sh:
 	docker exec -it api bash
 bi:

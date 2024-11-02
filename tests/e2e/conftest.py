@@ -23,7 +23,7 @@ def settings() -> Settings:
     return Settings()
 
 
-@pytest.fixture(scope="session", autouse=True)
+@pytest.fixture(scope="session")
 def engine(settings: Settings) -> Engine:
     test_db_name = settings.test_postgres_db
 
@@ -52,15 +52,12 @@ def engine(settings: Settings) -> Engine:
     return create_engine(settings.test_postgres_url)
 
 
-@pytest.fixture
-def database(settings: Settings, engine: Engine) -> Database:
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
-
+@pytest.fixture(scope="session")
+def database(settings: Settings) -> Database:
     return Database(settings.test_postgres_url)
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture(scope="session")
 def container(database: Database) -> Container:
     container = init_dummy_container()
 
@@ -70,6 +67,39 @@ def container(database: Database) -> Container:
         scope=Scope.singleton,
     )
     return container
+
+
+@pytest.fixture(scope="session")
+def repository(container: Container) -> INotesRepository:
+    return container.resolve(INotesRepository)
+
+
+@pytest.fixture(scope="session")
+def diary(container: Container) -> Diary:
+    return container.resolve(Diary)
+
+
+@pytest.fixture(scope="session")
+def app() -> FastAPI:
+
+    @pytest.mark.usefixtures("container")
+    def get_app() -> FastAPI:
+        app = create_app()
+        app.dependency_overrides[get_container] = init_dummy_container
+        return app
+
+    return get_app()
+
+
+@pytest.fixture(scope="session")
+def client(app: FastAPI) -> TestClient:
+    return TestClient(app)
+
+
+@pytest.fixture(autouse=True)
+def _recreate_tables(engine: Engine) -> None:
+    metadata.drop_all(engine)
+    metadata.create_all(engine)
 
 
 @pytest.fixture
@@ -85,25 +115,3 @@ def user(container: Container) -> ORMUser:
         session.commit()
         session.refresh(user)
     return user
-
-
-@pytest.fixture
-def repository(container: Container) -> INotesRepository:
-    return container.resolve(INotesRepository)
-
-
-@pytest.fixture
-def diary(container: Container) -> Diary:
-    return container.resolve(Diary)
-
-
-@pytest.fixture
-def app(container: Container) -> FastAPI:  # noqa: U100
-    app = create_app()
-    app.dependency_overrides[get_container] = init_dummy_container
-    return app
-
-
-@pytest.fixture
-def client(app: FastAPI) -> TestClient:
-    return TestClient(app)
