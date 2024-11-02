@@ -12,8 +12,6 @@ jobs:
     name: Сборка образа Приложения, запуск сервиса PostgreSQL и запуск тестов приложения
     runs-on: ubuntu-22.04
     env:
-      PRIVATE_KEY: ${{ secrets.PRIVATE_KEY }}
-      PUBLIC_KEY: ${{ secrets.PUBLIC_KEY }}
       POSTGRES_DB: ${{ secrets.POSTGRES_DB }}
       POSTGRES_USER: ${{ secrets.POSTGRES_USER }}
       POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
