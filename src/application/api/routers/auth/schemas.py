@@ -26,5 +26,5 @@ PasswordForm: str = Form(
 
 
 class MeInfoResponse(BaseModel):
-    oid: UUID4
+    sub: UUID4
     username: str

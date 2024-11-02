@@ -38,7 +38,7 @@ class IPayload(ABC):
 
 @dataclass(kw_only=True)
 class JWTPayload(IPayload):
-    token_type: TokenType
+    typ: TokenType
 
     expire_timedelta: InitVar[timedelta | None] = None
 
@@ -57,7 +57,7 @@ class JWTPayload(IPayload):
 
     def convert_to_dict(self: Self) -> dict:
         return {
-            "type": self.token_type.value,
+            "type_": self.typ.value,
             "iat": self.iat,
             "exp": self.exp,
             "jti": self.jti,
@@ -88,9 +88,8 @@ class IUserTokenService(ABC):
     def create_refresh(self: Self, user: UserEntity) -> RefreshToken:
         raise NotImplementedError
 
-    @property
     @abstractmethod
-    def payload(self: Self) -> UserJWTPayload:
+    def get_payload(self: Self, token: str) -> UserJWTPayload:
         raise NotImplementedError
 
     @abstractmethod

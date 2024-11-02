@@ -4,9 +4,6 @@ from typing_extensions import Self
 from uuid import UUID
 
 from fastapi import Depends, Header
-from fastapi.security import (
-    OAuth2PasswordBearer,
-)
 from jwt import DecodeError, decode, encode
 
 from src.domain.entities import UserEntity
@@ -23,9 +20,6 @@ from src.infra.authorization.exceptions import (
     JWTTypeException,
 )
 from src.project.settings import AuthJWTSettings
-
-
-oauth2_password_flow = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 @dataclass
@@ -57,7 +51,7 @@ class UserJWTService(IUserTokenService):
                 UserJWTPayload(
                     sub=str(user.oid),
                     username=user.username,
-                    token_type=TokenType.ACCESS,
+                    typ=TokenType.ACCESS,
                     expire_timedelta=timedelta(
                         minutes=self.settings.ACCESS_TOKEN_EXPIRE_MINUTES,
                     ),
@@ -71,7 +65,7 @@ class UserJWTService(IUserTokenService):
                 UserJWTPayload(
                     sub=str(user.oid),
                     username=user.username,
-                    token_type=TokenType.REFRESH,
+                    typ=TokenType.REFRESH,
                     expire_timedelta=timedelta(
                         days=self.settings.REFRESH_TOKEN_EXPIRE_DAYS,
                     ),
@@ -79,13 +73,8 @@ class UserJWTService(IUserTokenService):
             ),
         )
 
-    @staticmethod
-    def get_current_jwt(jwt: str = Depends(oauth2_password_flow)) -> str:
-        return jwt
-
-    @property
-    def payload(self: Self) -> UserJWTPayload:
-        return self._decode_jwt(self.get_current_jwt())
+    def get_payload(self: Self, token: str) -> UserJWTPayload:
+        return self._decode_jwt(token)
 
     def deauthorize(self: Self) -> None: ...
 
@@ -98,11 +87,11 @@ class UserJWTService(IUserTokenService):
         self: Self,
         token_type: TokenType = Depends(_received_token_type),
     ) -> None:
-        if not isinstance(self.payload.token_type, TokenType):
+        if not isinstance(self.payload.typ, TokenType):
             raise JWTAuthorizationException
 
-        if self.payload.token_type != token_type:
-            raise JWTTypeException(self.payload.token_type, token_type)
+        if self.payload.typ != token_type:
+            raise JWTTypeException(self.payload.typ, token_type)
 
     def get_user_oid(self: Self) -> UUID:
         return UUID(self.payload.sub)
