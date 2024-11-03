@@ -1,17 +1,15 @@
-from src.infra.authorization.base import IUserTokenService
+from src.infra.authorization.base import IUserAuthorizationService
 from src.infra.authorization.exceptions import (
     JWTAuthorizationException,
-    JWTExpireAtFieldException,
     JWTTypeException,
 )
-from src.infra.authorization.jwt import TokenType, UserJWTService
+from src.infra.authorization.user import JWTType, UserAuthorizationService
 
 
 __all__ = (
-    "IUserTokenService",
+    "IUserAuthorizationService",
     "JWTTypeException",
-    "JWTExpireAtFieldException",
     "JWTAuthorizationException",
-    "TokenType",
-    "UserJWTService",
+    "JWTType",
+    "UserAuthorizationService",
 )

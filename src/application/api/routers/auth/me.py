@@ -6,7 +6,10 @@ from src.application.api.routers.auth.schemas import (
     MeInfoResponse,
 )
 from src.application.api.schemas import jwt_dependency
-from src.infra.authorization import IUserTokenService, JWTAuthorizationException
+from src.infra.authorization import (
+    IUserAuthorizationService,
+    JWTAuthorizationException,
+)
 from src.infra.authorization.base import UserJWTPayload
 from src.project.containers import get_container
 
@@ -27,13 +30,14 @@ router = APIRouter(
     ),
     status_code=status.HTTP_200_OK,
     response_model=MeInfoResponse,
-    dependencies=[Depends(jwt_dependency)],
 )
 def me_info(
     token: str = Depends(jwt_dependency),
     container: Container = Depends(get_container),
 ) -> UserJWTPayload:
-    token_service: IUserTokenService = container.resolve(IUserTokenService)
+    token_service: IUserAuthorizationService
+    token_service = container.resolve(IUserAuthorizationService)
+
     try:
         return token_service.get_payload(token)
     except JWTAuthorizationException as exception:

@@ -1,9 +1,5 @@
 from fastapi import Form
-from fastapi.security import OAuth2PasswordBearer
 from pydantic import UUID4, BaseModel
-
-
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/auth/login")
 
 
 class AccessJWTResponseSchema(BaseModel):

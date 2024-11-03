@@ -5,7 +5,9 @@ import pytest
 from src.domain.entities import UserEntity
 from src.domain.services import INotesRepository, IUsersRepository
 from src.domain.values.points import Points
+from src.infra.jwt import IJWTService, JWTService
 from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
+from src.project.settings import AuthJWTSettings
 from src.service_layer import Diary
 from src.service_layer.services import (
     IUserAuthenticationService,
@@ -15,11 +17,6 @@ from src.service_layer.services import (
 
 class FakePoints(Points):
     def validate(self: Self) -> None: ...
-
-
-@pytest.fixture
-def notes_repository() -> INotesRepository:
-    return MemoryNotesRepository()
 
 
 @pytest.fixture(scope="session")
@@ -48,5 +45,20 @@ def authentication_service(
 
 
 @pytest.fixture
+def notes_repository() -> INotesRepository:
+    return MemoryNotesRepository()
+
+
+@pytest.fixture
 def diary(notes_repository: INotesRepository) -> Diary:
     return Diary(notes_repository)
+
+
+@pytest.fixture(scope="session")
+def auth_settings() -> AuthJWTSettings:
+    return AuthJWTSettings()
+
+
+@pytest.fixture(scope="session")
+def jwt_service(auth_settings: AuthJWTSettings) -> IJWTService:
+    return JWTService(auth_settings)

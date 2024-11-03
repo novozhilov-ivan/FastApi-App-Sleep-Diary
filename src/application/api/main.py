@@ -1,8 +1,8 @@
-from fastapi import FastAPI
+from fastapi import Depends, FastAPI
 from starlette import status
 
 from src.application.api.routers import about, auth, notes
-from src.application.api.schemas import ErrorSchema
+from src.application.api.schemas import ErrorSchema, jwt_dependency
 
 
 def create_app() -> FastAPI:
@@ -19,6 +19,10 @@ def create_app() -> FastAPI:
     app.include_router(about.router, prefix="/about")
     app.include_router(notes.router, prefix="/notes")
     app.include_router(auth.router_login, prefix="/auth")
-    app.include_router(auth.router_me, prefix="/auth")
+    app.include_router(
+        auth.router_me,
+        prefix="/auth",
+        dependencies=[Depends(jwt_dependency)],
+    )
     app.include_router(auth.router_register, prefix="/auth")
     return app

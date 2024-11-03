@@ -3,7 +3,10 @@ from functools import lru_cache
 from punq import Container, Scope
 
 from src.domain.services import INotesRepository, IUsersRepository
-from src.infra.authorization import IUserTokenService, UserJWTService
+from src.infra.authorization import (
+    IUserAuthorizationService,
+    UserAuthorizationService,
+)
 from src.infra.database import Database
 from src.infra.repository import (
     ORMNotesRepository,
@@ -27,9 +30,9 @@ def _init_container() -> Container:
 
     container.register(Settings, instance=Settings(), scope=Scope.singleton)
 
-    def init_token_service() -> IUserTokenService:
+    def init_token_service() -> IUserAuthorizationService:
         settings = container.resolve(Settings)
-        return UserJWTService(settings)
+        return UserAuthorizationService(settings)
 
     def init_database() -> Database:
         settings = container.resolve(Settings)
@@ -57,7 +60,7 @@ def _init_container() -> Container:
         scope=Scope.singleton,
     )
     container.register(
-        IUserTokenService,
+        IUserAuthorizationService,
         factory=init_token_service,
         scope=Scope.singleton,
     )
