@@ -5,6 +5,7 @@ networks:
 volumes:
   postgres-data:
     name: postgres-data
+    external: true
 
 services:
   postgres:

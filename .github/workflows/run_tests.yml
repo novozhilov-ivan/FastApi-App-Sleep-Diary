@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [master, development, gh_actions]
+    branches-ignore: [master, development]
   pull_request:
     branches: [master, development]
 
