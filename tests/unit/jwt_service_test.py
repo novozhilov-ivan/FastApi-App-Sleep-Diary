@@ -1,9 +1,10 @@
-from datetime import timedelta
+from datetime import UTC, datetime, timedelta
+from operator import add
 from uuid import UUID
 
 import pytest
 
-from src.infra.jwt import IJWTService, JWTPayload, JWTType
+from src.infra.jwt import IJWTService, JWTPayload, JWTService, JWTType
 from src.project.settings import AuthJWTSettings
 
 
@@ -72,3 +73,50 @@ def test_get_jwt_payload(
     assert jwt_payload
     assert isinstance(jwt_payload, dict)
     assert jwt_external_payload.items() <= jwt_payload.items()
+
+
+@pytest.mark.parametrize(
+    ("jwt_type", "expected_expire_seconds", "expire_timedelta"),
+    [
+        (JWTType.ACCESS, 30, timedelta(seconds=30)),
+        (JWTType.REFRESH, 30, timedelta(seconds=30)),
+        (JWTType.ACCESS, 60, timedelta(minutes=1)),
+        (JWTType.REFRESH, 60, timedelta(minutes=1)),
+        (JWTType.ACCESS, 60 * 60, timedelta(hours=1)),
+        (JWTType.REFRESH, 60 * 60, timedelta(hours=1)),
+        (JWTType.ACCESS, 60 * 60 * 24, timedelta(days=1)),
+        (JWTType.REFRESH, 60 * 60 * 24, timedelta(days=1)),
+        (
+            JWTType.ACCESS,
+            timedelta(
+                minutes=AuthJWTSettings().ACCESS_TOKEN_EXPIRE_MINUTES,
+            ).total_seconds(),
+            None,
+        ),
+        (
+            JWTType.REFRESH,
+            timedelta(
+                days=AuthJWTSettings().REFRESH_TOKEN_EXPIRE_DAYS,
+            ).total_seconds(),
+            None,
+        ),
+    ],
+)
+def test_get_expire_at(
+    jwt_type: JWTType,
+    expected_expire_seconds: float,
+    expire_timedelta: timedelta | None,
+    jwt_service: JWTService,
+):
+    expected_expire_at_seconds = add(
+        datetime.now(UTC).timestamp(),
+        expected_expire_seconds,
+    )
+
+    expire_at_seconds = jwt_service.get_expired_at(jwt_type, expire_timedelta)
+
+    assert expected_expire_at_seconds <= expire_at_seconds
+
+    expected_seconds_difference = 0.01
+    seconds_difference = expire_at_seconds - expected_expire_at_seconds
+    assert seconds_difference < expected_seconds_difference

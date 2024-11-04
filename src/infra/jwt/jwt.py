@@ -13,15 +13,13 @@ from src.project.settings import AuthJWTSettings
 @dataclass(kw_only=True)
 class JWTPayload(IPayload):
     typ: JWTType
-    external_payload: dict = field(default_factory=dict)
     iat: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
     exp: float
     jti: str = field(default_factory=lambda: str(uuid4()))
 
     def convert_to_dict(self: Self) -> dict:
         return {
-            **self.external_payload,
-            "typ": self.typ.value,
+            "typ": self.typ,
             "iat": self.iat,
             "exp": self.exp,
             "jti": self.jti,
@@ -58,12 +56,17 @@ class JWTService(IJWTService):
         payload: dict | None = None,
         expired_timedelta: timedelta | None = None,
     ) -> str:
+        if payload is None:
+            payload = {}
+
         return self._encode(
-            JWTPayload(
-                typ=jwt_type,
-                external_payload=payload or {},
-                exp=self.get_expired_at(jwt_type, expired_timedelta),
-            ).convert_to_dict(),
+            {
+                **JWTPayload(
+                    typ=jwt_type,
+                    exp=self.get_expired_at(jwt_type, expired_timedelta),
+                ).convert_to_dict(),
+                **payload,
+            },
         )
 
     def get_jwt_payload(self: Self, jwt: str) -> dict:
@@ -75,7 +78,7 @@ class JWTService(IJWTService):
         expired_timedelta: timedelta | None = None,
     ) -> float:
         if expired_timedelta:
-            return datetime.now(UTC).timestamp() + expired_timedelta.seconds
+            return datetime.now(UTC).timestamp() + expired_timedelta.total_seconds()
 
         expired_seconds: float
 
