@@ -5,7 +5,7 @@ import pytest
 from src.domain.entities import UserEntity
 from src.domain.services import INotesRepository, IUsersRepository
 from src.domain.values.points import Points
-from src.infra.jwt import IJWTService, JWTService
+from src.infra.jwt import IJWTService, JWTService, JWTType
 from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
 from src.project.settings import AuthJWTSettings
 from src.service_layer import Diary
@@ -62,3 +62,13 @@ def auth_settings() -> AuthJWTSettings:
 @pytest.fixture(scope="session")
 def jwt_service(auth_settings: AuthJWTSettings) -> IJWTService:
     return JWTService(auth_settings)
+
+
+@pytest.fixture(scope="session")
+def jwt_external_payload() -> dict:
+    return {"hello": "world"}
+
+
+@pytest.fixture(scope="session")
+def created_access_jwt(jwt_service: IJWTService, jwt_external_payload: dict) -> str:
+    return jwt_service.create_jwt(JWTType.ACCESS, jwt_external_payload)

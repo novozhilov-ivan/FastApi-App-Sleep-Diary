@@ -32,11 +32,11 @@ class IJWTService(ABC):
     def create_jwt(
         self: Self,
         jwt_type: JWTType,
-        payload: IPayload,
+        payload: dict | None = None,
         expired_timedelta: timedelta | None = None,
     ) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def get_jwt_payload(self: Self, jwt: str, payload_schema: type) -> object:
+    def get_jwt_payload(self: Self, jwt: str) -> dict:
         raise NotImplementedError

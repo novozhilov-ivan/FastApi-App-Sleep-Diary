@@ -6,19 +6,16 @@ from uuid import uuid4
 from jwt import DecodeError, PyJWTError, decode, encode
 
 from src.infra.jwt.base import IJWTService, IPayload, JWTType
+from src.infra.jwt.exceptions import DecodeJWTException, EncodeJWTException
 from src.project.settings import AuthJWTSettings
 
 
 @dataclass(kw_only=True)
 class JWTPayload(IPayload):
     typ: JWTType
-    exp: float
-
     external_payload: dict = field(default_factory=dict)
-
-    iat: float = field(
-        default_factory=lambda: datetime.now(UTC).timestamp(),
-    )
+    iat: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
+    exp: float
     jti: str = field(default_factory=lambda: str(uuid4()))
 
     def convert_to_dict(self: Self) -> dict:
@@ -58,27 +55,19 @@ class JWTService(IJWTService):
     def create_jwt(
         self: Self,
         jwt_type: JWTType,
-        payload: IPayload | None = None,
+        payload: dict | None = None,
         expired_timedelta: timedelta | None = None,
     ) -> str:
         return self._encode(
-            payload=JWTPayload(
+            JWTPayload(
                 typ=jwt_type,
-                external_payload=payload.convert_to_dict() if payload else {},
+                external_payload=payload or {},
                 exp=self.get_expired_at(jwt_type, expired_timedelta),
             ).convert_to_dict(),
         )
 
-    def get_jwt_payload(
-        self: Self,
-        jwt: str,
-        payload_schema: type[JWTPayload],
-    ) -> JWTPayload:
-        payload = self._decode(jwt)
-        try:
-            return payload_schema(**payload)
-        except DataclassInit:
-            raise ParseJWTPayloadException
+    def get_jwt_payload(self: Self, jwt: str) -> dict:
+        return self._decode(jwt)
 
     def get_expired_at(
         self: Self,
@@ -89,13 +78,14 @@ class JWTService(IJWTService):
             return datetime.now(UTC).timestamp() + expired_timedelta.seconds
 
         expired_seconds: float
+
         if token_type == JWTType.ACCESS:
             expired_seconds = timedelta(
                 minutes=self.settings.ACCESS_TOKEN_EXPIRE_MINUTES,
-            ).seconds
+            ).total_seconds()
         else:
             expired_seconds = timedelta(
                 days=self.settings.REFRESH_TOKEN_EXPIRE_DAYS,
-            ).seconds
+            ).total_seconds()
 
         return datetime.now(UTC).timestamp() + expired_seconds
