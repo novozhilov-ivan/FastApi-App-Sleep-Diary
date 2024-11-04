@@ -7,7 +7,7 @@ from src.application.api.routers.auth.schemas import (
     PasswordForm,
     UserNameForm,
 )
-from src.infra.authorization import IUserAuthorizationService
+from src.infra.authorization import IUserJWTAuthorizationService
 from src.infra.authorization.base import AccessToken
 from src.project.containers import get_container
 from src.service_layer.exceptions import (
@@ -40,10 +40,10 @@ def login_user_and_issue_jwt(
     container: Container = Depends(get_container),
 ) -> AccessToken:
     authentication_service: IUserAuthenticationService
-    authentication_service = container.resolve(IUserAuthenticationService)
+    token_service: IUserJWTAuthorizationService
 
-    token_service: IUserAuthorizationService
-    token_service = container.resolve(IUserAuthorizationService)
+    authentication_service = container.resolve(IUserAuthenticationService)
+    token_service = container.resolve(IUserJWTAuthorizationService)
 
     try:
         authentication_service.login(username, password)

@@ -4,8 +4,8 @@ from punq import Container, Scope
 
 from src.domain.services import INotesRepository, IUsersRepository
 from src.infra.authorization import (
-    IUserAuthorizationService,
-    UserAuthorizationService,
+    IUserJWTAuthorizationService,
+    UserJWTAuthorizationService,
 )
 from src.infra.database import Database
 from src.infra.repository import (
@@ -30,9 +30,9 @@ def _init_container() -> Container:
 
     container.register(Settings, instance=Settings(), scope=Scope.singleton)
 
-    def init_token_service() -> IUserAuthorizationService:
+    def init_user_jwt_authorization_service() -> IUserJWTAuthorizationService:
         settings = container.resolve(Settings)
-        return UserAuthorizationService(settings)
+        return UserJWTAuthorizationService(settings)
 
     def init_database() -> Database:
         settings = container.resolve(Settings)
@@ -60,8 +60,8 @@ def _init_container() -> Container:
         scope=Scope.singleton,
     )
     container.register(
-        IUserAuthorizationService,
-        factory=init_token_service,
+        IUserJWTAuthorizationService,
+        factory=init_user_jwt_authorization_service,
         scope=Scope.singleton,
     )
     container.register(

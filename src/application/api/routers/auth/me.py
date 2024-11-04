@@ -7,10 +7,10 @@ from src.application.api.routers.auth.schemas import (
 )
 from src.application.api.schemas import jwt_dependency
 from src.infra.authorization import (
-    IUserAuthorizationService,
+    IUserJWTAuthorizationService,
     JWTAuthorizationException,
 )
-from src.infra.authorization.base import UserJWTPayload
+from src.infra.authorization.base import UserPayload
 from src.project.containers import get_container
 
 
@@ -34,9 +34,9 @@ router = APIRouter(
 def me_info(
     token: str = Depends(jwt_dependency),
     container: Container = Depends(get_container),
-) -> UserJWTPayload:
-    token_service: IUserAuthorizationService
-    token_service = container.resolve(IUserAuthorizationService)
+) -> UserPayload:
+    token_service: IUserJWTAuthorizationService
+    token_service = container.resolve(IUserJWTAuthorizationService)
 
     try:
         return token_service.get_payload(token)

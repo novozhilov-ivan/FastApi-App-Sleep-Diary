@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 from typing_extensions import Self
 
 from src.domain.entities import UserEntity
-from src.infra.jwt import IPayload, JWTType
+from src.infra.jwt import IPayload, JWTPayload, JWTType
 
 
 @dataclass
@@ -21,8 +21,8 @@ class RefreshToken(BearerToken):
     refresh_token: str
 
 
-@dataclass(kw_only=True)
-class UserJWTPayload(IPayload):
+@dataclass
+class UserPayload(IPayload):
     sub: str
     username: str
 
@@ -33,8 +33,13 @@ class UserJWTPayload(IPayload):
         }
 
 
+@dataclass(kw_only=True)
+class UserJWTPayload(JWTPayload, UserPayload):
+    pass
+
+
 @dataclass
-class IUserAuthorizationService(ABC):
+class IUserJWTAuthorizationService(ABC):
 
     @abstractmethod
     def create_access(self: Self, user: UserEntity) -> AccessToken:
@@ -49,7 +54,7 @@ class IUserAuthorizationService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def validate_token_type(self: Self, token_type: JWTType) -> None:
+    def validate_token_type(self: Self, jwt_type: JWTType) -> None:
         raise NotImplementedError
 
     @abstractmethod
