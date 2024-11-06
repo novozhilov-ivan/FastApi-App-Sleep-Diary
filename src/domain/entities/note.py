@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from functools import total_ordering
 from operator import eq, gt
-from typing import Optional, TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 from typing_extensions import Self
 from uuid import UUID
 

@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from datetime import UTC, datetime, timedelta
+from datetime import UTC, datetime
 from typing_extensions import Self
 from uuid import uuid4
 
@@ -13,8 +13,8 @@ from src.project.settings import AuthJWTSettings
 @dataclass(kw_only=True)
 class JWTPayload(IPayload):
     typ: JWTType
-    iat: float = field(default_factory=lambda: datetime.now(UTC).timestamp())
-    exp: float
+    iat: int = field(default_factory=lambda: int(datetime.now(UTC).timestamp()))
+    exp: int
     jti: str = field(default_factory=lambda: str(uuid4()))
 
     def convert_to_dict(self: Self) -> dict:
@@ -30,7 +30,7 @@ class JWTPayload(IPayload):
 class JWTService(IJWTService):
     settings: AuthJWTSettings
 
-    def _encode(self: Self, payload: dict) -> str:
+    def encode(self: Self, payload: dict) -> str:
         try:
             return encode(
                 payload=payload,
@@ -40,7 +40,7 @@ class JWTService(IJWTService):
         except PyJWTError:
             raise EncodeJWTException
 
-    def _decode(self: Self, jwt: str) -> dict:
+    def decode(self: Self, jwt: str) -> dict:
         try:
             return decode(
                 jwt=jwt,
@@ -54,41 +54,37 @@ class JWTService(IJWTService):
         self: Self,
         jwt_type: JWTType,
         payload: dict | None = None,
-        expired_timedelta: timedelta | None = None,
+        expire: int = 0,
     ) -> str:
         if payload is None:
             payload = {}
 
-        return self._encode(
+        return self.encode(
             {
                 **JWTPayload(
                     typ=jwt_type,
-                    exp=self.get_expired_at(jwt_type, expired_timedelta),
+                    exp=self.get_expired_at(jwt_type, expire),
                 ).convert_to_dict(),
                 **payload,
             },
         )
 
     def get_jwt_payload(self: Self, jwt: str) -> dict:
-        return self._decode(jwt)
+        return self.decode(jwt)
 
     def get_expired_at(
         self: Self,
         token_type: JWTType,
-        expired_timedelta: timedelta | None = None,
-    ) -> float:
-        if expired_timedelta:
-            return datetime.now(UTC).timestamp() + expired_timedelta.total_seconds()
+        expire: int = 0,
+    ) -> int:
+        if expire:
+            return int(datetime.now(UTC).timestamp() + expire)
 
-        expired_seconds: float
+        default_expire_by_token_type: int
 
         if token_type == JWTType.ACCESS:
-            expired_seconds = timedelta(
-                minutes=self.settings.access_token_expire,
-            ).total_seconds()
+            default_expire_by_token_type = self.settings.access_token_expire
         else:
-            expired_seconds = timedelta(
-                days=self.settings.refresh_token_expire,
-            ).total_seconds()
+            default_expire_by_token_type = self.settings.refresh_token_expire
 
-        return datetime.now(UTC).timestamp() + expired_seconds
+        return int(datetime.now(UTC).timestamp() + default_expire_by_token_type)

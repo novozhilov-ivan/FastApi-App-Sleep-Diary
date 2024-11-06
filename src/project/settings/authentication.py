@@ -11,5 +11,5 @@ class AuthJWTSettings(BaseSettings):
     private_key: str = (_BASE_DIR / "jwt-private.pem").read_text()
     public_key: str = (_BASE_DIR / "jwt-public.pem").read_text()
     algorithm: str = "RS256"
-    access_token_expire: int = timedelta(minutes=3).total_seconds()
-    refresh_token_expire: int = timedelta(days=30).total_seconds()
+    access_token_expire: int = int(timedelta(minutes=3).total_seconds())
+    refresh_token_expire: int = int(timedelta(days=30).total_seconds())

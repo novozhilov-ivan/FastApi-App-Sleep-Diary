@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from datetime import timedelta
 from enum import StrEnum
 from typing_extensions import Self
 
@@ -21,11 +20,11 @@ class JWTType(StrEnum):
 class IJWTService(ABC):
 
     @abstractmethod
-    def _encode(self: Self, payload: dict) -> str:
+    def encode(self: Self, payload: dict) -> str:
         raise NotImplementedError
 
     @abstractmethod
-    def _decode(self: Self, jwt: str) -> dict:
+    def decode(self: Self, jwt: str) -> dict:
         raise NotImplementedError
 
     @abstractmethod
@@ -33,7 +32,7 @@ class IJWTService(ABC):
         self: Self,
         jwt_type: JWTType,
         payload: dict | None = None,
-        expired_timedelta: timedelta | None = None,
+        expire: int = 0,
     ) -> str:
         raise NotImplementedError
 
