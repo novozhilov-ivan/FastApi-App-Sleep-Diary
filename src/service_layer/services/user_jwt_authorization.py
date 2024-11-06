@@ -11,7 +11,7 @@ from src.service_layer.entities import (
     UserJWTPayload,
     UserPayload,
 )
-from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
+from src.service_layer.exceptions import JWTAuthorizationException
 from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationService
 
 

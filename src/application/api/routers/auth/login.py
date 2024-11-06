@@ -14,8 +14,10 @@ from src.service_layer.exceptions import (
     AuthenticationException,
     UserCredentialsFormatException,
 )
-from src.service_layer.services import IUserAuthenticationService
-from src.service_layer.services.base import IUserJWTAuthorizationService
+from src.service_layer.services import (
+    IUserAuthenticationService,
+    IUserJWTAuthorizationService,
+)
 
 
 router = APIRouter(

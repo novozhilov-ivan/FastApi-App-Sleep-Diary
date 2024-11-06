@@ -9,15 +9,6 @@ from src.infra.repository import (
     ORMUsersRepository,
 )
 from src.project.settings import Settings
-from src.service_layer.services import (
-    Diary,
-    IJWTService,
-    IUserAuthenticationService,
-    IUserJWTAuthorizationService,
-    JWTService,
-    UserAuthenticationService,
-    UserJWTAuthorizationService,
-)
 
 
 @lru_cache(1)
@@ -26,6 +17,16 @@ def get_container() -> Container:
 
 
 def _init_container() -> Container:
+    from src.service_layer.services import (
+        Diary,
+        IJWTService,
+        IUserAuthenticationService,
+        IUserJWTAuthorizationService,
+        JWTService,
+        UserAuthenticationService,
+        UserJWTAuthorizationService,
+    )
+
     container = Container()
 
     container.register(Settings, instance=Settings(), scope=Scope.singleton)
