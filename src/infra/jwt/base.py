@@ -31,7 +31,7 @@ class IJWTService(ABC):
     def create_jwt(
         self: Self,
         jwt_type: JWTType,
-        payload: dict | None = None,
+        payload: IPayload | None = None,
         expire: int = 0,
     ) -> str:
         raise NotImplementedError

@@ -26,7 +26,7 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
         return AccessToken(
             access_token=self.jwt_service.create_jwt(
                 jwt_type=JWTType.ACCESS,
-                payload=UserPayload(str(user.oid), user.username).convert_to_dict(),
+                payload=UserPayload(str(user.oid), user.username),
             ),
         )
 
@@ -34,7 +34,7 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
         return RefreshToken(
             refresh_token=self.jwt_service.create_jwt(
                 jwt_type=JWTType.REFRESH,
-                payload=UserPayload(str(user.oid), user.username).convert_to_dict(),
+                payload=UserPayload(str(user.oid), user.username),
             ),
         )
 

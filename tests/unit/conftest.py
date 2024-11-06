@@ -1,3 +1,4 @@
+from dataclasses import dataclass
 from typing_extensions import Self
 
 import pytest
@@ -9,7 +10,7 @@ from src.infra.authorization import (
     IUserJWTAuthorizationService,
     UserJWTAuthorizationService,
 )
-from src.infra.jwt import IJWTService, JWTService, JWTType
+from src.infra.jwt import IJWTService, IPayload, JWTService, JWTType
 from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
 from src.project.settings import AuthJWTSettings
 from src.service_layer import Diary
@@ -19,8 +20,17 @@ from src.service_layer.services import (
 )
 
 
+@dataclass(frozen=True)
 class FakePoints(Points):
     def validate(self: Self) -> None: ...
+
+
+@dataclass
+class DummyPayload(IPayload):
+    hello: str
+
+    def convert_to_dict(self: Self) -> dict:
+        return {"hello": "world"}
 
 
 @pytest.fixture(scope="session")
@@ -69,12 +79,15 @@ def jwt_service(auth_settings: AuthJWTSettings) -> IJWTService:
 
 
 @pytest.fixture(scope="session")
-def jwt_external_payload() -> dict:
-    return {"hello": "world"}
+def jwt_external_payload() -> IPayload:
+    return DummyPayload(hello="world")
 
 
 @pytest.fixture(scope="session")
-def created_access_jwt(jwt_service: IJWTService, jwt_external_payload: dict) -> str:
+def created_access_jwt(
+    jwt_service: IJWTService,
+    jwt_external_payload: IPayload,
+) -> str:
     return jwt_service.create_jwt(JWTType.ACCESS, jwt_external_payload)
 
 

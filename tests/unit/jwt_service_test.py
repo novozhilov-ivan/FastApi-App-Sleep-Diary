@@ -3,7 +3,7 @@ from uuid import UUID
 
 import pytest
 
-from src.infra.jwt import IJWTService, JWTPayload, JWTService, JWTType
+from src.infra.jwt import IJWTService, IPayload, JWTPayload, JWTService, JWTType
 from src.project.settings import AuthJWTSettings
 
 
@@ -18,11 +18,11 @@ def test_encode_payload(jwt_service: IJWTService):
 def test_decode_jwt(
     created_access_jwt: str,
     jwt_service: IJWTService,
-    jwt_external_payload: dict,
+    jwt_external_payload: IPayload,
 ):
     jwt_payload = jwt_service.decode(created_access_jwt)
     assert jwt_payload
-    assert jwt_external_payload.items() <= jwt_payload.items()
+    assert jwt_external_payload.convert_to_dict().items() <= jwt_payload.items()
     assert isinstance(jwt_payload, dict)
 
 
@@ -55,13 +55,13 @@ def test_create_access_jwt(
 def test_get_jwt_payload(
     jwt_service: IJWTService,
     created_access_jwt: str,
-    jwt_external_payload: dict,
+    jwt_external_payload: IPayload,
 ):
     jwt_payload = jwt_service.get_jwt_payload(created_access_jwt)
 
     assert jwt_payload
     assert isinstance(jwt_payload, dict)
-    assert jwt_external_payload.items() <= jwt_payload.items()
+    assert jwt_external_payload.convert_to_dict().items() <= jwt_payload.items()
 
 
 @pytest.mark.parametrize(
@@ -90,6 +90,6 @@ def test_get_expire_at(
 
     assert expected_expire_at <= expire_at
 
-    expected_seconds_difference = 0.01
+    expected_seconds_difference = 0
     seconds_difference = expire_at - expected_expire_at
-    assert seconds_difference < expected_seconds_difference
+    assert seconds_difference == expected_seconds_difference

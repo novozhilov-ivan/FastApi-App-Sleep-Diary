@@ -17,13 +17,19 @@ class JWTPayload(IPayload):
     exp: int
     jti: str = field(default_factory=lambda: str(uuid4()))
 
+    external_payload: IPayload | None = None
+
     def convert_to_dict(self: Self) -> dict:
-        return {
+        jwt_payload = {
             "typ": self.typ,
             "iat": self.iat,
             "exp": self.exp,
             "jti": self.jti,
         }
+        if self.external_payload:
+            jwt_payload.update(self.external_payload.convert_to_dict())
+
+        return jwt_payload
 
 
 @dataclass
@@ -53,20 +59,15 @@ class JWTService(IJWTService):
     def create_jwt(
         self: Self,
         jwt_type: JWTType,
-        payload: dict | None = None,
+        payload: IPayload | None = None,
         expire: int = 0,
     ) -> str:
-        if payload is None:
-            payload = {}
-
         return self.encode(
-            {
-                **JWTPayload(
-                    typ=jwt_type,
-                    exp=self.get_expired_at(jwt_type, expire),
-                ).convert_to_dict(),
-                **payload,
-            },
+            payload=JWTPayload(
+                typ=jwt_type,
+                exp=self.get_expired_at(jwt_type, expire),
+                external_payload=payload,
+            ).convert_to_dict(),
         )
 
     def get_jwt_payload(self: Self, jwt: str) -> dict:
