@@ -33,13 +33,13 @@ def test_decode_jwt(
         (
             JWTType.ACCESS,
             timedelta(
-                minutes=AuthJWTSettings().ACCESS_TOKEN_EXPIRE_MINUTES,
+                minutes=AuthJWTSettings().access_token_expire,
             ).total_seconds(),
         ),
         (
             JWTType.REFRESH,
             timedelta(
-                days=AuthJWTSettings().REFRESH_TOKEN_EXPIRE_DAYS,
+                days=AuthJWTSettings().refresh_token_expire,
             ).total_seconds(),
         ),
     ],
@@ -89,14 +89,14 @@ def test_get_jwt_payload(
         (
             JWTType.ACCESS,
             timedelta(
-                minutes=AuthJWTSettings().ACCESS_TOKEN_EXPIRE_MINUTES,
+                minutes=AuthJWTSettings().access_token_expire,
             ).total_seconds(),
             None,
         ),
         (
             JWTType.REFRESH,
             timedelta(
-                days=AuthJWTSettings().REFRESH_TOKEN_EXPIRE_DAYS,
+                days=AuthJWTSettings().refresh_token_expire,
             ).total_seconds(),
             None,
         ),

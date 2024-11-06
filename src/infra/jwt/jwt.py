@@ -34,8 +34,8 @@ class JWTService(IJWTService):
         try:
             return encode(
                 payload=payload,
-                key=self.settings.PRIVATE_KEY,
-                algorithm=self.settings.ALGORITHM,
+                key=self.settings.private_key,
+                algorithm=self.settings.algorithm,
             )
         except PyJWTError:
             raise EncodeJWTException
@@ -44,8 +44,8 @@ class JWTService(IJWTService):
         try:
             return decode(
                 jwt=jwt,
-                key=self.settings.PUBLIC_KEY,
-                algorithms=[self.settings.ALGORITHM],
+                key=self.settings.public_key,
+                algorithms=[self.settings.algorithm],
             )
         except DecodeError:
             raise DecodeJWTException
@@ -84,11 +84,11 @@ class JWTService(IJWTService):
 
         if token_type == JWTType.ACCESS:
             expired_seconds = timedelta(
-                minutes=self.settings.ACCESS_TOKEN_EXPIRE_MINUTES,
+                minutes=self.settings.access_token_expire,
             ).total_seconds()
         else:
             expired_seconds = timedelta(
-                days=self.settings.REFRESH_TOKEN_EXPIRE_DAYS,
+                days=self.settings.refresh_token_expire,
             ).total_seconds()
 
         return datetime.now(UTC).timestamp() + expired_seconds

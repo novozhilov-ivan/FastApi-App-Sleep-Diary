@@ -30,7 +30,7 @@ def engine(settings: Settings) -> Engine:
     assert "test_" in test_db_name, "Защита от выполнения create/drop с основной БД"
 
     engine_for_create_db: Engine = create_engine(
-        str(settings.POSTGRES_DB_URL),
+        str(settings.postgres_db_url),
         echo=False,
         isolation_level="AUTOCOMMIT",  # ???
     )

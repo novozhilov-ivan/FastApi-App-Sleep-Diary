@@ -39,6 +39,7 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
         )
 
     def get_payload(self: Self, token: str) -> UserJWTPayload:
+        # validate_token_type()
         return UserJWTPayload(**self.jwt_service.get_jwt_payload(token))
 
     def deauthorize(self: Self) -> None: ...

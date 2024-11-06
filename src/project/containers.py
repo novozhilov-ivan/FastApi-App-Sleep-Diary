@@ -36,7 +36,7 @@ def _init_container() -> Container:
 
     def init_database() -> Database:
         settings = container.resolve(Settings)
-        return Database(url=settings.POSTGRES_DB_URL)
+        return Database(url=settings.postgres_db_url)
 
     def init_notes_repository() -> INotesRepository:
         database = container.resolve(Database)

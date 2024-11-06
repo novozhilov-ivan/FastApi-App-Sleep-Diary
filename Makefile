@@ -37,6 +37,8 @@ all: up
 
 logs:
 	docker compose -f app.yml -f postgres.yml logs --tail=25 api
+logs-pgadmin:
+	docker compose -f pgadmin.yml logs --tail=25 pgadmin
 sh:
 	docker exec -it api bash
 bi:

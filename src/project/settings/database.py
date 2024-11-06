@@ -5,12 +5,12 @@ from pydantic_settings import BaseSettings
 
 
 class PostgresSettings(BaseSettings):
-    POSTGRES_DB: str
-    POSTGRES_USER: str
-    POSTGRES_PASSWORD: str
-    POSTGRES_HOST: str
-    POSTGRES_PORT: str
-    POSTGRES_DB_URL: str
+    postgres_db: str
+    postgres_user: str
+    postgres_password: str
+    postgres_host: str
+    postgres_port: str
+    postgres_db_url: str
 
     @model_validator(mode="before")
     @classmethod
@@ -18,15 +18,15 @@ class PostgresSettings(BaseSettings):
         cls: type["PostgresSettings"],
         values: dict[str, str],
     ) -> dict[str, str]:
-        if values.get("POSTGRES_DB_URL"):
+        if values.get("postgres_db_url"):
             return values
 
-        username = values.get("POSTGRES_USER")
-        password = values.get("POSTGRES_PASSWORD")
-        host = values.get("POSTGRES_HOST")
-        port = values.get("POSTGRES_PORT")
-        db_name = values.get("POSTGRES_DB")
-        values["POSTGRES_DB_URL"] = (
+        username = values.get("postgres_user")
+        password = values.get("postgres_password")
+        host = values.get("postgres_host")
+        port = values.get("postgres_port")
+        db_name = values.get("postgres_db")
+        values["postgres_db_url"] = (
             f"postgresql+psycopg2://{username}:{password}@{host}:{port}/{db_name}"
         )
 
@@ -34,11 +34,11 @@ class PostgresSettings(BaseSettings):
 
     @property
     def test_postgres_db(self: Self) -> str:
-        return f"test_{self.POSTGRES_DB}"
+        return f"test_{self.postgres_db}"
 
     @property
     def test_postgres_url(self: Self) -> str:
         return (
-            f"postgresql+psycopg2://{self.POSTGRES_USER}:{self.POSTGRES_PASSWORD}"
-            f"@{self.POSTGRES_HOST}:{self.POSTGRES_PORT}/{self.test_postgres_db}"
+            f"postgresql+psycopg2://{self.postgres_user}:{self.postgres_password}"
+            f"@{self.postgres_host}:{self.postgres_port}/{self.test_postgres_db}"
         )
