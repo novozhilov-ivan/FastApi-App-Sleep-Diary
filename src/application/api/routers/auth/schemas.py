@@ -7,8 +7,10 @@ class AccessJWTResponseSchema(BaseModel):
     token_type: str = "Bearer"
 
 
-class RefreshJWTResponseSchema(AccessJWTResponseSchema):
+class RefreshJWTResponseSchema(BaseModel):
+    access_token: str
     refresh_token: str
+    token_type: str = "Bearer"
 
 
 UserNameForm: str = Form(

@@ -59,7 +59,7 @@ def add_note(
 
 
 @router.get(
-    path="/{note_oid}",
+    path="/{oid}/",
     name="Получить запись по oid",
     description="Получение записи о сне из дневника по идентификатору объекта.",
     status_code=status.HTTP_200_OK,
@@ -70,7 +70,7 @@ def add_note(
     },
 )
 def get_note_by_oid(
-    note_oid: UUID4,
+    oid: UUID4,
     owner_oid: HeaderOwnerOid,
 ) -> NoteResponseSchema: ...
 
@@ -90,7 +90,7 @@ def get_note_by_oid(
 
 
 @router.get(
-    path="/{note_bedtime_date}",
+    path="/{bedtime_date}/",
     name="Получить запись по bedtime_date",
     description="Получение записи о сне из дневника по дате записи.",
     status_code=status.HTTP_200_OK,
@@ -121,7 +121,7 @@ def get_note_by_bedtime_date(
 
 
 @router.patch(
-    path="/{note_oid}",
+    path="/{oid}/",
     name="Обновить запись",
     description="Обновление значений полей записи дневника сна.",
     status_code=status.HTTP_200_OK,
@@ -132,13 +132,13 @@ def get_note_by_bedtime_date(
     },
 )
 def update_note(
-    note_oid: UUID4,
+    oid: UUID4,
     owner_oid: HeaderOwnerOid,
 ) -> None: ...
 
 
 @router.delete(
-    path="/{note_oid}",
+    path="/{oid}/",
     name="Удалить запись",
     description="Удалить записи дневника сна.",
     status_code=status.HTTP_204_NO_CONTENT,
@@ -149,6 +149,6 @@ def update_note(
     },
 )
 def delete_note(
-    note_oid: UUID4,
+    oid: UUID4,
     owner_oid: HeaderOwnerOid,
 ) -> None: ...

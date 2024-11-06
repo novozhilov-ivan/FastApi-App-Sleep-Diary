@@ -8,6 +8,7 @@ from src.infra.authorization import (
     UserJWTAuthorizationService,
 )
 from src.infra.database import Database
+from src.infra.jwt import IJWTService, JWTService
 from src.infra.repository import (
     ORMNotesRepository,
     ORMUsersRepository,
@@ -30,10 +31,6 @@ def _init_container() -> Container:
 
     container.register(Settings, instance=Settings(), scope=Scope.singleton)
 
-    def init_user_jwt_authorization_service() -> IUserJWTAuthorizationService:
-        settings = container.resolve(Settings)
-        return UserJWTAuthorizationService(settings)
-
     def init_database() -> Database:
         settings = container.resolve(Settings)
         return Database(url=settings.postgres_db_url)
@@ -50,6 +47,14 @@ def _init_container() -> Container:
         repository = container.resolve(IUsersRepository)
         return UserAuthenticationService(repository)
 
+    def init_jwt_service() -> IJWTService:
+        settings = container.resolve(Settings)
+        return JWTService(settings)
+
+    def init_user_jwt_authorization_service() -> IUserJWTAuthorizationService:
+        jwt_service = container.resolve(IJWTService)
+        return UserJWTAuthorizationService(jwt_service)
+
     def init_diary_service() -> Diary:
         repository = container.resolve(INotesRepository)
         return Diary(repository)
@@ -57,11 +62,6 @@ def _init_container() -> Container:
     container.register(
         Database,
         factory=init_database,
-        scope=Scope.singleton,
-    )
-    container.register(
-        IUserJWTAuthorizationService,
-        factory=init_user_jwt_authorization_service,
         scope=Scope.singleton,
     )
     container.register(
@@ -79,6 +79,12 @@ def _init_container() -> Container:
         IUserAuthenticationService,
         factory=init_authentication_service,
         scope=Scope.transient,
+    )
+    container.register(IJWTService, factory=init_jwt_service, scope=Scope.singleton)
+    container.register(
+        IUserJWTAuthorizationService,
+        factory=init_user_jwt_authorization_service,
+        scope=Scope.singleton,
     )
 
     return container
