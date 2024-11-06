@@ -3,13 +3,15 @@ from typing_extensions import Self
 from uuid import UUID
 
 from src.domain.entities import UserEntity
-from src.infra.authorization.base import (
+from src.infra.authorization import (
     AccessToken,
-    IUserJWTAuthorizationService,
-    JWTType,
     RefreshToken,
     UserJWTPayload,
     UserPayload,
+)
+from src.infra.authorization.base import (
+    IUserJWTAuthorizationService,
+    JWTType,
 )
 from src.infra.authorization.exceptions import (
     JWTAuthorizationException,
@@ -31,10 +33,15 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
         )
 
     def create_refresh(self: Self, user: UserEntity) -> RefreshToken:
+        payload = UserPayload(str(user.oid), user.username)
         return RefreshToken(
+            access_token=self.jwt_service.create_jwt(
+                jwt_type=JWTType.ACCESS,
+                payload=payload,
+            ),
             refresh_token=self.jwt_service.create_jwt(
                 jwt_type=JWTType.REFRESH,
-                payload=UserPayload(str(user.oid), user.username),
+                payload=payload,
             ),
         )
 

@@ -7,7 +7,7 @@ class AccessJWTResponseSchema(BaseModel):
     token_type: str = "Bearer"
 
 
-class JWTResponseSchema(AccessJWTResponseSchema):
+class RefreshJWTResponseSchema(AccessJWTResponseSchema):
     refresh_token: str
 
 

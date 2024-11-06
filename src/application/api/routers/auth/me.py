@@ -2,10 +2,10 @@ from fastapi import APIRouter, Depends, HTTPException
 from punq import Container
 from starlette import status
 
+from src.application.api.dependecies import get_token_bearer
 from src.application.api.routers.auth.schemas import (
     MeInfoResponse,
 )
-from src.application.api.schemas import jwt_dependency
 from src.infra.authorization import (
     IUserJWTAuthorizationService,
     JWTAuthorizationException,
@@ -32,7 +32,7 @@ router = APIRouter(
     response_model=MeInfoResponse,
 )
 def me_info(
-    token: str = Depends(jwt_dependency),
+    token: str = Depends(get_token_bearer),
     container: Container = Depends(get_container),
 ) -> UserPayload:
     token_service: IUserJWTAuthorizationService
