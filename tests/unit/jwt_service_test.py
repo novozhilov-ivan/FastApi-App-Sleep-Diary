@@ -3,8 +3,10 @@ from uuid import UUID
 
 import pytest
 
-from src.infra.jwt import IJWTService, IPayload, JWTPayload, JWTService, JWTType
 from src.project.settings import AuthJWTSettings
+from src.service_layer.entities import IPayload, JWTPayload, TokenType
+from src.service_layer.services.base import IJWTService
+from src.service_layer.services.jwt import JWTService
 
 
 def test_encode_payload(jwt_service: IJWTService):
@@ -29,13 +31,13 @@ def test_decode_jwt(
 @pytest.mark.parametrize(
     ("jwt_type", "expire_seconds"),
     [
-        (JWTType.ACCESS, AuthJWTSettings().access_token_expire),
-        (JWTType.REFRESH, AuthJWTSettings().refresh_token_expire),
+        (TokenType.ACCESS, AuthJWTSettings().access_token_expire),
+        (TokenType.REFRESH, AuthJWTSettings().refresh_token_expire),
     ],
 )
 def test_create_access_jwt(
     jwt_service: IJWTService,
-    jwt_type: JWTType,
+    jwt_type: TokenType,
     expire_seconds: float,
 ):
     jwt = jwt_service.create_jwt(jwt_type)
@@ -67,20 +69,20 @@ def test_get_jwt_payload(
 @pytest.mark.parametrize(
     ("jwt_type", "expected_expire"),
     [
-        (JWTType.ACCESS, 30),
-        (JWTType.REFRESH, 30),
-        (JWTType.ACCESS, 60),
-        (JWTType.REFRESH, 60),
-        (JWTType.ACCESS, 60 * 60),
-        (JWTType.REFRESH, 60 * 60),
-        (JWTType.ACCESS, 60 * 60 * 24),
-        (JWTType.REFRESH, 60 * 60 * 24),
-        (JWTType.ACCESS, AuthJWTSettings().access_token_expire),
-        (JWTType.REFRESH, AuthJWTSettings().refresh_token_expire),
+        (TokenType.ACCESS, 30),
+        (TokenType.REFRESH, 30),
+        (TokenType.ACCESS, 60),
+        (TokenType.REFRESH, 60),
+        (TokenType.ACCESS, 60 * 60),
+        (TokenType.REFRESH, 60 * 60),
+        (TokenType.ACCESS, 60 * 60 * 24),
+        (TokenType.REFRESH, 60 * 60 * 24),
+        (TokenType.ACCESS, AuthJWTSettings().access_token_expire),
+        (TokenType.REFRESH, AuthJWTSettings().refresh_token_expire),
     ],
 )
 def test_get_expire_at(
-    jwt_type: JWTType,
+    jwt_type: TokenType,
     expected_expire: int,
     jwt_service: JWTService,
 ):

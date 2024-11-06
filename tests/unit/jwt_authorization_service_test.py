@@ -1,6 +1,6 @@
 from src.domain.entities import UserEntity
-from src.infra.authorization import IUserJWTAuthorizationService
-from src.infra.authorization.base import AccessToken, RefreshToken, UserJWTPayload
+from src.service_layer.entities import AccessToken, RefreshToken, UserJWTPayload
+from src.service_layer.services.base import IUserJWTAuthorizationService
 
 
 def test_create_access_jwt(

@@ -3,21 +3,20 @@ from functools import lru_cache
 from punq import Container, Scope
 
 from src.domain.services import INotesRepository, IUsersRepository
-from src.infra.authorization import (
-    IUserJWTAuthorizationService,
-    UserJWTAuthorizationService,
-)
 from src.infra.database import Database
-from src.infra.jwt import IJWTService, JWTService
 from src.infra.repository import (
     ORMNotesRepository,
     ORMUsersRepository,
 )
 from src.project.settings import Settings
-from src.service_layer import Diary
-from src.service_layer.services.authentication import (
+from src.service_layer.services import (
+    Diary,
+    IJWTService,
     IUserAuthenticationService,
+    IUserJWTAuthorizationService,
+    JWTService,
     UserAuthenticationService,
+    UserJWTAuthorizationService,
 )
 
 

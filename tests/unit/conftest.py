@@ -6,18 +6,17 @@ import pytest
 from src.domain.entities import UserEntity
 from src.domain.services import INotesRepository, IUsersRepository
 from src.domain.values.points import Points
-from src.infra.authorization import (
-    IUserJWTAuthorizationService,
-    UserJWTAuthorizationService,
-)
-from src.infra.jwt import IJWTService, IPayload, JWTService, JWTType
 from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
 from src.project.settings import AuthJWTSettings
-from src.service_layer import Diary
+from src.service_layer.entities import IPayload, TokenType
 from src.service_layer.services import (
+    Diary,
     IUserAuthenticationService,
     UserAuthenticationService,
+    UserJWTAuthorizationService,
 )
+from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationService
+from src.service_layer.services.jwt import JWTService
 
 
 @dataclass(frozen=True)
@@ -88,7 +87,7 @@ def created_access_jwt(
     jwt_service: IJWTService,
     jwt_external_payload: IPayload,
 ) -> str:
-    return jwt_service.create_jwt(JWTType.ACCESS, jwt_external_payload)
+    return jwt_service.create_jwt(TokenType.ACCESS, jwt_external_payload)
 
 
 @pytest.fixture(scope="session")

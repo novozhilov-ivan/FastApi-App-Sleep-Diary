@@ -8,13 +8,14 @@ from src.application.api.routers.auth.schemas import (
     RefreshJWTResponseSchema,
     UserNameForm,
 )
-from src.infra.authorization import IUserJWTAuthorizationService, RefreshToken
 from src.project.containers import get_container
+from src.service_layer.entities import RefreshToken
 from src.service_layer.exceptions import (
     AuthenticationException,
     UserCredentialsFormatException,
 )
 from src.service_layer.services import IUserAuthenticationService
+from src.service_layer.services.base import IUserJWTAuthorizationService
 
 
 router = APIRouter(

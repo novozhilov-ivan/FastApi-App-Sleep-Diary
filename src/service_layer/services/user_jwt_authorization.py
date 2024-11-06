@@ -2,22 +2,17 @@ from dataclasses import dataclass
 from typing_extensions import Self
 from uuid import UUID
 
+from src.application.services.exceptions import JWTTypeException
 from src.domain.entities import UserEntity
-from src.infra.authorization import (
+from src.service_layer.entities import (
     AccessToken,
     RefreshToken,
+    TokenType,
     UserJWTPayload,
     UserPayload,
 )
-from src.infra.authorization.base import (
-    IUserJWTAuthorizationService,
-    JWTType,
-)
-from src.infra.authorization.exceptions import (
-    JWTAuthorizationException,
-    JWTTypeException,
-)
-from src.infra.jwt import IJWTService
+from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
+from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationService
 
 
 @dataclass
@@ -27,7 +22,7 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
     def create_access(self: Self, user: UserEntity) -> AccessToken:
         return AccessToken(
             access_token=self.jwt_service.create_jwt(
-                jwt_type=JWTType.ACCESS,
+                jwt_type=TokenType.ACCESS,
                 payload=UserPayload(str(user.oid), user.username),
             ),
         )
@@ -36,11 +31,11 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
         payload = UserPayload(str(user.oid), user.username)
         return RefreshToken(
             access_token=self.jwt_service.create_jwt(
-                jwt_type=JWTType.ACCESS,
+                jwt_type=TokenType.ACCESS,
                 payload=payload,
             ),
             refresh_token=self.jwt_service.create_jwt(
-                jwt_type=JWTType.REFRESH,
+                jwt_type=TokenType.REFRESH,
                 payload=payload,
             ),
         )
@@ -51,8 +46,8 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
 
     def deauthorize(self: Self) -> None: ...
 
-    def validate_token_type(self: Self, jwt_type: JWTType) -> None:
-        if not isinstance(self.payload.typ, JWTType):
+    def validate_token_type(self: Self, jwt_type: TokenType) -> None:
+        if not isinstance(self.payload.typ, TokenType):
             raise JWTAuthorizationException
 
         if self.payload.typ != jwt_type:

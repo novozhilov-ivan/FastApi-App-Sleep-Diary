@@ -1,26 +1,15 @@
-from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from enum import StrEnum
 from typing_extensions import Self
 from uuid import uuid4
 
-
-class JWTType(StrEnum):
-    ACCESS: str = "access"
-    REFRESH: str = "refresh"
-
-
-@dataclass
-class IPayload(ABC):
-    @abstractmethod
-    def convert_to_dict(self: Self) -> dict:
-        raise NotImplementedError
+from src.service_layer.entities.base import IPayload
+from src.service_layer.entities.enums import TokenType
 
 
 @dataclass(kw_only=True)
 class JWTPayload(IPayload):
-    typ: JWTType
+    typ: TokenType
     iat: int = field(default_factory=lambda: int(datetime.now(UTC).timestamp()))
     exp: int
     jti: str = field(default_factory=lambda: str(uuid4()))
@@ -38,3 +27,20 @@ class JWTPayload(IPayload):
             jwt_payload.update(self.external_payload.convert_to_dict())
 
         return jwt_payload
+
+
+@dataclass
+class UserPayload(IPayload):
+    sub: str
+    username: str
+
+    def convert_to_dict(self: Self) -> dict:
+        return {
+            "sub": self.sub,
+            "username": self.username,
+        }
+
+
+@dataclass(kw_only=True)
+class UserJWTPayload(JWTPayload, UserPayload):
+    pass

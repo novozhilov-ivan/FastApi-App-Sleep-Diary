@@ -15,7 +15,7 @@ from src.domain.exceptions import (
 from src.domain.values.points import Points
 from src.infra.converters import convert_points_to_json
 from src.infra.orm import ORMUser
-from src.service_layer import Diary
+from src.service_layer.services import Diary
 from tests.unit.conftest import FakePoints
 from tests.use_cases import (
     TN,

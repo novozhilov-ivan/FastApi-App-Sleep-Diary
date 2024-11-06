@@ -6,12 +6,10 @@ from src.application.api.dependecies import get_token_bearer
 from src.application.api.routers.auth.schemas import (
     MeInfoResponse,
 )
-from src.infra.authorization import (
-    IUserJWTAuthorizationService,
-    JWTAuthorizationException,
-    UserPayload,
-)
 from src.project.containers import get_container
+from src.service_layer.entities import UserPayload
+from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
+from src.service_layer.services.base import IUserJWTAuthorizationService
 
 
 router = APIRouter(

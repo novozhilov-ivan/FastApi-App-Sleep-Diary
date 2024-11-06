@@ -11,7 +11,7 @@ from src.infra.database import Database
 from src.infra.orm import ORMUser, metadata
 from src.project.containers import get_container
 from src.project.settings import Settings
-from src.service_layer import Diary
+from src.service_layer.services import Diary
 
 
 def init_dummy_container() -> Container:

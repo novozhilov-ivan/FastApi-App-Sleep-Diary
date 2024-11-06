@@ -14,12 +14,6 @@ from src.domain.values.points import Points
 class Diary:
     repository: INotesRepository
 
-    # user_service: InitVar[UserAuthenticationService]
-    # owner_oid: UUID = field(init=False)
-    #
-    # def __post_init__(self: Self, user_service: UserAuthenticationService) -> None:
-    #     self.owner_oid = user_service.user.oid
-
     def write(
         self: Self,
         owner_oid: UUID,

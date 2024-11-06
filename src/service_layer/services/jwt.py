@@ -4,10 +4,10 @@ from typing_extensions import Self
 
 from jwt import DecodeError, PyJWTError, decode, encode
 
-from src.infra.jwt.base import IJWTService, IPayload, JWTType
-from src.infra.jwt.exceptions import DecodeJWTException, EncodeJWTException
-from src.infra.jwt.payloads import JWTPayload
 from src.project.settings import AuthJWTSettings
+from src.service_layer.entities import IPayload, JWTPayload, TokenType
+from src.service_layer.exceptions import DecodeJWTException, EncodeJWTException
+from src.service_layer.services.base import IJWTService
 
 
 @dataclass
@@ -36,7 +36,7 @@ class JWTService(IJWTService):
 
     def create_jwt(
         self: Self,
-        jwt_type: JWTType,
+        jwt_type: TokenType,
         payload: IPayload | None = None,
         expire: int = 0,
     ) -> str:
@@ -53,7 +53,7 @@ class JWTService(IJWTService):
 
     def get_expired_at(
         self: Self,
-        token_type: JWTType,
+        token_type: TokenType,
         expire: int = 0,
     ) -> int:
         if expire:
@@ -61,7 +61,7 @@ class JWTService(IJWTService):
 
         default_expire_by_token_type: int
 
-        if token_type == JWTType.ACCESS:
+        if token_type == TokenType.ACCESS:
             default_expire_by_token_type = self.settings.access_token_expire
         else:
             default_expire_by_token_type = self.settings.refresh_token_expire
