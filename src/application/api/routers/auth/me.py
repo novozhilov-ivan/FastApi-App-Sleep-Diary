@@ -9,8 +9,8 @@ from src.application.api.schemas import jwt_dependency
 from src.infra.authorization import (
     IUserJWTAuthorizationService,
     JWTAuthorizationException,
+    UserPayload,
 )
-from src.infra.authorization.base import UserPayload
 from src.project.containers import get_container
 
 

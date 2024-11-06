@@ -1,35 +1,13 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing_extensions import Self
-from uuid import uuid4
 
 from jwt import DecodeError, PyJWTError, decode, encode
 
 from src.infra.jwt.base import IJWTService, IPayload, JWTType
 from src.infra.jwt.exceptions import DecodeJWTException, EncodeJWTException
+from src.infra.jwt.payloads import JWTPayload
 from src.project.settings import AuthJWTSettings
-
-
-@dataclass(kw_only=True)
-class JWTPayload(IPayload):
-    typ: JWTType
-    iat: int = field(default_factory=lambda: int(datetime.now(UTC).timestamp()))
-    exp: int
-    jti: str = field(default_factory=lambda: str(uuid4()))
-
-    external_payload: IPayload | None = None
-
-    def convert_to_dict(self: Self) -> dict:
-        jwt_payload = {
-            "typ": self.typ,
-            "iat": self.iat,
-            "exp": self.exp,
-            "jti": self.jti,
-        }
-        if self.external_payload:
-            jwt_payload.update(self.external_payload.convert_to_dict())
-
-        return jwt_payload
 
 
 @dataclass

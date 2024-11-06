@@ -1,19 +1,8 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from enum import StrEnum
 from typing_extensions import Self
 
-
-@dataclass
-class IPayload(ABC):
-    @abstractmethod
-    def convert_to_dict(self: Self) -> dict:
-        raise NotImplementedError
-
-
-class JWTType(StrEnum):
-    ACCESS: str = "access"
-    REFRESH: str = "refresh"
+from src.infra.jwt.payloads import IPayload, JWTType
 
 
 @dataclass

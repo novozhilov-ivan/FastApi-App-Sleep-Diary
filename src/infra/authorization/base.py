@@ -1,41 +1,14 @@
 from abc import ABC, abstractmethod
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from typing_extensions import Self
 
 from src.domain.entities import UserEntity
-from src.infra.jwt import IPayload, JWTPayload, JWTType
-
-
-@dataclass
-class BearerToken:
-    token_type: str = field(default="Bearer", init=False)
-
-
-@dataclass
-class AccessToken(BearerToken):
-    access_token: str
-
-
-@dataclass
-class RefreshToken(BearerToken):
-    refresh_token: str
-
-
-@dataclass
-class UserPayload(IPayload):
-    sub: str
-    username: str
-
-    def convert_to_dict(self: Self) -> dict:
-        return {
-            "sub": self.sub,
-            "username": self.username,
-        }
-
-
-@dataclass(kw_only=True)
-class UserJWTPayload(JWTPayload, UserPayload):
-    pass
+from src.infra.authorization.payloads import (
+    AccessToken,
+    RefreshToken,
+    UserJWTPayload,
+)
+from src.infra.jwt import JWTType
 
 
 @dataclass
