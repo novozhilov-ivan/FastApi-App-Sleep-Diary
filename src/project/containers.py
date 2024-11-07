@@ -84,7 +84,7 @@ def _init_container() -> Container:
     container.register(
         IUserJWTAuthorizationService,
         factory=init_user_jwt_authorization_service,
-        scope=Scope.singleton,
+        scope=Scope.transient,
     )
 
     return container
