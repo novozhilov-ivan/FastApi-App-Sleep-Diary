@@ -2,11 +2,17 @@ from dataclasses import dataclass
 from typing_extensions import Self
 
 from src.service_layer.entities import TokenType
-from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
 
 
 @dataclass(eq=False)
-class JWTTypeException(JWTAuthorizationException):
+class UserAuthorizationException(Exception):
+    @property
+    def message(self: Self) -> str:
+        return "Не авторизован."
+
+
+@dataclass(eq=False)
+class TokenTypeException(UserAuthorizationException):
     current_token_type: TokenType
     token_type: TokenType
 

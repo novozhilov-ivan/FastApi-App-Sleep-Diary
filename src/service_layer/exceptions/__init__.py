@@ -8,11 +8,13 @@ from src.service_layer.exceptions.jwt import (
     EncodeJWTException,
     JWTException,
 )
-from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
 from src.service_layer.exceptions.login import LogInException
 from src.service_layer.exceptions.register import (
     UserNameAlreadyExistException,
     UserRegisterException,
+)
+from src.service_layer.exceptions.user_authorization import (
+    UserAuthorizationException,
 )
 
 
@@ -26,5 +28,5 @@ __all__ = (
     "JWTException",
     "DecodeJWTException",
     "EncodeJWTException",
-    "JWTAuthorizationException",
+    "UserAuthorizationException",
 )

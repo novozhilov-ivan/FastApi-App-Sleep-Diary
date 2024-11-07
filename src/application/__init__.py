@@ -1,7 +1,4 @@
-from src.application import api, services
+from src.application import api
 
 
-__all__ = (
-    "api",
-    "services",
-)
+__all__ = ("api",)
