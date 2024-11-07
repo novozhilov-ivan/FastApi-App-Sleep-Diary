@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
 from typing_extensions import Self
+from uuid import UUID
 
 from src.domain.entities import UserEntity
 from src.service_layer.entities import (
@@ -54,7 +55,6 @@ class IUserAuthenticationService(ABC):
 
 @dataclass
 class IJWTService(ABC):
-
     @abstractmethod
     def encode(self: Self, payload: dict) -> str:
         raise NotImplementedError
@@ -79,17 +79,17 @@ class IJWTService(ABC):
 
 @dataclass
 class IUserJWTAuthorizationService(ABC):
-
     @abstractmethod
-    def create_access(self: Self, user: UserEntity) -> AccessToken:
+    def create_access(self: Self) -> AccessToken:
         raise NotImplementedError
 
     @abstractmethod
     def create_refresh(self: Self, user: UserEntity) -> RefreshToken:
         raise NotImplementedError
 
+    @property
     @abstractmethod
-    def get_payload(self: Self, token: str) -> UserJWTPayload:
+    def current_payload(self: Self) -> UserJWTPayload:
         raise NotImplementedError
 
     @abstractmethod
@@ -98,4 +98,19 @@ class IUserJWTAuthorizationService(ABC):
 
     @abstractmethod
     def deauthorize(self: Self) -> None:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def current_user_oid(self: Self) -> UUID:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def current_username(self: Self) -> str:
+        raise NotImplementedError
+
+    @property
+    @abstractmethod
+    def current_token_type(self: Self) -> TokenType:
         raise NotImplementedError
