@@ -18,13 +18,13 @@ def test_encode_payload(jwt_service: IJWTService):
 
 
 def test_decode_jwt(
-    created_access_jwt: str,
+    created_user_access_jwt: str,
     jwt_service: IJWTService,
-    jwt_external_payload: IPayload,
+    created_user_jwt_payload: IPayload,
 ):
-    jwt_payload = jwt_service.decode(created_access_jwt)
+    jwt_payload = jwt_service.decode(created_user_access_jwt)
     assert jwt_payload
-    assert jwt_external_payload.convert_to_dict().items() <= jwt_payload.items()
+    assert created_user_jwt_payload.convert_to_dict().items() <= jwt_payload.items()
     assert isinstance(jwt_payload, dict)
 
 
@@ -56,14 +56,14 @@ def test_create_access_jwt(
 
 def test_get_jwt_payload(
     jwt_service: IJWTService,
-    created_access_jwt: str,
-    jwt_external_payload: IPayload,
+    created_user_access_jwt: str,
+    created_user_jwt_payload: IPayload,
 ):
-    jwt_payload = jwt_service.get_jwt_payload(created_access_jwt)
+    jwt_payload = jwt_service.get_jwt_payload(created_user_access_jwt)
 
     assert jwt_payload
     assert isinstance(jwt_payload, dict)
-    assert jwt_external_payload.convert_to_dict().items() <= jwt_payload.items()
+    assert created_user_jwt_payload.convert_to_dict().items() <= jwt_payload.items()
 
 
 @pytest.mark.parametrize(

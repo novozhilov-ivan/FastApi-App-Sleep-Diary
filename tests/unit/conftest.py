@@ -8,7 +8,11 @@ from src.domain.services import INotesRepository, IUsersRepository
 from src.domain.values.points import Points
 from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
 from src.project.settings import AuthJWTSettings
-from src.service_layer.entities import IPayload, TokenType
+from src.service_layer.entities import (
+    IPayload,
+    TokenType,
+    UserPayload,
+)
 from src.service_layer.services import (
     Diary,
     IUserAuthenticationService,
@@ -29,7 +33,7 @@ class DummyPayload(IPayload):
     hello: str
 
     def convert_to_dict(self: Self) -> dict:
-        return {"hello": "world"}
+        return {"hello": self.hello}
 
 
 @pytest.fixture(scope="session")
@@ -78,20 +82,45 @@ def jwt_service(auth_settings: AuthJWTSettings) -> IJWTService:
 
 
 @pytest.fixture(scope="session")
-def jwt_external_payload() -> IPayload:
-    return DummyPayload(hello="world")
+def created_user_jwt_payload(created_user: UserEntity) -> IPayload:
+    return UserPayload(str(created_user.oid), created_user.username)
 
 
 @pytest.fixture(scope="session")
-def created_access_jwt(
+def created_user_access_jwt(
     jwt_service: IJWTService,
-    jwt_external_payload: IPayload,
+    created_user_jwt_payload: IPayload,
 ) -> str:
-    return jwt_service.create_jwt(TokenType.ACCESS, jwt_external_payload)
+
+    return jwt_service.create_jwt(TokenType.ACCESS, created_user_jwt_payload)
 
 
 @pytest.fixture(scope="session")
-def jwt_authorization_service(
+def created_user_jwt_refresh(
+    jwt_service: IJWTService,
+    created_user_jwt_payload: IPayload,
+) -> str:
+    return jwt_service.create_jwt(TokenType.REFRESH, created_user_jwt_payload)
+
+
+@pytest.fixture(scope="session")
+def user_jwt_service_with_none_jwt(
     jwt_service: IJWTService,
 ) -> IUserJWTAuthorizationService:
     return UserJWTAuthorizationService(jwt_service)
+
+
+@pytest.fixture(scope="session")
+def user_jwt_service_with_user_jwt_access(
+    jwt_service: IJWTService,
+    created_user_access_jwt: str,
+) -> IUserJWTAuthorizationService:
+    return UserJWTAuthorizationService(jwt_service, created_user_access_jwt)
+
+
+@pytest.fixture(scope="session")
+def user_jwt_service_with_user_jwt_refresh(
+    jwt_service: IJWTService,
+    created_user_jwt_refresh: str,
+) -> IUserJWTAuthorizationService:
+    return UserJWTAuthorizationService(jwt_service, created_user_jwt_refresh)
