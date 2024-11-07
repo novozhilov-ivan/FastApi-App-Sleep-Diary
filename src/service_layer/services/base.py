@@ -93,7 +93,7 @@ class IUserJWTAuthorizationService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def validate_token_type(self: Self, jwt_type: TokenType) -> None:
+    def validate_token_type(self: Self, token_type: TokenType) -> None:
         raise NotImplementedError
 
     @abstractmethod

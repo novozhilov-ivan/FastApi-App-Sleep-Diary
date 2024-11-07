@@ -1,21 +1,22 @@
-from fastapi import APIRouter, Depends, HTTPException
-from punq import Container
+from fastapi import APIRouter, Depends
 from starlette import status
 
-from src.application.api.dependecies import get_token_bearer
+from src.application.api.authorization import (
+    get_user_payload_from_access_token,
+)
 from src.application.api.routers.auth.schemas import (
     MeInfoResponse,
 )
-from src.project.containers import get_container
 from src.service_layer.entities import UserPayload
-from src.service_layer.exceptions.jwt_authorization import JWTAuthorizationException
-from src.service_layer.services.base import IUserJWTAuthorizationService
+from src.service_layer.exceptions.user_authorization import (
+    UserTokenAuthorizationException,
+)
 
 
 router = APIRouter(
     tags=["JWT"],
     responses={
-        status.HTTP_401_UNAUTHORIZED: {"model": JWTAuthorizationException},
+        status.HTTP_401_UNAUTHORIZED: {"model": UserTokenAuthorizationException},
     },
 )
 
@@ -30,16 +31,6 @@ router = APIRouter(
     response_model=MeInfoResponse,
 )
 def me_info(
-    token: str = Depends(get_token_bearer),
-    container: Container = Depends(get_container),
+    user_payload: UserPayload = Depends(get_user_payload_from_access_token),
 ) -> UserPayload:
-    token_service: IUserJWTAuthorizationService
-    token_service = container.resolve(IUserJWTAuthorizationService)
-
-    try:
-        return token_service.get_payload(token)
-    except JWTAuthorizationException as exception:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail={"error": exception.message},
-        )
+    return user_payload

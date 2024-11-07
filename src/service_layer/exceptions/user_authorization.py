@@ -5,14 +5,14 @@ from src.service_layer.entities import TokenType
 
 
 @dataclass(eq=False)
-class UserAuthorizationException(Exception):
+class UserTokenAuthorizationException(Exception):
     @property
     def message(self: Self) -> str:
         return "Не авторизован."
 
 
 @dataclass(eq=False)
-class TokenTypeException(UserAuthorizationException):
+class TokenTypeException(UserTokenAuthorizationException):
     current_token_type: TokenType
     token_type: TokenType
 

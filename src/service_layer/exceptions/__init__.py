@@ -14,7 +14,7 @@ from src.service_layer.exceptions.register import (
     UserRegisterException,
 )
 from src.service_layer.exceptions.user_authorization import (
-    UserAuthorizationException,
+    UserTokenAuthorizationException,
 )
 
 
@@ -28,5 +28,5 @@ __all__ = (
     "JWTException",
     "DecodeJWTException",
     "EncodeJWTException",
-    "UserAuthorizationException",
+    "UserTokenAuthorizationException",
 )

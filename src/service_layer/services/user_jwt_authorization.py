@@ -10,7 +10,7 @@ from src.service_layer.entities import (
     UserJWTPayload,
     UserPayload,
 )
-from src.service_layer.exceptions import UserAuthorizationException
+from src.service_layer.exceptions import UserTokenAuthorizationException
 from src.service_layer.exceptions.user_authorization import TokenTypeException
 from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationService
 
@@ -49,18 +49,18 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
     @property
     def current_payload(self: Self) -> UserJWTPayload:
         if self.jwt is None:
-            raise UserAuthorizationException
+            raise UserTokenAuthorizationException
 
         return UserJWTPayload(**self.jwt_service.get_jwt_payload(self.jwt))
 
     def deauthorize(self: Self) -> None: ...
 
-    def validate_token_type(self: Self, jwt_type: TokenType) -> None:
+    def validate_token_type(self: Self, token_type: TokenType) -> None:
         if self.current_token_type not in TokenType:
-            raise UserAuthorizationException
+            raise UserTokenAuthorizationException
 
-        if self.current_payload.typ != jwt_type:
-            raise TokenTypeException(self.current_payload.typ, jwt_type)
+        if self.current_payload.typ != token_type:
+            raise TokenTypeException(self.current_payload.typ, token_type)
 
     @property
     def current_user_oid(self: Self) -> UUID:
