@@ -43,5 +43,5 @@ sh:
 	docker exec -it api bash
 bi:
 	black . && isort .
-upgrade-to-head:
+migrate:
 	docker exec -it api alembic upgrade head
