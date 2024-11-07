@@ -2,7 +2,6 @@ from dataclasses import dataclass
 from typing_extensions import Self
 from uuid import UUID
 
-from src.application.services.exceptions import JWTTypeException
 from src.domain.entities import UserEntity
 from src.service_layer.entities import (
     AccessToken,
@@ -19,12 +18,18 @@ from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationSe
 @dataclass
 class UserJWTAuthorizationService(IUserJWTAuthorizationService):
     jwt_service: IJWTService
+    jwt: str | None = None
 
-    def create_access(self: Self, user: UserEntity) -> AccessToken:
+    def create_access(self: Self) -> AccessToken:
+        self.validate_token_type(TokenType.REFRESH)
+
         return AccessToken(
             access_token=self.jwt_service.create_jwt(
                 jwt_type=TokenType.ACCESS,
-                payload=UserPayload(str(user.oid), user.username),
+                payload=UserPayload(
+                    str(self.current_user_oid),
+                    self.current_username,
+                ),
             ),
         )
 
@@ -41,18 +46,30 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
             ),
         )
 
-    def get_payload(self: Self, token: str) -> UserJWTPayload:
-        # validate_token_type()
-        return UserJWTPayload(**self.jwt_service.get_jwt_payload(token))
+    @property
+    def current_payload(self: Self) -> UserJWTPayload:
+        if self.jwt is None:
+            raise UserAuthorizationException
+
+        return UserJWTPayload(**self.jwt_service.get_jwt_payload(self.jwt))
 
     def deauthorize(self: Self) -> None: ...
 
     def validate_token_type(self: Self, jwt_type: TokenType) -> None:
-        if not isinstance(self.payload.typ, TokenType):
-            raise JWTAuthorizationException
+        if self.current_token_type not in TokenType:
+            raise UserAuthorizationException
 
-        if self.payload.typ != jwt_type:
-            raise JWTTypeException(self.payload.typ, jwt_type)
+        if self.current_payload.typ != jwt_type:
+            raise TokenTypeException(self.current_payload.typ, jwt_type)
 
-    def get_user_oid(self: Self) -> UUID:
-        return UUID(self.payload.sub)
+    @property
+    def current_user_oid(self: Self) -> UUID:
+        return UUID(self.current_payload.sub)
+
+    @property
+    def current_username(self: Self) -> str:
+        return self.current_payload.username
+
+    @property
+    def current_token_type(self: Self) -> TokenType:
+        return self.current_payload.typ
