@@ -1,4 +1,4 @@
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from datetime import date, time
 from typing_extensions import Self
 
@@ -21,7 +21,7 @@ class Points(BaseValueObject):
     fell_asleep: time
     woke_up: time
     got_up: time
-    no_sleep: time = field(default=time())
+    no_sleep: time = time()
 
     def validate(self: Self) -> None:
         if not NoSleepHasValidTime(Durations(self)):
