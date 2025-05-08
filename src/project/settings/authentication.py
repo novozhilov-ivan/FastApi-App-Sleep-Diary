@@ -1,14 +1,15 @@
+from datetime import timedelta
 from pathlib import Path
+from typing import ClassVar
 
 from pydantic_settings import BaseSettings
 
 
-BASE_DIR = Path(__file__).parent.parent.parent.parent
-
-
 class AuthJWTSettings(BaseSettings):
-    PRIVATE_KEY: str = (BASE_DIR / "jwt-private.pem").read_text()
-    PUBLIC_KEY: str = (BASE_DIR / "jwt-public.pem").read_text()
-    ALGORITHM: str = "RS256"
-    ACCESS_TOKEN_EXPIRE_MINUTES: int = 3
-    REFRESH_TOKEN_EXPIRE_DAYS: int = 30
+    _BASE_DIR: ClassVar[Path] = Path(__file__).parent.parent.parent.parent
+
+    private_key: str = (_BASE_DIR / "jwt-private.pem").read_text()
+    public_key: str = (_BASE_DIR / "jwt-public.pem").read_text()
+    algorithm: str = "RS256"
+    access_token_expire: int = int(timedelta(minutes=3).total_seconds())
+    refresh_token_expire: int = int(timedelta(days=30).total_seconds())

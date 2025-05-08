@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from functools import total_ordering
 from operator import eq, gt
-from typing import TYPE_CHECKING
-from typing_extensions import Self
+from typing import Optional, Self, TYPE_CHECKING
 from uuid import UUID
 
 from src.domain.entities import BaseEntity
@@ -18,8 +17,8 @@ if TYPE_CHECKING:
 class NoteEntity(BaseEntity):
     owner_oid: UUID
     points: "Points"
-    durations: "IDurations" = None
-    statistics_of_points: "IStatistics" = None
+    durations: Optional["IDurations"] = None
+    statistics_of_points: Optional["IStatistics"] = None
 
     def __eq__(self: Self, other: object) -> bool:
         if not isinstance(other, NoteEntity):

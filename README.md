@@ -1,6 +1,6 @@
 ![Tests](https://github.com/novozhilov-ivan/FastApi-App-Sleep-Diary/actions/workflows/run_tests.yml/badge.svg)
 # Sleep Diary
-# FastApi + PostgreSQL Application 
+# FastApi + PostgreSQL Application
 
 
 ## Requirements

@@ -1,5 +1,5 @@
 from datetime import date, time
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID
 
 from sqlalchemy import ForeignKey, PrimaryKeyConstraint

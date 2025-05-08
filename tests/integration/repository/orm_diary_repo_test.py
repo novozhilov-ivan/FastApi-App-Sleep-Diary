@@ -9,7 +9,7 @@ from src.domain.values.points import Points
 from src.infra.database import Database
 from src.infra.orm import ORMNote, ORMUser
 from src.infra.repository import ORMNotesRepository
-from tests.use_cases import points_order_desc_from_went_to_bed
+from tests.conftest import points_order_desc_from_went_to_bed
 
 
 def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):

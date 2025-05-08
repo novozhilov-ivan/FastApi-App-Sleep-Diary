@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import datetime
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID, uuid4
 
 from sqlalchemy import func

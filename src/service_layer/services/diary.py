@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date, time
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID
 
 from src.domain import services
@@ -13,12 +13,6 @@ from src.domain.values.points import Points
 @dataclass
 class Diary:
     repository: INotesRepository
-
-    # user_service: InitVar[UserAuthenticationService]
-    # owner_oid: UUID = field(init=False)
-    #
-    # def __post_init__(self: Self, user_service: UserAuthenticationService) -> None:
-    #     self.owner_oid = user_service.user.oid
 
     def write(
         self: Self,

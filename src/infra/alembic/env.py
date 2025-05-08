@@ -14,7 +14,7 @@ if config.config_file_name is not None:
 
 target_metadata = ORMBase.metadata
 
-config.set_main_option("sqlalchemy.url", Settings().POSTGRES_DB_URL)
+config.set_main_option("sqlalchemy.url", Settings().postgres_db_url)
 
 
 def run_migrations_offline() -> None:

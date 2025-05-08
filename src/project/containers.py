@@ -3,18 +3,12 @@ from functools import lru_cache
 from punq import Container, Scope
 
 from src.domain.services import INotesRepository, IUsersRepository
-from src.infra.authorization import IUserTokenService, UserJWTService
 from src.infra.database import Database
 from src.infra.repository import (
     ORMNotesRepository,
     ORMUsersRepository,
 )
 from src.project.settings import Settings
-from src.service_layer import Diary
-from src.service_layer.services.authentication import (
-    IUserAuthenticationService,
-    UserAuthenticationService,
-)
 
 
 @lru_cache(1)
@@ -23,17 +17,23 @@ def get_container() -> Container:
 
 
 def _init_container() -> Container:
+    from src.service_layer.services import (
+        Diary,
+        IJWTService,
+        IUserAuthenticationService,
+        IUserJWTAuthorizationService,
+        JWTService,
+        UserAuthenticationService,
+        UserJWTAuthorizationService,
+    )
+
     container = Container()
 
     container.register(Settings, instance=Settings(), scope=Scope.singleton)
 
-    def init_token_service() -> IUserTokenService:
-        settings = container.resolve(Settings)
-        return UserJWTService(settings)
-
     def init_database() -> Database:
         settings = container.resolve(Settings)
-        return Database(url=settings.POSTGRES_DB_URL)
+        return Database(url=settings.postgres_db_url)
 
     def init_notes_repository() -> INotesRepository:
         database = container.resolve(Database)
@@ -47,6 +47,14 @@ def _init_container() -> Container:
         repository = container.resolve(IUsersRepository)
         return UserAuthenticationService(repository)
 
+    def init_jwt_service() -> IJWTService:
+        settings = container.resolve(Settings)
+        return JWTService(settings)
+
+    def init_user_jwt_authorization_service() -> IUserJWTAuthorizationService:
+        jwt_service = container.resolve(IJWTService)
+        return UserJWTAuthorizationService(jwt_service)
+
     def init_diary_service() -> Diary:
         repository = container.resolve(INotesRepository)
         return Diary(repository)
@@ -54,11 +62,6 @@ def _init_container() -> Container:
     container.register(
         Database,
         factory=init_database,
-        scope=Scope.singleton,
-    )
-    container.register(
-        IUserTokenService,
-        factory=init_token_service,
         scope=Scope.singleton,
     )
     container.register(
@@ -75,6 +78,12 @@ def _init_container() -> Container:
     container.register(
         IUserAuthenticationService,
         factory=init_authentication_service,
+        scope=Scope.transient,
+    )
+    container.register(IJWTService, factory=init_jwt_service, scope=Scope.singleton)
+    container.register(
+        IUserJWTAuthorizationService,
+        factory=init_user_jwt_authorization_service,
         scope=Scope.transient,
     )
 

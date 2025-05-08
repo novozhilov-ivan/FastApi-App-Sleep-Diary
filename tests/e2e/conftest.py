@@ -2,16 +2,16 @@ import pytest
 
 from fastapi import FastAPI
 from punq import Container, Scope
-from sqlalchemy import Engine, create_engine, text
+from sqlalchemy import create_engine, Engine, text
 from starlette.testclient import TestClient
 
 from src.application.api.main import create_app
 from src.domain.services import INotesRepository
 from src.infra.database import Database
-from src.infra.orm import ORMUser, metadata
+from src.infra.orm import metadata, ORMUser
 from src.project.containers import get_container
 from src.project.settings import Settings
-from src.service_layer import Diary
+from src.service_layer.services import Diary
 
 
 def init_dummy_container() -> Container:
@@ -30,9 +30,9 @@ def engine(settings: Settings) -> Engine:
     assert "test_" in test_db_name, "Защита от выполнения create/drop с основной БД"
 
     engine_for_create_db: Engine = create_engine(
-        str(settings.POSTGRES_DB_URL),
+        str(settings.postgres_db_url),
         echo=False,
-        isolation_level="AUTOCOMMIT",  # ???
+        isolation_level="AUTOCOMMIT",
     )
 
     connection_for_create_test_db = engine_for_create_db.connect()

@@ -4,7 +4,7 @@ from src.domain.entities import NoteEntity
 from src.domain.values.points import Points
 from src.infra.database import Database
 from src.infra.orm import ORMNote, ORMUser
-from tests.use_cases import (
+from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )
 

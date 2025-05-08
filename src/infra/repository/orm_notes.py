@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from datetime import date
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID
 
 from sqlalchemy import select

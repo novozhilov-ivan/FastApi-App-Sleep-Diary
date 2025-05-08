@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from operator import and_
-from typing import ClassVar
-from typing_extensions import Self
+from typing import ClassVar, Self
 
 from src.domain.specifications.base import BaseSpecification
 

@@ -5,13 +5,13 @@ import pytest
 
 from src.domain.services import Durations, IStatistics, Statistics
 from src.domain.values.points import Points
-from tests.unit.conftest import FakePoints
-from tests.use_cases import (
+from tests.conftest import (
     correct_points_4_different_order_of_sequences_and_one_hour_no_sleep,
     date_point,
     points_all_zero,
     points_with_zeros_and_some_big_no_sleep,
 )
+from tests.unit.conftest import FakePoints
 
 
 @pytest.mark.parametrize(

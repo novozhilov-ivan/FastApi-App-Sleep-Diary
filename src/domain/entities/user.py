@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 from operator import eq
-from typing_extensions import Self
+from typing import Self
 
 from src.domain.entities.base import BaseEntity
 
