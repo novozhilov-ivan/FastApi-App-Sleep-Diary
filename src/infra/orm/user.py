@@ -1,4 +1,4 @@
-from typing_extensions import Self
+from typing import Self
 
 from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column

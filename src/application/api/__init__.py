@@ -1,6 +1,6 @@
 from src.application.api.authorization import (
-    GetUserPayloadFromToken,
     get_user_payload_from_access_token,
+    GetUserPayloadFromToken,
 )
 from src.application.api.dependecies import (
     get_token_bearer,

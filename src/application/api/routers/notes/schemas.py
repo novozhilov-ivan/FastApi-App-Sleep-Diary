@@ -1,6 +1,6 @@
 from datetime import date, datetime, time
 
-from pydantic import UUID4, BaseModel, Field
+from pydantic import BaseModel, Field, UUID4
 
 
 class CreatePointsRequestSchema(BaseModel):

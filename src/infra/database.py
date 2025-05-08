@@ -1,9 +1,9 @@
+from collections.abc import Generator
 from contextlib import contextmanager
-from dataclasses import InitVar, dataclass, field
-from typing import Generator
-from typing_extensions import Self
+from dataclasses import dataclass, field, InitVar
+from typing import Self
 
-from sqlalchemy import Engine, create_engine
+from sqlalchemy import create_engine, Engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 

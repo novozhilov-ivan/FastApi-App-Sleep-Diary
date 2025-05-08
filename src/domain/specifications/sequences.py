@@ -1,8 +1,7 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import time
-from typing import TYPE_CHECKING
-from typing_extensions import Self
+from typing import Self, TYPE_CHECKING
 
 from more_itertools import is_sorted
 

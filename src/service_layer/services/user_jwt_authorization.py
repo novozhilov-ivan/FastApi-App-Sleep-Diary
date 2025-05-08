@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID
 
 from src.domain.entities import UserEntity
@@ -53,7 +53,8 @@ class UserJWTAuthorizationService(IUserJWTAuthorizationService):
 
         return UserJWTPayload(**self.jwt_service.get_jwt_payload(self.jwt))
 
-    def deauthorize(self: Self) -> None: ...
+    def deauthorize(self: Self) -> None:
+        pass
 
     def validate_token_type(self: Self, token_type: TokenType) -> None:
         if self.current_token_type not in TokenType:

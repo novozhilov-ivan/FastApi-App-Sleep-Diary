@@ -1,5 +1,5 @@
 from dataclasses import dataclass, field
-from typing_extensions import Self
+from typing import Self
 
 from src.domain.entities import UserEntity
 from src.domain.services import IUsersRepository
@@ -10,12 +10,10 @@ class MemoryUsersRepository(IUsersRepository):
     _saved_users: set[UserEntity] = field(default_factory=set)
 
     def get_by_username(self: Self, username: str) -> UserEntity | None:
-        try:
-            return next(
-                user for user in self._saved_users if user.username == username
-            )
-        except StopIteration:
-            return None
+        return next(
+            (user for user in self._saved_users if user.username == username),
+            None,
+        )
 
     def add_user(self: Self, user: UserEntity) -> None:
         self._saved_users.add(user)

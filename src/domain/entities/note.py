@@ -1,8 +1,7 @@
 from dataclasses import dataclass
 from functools import total_ordering
 from operator import eq, gt
-from typing import TYPE_CHECKING, Optional
-from typing_extensions import Self
+from typing import Optional, Self, TYPE_CHECKING
 from uuid import UUID
 
 from src.domain.entities import BaseEntity

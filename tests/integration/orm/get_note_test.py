@@ -2,11 +2,11 @@ from uuid import uuid4
 
 from src.infra.database import Database
 from src.infra.orm import ORMNote, ORMUser
-from tests.integration.conftest import stmt_insert_note
-from tests.use_cases import (
-    TN,
+from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
+    TN,
 )
+from tests.integration.conftest import stmt_insert_note
 
 
 def test_get_note(memory_database: Database, user: ORMUser):

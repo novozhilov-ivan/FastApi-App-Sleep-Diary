@@ -3,7 +3,7 @@ from uuid import uuid4
 from src.domain.entities import NoteEntity
 from src.domain.services import DiaryService
 from src.domain.values.points import Points
-from tests.use_cases import (
+from tests.conftest import (
     date_point,
     points_order_desc_from_got_up,
     points_order_desc_from_went_to_bed,

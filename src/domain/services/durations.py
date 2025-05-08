@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 from datetime import time, timedelta
 from operator import ge, sub
-from typing_extensions import Self
+from typing import Self
 
 from src.domain.services import IDurations
 

@@ -1,5 +1,5 @@
 from fastapi import Form
-from pydantic import UUID4, BaseModel
+from pydantic import BaseModel, UUID4
 
 
 class AccessJWTResponseSchema(BaseModel):

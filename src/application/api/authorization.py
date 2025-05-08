@@ -1,11 +1,11 @@
 from dataclasses import dataclass
-from typing_extensions import Self
+from typing import Self
 
 from fastapi import Depends, HTTPException
 from punq import Container
 from starlette import status
 
-from .dependecies import get_token_bearer
+from .dependecies import get_token_bearer  # noqa: ABS101 # need to fix
 from src.project.containers import get_container
 from src.service_layer.entities import TokenType, UserPayload
 from src.service_layer.exceptions import UserTokenAuthorizationException

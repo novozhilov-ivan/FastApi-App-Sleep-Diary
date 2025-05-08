@@ -1,8 +1,8 @@
 from dataclasses import dataclass
-from datetime import UTC, datetime
-from typing_extensions import Self
+from datetime import datetime, UTC
+from typing import Self
 
-from jwt import DecodeError, PyJWTError, decode, encode
+from jwt import decode, DecodeError, encode, PyJWTError
 
 from src.project.settings import AuthJWTSettings
 from src.service_layer.entities import IPayload, JWTPayload, TokenType

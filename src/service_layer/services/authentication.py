@@ -1,6 +1,5 @@
 from dataclasses import dataclass
-from typing import ClassVar, cast
-from typing_extensions import Self
+from typing import cast, ClassVar, Self
 
 from bcrypt import checkpw, gensalt, hashpw
 

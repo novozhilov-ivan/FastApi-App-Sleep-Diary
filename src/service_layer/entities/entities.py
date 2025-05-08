@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
-from typing_extensions import Self
+from datetime import datetime, UTC
+from typing import Self
 from uuid import uuid4
 
 from src.service_layer.entities.base import IPayload

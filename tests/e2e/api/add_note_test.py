@@ -16,14 +16,14 @@ from src.domain.values.points import Points
 from src.infra.converters import convert_points_to_json
 from src.infra.orm import ORMUser
 from src.service_layer.services import Diary
-from tests.unit.conftest import FakePoints
-from tests.use_cases import (
-    TN,
-    T,
+from tests.conftest import (
     points_order_desc_from_went_to_bed,
+    T,
+    TN,
     wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed,
     wrong_points_went_to_bed_gt_fell_asleep_and_lt_other_time_points,
 )
+from tests.unit.conftest import FakePoints
 
 
 def test_add_note_201(app: FastAPI, client: TestClient, user: ORMUser):
@@ -31,7 +31,6 @@ def test_add_note_201(app: FastAPI, client: TestClient, user: ORMUser):
         url=app.url_path_for("Добавить запись"),
         json=convert_points_to_json(Points(*points_order_desc_from_went_to_bed)),
         headers={"owner_oid": str(user.oid)},
-        # auth=jwt_access,
     )
     assert response.status_code == status.HTTP_201_CREATED, response.json()
     assert response.json() is None
@@ -61,7 +60,6 @@ def test_add_note_400_note_exceptions(
         url=app.url_path_for("Добавить запись"),
         json=convert_points_to_json(FakePoints(*points)),
         headers={"owner_oid": str(user.oid)},
-        # auth=jwt_access,
     )
     assert status.HTTP_400_BAD_REQUEST == response.status_code
     with pytest.raises(NoteException) as excinfo:
@@ -84,13 +82,11 @@ def test_add_note_400_write_note_twice_exception(
         url=url,
         json=convert_points_to_json(points),
         headers={"owner_oid": str(user.oid)},
-        # auth=jwt_access,
     )
     response: Response = client.post(
         url=url,
         json=convert_points_to_json(points),
         headers={"owner_oid": str(user.oid)},
-        # auth=jwt_access,
     )
 
     assert status.HTTP_400_BAD_REQUEST == response.status_code, response.json()

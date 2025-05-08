@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing_extensions import Self
+from typing import Self
 
 from src.domain.specifications import UserCredentialsSpecification
 from src.service_layer.exceptions import AuthenticationException

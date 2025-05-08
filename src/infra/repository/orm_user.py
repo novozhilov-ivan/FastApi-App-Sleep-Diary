@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing_extensions import Self
+from typing import Self
 
 from sqlalchemy import select
 
@@ -27,4 +27,5 @@ class ORMUsersRepository(IUsersRepository):
         with self.database.get_session() as session:
             session.add(ORMUser.from_entity(user))
 
-    def delete_user(self: Self, username: str) -> None: ...
+    def delete_user(self: Self, username: str) -> None:
+        pass

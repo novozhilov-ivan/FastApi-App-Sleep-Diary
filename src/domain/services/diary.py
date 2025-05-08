@@ -1,6 +1,5 @@
 from dataclasses import dataclass, field
-from typing import TYPE_CHECKING
-from typing_extensions import Self
+from typing import Self, TYPE_CHECKING
 
 
 if TYPE_CHECKING:

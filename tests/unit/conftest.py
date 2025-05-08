@@ -1,5 +1,5 @@
 from dataclasses import dataclass
-from typing_extensions import Self
+from typing import Self
 
 import pytest
 
@@ -25,7 +25,8 @@ from src.service_layer.services.jwt import JWTService
 
 @dataclass(frozen=True)
 class FakePoints(Points):
-    def validate(self: Self) -> None: ...
+    def validate(self: Self) -> None:
+        pass
 
 
 @dataclass

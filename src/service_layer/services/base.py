@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass, field
-from typing_extensions import Self
+from typing import Self
 from uuid import UUID
 
 from src.domain.entities import UserEntity
