@@ -3,10 +3,10 @@ from uuid import uuid4
 
 import pytest
 
-from src.domain.entities import NoteEntity
-from src.domain.exceptions import NonUniqueNoteBedtimeDateException
-from src.domain.services import INotesRepository
-from src.service_layer.services import Diary
+from src.sleep_diary.application.services import Diary
+from src.sleep_diary.domain.entities import NoteEntity
+from src.sleep_diary.domain.exceptions import NonUniqueNoteBedtimeDateException
+from src.sleep_diary.domain.services import INotesRepository
 from tests.conftest import points_order_desc_from_went_to_bed
 
 

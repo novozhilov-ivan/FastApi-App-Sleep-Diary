@@ -2,7 +2,7 @@ from datetime import date, time
 from itertools import chain
 from typing import TypeAlias
 
-from src.domain.values.points import Points
+from src.sleep_diary.domain.values.points import Points
 
 
 date_point: date = date(2020, 12, 12)

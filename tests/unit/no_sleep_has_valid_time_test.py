@@ -1,7 +1,7 @@
 import pytest
 
-from src.domain.services import Durations
-from src.domain.specifications import NoSleepHasValidTime
+from src.sleep_diary.domain.services import Durations
+from src.sleep_diary.domain.specifications import NoSleepHasValidTime
 from tests.conftest import (
     wrong_points_where_no_sleep_gt_sleep,
 )

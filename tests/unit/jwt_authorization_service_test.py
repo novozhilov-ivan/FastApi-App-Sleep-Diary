@@ -1,11 +1,11 @@
-from src.domain.entities import UserEntity
-from src.service_layer.entities import (
+from src.sleep_diary.application.entities import (
     AccessToken,
     RefreshToken,
     UserJWTPayload,
     UserPayload,
 )
-from src.service_layer.services.base import IUserJWTAuthorizationService
+from src.sleep_diary.application.services.base import IUserJWTAuthorizationService
+from src.sleep_diary.domain.entities import UserEntity
 
 
 def test_create_access_jwt_by_refresh_jwt(

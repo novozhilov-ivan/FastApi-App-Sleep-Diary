@@ -2,7 +2,7 @@ from fastapi import FastAPI
 from httpx import Response
 from starlette.testclient import TestClient
 
-from src.application.api.routers.about.schemas import (
+from src.sleep_diary.infrastructure.api.routers.about.schemas import (
     AboutSleepDiarySchema,
 )
 

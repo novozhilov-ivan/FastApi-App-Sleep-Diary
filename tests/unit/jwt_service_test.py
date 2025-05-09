@@ -3,10 +3,10 @@ from uuid import UUID
 
 import pytest
 
-from src.project.settings import AuthJWTSettings
-from src.service_layer.entities import IPayload, JWTPayload, TokenType
-from src.service_layer.services.base import IJWTService
-from src.service_layer.services.jwt import JWTService
+from src.sleep_diary.application.entities import IPayload, JWTPayload, TokenType
+from src.sleep_diary.application.services.base import IJWTService
+from src.sleep_diary.application.services.jwt import JWTService
+from src.sleep_diary.config.settings import AuthJWTSettings
 
 
 def test_encode_payload(jwt_service: IJWTService):

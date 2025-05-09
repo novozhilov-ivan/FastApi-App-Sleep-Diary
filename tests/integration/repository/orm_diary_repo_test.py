@@ -3,12 +3,12 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import text
 
-from src.domain.entities import NoteEntity
-from src.domain.services import DiaryService
-from src.domain.values.points import Points
-from src.infra.database import Database
-from src.infra.orm import ORMNote, ORMUser
-from src.infra.repository import ORMNotesRepository
+from src.sleep_diary.domain.entities import NoteEntity
+from src.sleep_diary.domain.services import DiaryService
+from src.sleep_diary.domain.values.points import Points
+from src.sleep_diary.infrastructure.database import Database
+from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
+from src.sleep_diary.infrastructure.repository import ORMNotesRepository
 from tests.conftest import points_order_desc_from_went_to_bed
 
 

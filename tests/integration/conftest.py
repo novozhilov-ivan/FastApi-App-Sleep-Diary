@@ -2,8 +2,8 @@ import pytest
 
 from sqlalchemy import text
 
-from src.infra.database import Database
-from src.infra.orm import metadata, ORMUser
+from src.sleep_diary.infrastructure.database import Database
+from src.sleep_diary.infrastructure.orm import metadata, ORMUser
 
 
 stmt_insert_note = text(

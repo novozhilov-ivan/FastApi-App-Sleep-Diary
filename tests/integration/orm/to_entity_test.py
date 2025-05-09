@@ -1,9 +1,9 @@
 from uuid import uuid4
 
-from src.domain.entities import NoteEntity
-from src.domain.values.points import Points
-from src.infra.database import Database
-from src.infra.orm import ORMNote, ORMUser
+from src.sleep_diary.domain.entities import NoteEntity
+from src.sleep_diary.domain.values.points import Points
+from src.sleep_diary.infrastructure.database import Database
+from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,

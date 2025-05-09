@@ -1,6 +1,6 @@
 import pytest
 
-from src.domain.specifications import (
+from src.sleep_diary.domain.specifications import (
     FellAsleepPointFirstInOrder,
     GotUpPointFirstInOrder,
     PointsHasValidAnyAllowedSortedSequences,

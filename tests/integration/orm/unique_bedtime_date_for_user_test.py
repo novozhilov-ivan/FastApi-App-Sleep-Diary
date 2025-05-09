@@ -4,8 +4,8 @@ import pytest
 
 from sqlalchemy.exc import IntegrityError
 
-from src.infra.database import Database
-from src.infra.orm import ORMNote, ORMUser
+from src.sleep_diary.infrastructure.database import Database
+from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,

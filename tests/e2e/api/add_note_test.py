@@ -5,17 +5,17 @@ from httpx import Response
 from starlette import status
 from starlette.testclient import TestClient
 
-from src.domain.exceptions import (
+from src.sleep_diary.application.services import Diary
+from src.sleep_diary.domain.exceptions import (
     ApplicationException,
     NonUniqueNoteBedtimeDateException,
     NoSleepDurationException,
     NoteException,
     TimePointsSequenceException,
 )
-from src.domain.values.points import Points
-from src.infra.converters import convert_points_to_json
-from src.infra.orm import ORMUser
-from src.service_layer.services import Diary
+from src.sleep_diary.domain.values.points import Points
+from src.sleep_diary.infrastructure.converters import convert_points_to_json
+from src.sleep_diary.infrastructure.orm import ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed,
     T,

@@ -1,8 +1,8 @@
 from uuid import uuid4
 
-from src.domain.entities import NoteEntity
-from src.domain.services import DiaryService
-from src.domain.values.points import Points
+from src.sleep_diary.domain.entities import NoteEntity
+from src.sleep_diary.domain.services import DiaryService
+from src.sleep_diary.domain.values.points import Points
 from tests.conftest import (
     date_point,
     points_order_desc_from_got_up,

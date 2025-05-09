@@ -3,24 +3,30 @@ from typing import Self
 
 import pytest
 
-from src.domain.entities import UserEntity
-from src.domain.services import INotesRepository, IUsersRepository
-from src.domain.values.points import Points
-from src.infra.repository import MemoryNotesRepository, MemoryUsersRepository
-from src.project.settings import AuthJWTSettings
-from src.service_layer.entities import (
+from src.sleep_diary.application.entities import (
     IPayload,
     TokenType,
     UserPayload,
 )
-from src.service_layer.services import (
+from src.sleep_diary.application.services import (
     Diary,
     IUserAuthenticationService,
     UserAuthenticationService,
     UserJWTAuthorizationService,
 )
-from src.service_layer.services.base import IJWTService, IUserJWTAuthorizationService
-from src.service_layer.services.jwt import JWTService
+from src.sleep_diary.application.services.base import (
+    IJWTService,
+    IUserJWTAuthorizationService,
+)
+from src.sleep_diary.application.services.jwt import JWTService
+from src.sleep_diary.config.settings import AuthJWTSettings
+from src.sleep_diary.domain.entities import UserEntity
+from src.sleep_diary.domain.services import INotesRepository, IUsersRepository
+from src.sleep_diary.domain.values.points import Points
+from src.sleep_diary.infrastructure.repository import (
+    MemoryNotesRepository,
+    MemoryUsersRepository,
+)
 
 
 @dataclass(frozen=True)

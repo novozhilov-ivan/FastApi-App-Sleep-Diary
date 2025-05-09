@@ -1,20 +1,20 @@
 import pytest
 
-from src.domain.entities import UserEntity
-from src.domain.services import IUsersRepository
-from src.domain.specifications import UserCredentialsSpecification
-from src.infra.repository import MemoryUsersRepository
-from src.service_layer.exceptions import (
+from src.sleep_diary.application.exceptions import (
     LogInException,
     NotAuthenticatedException,
     UserCredentialsFormatException,
     UserNameAlreadyExistException,
 )
-from src.service_layer.services import (
+from src.sleep_diary.application.services import (
     IUserAuthenticationService,
     NotAuthenticated,
     UserAuthenticationService,
 )
+from src.sleep_diary.domain.entities import UserEntity
+from src.sleep_diary.domain.services import IUsersRepository
+from src.sleep_diary.domain.specifications import UserCredentialsSpecification
+from src.sleep_diary.infrastructure.repository import MemoryUsersRepository
 
 
 def test_property_user_authenticated(

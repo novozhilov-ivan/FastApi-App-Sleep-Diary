@@ -5,13 +5,13 @@ from punq import Container, Scope
 from sqlalchemy import create_engine, Engine, text
 from starlette.testclient import TestClient
 
-from src.application.api.main import create_app
-from src.domain.services import INotesRepository
-from src.infra.database import Database
-from src.infra.orm import metadata, ORMUser
-from src.project.containers import get_container
-from src.project.settings import Settings
-from src.service_layer.services import Diary
+from src.sleep_diary.application.services import Diary
+from src.sleep_diary.config.containers import get_container
+from src.sleep_diary.config.settings import Settings
+from src.sleep_diary.domain.services import INotesRepository
+from src.sleep_diary.infrastructure.api.main import create_app
+from src.sleep_diary.infrastructure.database import Database
+from src.sleep_diary.infrastructure.orm import metadata, ORMUser
 
 
 def init_dummy_container() -> Container:

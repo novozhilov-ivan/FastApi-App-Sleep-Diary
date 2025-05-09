@@ -3,8 +3,8 @@ from operator import truediv
 
 import pytest
 
-from src.domain.services import Durations, IStatistics, Statistics
-from src.domain.values.points import Points
+from src.sleep_diary.domain.services import Durations, IStatistics, Statistics
+from src.sleep_diary.domain.values.points import Points
 from tests.conftest import (
     correct_points_4_different_order_of_sequences_and_one_hour_no_sleep,
     date_point,
