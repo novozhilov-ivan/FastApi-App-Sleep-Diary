@@ -1,17 +1,13 @@
+from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import cast, ClassVar, Self
+from typing import ClassVar, Self
 
 from bcrypt import checkpw, gensalt, hashpw
 
 from src.sleep_diary.application.exceptions import (
     LogInException,
-    NotAuthenticatedException,
     UserCredentialsFormatException,
     UserNameAlreadyExistException,
-)
-from src.sleep_diary.application.services.base import (
-    IUserAuthenticationService,
-    NotAuthenticated,
 )
 from src.sleep_diary.domain.entities import UserEntity
 from src.sleep_diary.domain.services import IUsersRepository
@@ -21,23 +17,33 @@ from src.sleep_diary.domain.specifications import (
 
 
 @dataclass
+class IUserAuthenticationService(ABC):
+    @abstractmethod
+    def login(self: Self, username: str, password: str) -> UserEntity:
+        raise NotImplementedError
+
+    @abstractmethod
+    def register(self: Self, username: str, password: str) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
+    def unregister(self: Self) -> None:
+        raise NotImplementedError
+
+
+@dataclass
 class UserAuthenticationService(IUserAuthenticationService):
-    DEFAULT_ENCODING: ClassVar[str] = "utf-8"
+    _DEFAULT_ENCODING: ClassVar[str] = "utf-8"
 
     repository: IUsersRepository
 
-    def login(self: Self, username: str, password: str) -> None:
-        user = self._validate_user(username)
+    def login(self: Self, username: str, password: str) -> UserEntity:
+        if (user := self.repository.get_by_username(username)) is None:
+            raise LogInException
+
         self._validate_user_password(user, password)
-        self._user = user
-        cast(UserEntity, self._user)
 
-    def logout(self: Self) -> None:
-        if isinstance(self._user, NotAuthenticated):
-            raise NotAuthenticatedException
-
-        self._user = NotAuthenticated()
-        cast(NotAuthenticated, self._user)
+        return user
 
     def register(self: Self, username: str, password: str) -> None:
         if self.repository.get_by_username(username) is not None:
@@ -58,7 +64,7 @@ class UserAuthenticationService(IUserAuthenticationService):
         self.logout()
 
     @staticmethod
-    def hash_password(pwd: str, encoding: str = DEFAULT_ENCODING) -> str:
+    def hash_password(pwd: str, encoding: str = _DEFAULT_ENCODING) -> str:
         return hashpw(
             password=pwd.encode(encoding),
             salt=gensalt(),
@@ -68,21 +74,12 @@ class UserAuthenticationService(IUserAuthenticationService):
     def compare_passwords(
         password: str,
         hashed_password: str,
-        encoding: str = DEFAULT_ENCODING,
+        encoding: str = _DEFAULT_ENCODING,
     ) -> bool:
         return checkpw(
             password=password.encode(encoding),
             hashed_password=hashed_password.encode(encoding),
         )
-
-    def _get_user(self: Self, username: str) -> UserEntity | None:
-        return self.repository.get_by_username(username)
-
-    def _validate_user(self: Self, username: str) -> UserEntity:
-        if (user := self._get_user(username)) is None:
-            raise LogInException
-
-        return user
 
     def _validate_user_password(self: Self, user: UserEntity, password: str) -> None:
         if not self.compare_passwords(

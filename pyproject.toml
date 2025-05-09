@@ -17,10 +17,10 @@ more-itertools = "^10.3.0"
 psycopg2-binary = "^2.9.9"
 sqlalchemy = "2.0.40"
 fastapi = {version = "0.115.12", extras = ["all"]}
-punq = "^0.7.0"
 python-multipart = "0.0.19"
 alembic = "1.15.2"
 httpx = "^0.28.1"
+dishka = "^1.5.3"
 
 [tool.poetry.group.dev.dependencies]
 pytest-html = "^4.1.1"
