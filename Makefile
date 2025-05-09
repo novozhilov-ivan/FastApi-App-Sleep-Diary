@@ -41,7 +41,5 @@ logs-pgadmin:
 	docker compose -f pgadmin.yml logs --tail=25 pgadmin
 sh:
 	docker exec -it api bash
-bi:
-	black . && isort .
 migrate:
 	docker exec -it api alembic upgrade head
