@@ -43,3 +43,15 @@ sh:
 	docker exec -it api bash
 migrate:
 	docker exec -it api alembic upgrade head
+all-cov:
+	coverage run -m pytest
+	coverage report -m
+open-cov: all-cov
+	coverage html
+	xdg-open coverage_html_report/index.html
+clean-cov:
+	rm -rf \
+		coverage_html_report \
+		coverage.xml \
+		.coverage \
+		.pytest_cache

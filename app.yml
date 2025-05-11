@@ -47,7 +47,7 @@ services:
     entrypoint:
       - uvicorn
       - --factory
-      - src.application.api.main:create_app
+      - src.shared.infrastructure.api.main:create_app
       - --host=0.0.0.0
       - --port=8000
       - --reload

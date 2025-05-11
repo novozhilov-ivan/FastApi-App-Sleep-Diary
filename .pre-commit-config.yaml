@@ -90,3 +90,14 @@ repos:
           pep8-naming,
           dlint,
         ]
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.15.0
+    hooks:
+      - id: mypy
+        args: [
+          --config-file=mypy.ini,
+        ]
+        additional_dependencies: [
+          "pydantic",
+          "sqlalchemy[mypy]",
+        ]
