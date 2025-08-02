@@ -6,8 +6,8 @@ from sqlalchemy.orm import Mapped, mapped_column
 
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.values.points import Points
-from src.gateways.postresql.models.base import ORMBase
-from src.gateways.postresql.models.mixins import MixinUpdatedAt, MixinUUIDOid
+from src.gateways.postgresql.models.base import ORMBase
+from src.gateways.postgresql.models.mixins import MixinUpdatedAt, MixinUUIDOid
 
 
 class ORMNote(ORMBase, MixinUUIDOid, MixinUpdatedAt):

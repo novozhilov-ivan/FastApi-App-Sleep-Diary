@@ -9,8 +9,8 @@ from sqlalchemy.orm import Session
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.services.base import INotesRepository
-from src.gateways.postresql.database import Database
-from src.gateways.postresql.models.user import ORMUser
+from src.gateways.postgresql.database import Database
+from src.gateways.postgresql.models.user import ORMUser
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from src.project.settings import PostgreSQLSettings
 

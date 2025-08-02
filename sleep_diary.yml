@@ -10,6 +10,7 @@ secrets:
 
 services:
   sleep_diary:
+    container_name: sleep_diary
     build:
       context: .
       dockerfile: Dockerfile

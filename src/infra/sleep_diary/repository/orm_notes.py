@@ -6,8 +6,8 @@ from sqlalchemy import select
 
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.services.base import INotesRepository
-from src.gateways.postresql.database import Database
-from src.gateways.postresql.models.note import ORMNote
+from src.gateways.postgresql.database import Database
+from src.gateways.postgresql.models.note import ORMNote
 
 
 @dataclass

@@ -4,8 +4,8 @@ import pytest
 
 from sqlalchemy.exc import IntegrityError
 
-from src.gateways.postresql.database import Database
-from src.gateways.postresql.models import ORMNote, ORMUser
+from src.gateways.postgresql.database import Database
+from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,

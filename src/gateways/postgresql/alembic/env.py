@@ -3,8 +3,8 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from src.sleep_diary.config.settings import Settings
-from src.sleep_diary.infrastructure.orm import ORMBase
+from src.gateways.postgresql.models import ORMBase
+from src.project.container import config as project_config
 
 
 config = context.config
@@ -14,7 +14,7 @@ if config.config_file_name is not None:
 
 target_metadata = ORMBase.metadata
 
-config.set_main_option("sqlalchemy.url", Settings().db_url)
+config.set_main_option("sqlalchemy.url", project_config.postgresql.db_url)
 
 
 def run_migrations_offline() -> None:

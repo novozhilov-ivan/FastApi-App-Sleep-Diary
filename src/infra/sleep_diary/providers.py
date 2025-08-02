@@ -4,7 +4,7 @@ from dishka import provide, Provider, Scope
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.services.base import INotesRepository, IUsersRepository
-from src.gateways.postresql.database import Database
+from src.gateways.postgresql.database import Database
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from src.infra.sleep_diary.repository.orm_user import ORMUsersRepository
 

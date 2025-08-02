@@ -2,8 +2,8 @@ from sqlalchemy import String
 from sqlalchemy.orm import Mapped, mapped_column
 
 from src.domain.sleep_diary.entities.user import UserEntity
-from src.gateways.postresql.models import ORMBase
-from src.gateways.postresql.models.mixins import MixinUpdatedAt, MixinUUIDOid
+from src.gateways.postgresql.models import ORMBase
+from src.gateways.postgresql.models.mixins import MixinUpdatedAt, MixinUUIDOid
 
 
 class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):

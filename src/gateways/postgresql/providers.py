@@ -2,7 +2,7 @@ from typing import ClassVar
 
 from dishka import provide, Provider, Scope
 
-from src.gateways.postresql.database import Database
+from src.gateways.postgresql.database import Database
 from src.project.settings import Config
 
 
