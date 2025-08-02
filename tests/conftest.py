@@ -1,19 +1,23 @@
+from collections.abc import Iterable
 from datetime import date, time
 from itertools import chain
 from typing import TypeAlias
+from uuid import uuid4
 
-from src.sleep_diary.domain.values.points import Points
+import pytest
+
+from src.domain.sleep_diary.values.points import Points
+
+
+@pytest.fixture(scope="session")
+def user_oid() -> str:
+    return str(uuid4())
 
 
 date_point: date = date(2020, 12, 12)
 
 T: TypeAlias = tuple[date, time, time, time, time]
-TT: TypeAlias = tuple[
-    tuple[date, time, time, time, time],
-    tuple[date, time, time, time, time],
-    tuple[date, time, time, time, time],
-    tuple[date, time, time, time, time],
-]
+TT: TypeAlias = tuple[T, T, T, T]
 # 4 Корректных, последовательных и отсортированных данных для временных точек.
 # Все имеют:
 # 8 часов сна [fell_asleep:woke_up]
@@ -197,7 +201,7 @@ wrong_points_where_got_up_is_wrong: TT = (
     wrong_points_got_up_lt_fell_asleep_and_gt_other_points,
 )
 # Все point'ы, в которых не корректная сортировка
-all_wrong_points_sequences: chain[TT] = chain.from_iterable(
+all_wrong_points_sequences: Iterable[T] = chain.from_iterable(
     (
         wrong_points_where_went_to_bed_is_wrong,
         wrong_points_where_fell_asleep_is_wrong,
@@ -207,12 +211,7 @@ all_wrong_points_sequences: chain[TT] = chain.from_iterable(
 )
 #  Point'ы, в которых время без сна больше времени сна
 TN: TypeAlias = tuple[date, time, time, time, time, time]
-TTN: TypeAlias = tuple[
-    tuple[date, time, time, time, time, time],
-    tuple[date, time, time, time, time, time],
-    tuple[date, time, time, time, time, time],
-    tuple[date, time, time, time, time, time],
-]
+TTN: TypeAlias = tuple[TN, TN, TN, TN]
 wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed: TN = (
     date_point,
     time(1),

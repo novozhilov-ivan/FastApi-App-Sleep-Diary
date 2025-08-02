@@ -1,0 +1,14 @@
+from typing import ClassVar
+
+from dishka import provide, Provider, Scope
+
+from src.gateways.postresql.database import Database
+from src.project.settings import Config
+
+
+class DatabaseProvider(Provider):
+    scope: ClassVar[Scope] = Scope.APP
+
+    @provide
+    def get_database(self, config: Config) -> Database:
+        return Database(url=config.postgresql.db_url)

@@ -3,53 +3,53 @@ from uuid import UUID, uuid4
 
 from sqlalchemy import text
 
-from src.sleep_diary.domain.entities import NoteEntity
-from src.sleep_diary.domain.services import DiaryService
-from src.sleep_diary.domain.values.points import Points
-from src.sleep_diary.infrastructure.database import Database
-from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
-from src.sleep_diary.infrastructure.repository import ORMNotesRepository
+from src.domain.sleep_diary.entities.note import NoteEntity
+from src.domain.sleep_diary.services.diary import DiaryService
+from src.domain.sleep_diary.values.points import Points
+from src.gateways.postresql.database import Database
+from src.gateways.postresql.models import ORMNote, ORMUser
+from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from tests.conftest import points_order_desc_from_went_to_bed
 
 
-def test_repo_can_add_and_save_note(memory_database: Database, user: ORMUser):
+def test_repo_can_add_and_save_note(database: Database, orm_user: ORMUser) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
     note_oid = uuid4()
     note = NoteEntity(
         oid=note_oid,
-        owner_oid=user.oid,
+        owner_oid=orm_user.oid,
         points=points,
     )
 
-    repository = ORMNotesRepository(memory_database)
+    repository = ORMNotesRepository(database)
     repository.add(note)
 
-    with memory_database.get_session() as session:
-        [result] = session.execute(
-            text(
-                "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up "
-                'FROM "notes";',
-            ),
-        )
+    stmt = text(
+        "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up "
+        "FROM notes;"
+    )
+    with database.get_session() as session:
+        [result] = session.execute(stmt)
+
     assert result == (
-        points.bedtime_date.isoformat(),
-        points.went_to_bed.isoformat("microseconds"),
-        points.fell_asleep.isoformat("microseconds"),
-        points.woke_up.isoformat("microseconds"),
-        points.got_up.isoformat("microseconds"),
+        points.bedtime_date,
+        points.went_to_bed,
+        points.fell_asleep,
+        points.woke_up,
+        points.got_up,
     )
 
 
-def insert_note(memory_database: Database, user: ORMUser, points: Points) -> ORMNote:
+def insert_note(database: Database, orm_user: ORMUser, points: Points) -> ORMNote:
     note = NoteEntity(
         oid=uuid4(),
-        owner_oid=user.oid,
+        owner_oid=orm_user.oid,
         points=points,
     )
 
     note_orm = ORMNote.from_entity(note)
 
-    with memory_database.get_session() as session:
+    with database.get_session() as session:
         session.add(note_orm)
         session.commit()
         session.refresh(note_orm)
@@ -57,13 +57,13 @@ def insert_note(memory_database: Database, user: ORMUser, points: Points) -> ORM
 
 
 def test_repo_can_retrieve_note_entity_by_oid(
-    memory_database: Database,
-    user: ORMUser,
-):
+    database: Database,
+    orm_user: ORMUser,
+) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
-    inserted_note_orm = insert_note(memory_database, user, points)
+    inserted_note_orm = insert_note(database, orm_user, points)
 
-    repository = ORMNotesRepository(memory_database)
+    repository = ORMNotesRepository(database)
     retrieved_entity: NoteEntity | None = repository.get_by_oid(
         inserted_note_orm.oid,
     )
@@ -82,16 +82,16 @@ def test_repo_can_retrieve_note_entity_by_oid(
 
 
 def test_repo_can_retrieve_note_entity_by_bedtime_date(
-    memory_database: Database,
-    user: ORMUser,
-):
+    database: Database,
+    orm_user: ORMUser,
+) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
-    insert_note(memory_database, user, points)
+    insert_note(database, orm_user, points)
 
-    repository = ORMNotesRepository(memory_database)
+    repository = ORMNotesRepository(database)
     retrieved_entity: NoteEntity | None = repository.get_by_bedtime_date(
         points.bedtime_date,
-        user.oid,
+        orm_user.oid,
     )
 
     assert retrieved_entity
@@ -107,12 +107,12 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
     assert retrieved_entity.points.no_sleep == points.no_sleep
 
 
-def test_repo_can_retrieve_diary(memory_database: Database, user: ORMUser):
+def test_repo_can_retrieve_diary(database: Database, orm_user: ORMUser) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
-    insert_note(memory_database, user, points)
+    insert_note(database, orm_user, points)
 
-    repository = ORMNotesRepository(memory_database)
-    retrieved_notes = repository.get_all_notes(user.oid)
+    repository = ORMNotesRepository(database)
+    retrieved_notes = repository.get_all_notes(orm_user.oid)
     diary = DiaryService.create(retrieved_notes)
 
     assert isinstance(diary.notes_list, set)
@@ -120,5 +120,5 @@ def test_repo_can_retrieve_diary(memory_database: Database, user: ORMUser):
 
     fake_oid = uuid4()
     assert diary.notes_list == {
-        NoteEntity(oid=fake_oid, owner_oid=user.oid, points=points),
+        NoteEntity(oid=fake_oid, owner_oid=orm_user.oid, points=points),
     }

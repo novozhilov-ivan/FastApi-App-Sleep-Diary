@@ -4,7 +4,7 @@ export COMPOSE_IGNORE_ORPHANS=1
 
 
 build:
-	docker compose -f app.yml -f postgres.yml build
+	docker compose -f sleep_diary.yml -f postgres.yml build
 
 pull-postgres:
 	docker compose -f postgres.yml pull
@@ -17,32 +17,32 @@ up-postgres:
 up-pgadmin:
 	docker compose -f pgadmin.yml up -d --no-recreate
 up: build
-	docker compose -f app.yml -f postgres.yml up -d
+	docker compose -f sleep_diary.yml -f postgres.yml up -d
 up-all: build up-postgres up-pgadmin
-	docker compose -f app.yml -f postgres.yml up -d
+	docker compose -f sleep_diary.yml -f postgres.yml up -d
 
 down:
-	docker compose -f app.yml -f postgres.yml down
+	docker compose -f sleep_diary.yml -f postgres.yml down
 down-all:
-	docker compose -f app.yml -f postgres.yml down --remove-orphans
+	docker compose -f sleep_diary.yml -f postgres.yml down --remove-orphans
 
 unit: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/unit" api
+	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest tests/unit" sleep_diary
 integration: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/integration" api
+	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest tests/integration" sleep_diary
 e2e: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" api
+	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" sleep_diary
 all: up
-	docker compose -f app.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" api
+	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" sleep_diary
 
 logs:
-	docker compose -f app.yml -f postgres.yml logs --tail=25 api
+	docker compose -f sleep_diary.yml -f postgres.yml logs --tail=35 sleep_diary
 logs-pgadmin:
 	docker compose -f pgadmin.yml logs --tail=25 pgadmin
 sh:
-	docker exec -it api bash
+	docker exec -it sleep_diary bash
 migrate:
-	docker exec -it api alembic upgrade head
+	docker exec -it sleep_diary alembic upgrade head
 all-cov:
 	coverage run -m pytest
 	coverage report -m

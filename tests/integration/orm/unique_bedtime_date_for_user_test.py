@@ -4,23 +4,23 @@ import pytest
 
 from sqlalchemy.exc import IntegrityError
 
-from src.sleep_diary.infrastructure.database import Database
-from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
+from src.gateways.postresql.database import Database
+from src.gateways.postresql.models import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,
 )
-from tests.integration.conftest import stmt_insert_note
+from tests.integration.conftest import query_insert_note
 
 
-def test_unique_bedtime_date_for_user(memory_database: Database, user: ORMUser):
+def test_unique_bedtime_date_for_user(database: Database, orm_user: ORMUser) -> None:
     points: TN = points_order_desc_from_went_to_bed_and_one_hour_no_sleep
     bedtime_date, went_to_bed, fell_asleep, woke_up, got_up, no_sleep = points
     note_oid = uuid4()
     note = {
         "oid": str(note_oid),
         "bedtime_date": bedtime_date.isoformat(),
-        "owner_oid": str(user.oid),
+        "owner_oid": str(orm_user.oid),
         "went_to_bed": went_to_bed.isoformat(),
         "fell_asleep": fell_asleep.isoformat(),
         "woke_up": woke_up.isoformat(),
@@ -28,8 +28,8 @@ def test_unique_bedtime_date_for_user(memory_database: Database, user: ORMUser):
         "no_sleep": no_sleep.isoformat(),
     }
 
-    with memory_database.get_session() as session:
-        session.execute(stmt_insert_note, note)
+    with database.get_session() as session:
+        session.execute(query_insert_note, note)
         db_notes: list[ORMNote] = session.query(ORMNote).all()
 
     assert len(db_notes) == 1
@@ -40,13 +40,10 @@ def test_unique_bedtime_date_for_user(memory_database: Database, user: ORMUser):
 
     note["oid"] = str(uuid4())
 
-    with memory_database.get_session() as session:
-        with pytest.raises(
-            expected_exception=IntegrityError,
-            match="UNIQUE constraint failed: notes.bedtime_date, notes.owner_oid",
-        ):
-            session.execute(stmt_insert_note, note)
-        db_notes = session.query(ORMNote).all()
+    with pytest.raises(IntegrityError):
+        with database.get_session() as session:
+            session.execute(query_insert_note, note)
+            db_notes = session.query(ORMNote).all()
 
     assert len(db_notes) == 1
     [expected_first_note] = db_notes

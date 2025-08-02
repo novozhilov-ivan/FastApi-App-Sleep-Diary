@@ -1,27 +1,27 @@
 from uuid import uuid4
 
-from src.sleep_diary.infrastructure.database import Database
-from src.sleep_diary.infrastructure.orm import ORMNote, ORMUser
+from src.gateways.postresql.database import Database
+from src.gateways.postresql.models import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,
 )
-from tests.integration.conftest import stmt_insert_note
+from tests.integration.conftest import query_insert_note
 
 
-def test_get_note(memory_database: Database, user: ORMUser):
+def test_get_note(database: Database, orm_user: ORMUser) -> None:
     expected_note_oid = uuid4()
     points: TN = points_order_desc_from_went_to_bed_and_one_hour_no_sleep
     bedtime_date, went_to_bed, fell_asleep, woke_up, got_up, no_sleep = points
     bedtime_date = bedtime_date.replace(month=bedtime_date.month - 2)
 
-    with memory_database.get_session() as session:
+    with database.get_session() as session:
         session.execute(
-            statement=stmt_insert_note,
+            statement=query_insert_note,
             params=(
                 {
                     "oid": f"{expected_note_oid}",
-                    "owner_oid": f"{user.oid}",
+                    "owner_oid": f"{orm_user.oid}",
                     "bedtime_date": bedtime_date.isoformat(),
                     "went_to_bed": went_to_bed.isoformat(),
                     "fell_asleep": fell_asleep.isoformat(),
@@ -31,7 +31,7 @@ def test_get_note(memory_database: Database, user: ORMUser):
                 },
                 {
                     "oid": f"{uuid4()}",
-                    "owner_oid": f"{user.oid}",
+                    "owner_oid": f"{orm_user.oid}",
                     "bedtime_date": bedtime_date.replace(
                         day=bedtime_date.day + 1,
                     ).isoformat(),
@@ -47,7 +47,7 @@ def test_get_note(memory_database: Database, user: ORMUser):
                 },
                 {
                     "oid": f"{uuid4()}",
-                    "owner_oid": f"{user.oid}",
+                    "owner_oid": f"{orm_user.oid}",
                     "bedtime_date": bedtime_date.replace(
                         day=bedtime_date.day + 2,
                     ).isoformat(),
@@ -68,7 +68,7 @@ def test_get_note(memory_database: Database, user: ORMUser):
     db_note, *_ = db_notes
     assert isinstance(db_note, ORMNote)
     assert db_note.oid == expected_note_oid
-    assert db_note.owner_oid == user.oid
+    assert db_note.owner_oid == orm_user.oid
     assert db_note.bedtime_date == bedtime_date
     assert db_note.went_to_bed.replace(tzinfo=None) == went_to_bed
     assert db_note.fell_asleep.replace(tzinfo=None) == fell_asleep
