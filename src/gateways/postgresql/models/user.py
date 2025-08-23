@@ -15,8 +15,6 @@ class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):
     def to_entity(self) -> UserEntity:
         return UserEntity(
             oid=self.oid,
-            created_at=self.created_at,
-            updated_at=self.updated_at,
             username=self.username,
             password=self.password,
         )
@@ -25,8 +23,6 @@ class ORMUser(ORMBase, MixinUUIDOid, MixinUpdatedAt):
     def from_entity(cls: type["ORMUser"], user: UserEntity) -> "ORMUser":
         return cls(
             oid=user.oid,
-            created_at=user.created_at,
-            updated_at=user.updated_at,
             username=user.username,
             password=user.password,
         )

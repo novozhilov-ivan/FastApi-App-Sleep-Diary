@@ -1,4 +1,3 @@
-from datetime import datetime
 from uuid import UUID, uuid4
 
 from sqlalchemy import text
@@ -71,8 +70,6 @@ def test_repo_can_retrieve_note_entity_by_oid(
     assert retrieved_entity
     assert isinstance(retrieved_entity, NoteEntity)
     assert isinstance(retrieved_entity.oid, UUID)
-    assert isinstance(retrieved_entity.created_at, datetime)
-    assert isinstance(retrieved_entity.updated_at, datetime)
     assert retrieved_entity.points.bedtime_date == points.bedtime_date
     assert retrieved_entity.points.went_to_bed == points.went_to_bed
     assert retrieved_entity.points.fell_asleep == points.fell_asleep
@@ -97,8 +94,6 @@ def test_repo_can_retrieve_note_entity_by_bedtime_date(
     assert retrieved_entity
     assert isinstance(retrieved_entity, NoteEntity)
     assert isinstance(retrieved_entity.oid, UUID)
-    assert isinstance(retrieved_entity.created_at, datetime)
-    assert isinstance(retrieved_entity.updated_at, datetime)
     assert retrieved_entity.points.bedtime_date == points.bedtime_date
     assert retrieved_entity.points.went_to_bed == points.went_to_bed
     assert retrieved_entity.points.fell_asleep == points.fell_asleep

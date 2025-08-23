@@ -38,8 +38,6 @@ class ORMNote(ORMBase, MixinUUIDOid, MixinUpdatedAt):
         return cls(
             oid=obj.oid,
             owner_oid=obj.owner_oid,
-            created_at=obj.created_at,
-            updated_at=obj.updated_at,
             bedtime_date=obj.points.bedtime_date,
             went_to_bed=obj.points.went_to_bed,
             fell_asleep=obj.points.fell_asleep,
@@ -52,8 +50,6 @@ class ORMNote(ORMBase, MixinUUIDOid, MixinUpdatedAt):
         return NoteEntity(
             oid=self.oid,
             owner_oid=self.owner_oid,
-            created_at=self.created_date,
-            updated_at=self.updated_date,
             points=Points(
                 self.bedtime_date,
                 self.went_to_bed.replace(tzinfo=None),
