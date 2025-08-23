@@ -2,6 +2,7 @@ from uuid import uuid4
 
 import pytest
 
+from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
 from src.gateways.postgresql.database import Database
@@ -29,7 +30,7 @@ def test_unique_bedtime_date_for_user(database: Database, orm_user: ORMUser) -> 
     }
 
     with database.get_session() as session:
-        session.execute(query_insert_note, note)
+        session.execute(text(query_insert_note), note)
         db_notes: list[ORMNote] = session.query(ORMNote).all()
 
     assert len(db_notes) == 1
@@ -42,7 +43,7 @@ def test_unique_bedtime_date_for_user(database: Database, orm_user: ORMUser) -> 
 
     with pytest.raises(IntegrityError):
         with database.get_session() as session:
-            session.execute(query_insert_note, note)
+            session.execute(text(query_insert_note), note)
             db_notes = session.query(ORMNote).all()
 
     assert len(db_notes) == 1

@@ -1,13 +1,11 @@
-from uuid import UUID
-
 import pytest
 
-from fastapi import FastAPI
+from fastapi import FastAPI, status
+from fastapi.testclient import TestClient
 from httpx import Response
-from starlette import status
-from starlette.testclient import TestClient
 
 from src.application.api.sleep_diary.services.diary import Diary
+from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.exceptions.base import ApplicationException
 from src.domain.sleep_diary.exceptions.note import (
     NoSleepDurationException,
@@ -27,11 +25,10 @@ from tests.conftest import (
 from tests.unit.sleep_diary.conftest import FakePoints
 
 
-def test_add_note_201(app: FastAPI, client: TestClient, user_oid: str) -> None:
-    response: Response = client.post(
+def test_add_note_201(app: FastAPI, authorized_client: TestClient) -> None:
+    response: Response = authorized_client.post(
         url=app.url_path_for("add_note"),
         json=convert_points_to_json(Points(*points_order_desc_from_went_to_bed)),
-        headers={"owner_oid": user_oid},
     )
     assert response.status_code == status.HTTP_201_CREATED, response.json()
     assert response.json() is None
@@ -52,15 +49,13 @@ def test_add_note_201(app: FastAPI, client: TestClient, user_oid: str) -> None:
 )
 def test_add_note_400_note_exceptions(
     app: FastAPI,
-    client: TestClient,
-    user_oid: str,
+    authorized_client: TestClient,
     points: T | TN,
     exception: NoteException,
 ) -> None:
-    response: Response = client.post(
+    response: Response = authorized_client.post(
         url=app.url_path_for("add_note"),
         json=convert_points_to_json(FakePoints(*points)),
-        headers={"owner_oid": user_oid},
     )
     assert status.HTTP_400_BAD_REQUEST == response.status_code
     with pytest.raises(NoteException) as excinfo:
@@ -71,29 +66,27 @@ def test_add_note_400_note_exceptions(
 
 def test_add_note_400_write_note_twice_exception(
     app: FastAPI,
-    client: TestClient,
-    user_oid: str,
+    authorized_client: TestClient,
+    api_user: UserEntity,
     diary: Diary,
 ) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
     expected_exception = NonUniqueNoteBedtimeDateException
 
     url = app.url_path_for("add_note")
-    client.post(
+    authorized_client.post(
         url=url,
         json=convert_points_to_json(points),
-        headers={"owner_oid": user_oid},
     )
-    response: Response = client.post(
+    response: Response = authorized_client.post(
         url=url,
         json=convert_points_to_json(points),
-        headers={"owner_oid": user_oid},
     )
 
     assert status.HTTP_400_BAD_REQUEST == response.status_code, response.json()
 
     with pytest.raises(ApplicationException) as excinfo:
-        diary.write(UUID(user_oid), *points_order_desc_from_went_to_bed)
+        diary.write(api_user.oid, *points_order_desc_from_went_to_bed)
 
     assert excinfo.type is expected_exception
     assert excinfo.value.message == response.json()["detail"]["error"]

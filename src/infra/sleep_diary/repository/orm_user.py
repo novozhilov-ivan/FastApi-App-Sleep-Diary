@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.services.base import IUsersRepository
@@ -27,4 +27,6 @@ class ORMUsersRepository(IUsersRepository):
             session.add(ORMUser.from_entity(user))
 
     def delete_user(self, username: str) -> None:
-        pass
+        stmt = delete(ORMUser).where(ORMUser.username == username)
+        with self.database.get_session() as session:
+            session.execute(stmt)

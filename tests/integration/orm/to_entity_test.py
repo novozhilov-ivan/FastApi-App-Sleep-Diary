@@ -1,5 +1,7 @@
 from uuid import uuid4
 
+from sqlalchemy import text
+
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.values.points import Points
 from src.gateways.postgresql.database import Database
@@ -27,7 +29,7 @@ def test_note_orm_to_entity(database: Database, orm_user: ORMUser) -> None:
     }
 
     with database.get_session() as session:
-        session.execute(query_insert_note, note)
+        session.execute(text(query_insert_note), note)
 
     db_note: ORMNote | None = session.query(ORMNote).first()
     assert isinstance(db_note, ORMNote)

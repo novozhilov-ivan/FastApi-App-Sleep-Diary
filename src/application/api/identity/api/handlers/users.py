@@ -26,7 +26,7 @@ router = APIRouter(
     },
 )
 async def sign_in(
-    form: Annotated[SignInRequestSchema, Form(...)],
+    form: Annotated[SignInRequestSchema, Form()],
     action: FromDishka[SignIn],
     token_auth: FromDishka[TokenAuth],
 ) -> Response:

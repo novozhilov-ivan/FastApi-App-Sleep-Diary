@@ -1,8 +1,8 @@
-"""Create tables
+"""Init migration.
 
-Revision ID: eb6dc73824a4
+Revision ID: 88238f0e6f57
 Revises:
-Create Date: 2024-10-28 12:47:02.234543
+Create Date: 2025-08-23 10:43:12.898111+00:00
 
 """
 
@@ -14,7 +14,7 @@ from alembic import op
 
 
 # revision identifiers, used by Alembic.
-revision: str = "eb6dc73824a4"
+revision: str = "88238f0e6f57"
 down_revision: str | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
@@ -25,7 +25,7 @@ def upgrade() -> None:
     op.create_table(
         "users",
         sa.Column("username", sa.String(length=128), nullable=False),
-        sa.Column("password", sa.LargeBinary(), nullable=False),
+        sa.Column("password", sa.String(), nullable=False),
         sa.Column("oid", sa.Uuid(), nullable=False),
         sa.Column(
             "updated_at",
@@ -41,9 +41,9 @@ def upgrade() -> None:
             nullable=False,
             comment="Дата создания записи",
         ),
-        sa.PrimaryKeyConstraint("username"),
-        sa.UniqueConstraint("oid"),
-        sa.UniqueConstraint("username"),
+        sa.PrimaryKeyConstraint("username", name=op.f("pk_users")),
+        sa.UniqueConstraint("oid", name=op.f("uq_users_oid")),
+        sa.UniqueConstraint("username", name=op.f("uq_users_username")),
     )
     op.create_table(
         "notes",
@@ -69,13 +69,16 @@ def upgrade() -> None:
             nullable=False,
             comment="Дата создания записи",
         ),
-        sa.ForeignKeyConstraint(["owner_oid"], ["users.oid"], ondelete="CASCADE"),
-        sa.PrimaryKeyConstraint(
-            "bedtime_date",
-            "owner_oid",
-            name="unique_bedtime_date_for_user",
+        sa.ForeignKeyConstraint(
+            ["owner_oid"],
+            ["users.oid"],
+            name=op.f("fk_notes_owner_oid_users"),
+            ondelete="CASCADE",
         ),
-        sa.UniqueConstraint("oid"),
+        sa.PrimaryKeyConstraint(
+            "bedtime_date", "owner_oid", name="unique_bedtime_date_for_user"
+        ),
+        sa.UniqueConstraint("oid", name=op.f("uq_notes_oid")),
     )
     # ### end Alembic commands ###
 

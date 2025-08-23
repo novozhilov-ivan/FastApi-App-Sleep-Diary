@@ -29,7 +29,7 @@ class IUserAuthenticationService(ABC):
         raise NotImplementedError
 
     @abstractmethod
-    def unregister(self) -> None:
+    def unregister(self, username: str) -> None:
         raise NotImplementedError
 
 
@@ -61,8 +61,8 @@ class UserAuthenticationService(IUserAuthenticationService):
             ),
         )
 
-    def unregister(self) -> None:
-        pass
+    def unregister(self, username: str) -> None:
+        self.repository.delete_user(username)
 
     @staticmethod
     def hash_password(pwd: str, encoding: str = _DEFAULT_ENCODING) -> str:

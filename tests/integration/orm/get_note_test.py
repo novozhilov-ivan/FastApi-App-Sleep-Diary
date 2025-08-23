@@ -1,5 +1,7 @@
 from uuid import uuid4
 
+from sqlalchemy import text
+
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
@@ -17,7 +19,7 @@ def test_get_note(database: Database, orm_user: ORMUser) -> None:
 
     with database.get_session() as session:
         session.execute(
-            statement=query_insert_note,
+            statement=text(query_insert_note),
             params=(
                 {
                     "oid": f"{expected_note_oid}",

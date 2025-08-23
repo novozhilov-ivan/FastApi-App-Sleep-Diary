@@ -12,5 +12,5 @@ class SignInInputData:
         self._validate()
 
     def _validate(self) -> None:
-        if not self.username or self.password:
+        if not self.username or not self.password:
             raise CredentialsRequiredError
