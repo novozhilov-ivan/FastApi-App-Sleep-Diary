@@ -12,7 +12,7 @@ class SignIn:
     settings: JWTSettings
     service: IUserAuthenticationService
 
-    async def __call__(self, command: SignInInputData) -> AccessTokenClaims:
+    def __call__(self, command: SignInInputData) -> AccessTokenClaims:
         user = self.service.login(command.username, command.password)
         expired_at = (
             AccessTokenClaims.timestamp_seconds_now()

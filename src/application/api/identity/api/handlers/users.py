@@ -25,12 +25,12 @@ router = APIRouter(
         status.HTTP_200_OK: {"model": {}},
     },
 )
-async def sign_in(
+def sign_in(
     form: Annotated[SignInRequestSchema, Form()],
     action: FromDishka[SignIn],
     token_auth: FromDishka[TokenAuth],
 ) -> Response:
-    access_token_claims = await action(
+    access_token_claims = action(
         SignInInputData(username=form.username, password=form.password),
     )
 

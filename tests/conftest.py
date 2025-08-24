@@ -11,7 +11,7 @@ import pytest
 
 from alembic.command import downgrade, upgrade
 from alembic.config import Config
-from sqlalchemy import Connection, create_engine, Engine, text
+from sqlalchemy import create_engine, Engine, text
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
@@ -21,6 +21,9 @@ from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMUser
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from src.project.settings import PostgreSQLSettings
+
+
+STMT_CHECK_DATABASE = "SELECT 1 FROM pg_database WHERE datname = :test_db_name;"
 
 
 @pytest.fixture(scope="session")
@@ -51,35 +54,14 @@ def user_entity(
     )
 
 
-stmt_check_database = "SELECT 1 FROM pg_database WHERE datname = :test_db_name;"
-
-
 @pytest.fixture(scope="session")
 def postgres_settings() -> PostgreSQLSettings:
     return PostgreSQLSettings()
 
 
 @pytest.fixture(scope="session")
-def connection_for_create_test_db(
-    postgres_settings: PostgreSQLSettings,
-) -> Generator[Connection, None, None]:
-    engine_for_create_db: Engine = create_engine(
-        url=postgres_settings.db_url,
-        echo=False,
-        isolation_level="AUTOCOMMIT",
-    )
-    connection = engine_for_create_db.connect()
-    try:
-        yield connection
-    finally:
-        connection.close()
-        engine_for_create_db.dispose()
-
-
-@pytest.fixture(scope="session")
 def test_db_engine(
     postgres_settings: PostgreSQLSettings,
-    connection_for_create_test_db: Connection,
 ) -> Generator[Engine, None, None]:
     test_db_name = postgres_settings.test_db
     test_db_url = postgres_settings.test_url
@@ -87,15 +69,20 @@ def test_db_engine(
     assert "test_" in test_db_name, "Защита от выполнения create/drop с основной БД"
     assert "test_" in test_db_url, "Защита от выполнения create/drop с основной БД"
 
-    is_test_db_exists = connection_for_create_test_db.execute(
-        text(stmt_check_database),
-        {"test_db_name": test_db_name},
+    engine_for_create_db: Engine = create_engine(
+        url=postgres_settings.db_url,
+        echo=False,
+        isolation_level="AUTOCOMMIT",
     )
+    with engine_for_create_db.connect() as connection:
+        is_test_db_exists = connection.execute(
+            text(STMT_CHECK_DATABASE),
+            {"test_db_name": test_db_name},
+        ).scalar()
 
-    if not is_test_db_exists.scalar():
-        connection_for_create_test_db.execute(
-            text(f"CREATE DATABASE {test_db_name};"),
-        )
+        if not is_test_db_exists:
+            connection.execute(text(f"CREATE DATABASE {test_db_name}"))
+    engine_for_create_db.dispose()
 
     engine = create_engine(test_db_url)
     try:
@@ -113,7 +100,6 @@ def alembic_test_config(
 
     stdout = io.StringIO("")
     alembic_config = Config(str(alembic_ini), stdout=stdout)
-
     alembic_config.set_main_option("sqlalchemy.url", postgres_settings.test_url)
 
     return alembic_config
@@ -140,13 +126,28 @@ def database(
     return Database(url=postgres_settings.test_url)
 
 
+@pytest.fixture(autouse=True)
+def cleanup_after_test(test_db_engine: Engine) -> Generator[None, None, None]:
+    yield
+
+    select_all_tables = (
+        "SELECT tablename FROM pg_tables"
+        " WHERE schemaname = 'public'"
+        " AND tablename NOT LIKE 'alembic_%'"
+        " ORDER BY tablename DESC"
+    )
+    with test_db_engine.begin() as conn:
+        for (table_name,) in conn.execute(text(select_all_tables)).fetchall():
+            conn.execute(text(f"DELETE FROM {table_name}"))
+
+
 @pytest.fixture
 def orm_user(
     database: Database,
     user_oid: str,
     username: str,
     plain_password: str,
-) -> Generator[ORMUser, None, None]:
+) -> ORMUser:
     user = ORMUser(
         oid=UUID(user_oid),
         username=username,
@@ -157,21 +158,16 @@ def orm_user(
         session.commit()
         session.refresh(user)
 
-    try:
-        yield user
-    finally:
-        with database.get_session() as session:
-            session.delete(user)
-            session.commit()
+    return user
 
 
-@pytest.fixture(scope="package")
+@pytest.fixture(scope="session")
 def orm_notes_repository(database: Database) -> INotesRepository:
     return ORMNotesRepository(database=database)
 
 
-@pytest.fixture(scope="package")
-def diary(orm_notes_repository: INotesRepository) -> Diary:
+@pytest.fixture(scope="session")
+def diary_with_orm(orm_notes_repository: INotesRepository) -> Diary:
     return Diary(repository=orm_notes_repository)
 
 

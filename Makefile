@@ -33,7 +33,7 @@ integration: up
 e2e: up
 	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest tests/e2e" sleep_diary
 all: up
-	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest --dist=worksteal -n 4" sleep_diary
+	docker compose -f sleep_diary.yml -f postgres.yml run --rm --entrypoint="pytest" sleep_diary
 
 logs:
 	docker compose -f sleep_diary.yml -f postgres.yml logs --tail=35 sleep_diary

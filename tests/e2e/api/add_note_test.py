@@ -68,7 +68,7 @@ def test_add_note_400_write_note_twice_exception(
     app: FastAPI,
     authorized_client: TestClient,
     api_user: UserEntity,
-    diary: Diary,
+    diary_with_orm: Diary,
 ) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
     expected_exception = NonUniqueNoteBedtimeDateException
@@ -86,7 +86,7 @@ def test_add_note_400_write_note_twice_exception(
     assert status.HTTP_400_BAD_REQUEST == response.status_code, response.json()
 
     with pytest.raises(ApplicationException) as excinfo:
-        diary.write(api_user.oid, *points_order_desc_from_went_to_bed)
+        diary_with_orm.write(api_user.oid, *points_order_desc_from_went_to_bed)
 
     assert excinfo.type is expected_exception
     assert excinfo.value.message == response.json()["detail"]["error"]
