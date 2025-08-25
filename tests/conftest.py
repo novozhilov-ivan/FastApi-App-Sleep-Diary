@@ -9,7 +9,7 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from alembic.command import downgrade, upgrade
+from alembic.command import upgrade
 from alembic.config import Config
 from sqlalchemy import create_engine, Engine, text
 
@@ -60,8 +60,23 @@ def postgres_settings() -> PostgreSQLSettings:
 
 
 @pytest.fixture(scope="session")
+def alembic_test_config(
+    postgres_settings: PostgreSQLSettings,
+) -> Config:
+    base_dir = Path(__file__).parent.parent
+    alembic_ini = base_dir / "src" / "alembic.ini"
+
+    stdout = io.StringIO("")
+    alembic_config = Config(str(alembic_ini), stdout=stdout)
+    alembic_config.set_main_option("sqlalchemy.url", postgres_settings.test_url)
+
+    return alembic_config
+
+
+@pytest.fixture(scope="session")
 def test_db_engine(
     postgres_settings: PostgreSQLSettings,
+    alembic_test_config: Config,
 ) -> Generator[Engine, None, None]:
     test_db_name = postgres_settings.test_db
     test_db_url = postgres_settings.test_url
@@ -84,6 +99,7 @@ def test_db_engine(
             connection.execute(text(f"CREATE DATABASE {test_db_name}"))
     engine_for_create_db.dispose()
 
+    upgrade(alembic_test_config, "head")
     engine = create_engine(test_db_url)
     try:
         yield engine
@@ -92,44 +108,14 @@ def test_db_engine(
 
 
 @pytest.fixture(scope="session")
-def alembic_test_config(
-    postgres_settings: PostgreSQLSettings,
-) -> Config:
-    base_dir = Path(__file__).parent.parent
-    alembic_ini = base_dir / "src" / "alembic.ini"
-
-    stdout = io.StringIO("")
-    alembic_config = Config(str(alembic_ini), stdout=stdout)
-    alembic_config.set_main_option("sqlalchemy.url", postgres_settings.test_url)
-
-    return alembic_config
-
-
-@pytest.fixture(scope="session")
-def apply_migration(
-    alembic_test_config: Config,
-    test_db_engine: Engine,
-) -> Generator[None]:
-    upgrade(alembic_test_config, "head")
-
-    try:
-        yield
-    finally:
-        downgrade(alembic_test_config, "base")
-
-
-@pytest.fixture(scope="session")
 def database(
     postgres_settings: PostgreSQLSettings,
-    apply_migration: None,
 ) -> Database:
     return Database(url=postgres_settings.test_url)
 
 
 @pytest.fixture(autouse=True)
-def cleanup_after_test(test_db_engine: Engine) -> Generator[None, None, None]:
-    yield
-
+def cleanup_tables_test(test_db_engine: Engine) -> Generator[None, None, None]:
     select_all_tables = (
         "SELECT tablename FROM pg_tables"
         " WHERE schemaname = 'public'"
@@ -139,6 +125,13 @@ def cleanup_after_test(test_db_engine: Engine) -> Generator[None, None, None]:
     with test_db_engine.begin() as conn:
         for (table_name,) in conn.execute(text(select_all_tables)).fetchall():
             conn.execute(text(f"DELETE FROM {table_name}"))
+
+    try:
+        yield
+    finally:
+        with test_db_engine.begin() as conn:
+            for (table_name,) in conn.execute(text(select_all_tables)).fetchall():
+                conn.execute(text(f"DELETE FROM {table_name}"))
 
 
 @pytest.fixture

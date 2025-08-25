@@ -33,6 +33,7 @@ coverage = "^7.5.3"
 pytest-mypy-plugins = "^3.1.2"
 ipython = "^8.29.0"
 pytest-mypy = "^0.10.3"
+pytest-timeout = "^2.4.0"
 
 
 [tool.poetry.group.lint.dependencies]

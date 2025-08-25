@@ -26,4 +26,4 @@ ENV PYTHONDONTWRITEBYTECODE=1 PYTHONUNBUFFERED=1 PATH=/root/.local/bin:$PATH
 COPY --from=dev /root/.local /root/.local
 COPY src/ /app/src
 COPY tests/ /app/tests
-COPY src/alembic.ini /app/alembic.ini
+COPY pytest.ini /app/pytest.ini
