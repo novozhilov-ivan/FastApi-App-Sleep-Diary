@@ -1,5 +1,3 @@
-from uuid import uuid4
-
 import pytest
 
 from fastapi import FastAPI
@@ -25,7 +23,6 @@ from src.project.settings import AuthorizationTokenSettings, JWTSettings
 @pytest.fixture(scope="session")
 def api_user() -> UserEntity:
     return UserEntity(
-        oid=uuid4(),
         username="api_test_user",
         password="api_test_password",
     )
@@ -77,7 +74,8 @@ def user_auth_service(
 
 @pytest.fixture(scope="session")
 def sign_in(
-    jwt_settings: JWTSettings, user_auth_service: UserAuthenticationService
+    jwt_settings: JWTSettings,
+    user_auth_service: UserAuthenticationService,
 ) -> SignIn:
     return SignIn(
         settings=jwt_settings,
@@ -86,13 +84,11 @@ def sign_in(
 
 
 @pytest.fixture(scope="session")
-def access_token_claims(
-    auth_credentials: dict[str, str],
-    sign_in: SignIn,
-) -> AccessTokenClaims:
-    return sign_in(
-        command=SignInInputData(**auth_credentials),
-    )
+def api_user_hashed_password(
+    user_auth_service: UserAuthenticationService,
+    api_user: UserEntity,
+) -> str:
+    return user_auth_service.hash_password(api_user.password)
 
 
 @pytest.fixture(scope="session")
@@ -105,7 +101,33 @@ def token_processor(jwt_processor: JWTProcessor) -> AccessTokenProcessor:
     return AccessTokenProcessor(jwt_processor=jwt_processor)
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture
+def register_user(
+    api_user: UserEntity,
+    api_user_hashed_password: str,
+    orm_user_repository: ORMUsersRepository,
+) -> None:
+    orm_user_repository.add_user(
+        UserEntity(
+            oid=api_user.oid,
+            username=api_user.username,
+            password=api_user_hashed_password,
+        )
+    )
+
+
+@pytest.fixture
+def access_token_claims(
+    auth_credentials: dict[str, str],
+    sign_in: SignIn,
+    register_user: None,
+) -> AccessTokenClaims:
+    return sign_in(
+        command=SignInInputData(**auth_credentials),
+    )
+
+
+@pytest.fixture
 def jwt_token(
     token_processor: AccessTokenProcessor,
     access_token_claims: AccessTokenClaims,
@@ -114,31 +136,15 @@ def jwt_token(
 
 
 @pytest.fixture
-def register_user(
-    api_user: UserEntity,
-    user_auth_service: UserAuthenticationService,
-) -> None:
-    user_auth_service.register(
-        username=api_user.username,
-        password=api_user.password,
-    )
-
-
-@pytest.fixture
 def authorized_client(
-    app: FastAPI,
     client: TestClient,
-    auth_credentials: dict[str, str],
     auth_settings: AuthorizationTokenSettings,
     jwt_token: JWTToken,
-    register_user: None,
 ) -> TestClient:
-    url = app.url_path_for("sign_in")
-    client.post(url=url, data=auth_credentials)
-
     client.cookies.set(
         name=auth_settings.cookies_key,
         value=jwt_token,
     )
+
     assert client.cookies.get(auth_settings.cookies_key) == jwt_token
     return client

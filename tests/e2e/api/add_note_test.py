@@ -57,6 +57,7 @@ def test_add_note_400_note_exceptions(
         url=app.url_path_for("add_note"),
         json=convert_points_to_json(FakePoints(*points)),
     )
+
     assert status.HTTP_400_BAD_REQUEST == response.status_code
     with pytest.raises(NoteException) as excinfo:
         Points(*points)

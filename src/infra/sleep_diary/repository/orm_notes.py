@@ -52,4 +52,4 @@ class ORMNotesRepository(INotesRepository):
         with self.database.get_session() as session:
             result = session.scalars(stmt).all()
 
-        return {note.to_entity() for note in result if isinstance(note, ORMNote)}
+        return {note.to_entity() for note in result}
