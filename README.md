@@ -1,14 +1,13 @@
 # FastApi-App-Sleep-Diary
 
+
 ![Python](https://img.shields.io/badge/python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
 
-![Docker Build](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/build.yaml?branch=master&label=Docker%20Build&style=for-the-badge&logo=docker&logoColor=white)
+![Docker Build](https://github.com/${{ github.repository }}/actions/workflows/build.yaml/badge.svg?branch=master)
 
-![Pytest](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/tests.yaml?branch=master&label=Pytest&style=for-the-badge&logo=pytest&logoColor=white&color=6610f2)
+![Pytest](https://github.com/${{ github.repository }}/actions/workflows/tests.yaml/badge.svg?branch=master)
 
-![Pre-commit](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/pre-commit.yaml?branch=master&label=Pre-commit&style=for-the-badge&logo=git&logoColor=white&color=22863a)
-
-![Ruff](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/pre-commit.yaml?branch=master&label=Ruff&style=for-the-badge&logo=python&logoColor=white&color=f0a500)
+![Pre-commit](https://github.com/${{ github.repository }}/actions/workflows/pre-commit.yaml/badge.svg?branch=master)
 
 # FastApi + PostgreSQL Application
 
