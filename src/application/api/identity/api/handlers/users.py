@@ -11,7 +11,6 @@ from src.application.api.identity.auth.token_auth import TokenAuth
 from src.infra.identity.commands import SignInInputData
 from src.infra.identity.sign_in import SignIn
 
-
 router = APIRouter(
     prefix="/users",
     route_class=DishkaSyncRoute,

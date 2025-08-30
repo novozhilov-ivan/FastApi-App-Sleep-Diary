@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from dishka import provide, Provider, Scope
+from dishka import Provider, Scope, provide
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.services.base import INotesRepository, IUsersRepository

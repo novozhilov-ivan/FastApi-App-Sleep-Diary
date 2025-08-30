@@ -10,10 +10,9 @@ from src.application.api.sleep_diary.handlers.notes.schemas import (
     CreatePointsRequestSchema,
 )
 from src.application.api.sleep_diary.services.diary import Diary
-from src.domain.sleep_diary.exceptions.base import ApplicationException
+from src.domain.sleep_diary.exceptions.base import ApplicationError
 from src.infra.identity.access_token_processor import AccessTokenProcessor
 from src.project.settings import AuthorizationTokenSettings
-
 
 HeaderOwnerOid = Annotated[UUID4, Header(convert_underscores=False)]
 router = APIRouter(
@@ -58,8 +57,8 @@ def add_note(
             schema.got_up,
             schema.no_sleep,
         )
-    except ApplicationException as exception:
+    except ApplicationError as error:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail={"error": exception.message},
-        )
+            detail={"error": error.message},
+        ) from error

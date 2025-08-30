@@ -7,7 +7,6 @@ from more_itertools import is_sorted
 
 from src.domain.sleep_diary.specifications.base import BaseSpecification
 
-
 if TYPE_CHECKING:
     from src.domain.sleep_diary.values.points import Points
 

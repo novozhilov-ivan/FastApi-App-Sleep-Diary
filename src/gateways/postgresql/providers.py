@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from dishka import provide, Provider, Scope
+from dishka import Provider, Scope, provide
 
 from src.gateways.postgresql.database import Database
 from src.project.settings import Config

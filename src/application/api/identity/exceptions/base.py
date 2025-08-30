@@ -2,14 +2,14 @@ from dataclasses import dataclass
 
 
 @dataclass(eq=False)
-class AuthenticationException(Exception):
+class AuthenticationError(Exception):
     @property
     def message(self) -> str:
         return "Произошла ошибка авторизации."
 
 
 @dataclass(eq=False)
-class NotAuthenticatedException(AuthenticationException):
+class NotAuthenticatedError(AuthenticationError):
     @property
     def message(self) -> str:
         return "Необходима аутентификация."

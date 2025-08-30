@@ -9,9 +9,7 @@ Create Date: 2025-08-23 10:43:12.898111+00:00
 from collections.abc import Sequence
 
 import sqlalchemy as sa
-
 from alembic import op
-
 
 # revision identifiers, used by Alembic.
 revision: str = "88238f0e6f57"
@@ -76,7 +74,9 @@ def upgrade() -> None:
             ondelete="CASCADE",
         ),
         sa.PrimaryKeyConstraint(
-            "bedtime_date", "owner_oid", name="unique_bedtime_date_for_user"
+            "bedtime_date",
+            "owner_oid",
+            name="unique_bedtime_date_for_user",
         ),
         sa.UniqueConstraint("oid", name=op.f("uq_notes_oid")),
     )

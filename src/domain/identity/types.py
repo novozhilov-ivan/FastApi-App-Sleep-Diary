@@ -1,9 +1,8 @@
 from enum import StrEnum
-from typing import Any, TypeAlias
+from typing import Any
 
-
-JWTClaims: TypeAlias = dict[str, Any]
-JWTToken: TypeAlias = str
+type JWTClaims = dict[str, Any]
+type JWTToken = str
 
 
 class TokenType(StrEnum):

@@ -9,7 +9,6 @@ from src.application.api.sleep_diary.handlers.notes.handlers import (
     router as notes_router,
 )
 
-
 router = APIRouter(
     responses={
         status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},

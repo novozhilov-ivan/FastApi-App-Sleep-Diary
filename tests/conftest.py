@@ -1,18 +1,15 @@
 import io
-
 from collections.abc import Generator, Iterable
 from datetime import date, time
 from itertools import chain
 from pathlib import Path
-from typing import TypeAlias
 from uuid import UUID, uuid4
 
 import pytest
-
 from alembic.command import upgrade
 from alembic.config import Config
 from dishka import Container
-from sqlalchemy import create_engine, Engine, text
+from sqlalchemy import Engine, create_engine, text
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
@@ -23,7 +20,6 @@ from src.gateways.postgresql.models import ORMUser
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from src.project.containers import get_test_container
 from src.project.settings import PostgreSQLSettings
-
 
 STMT_CHECK_DATABASE = "SELECT 1 FROM pg_database WHERE datname = :test_db_name;"
 
@@ -173,8 +169,8 @@ def diary_with_orm(orm_notes_repository: INotesRepository) -> Diary:
 
 date_point: date = date(2020, 12, 12)
 
-T: TypeAlias = tuple[date, time, time, time, time]
-TT: TypeAlias = tuple[T, T, T, T]
+type T = tuple[date, time, time, time, time]
+type TT = tuple[T, T, T, T]
 # 4 Корректных, последовательных и отсортированных данных для временных точек.
 # Все имеют:
 # 8 часов сна [fell_asleep:woke_up]
@@ -367,8 +363,8 @@ all_wrong_points_sequences: Iterable[T] = chain.from_iterable(
     ),
 )
 #  Point'ы, в которых время без сна больше времени сна
-TN: TypeAlias = tuple[date, time, time, time, time, time]
-TTN: TypeAlias = tuple[TN, TN, TN, TN]
+type TN = tuple[date, time, time, time, time, time]
+type TTN = tuple[TN, TN, TN, TN]
 wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed: TN = (
     date_point,
     time(1),

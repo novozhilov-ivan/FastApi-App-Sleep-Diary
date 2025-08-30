@@ -5,8 +5,8 @@ from sqlalchemy import text
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
-    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,
+    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )
 from tests.integration.conftest import query_insert_note
 

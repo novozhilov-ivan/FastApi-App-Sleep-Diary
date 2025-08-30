@@ -1,8 +1,8 @@
 from collections.abc import Generator
 from contextlib import contextmanager
-from dataclasses import dataclass, field, InitVar
+from dataclasses import InitVar, dataclass, field
 
-from sqlalchemy import create_engine, Engine
+from sqlalchemy import Engine, create_engine
 from sqlalchemy.exc import SQLAlchemyError
 from sqlalchemy.orm import Session, sessionmaker
 

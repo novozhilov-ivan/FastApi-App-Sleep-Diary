@@ -9,7 +9,6 @@ from tests.conftest import (
     points_order_desc_from_went_to_bed,
 )
 
-
 owner_oid = uuid4()
 points = Points(*points_order_desc_from_went_to_bed)
 note = NoteEntity(owner_oid=owner_oid, points=points)

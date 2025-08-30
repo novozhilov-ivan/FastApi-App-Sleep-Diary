@@ -5,7 +5,7 @@ import pytest
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.note import NoteEntity
-from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateException
+from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateError
 from src.domain.sleep_diary.services.base import INotesRepository
 from tests.conftest import points_order_desc_from_went_to_bed
 
@@ -64,7 +64,7 @@ def test_write_note_in_diary_twice(diary: Diary) -> None:
     points = points_order_desc_from_went_to_bed
     diary.write(fake_owner_oid, *points)
 
-    with pytest.raises(NonUniqueNoteBedtimeDateException):
+    with pytest.raises(NonUniqueNoteBedtimeDateError):
         diary.write(fake_owner_oid, *points)
 
 
@@ -84,9 +84,7 @@ def test_write_different_note_in_diary(
         first_bedtime_date.day + 1,
     )
 
-    points_1: tuple[date, time, time, time, time] = (
-        points_order_desc_from_went_to_bed
-    )
+    points_1: tuple[date, time, time, time, time] = points_order_desc_from_went_to_bed
 
     points_2: tuple[date, time, time, time, time] = (
         second_bedtime_date,

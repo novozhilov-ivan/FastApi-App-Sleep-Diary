@@ -8,7 +8,6 @@ from src.infra.identity.providers import InfraIdentityProvider
 from src.infra.sleep_diary.providers import InfraSleepDiaryProvider
 from src.project.settings import Config
 
-
 config = Config()
 
 

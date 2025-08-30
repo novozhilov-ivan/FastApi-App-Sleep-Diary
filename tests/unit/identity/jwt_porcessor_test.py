@@ -13,7 +13,6 @@ def test_jwt_processor_encode_payload(
 
     assert token
     assert isinstance(token, str)
-    assert isinstance(token, JWTToken)
 
 
 def test_jwt_processor_decode_token(

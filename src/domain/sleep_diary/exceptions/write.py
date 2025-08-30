@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from datetime import date
 
-from src.domain.sleep_diary.exceptions.base import ApplicationException
+from src.domain.sleep_diary.exceptions.base import ApplicationError
 
 
 @dataclass(eq=False)
-class NonUniqueNoteBedtimeDateException(ApplicationException):
+class NonUniqueNoteBedtimeDateError(ApplicationError):
     bedtime_date: date
 
     @property

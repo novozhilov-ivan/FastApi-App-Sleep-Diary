@@ -5,11 +5,11 @@ from typing import ClassVar
 from bcrypt import checkpw, gensalt, hashpw
 
 from src.application.api.identity.exceptions.credentials import (
-    UserCredentialsFormatException,
+    UserCredentialsFormatError,
 )
-from src.application.api.identity.exceptions.login import LogInException
+from src.application.api.identity.exceptions.login import LogInError
 from src.application.api.identity.exceptions.register import (
-    UserNameAlreadyExistException,
+    UserNameAlreadyExistError,
 )
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.services.base import IUsersRepository
@@ -41,7 +41,7 @@ class UserAuthenticationService(IUserAuthenticationService):
 
     def login(self, username: str, password: str) -> UserEntity:
         if (user := self.repository.get_by_username(username)) is None:
-            raise LogInException
+            raise LogInError
 
         self._validate_user_password(user, password)
 
@@ -49,10 +49,10 @@ class UserAuthenticationService(IUserAuthenticationService):
 
     def register(self, username: str, password: str) -> None:
         if self.repository.get_by_username(username) is not None:
-            raise UserNameAlreadyExistException
+            raise UserNameAlreadyExistError
 
         if not (specification := UserCredentialsSpecification(username, password)):
-            raise UserCredentialsFormatException(specification)
+            raise UserCredentialsFormatError(specification)
 
         self.repository.add_user(
             UserEntity(
@@ -87,4 +87,4 @@ class UserAuthenticationService(IUserAuthenticationService):
             password=password,
             hashed_password=user.password,
         ):
-            raise LogInException
+            raise LogInError

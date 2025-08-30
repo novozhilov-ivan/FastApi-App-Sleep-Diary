@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from dishka import from_context, provide, Provider, Scope
+from dishka import Provider, Scope, from_context, provide
 from fastapi import Request
 
 from src.application.api.identity.auth.token_auth import TokenAuth

@@ -1,13 +1,13 @@
 from dataclasses import dataclass
 
-from src.application.api.identity.exceptions.base import AuthenticationException
+from src.application.api.identity.exceptions.base import AuthenticationError
 from src.domain.sleep_diary.specifications.user_credentials import (
     UserCredentialsSpecification,
 )
 
 
 @dataclass(eq=False)
-class UserCredentialsFormatException(AuthenticationException):
+class UserCredentialsFormatError(AuthenticationError):
     specification: UserCredentialsSpecification
 
     @property

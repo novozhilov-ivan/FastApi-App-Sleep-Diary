@@ -1,24 +1,23 @@
 import pytest
-
 from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 from httpx import Response
 
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
-from src.domain.sleep_diary.exceptions.base import ApplicationException
+from src.domain.sleep_diary.exceptions.base import ApplicationError
 from src.domain.sleep_diary.exceptions.note import (
-    NoSleepDurationException,
-    NoteException,
-    TimePointsSequenceException,
+    NoSleepDurationError,
+    NoteError,
+    TimePointsSequenceError,
 )
-from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateException
+from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateError
 from src.domain.sleep_diary.values.points import Points
 from src.infra.sleep_diary.converters import convert_points_to_json
 from tests.conftest import (
-    points_order_desc_from_went_to_bed,
-    T,
     TN,
+    T,
+    points_order_desc_from_went_to_bed,
     wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed,
     wrong_points_went_to_bed_gt_fell_asleep_and_lt_other_time_points,
 )
@@ -40,11 +39,11 @@ def test_add_note_201(app: FastAPI, authorized_client: TestClient) -> None:
     [
         (
             wrong_points_went_to_bed_gt_fell_asleep_and_lt_other_time_points,
-            TimePointsSequenceException,
+            TimePointsSequenceError,
         ),
         (
             wrong_points_no_sleep_gt_sleep_order_asc_from_went_to_bed,
-            NoSleepDurationException,
+            NoSleepDurationError,
         ),
     ],
 )
@@ -52,15 +51,15 @@ def test_add_note_400_note_exceptions(
     app: FastAPI,
     authorized_client: TestClient,
     points: T | TN,
-    exception: NoteException,
+    exception: NoteError,
 ) -> None:
     response: Response = authorized_client.post(
         url=app.url_path_for("add_note"),
         json=convert_points_to_json(FakePoints(*points)),
     )
 
-    assert status.HTTP_400_BAD_REQUEST == response.status_code
-    with pytest.raises(NoteException) as excinfo:
+    assert response.status_code == status.HTTP_400_BAD_REQUEST
+    with pytest.raises(NoteError) as excinfo:
         Points(*points)
     assert excinfo.type is exception
     assert excinfo.value.message == response.json()["detail"]["error"]
@@ -73,7 +72,7 @@ def test_add_note_400_write_note_twice_exception(
     diary_with_orm: Diary,
 ) -> None:
     points = Points(*points_order_desc_from_went_to_bed)
-    expected_exception = NonUniqueNoteBedtimeDateException
+    expected_exception = NonUniqueNoteBedtimeDateError
 
     url = app.url_path_for("add_note")
     authorized_client.post(
@@ -85,10 +84,9 @@ def test_add_note_400_write_note_twice_exception(
         json=convert_points_to_json(points),
     )
 
-    assert status.HTTP_400_BAD_REQUEST == response.status_code, response.json()
+    assert response.status_code == status.HTTP_400_BAD_REQUEST, response.json()
 
-    with pytest.raises(ApplicationException) as excinfo:
-        print("diary_with_orm.write")
+    with pytest.raises(ApplicationError) as excinfo:
         diary_with_orm.write(api_user.oid, *points_order_desc_from_went_to_bed)
 
     assert excinfo.type is expected_exception

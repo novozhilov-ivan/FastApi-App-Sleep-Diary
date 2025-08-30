@@ -3,7 +3,7 @@ from datetime import date, time
 from uuid import UUID
 
 from src.domain.sleep_diary.entities.note import NoteEntity
-from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateException
+from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateError
 from src.domain.sleep_diary.services.base import INotesRepository
 from src.domain.sleep_diary.services.diary import DiaryService
 from src.domain.sleep_diary.values.points import Points
@@ -37,10 +37,8 @@ class Diary:
         diary = DiaryService.create(
             notes=self.repository.get_all_notes(owner_oid),
         )
-        print(f"{diary=}")
-        print(f"{self=}")
         if not diary.can_write(note):
-            raise NonUniqueNoteBedtimeDateException(note.points.bedtime_date)
+            raise NonUniqueNoteBedtimeDateError(note.points.bedtime_date)
 
         diary.write(note)
         self.repository.add(note)

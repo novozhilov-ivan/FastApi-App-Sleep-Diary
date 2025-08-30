@@ -24,8 +24,7 @@ def test_repo_can_add_and_save_note(database: Database, orm_user: ORMUser) -> No
     repository.add(note)
 
     stmt = text(
-        "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up "
-        "FROM notes;"
+        "SELECT bedtime_date, went_to_bed, fell_asleep, woke_up, got_up FROM notes;",
     )
     with database.get_session() as session:
         [result] = session.execute(stmt)

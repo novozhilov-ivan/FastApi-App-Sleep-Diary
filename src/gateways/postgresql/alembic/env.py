@@ -6,7 +6,6 @@ from sqlalchemy import engine_from_config, pool
 from src.gateways.postgresql.models import ORMBase
 from src.project.containers import config as project_config
 
-
 config = context.config
 
 if config.config_file_name is not None:

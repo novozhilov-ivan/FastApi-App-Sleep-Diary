@@ -1,5 +1,4 @@
 import pytest
-
 from dishka import Container
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
@@ -116,7 +115,7 @@ def register_user(
             oid=api_user.oid,
             username=api_user.username,
             password=api_user_hashed_password,
-        )
+        ),
     )
 
 

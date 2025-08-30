@@ -1,10 +1,10 @@
 from dataclasses import dataclass
 
-from src.application.api.identity.exceptions.base import AuthenticationException
+from src.application.api.identity.exceptions.base import AuthenticationError
 
 
 @dataclass(eq=False)
-class LogInException(AuthenticationException):
+class LogInError(AuthenticationError):
     @property
     def message(self) -> str:
         return "Неверное имя пользователя или пароль."

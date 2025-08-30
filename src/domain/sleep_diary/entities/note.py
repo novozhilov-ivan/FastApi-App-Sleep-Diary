@@ -7,7 +7,6 @@ from uuid import UUID
 
 from src.domain.sleep_diary.entities.base import BaseEntity
 
-
 if TYPE_CHECKING:
     from src.domain.sleep_diary.values.points import Points
 

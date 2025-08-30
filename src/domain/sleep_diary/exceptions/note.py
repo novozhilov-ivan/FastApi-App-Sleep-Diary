@@ -1,24 +1,24 @@
 from dataclasses import dataclass
 
-from src.domain.sleep_diary.exceptions.base import ApplicationException
+from src.domain.sleep_diary.exceptions.base import ApplicationError
 
 
 @dataclass(eq=False)
-class NoteException(ApplicationException):
+class NoteError(ApplicationError):
     @property
     def message(self) -> str:
         return "При создании записи произошла ошибка."
 
 
 @dataclass(eq=False)
-class TimePointsSequenceException(NoteException):
+class TimePointsSequenceError(NoteError):
     @property
     def message(self) -> str:
         return "Некорректная последовательность временных точек записи."
 
 
 @dataclass(eq=False)
-class NoSleepDurationException(NoteException):
+class NoSleepDurationError(NoteError):
     @property
     def message(self) -> str:
         return "Время без сна должно быть меньше или равно времени сна."

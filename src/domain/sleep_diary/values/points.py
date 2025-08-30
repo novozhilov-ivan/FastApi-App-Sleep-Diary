@@ -2,8 +2,8 @@ from dataclasses import dataclass
 from datetime import date, time
 
 from src.domain.sleep_diary.exceptions.note import (
-    NoSleepDurationException,
-    TimePointsSequenceException,
+    NoSleepDurationError,
+    TimePointsSequenceError,
 )
 from src.domain.sleep_diary.services.durations import Durations
 from src.domain.sleep_diary.specifications.no_sleep_duration import (
@@ -26,7 +26,7 @@ class Points(BaseValueObject):
 
     def validate(self) -> None:
         if not NoSleepHasValidTime(Durations(self)):
-            raise NoSleepDurationException
+            raise NoSleepDurationError
 
         if not PointsHasValidAnyAllowedSortedSequences(self):
-            raise TimePointsSequenceException
+            raise TimePointsSequenceError

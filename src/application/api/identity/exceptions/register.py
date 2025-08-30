@@ -1,17 +1,17 @@
 from dataclasses import dataclass
 
-from src.application.api.identity.exceptions.base import AuthenticationException
+from src.application.api.identity.exceptions.base import AuthenticationError
 
 
 @dataclass(eq=False)
-class UserRegisterException(AuthenticationException):
+class UserRegisterError(AuthenticationError):
     @property
     def message(self) -> str:
         return "Произошла ошибка при регистрации пользователя."
 
 
 @dataclass(eq=False)
-class UserNameAlreadyExistException(UserRegisterException):
+class UserNameAlreadyExistError(UserRegisterError):
     @property
     def message(self) -> str:
         return "Это имя пользователя занято."

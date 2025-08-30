@@ -5,7 +5,6 @@ from src.application.api.sleep_diary.handlers.about.schemas import (
     AboutSleepDiarySchema,
 )
 
-
 router = APIRouter(prefix="/about", tags=["About"])
 
 

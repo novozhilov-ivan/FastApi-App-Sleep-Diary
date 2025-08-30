@@ -1,15 +1,14 @@
 from uuid import uuid4
 
 import pytest
-
 from sqlalchemy import text
 from sqlalchemy.exc import IntegrityError
 
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
-    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,
+    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )
 from tests.integration.conftest import query_insert_note
 
@@ -41,10 +40,9 @@ def test_unique_bedtime_date_for_user(database: Database, orm_user: ORMUser) -> 
 
     note["oid"] = str(uuid4())
 
-    with pytest.raises(IntegrityError):
-        with database.get_session() as session:
-            session.execute(text(query_insert_note), note)
-            db_notes = session.query(ORMNote).all()
+    with pytest.raises(IntegrityError), database.get_session() as session:
+        session.execute(text(query_insert_note), note)
+        db_notes = session.query(ORMNote).all()
 
     assert len(db_notes) == 1
     [expected_first_note] = db_notes
