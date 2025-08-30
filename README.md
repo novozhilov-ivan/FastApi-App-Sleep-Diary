@@ -1,15 +1,8 @@
-# FastApi-App-Sleep-Diary
+# App Sleep Diary
 
-
-![Python](https://img.shields.io/badge/python-3.12-3776AB?style=for-the-badge&logo=python&logoColor=white)
-
-![Docker Build](https://github.com/${{ github.repository }}/actions/workflows/build.yaml/badge.svg?branch=master)
-
-![Pytest](https://github.com/${{ github.repository }}/actions/workflows/tests.yaml/badge.svg?branch=master)
-
-![Pre-commit](https://github.com/${{ github.repository }}/actions/workflows/pre-commit.yaml/badge.svg?branch=master)
-
-# FastApi + PostgreSQL Application
+![Docker Build](https://github.com/novozhilov-ivan/FastApi-App-Sleep-Diary/actions/workflows/build.yaml/badge.svg)
+![Pytest](https://github.com/novozhilov-ivan/FastApi-App-Sleep-Diary/actions/workflows/tests.yaml/badge.svg)
+![Pre-commit](https://github.com/novozhilov-ivan/FastApi-App-Sleep-Diary/actions/workflows/pre-commit.yaml/badge.svg)
 
 
 ## Requirements
