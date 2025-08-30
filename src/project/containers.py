@@ -1,90 +1,33 @@
 from functools import lru_cache
 
-from punq import Container, Scope
+from dishka import Container, make_container
+from dishka.integrations.fastapi import FastapiProvider
 
-from src.domain.services import INotesRepository, IUsersRepository
-from src.infra.database import Database
-from src.infra.repository import (
-    ORMNotesRepository,
-    ORMUsersRepository,
-)
-from src.project.settings import Settings
+from src.gateways.postgresql.providers import DatabaseProvider, TestDatabaseProvider
+from src.infra.identity.providers import InfraIdentityProvider
+from src.infra.sleep_diary.providers import InfraSleepDiaryProvider
+from src.project.settings import Config
+
+config = Config()
 
 
 @lru_cache(1)
 def get_container() -> Container:
-    return _init_container()
-
-
-def _init_container() -> Container:
-    from src.service_layer.services import (
-        Diary,
-        IJWTService,
-        IUserAuthenticationService,
-        IUserJWTAuthorizationService,
-        JWTService,
-        UserAuthenticationService,
-        UserJWTAuthorizationService,
+    return make_container(
+        InfraIdentityProvider(),
+        InfraSleepDiaryProvider(),
+        DatabaseProvider(),
+        FastapiProvider(),
+        context={Config: config},
     )
 
-    container = Container()
 
-    container.register(Settings, instance=Settings(), scope=Scope.singleton)
-
-    def init_database() -> Database:
-        settings = container.resolve(Settings)
-        return Database(url=settings.postgres_db_url)
-
-    def init_notes_repository() -> INotesRepository:
-        database = container.resolve(Database)
-        return ORMNotesRepository(database)
-
-    def init_users_repository() -> IUsersRepository:
-        database = container.resolve(Database)
-        return ORMUsersRepository(database)
-
-    def init_authentication_service() -> IUserAuthenticationService:
-        repository = container.resolve(IUsersRepository)
-        return UserAuthenticationService(repository)
-
-    def init_jwt_service() -> IJWTService:
-        settings = container.resolve(Settings)
-        return JWTService(settings)
-
-    def init_user_jwt_authorization_service() -> IUserJWTAuthorizationService:
-        jwt_service = container.resolve(IJWTService)
-        return UserJWTAuthorizationService(jwt_service)
-
-    def init_diary_service() -> Diary:
-        repository = container.resolve(INotesRepository)
-        return Diary(repository)
-
-    container.register(
-        Database,
-        factory=init_database,
-        scope=Scope.singleton,
+@lru_cache(1)
+def get_test_container() -> Container:
+    return make_container(
+        InfraIdentityProvider(),
+        InfraSleepDiaryProvider(),
+        TestDatabaseProvider(),
+        FastapiProvider(),
+        context={Config: config},
     )
-    container.register(
-        INotesRepository,
-        factory=init_notes_repository,
-        scope=Scope.singleton,
-    )
-    container.register(
-        IUsersRepository,
-        factory=init_users_repository,
-        scope=Scope.singleton,
-    )
-    container.register(Diary, factory=init_diary_service, scope=Scope.singleton)
-    container.register(
-        IUserAuthenticationService,
-        factory=init_authentication_service,
-        scope=Scope.transient,
-    )
-    container.register(IJWTService, factory=init_jwt_service, scope=Scope.singleton)
-    container.register(
-        IUserJWTAuthorizationService,
-        factory=init_user_jwt_authorization_service,
-        scope=Scope.transient,
-    )
-
-    return container

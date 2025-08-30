@@ -1,23 +1,23 @@
 from uuid import uuid4
 
-from src.domain.entities import NoteEntity
-from src.domain.values.points import Points
-from src.infra.database import Database
-from src.infra.orm import ORMNote, ORMUser
+from src.domain.sleep_diary.entities.note import NoteEntity
+from src.domain.sleep_diary.values.points import Points
+from src.gateways.postgresql.database import Database
+from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
     points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )
 
 
-def test_note_orm_from_time_points(memory_database: Database, user: ORMUser):
+def test_note_orm_from_time_points(database: Database, orm_user: ORMUser) -> None:
     note = NoteEntity(
         oid=uuid4(),
-        owner_oid=user.oid,
+        owner_oid=orm_user.oid,
         points=Points(*points_order_desc_from_went_to_bed_and_one_hour_no_sleep),
     )
     note_orm = ORMNote.from_entity(note)
 
-    with memory_database.get_session() as session:
+    with database.get_session() as session:
         session.add(note_orm)
         session.commit()
         session.refresh(note_orm)

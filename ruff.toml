@@ -1,0 +1,43 @@
+target-version = "py312"
+line-length = 88
+indent-width = 4
+
+[lint]
+select = [
+    "E",   # pycodestyle errors - базовые ошибки стиля кода (отступы, пробелы, синтаксис)
+    "W",   # pycodestyle warnings - предупреждения стиля (неиспользуемые переменные, лишние пробелы)
+    "F",   # pyflakes - логические ошибки (неопределенные переменные, неиспользуемые импорты)
+    "I",   # isort - сортировка и группировка импортов
+    "C4",  # flake8-comprehensions - оптимизация list/dict/set comprehensions
+    "UP",  # pyupgrade - обновление синтаксиса до современного Python
+    "A",   # flake8-builtins - предотвращение переопределения встроенных функций
+    "PLC", # pylint convention - соглашения о стиле кода
+    "PLE", # pylint error - критические ошибки логики
+    "PLW", # pylint warning - предупреждения о потенциальных проблемах
+    "ANN", # flake8-annotations - проверка аннотаций типов (обязательные type hints)
+    "TID", # flake8-tidy-imports - контроль импортов (запрет относительных импортов)
+    "COM", # flake8-commas - правила использования запятых
+    "N",   # pep8-naming - соглашения именования (snake_case, PascalCase)
+    "B",   # flake8-bugbear - обнаружение потенциальных багов и анти-паттернов
+    "T20", # flake8-print - запрет print() в продакшн коде
+    "RET", # flake8-return - оптимизация return statements
+    "SIM", # flake8-simplify - упрощение сложных конструкций
+    "PTH", # flake8-use-pathlib - принуждение к использованию pathlib вместо os.path
+]
+ignore = []
+
+
+[format]
+quote-style = "double"
+indent-style = "space"
+skip-magic-trailing-comma = false
+line-ending = "auto"
+docstring-code-format = false
+docstring-code-line-length = "dynamic"
+
+
+[lint.pycodestyle]
+max-line-length = 88
+
+[lint.flake8-tidy-imports]
+ban-relative-imports = "all"

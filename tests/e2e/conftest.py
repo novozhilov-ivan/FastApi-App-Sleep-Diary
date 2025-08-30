@@ -1,94 +1,39 @@
 import pytest
-
+from dishka import Container
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
-from punq import Container, Scope
-from sqlalchemy import create_engine, Engine, text
-from starlette.testclient import TestClient
+from fastapi.testclient import TestClient
 
-from src.application.api.main import create_app
-from src.domain.services import INotesRepository
-from src.infra.database import Database
-from src.infra.orm import metadata, ORMUser
-from src.project.containers import get_container
-from src.project.settings import Settings
-from src.service_layer.services import Diary
-
-
-def init_dummy_container() -> Container:
-    return get_container()
-
-
-@pytest.fixture(scope="session")
-def settings() -> Settings:
-    return Settings()
+from src.application.api.identity.api.handlers.schemas import SignInRequestSchema
+from src.domain.identity.entities import AccessTokenClaims
+from src.domain.identity.jwt_processor import JWTProcessor
+from src.domain.identity.types import JWTToken
+from src.domain.sleep_diary.entities.user import UserEntity
+from src.gateways.postgresql.database import Database
+from src.infra.identity.access_token_processor import AccessTokenProcessor
+from src.infra.identity.authentication import (
+    UserAuthenticationService,
+)
+from src.infra.identity.commands import SignInInputData
+from src.infra.identity.sign_in import SignIn
+from src.infra.sleep_diary.repository.orm_user import ORMUsersRepository
+from src.main import create_app
+from src.project.settings import AuthorizationTokenSettings, JWTSettings
 
 
 @pytest.fixture(scope="session")
-def engine(settings: Settings) -> Engine:
-    test_db_name = settings.test_postgres_db
-
-    assert "test_" in test_db_name, "Защита от выполнения create/drop с основной БД"
-
-    engine_for_create_db: Engine = create_engine(
-        str(settings.postgres_db_url),
-        echo=False,
-        isolation_level="AUTOCOMMIT",
+def api_user() -> UserEntity:
+    return UserEntity(
+        username="api_test_user",
+        password="api_test_password",
     )
 
-    connection_for_create_test_db = engine_for_create_db.connect()
-
-    is_test_db_exists = connection_for_create_test_db.execute(
-        text(f"SELECT 1 FROM pg_database " f"WHERE datname = '{test_db_name}';"),
-    )
-
-    if not is_test_db_exists.one_or_none():
-        connection_for_create_test_db.execute(
-            text(f"CREATE DATABASE {test_db_name};"),
-        )
-    if engine_for_create_db:
-        engine_for_create_db.dispose()
-    connection_for_create_test_db.close()
-
-    return create_engine(settings.test_postgres_url)
-
 
 @pytest.fixture(scope="session")
-def database(settings: Settings) -> Database:
-    return Database(settings.test_postgres_url)
-
-
-@pytest.fixture(scope="session")
-def container(database: Database) -> Container:
-    container = init_dummy_container()
-
-    container.register(
-        Database,
-        instance=database,
-        scope=Scope.singleton,
-    )
-    return container
-
-
-@pytest.fixture(scope="session")
-def repository(container: Container) -> INotesRepository:
-    return container.resolve(INotesRepository)
-
-
-@pytest.fixture(scope="session")
-def diary(container: Container) -> Diary:
-    return container.resolve(Diary)
-
-
-@pytest.fixture(scope="session")
-def app() -> FastAPI:
-
-    @pytest.mark.usefixtures("container")
-    def get_app() -> FastAPI:
-        app = create_app()
-        app.dependency_overrides[get_container] = init_dummy_container
-        return app
-
-    return get_app()
+def app(test_container: Container) -> FastAPI:
+    app = create_app()
+    setup_dishka(test_container, app)
+    return app
 
 
 @pytest.fixture(scope="session")
@@ -96,22 +41,114 @@ def client(app: FastAPI) -> TestClient:
     return TestClient(app)
 
 
-@pytest.fixture(autouse=True)
-def _recreate_tables(engine: Engine) -> None:
-    metadata.drop_all(engine)
-    metadata.create_all(engine)
+@pytest.fixture(scope="session")
+def auth_settings() -> AuthorizationTokenSettings:
+    return AuthorizationTokenSettings()
+
+
+@pytest.fixture(scope="session")
+def jwt_settings() -> JWTSettings:
+    return JWTSettings()
+
+
+@pytest.fixture(scope="session")
+def auth_credentials(api_user: UserEntity) -> dict[str, str]:
+    return SignInRequestSchema(
+        username=api_user.username,
+        password=api_user.password,
+    ).model_dump()
+
+
+@pytest.fixture(scope="session")
+def orm_user_repository(database: Database) -> ORMUsersRepository:
+    return ORMUsersRepository(
+        database=database,
+    )
+
+
+@pytest.fixture(scope="session")
+def user_auth_service(
+    orm_user_repository: ORMUsersRepository,
+) -> UserAuthenticationService:
+    return UserAuthenticationService(
+        repository=orm_user_repository,
+    )
+
+
+@pytest.fixture(scope="session")
+def sign_in(
+    jwt_settings: JWTSettings,
+    user_auth_service: UserAuthenticationService,
+) -> SignIn:
+    return SignIn(
+        settings=jwt_settings,
+        service=user_auth_service,
+    )
+
+
+@pytest.fixture(scope="session")
+def api_user_hashed_password(
+    user_auth_service: UserAuthenticationService,
+    api_user: UserEntity,
+) -> str:
+    return user_auth_service.hash_password(api_user.password)
+
+
+@pytest.fixture(scope="session")
+def jwt_processor(jwt_settings: JWTSettings) -> JWTProcessor:
+    return JWTProcessor(jwt_settings=jwt_settings)
+
+
+@pytest.fixture(scope="session")
+def token_processor(jwt_processor: JWTProcessor) -> AccessTokenProcessor:
+    return AccessTokenProcessor(jwt_processor=jwt_processor)
 
 
 @pytest.fixture
-def user(container: Container) -> ORMUser:
-    user = ORMUser(
-        username="test_user",
-        password=b"test_password",
+def register_user(
+    api_user: UserEntity,
+    api_user_hashed_password: str,
+    orm_user_repository: ORMUsersRepository,
+) -> None:
+    orm_user_repository.add_user(
+        UserEntity(
+            oid=api_user.oid,
+            username=api_user.username,
+            password=api_user_hashed_password,
+        ),
     )
-    database: Database = container.resolve(Database)
 
-    with database.get_session() as session:
-        session.add(user)
-        session.commit()
-        session.refresh(user)
-    return user
+
+@pytest.fixture
+def access_token_claims(
+    auth_credentials: dict[str, str],
+    sign_in: SignIn,
+    register_user: None,
+) -> AccessTokenClaims:
+    return sign_in(
+        command=SignInInputData(**auth_credentials),
+    )
+
+
+@pytest.fixture
+def jwt_token(
+    token_processor: AccessTokenProcessor,
+    access_token_claims: AccessTokenClaims,
+) -> JWTToken:
+    return token_processor.encode(access_token_claims)
+
+
+@pytest.fixture
+def authorized_client(
+    client: TestClient,
+    auth_settings: AuthorizationTokenSettings,
+    jwt_token: JWTToken,
+    register_user: None,
+) -> TestClient:
+    client.cookies.set(
+        name=auth_settings.cookies_key,
+        value=jwt_token,
+    )
+
+    assert client.cookies.get(auth_settings.cookies_key) == jwt_token
+    return client

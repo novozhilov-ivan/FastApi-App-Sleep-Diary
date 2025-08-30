@@ -1,24 +1,26 @@
 from uuid import uuid4
 
-from src.domain.entities import NoteEntity
-from src.domain.values.points import Points
-from src.infra.database import Database
-from src.infra.orm import ORMNote, ORMUser
+from sqlalchemy import text
+
+from src.domain.sleep_diary.entities.note import NoteEntity
+from src.domain.sleep_diary.values.points import Points
+from src.gateways.postgresql.database import Database
+from src.gateways.postgresql.models import ORMNote, ORMUser
 from tests.conftest import (
-    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
     TN,
+    points_order_desc_from_went_to_bed_and_one_hour_no_sleep,
 )
-from tests.integration.conftest import stmt_insert_note
+from tests.integration.conftest import query_insert_note
 
 
-def test_note_orm_to_entity(memory_database: Database, user: ORMUser):
+def test_note_orm_to_entity(database: Database, orm_user: ORMUser) -> None:
     points: TN = points_order_desc_from_went_to_bed_and_one_hour_no_sleep
     bedtime_date, went_to_bed, fell_asleep, woke_up, got_up, no_sleep = points
     note_oid = uuid4()
     note = {
         "oid": str(note_oid),
         "bedtime_date": bedtime_date.isoformat(),
-        "owner_oid": str(user.oid),
+        "owner_oid": str(orm_user.oid),
         "went_to_bed": went_to_bed.isoformat(),
         "fell_asleep": fell_asleep.isoformat(),
         "woke_up": woke_up.isoformat(),
@@ -26,8 +28,8 @@ def test_note_orm_to_entity(memory_database: Database, user: ORMUser):
         "no_sleep": no_sleep.isoformat(),
     }
 
-    with memory_database.get_session() as session:
-        session.execute(stmt_insert_note, note)
+    with database.get_session() as session:
+        session.execute(text(query_insert_note), note)
 
     db_note: ORMNote | None = session.query(ORMNote).first()
     assert isinstance(db_note, ORMNote)
@@ -36,7 +38,7 @@ def test_note_orm_to_entity(memory_database: Database, user: ORMUser):
 
     expected_note = NoteEntity(
         oid=note_oid,
-        owner_oid=user.oid,
+        owner_oid=orm_user.oid,
         points=Points(
             bedtime_date=bedtime_date,
             went_to_bed=went_to_bed,

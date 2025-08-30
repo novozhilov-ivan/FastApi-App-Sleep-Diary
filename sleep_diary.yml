@@ -1,0 +1,53 @@
+networks:
+  backend:
+    driver: bridge
+
+secrets:
+   private_key:
+     file: ./jwt-private.pem
+   public_key:
+     file: ./jwt-public.pem
+
+services:
+  sleep_diary:
+    container_name: sleep_diary
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: sleep-diary-image
+    restart: always
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    env_file:
+      - path: .env.example
+        required: false
+      - path: .env
+        required: false
+    secrets:
+      - source: private_key
+        target: /app/jwt-private.pem
+      - source: public_key
+        target: /app/jwt-public.pem
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-db_sleep_diary}
+      POSTGRES_USER: ${POSTGRES_USER:-user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-password}
+      POSTGRES_HOST: ${POSTGRES_HOST:-postgres}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+      POSTGRES_DB_URL: ${POSTGRES_DB_URL:-}
+    ports:
+      - "8000:8000"
+    working_dir: /app
+    volumes:
+      - ./src:/app/src
+      - ./tests:/app/tests
+    entrypoint:
+      - uvicorn
+      - --factory
+      - src.main:create_production_app
+      - --host=0.0.0.0
+      - --port=8000
+      - --reload

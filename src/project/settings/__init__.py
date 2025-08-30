@@ -1,14 +1,14 @@
-from typing import ClassVar
+from dataclasses import dataclass, field
 
-from pydantic_settings import SettingsConfigDict
+from src.project.settings.jwt import JWTSettings
+from src.project.settings.postgresql import PostgreSQLSettings
+from src.project.settings.token_auth import AuthorizationTokenSettings
 
-from src.project.settings.authentication import AuthJWTSettings
-from src.project.settings.database import PostgresSettings
 
-
-class Settings(PostgresSettings, AuthJWTSettings):
-    model_config: ClassVar[SettingsConfigDict] = SettingsConfigDict(
-        case_sensitive=False,
-        env_file=".env",
-        extra="ignore",
+@dataclass
+class Config:
+    postgresql: PostgreSQLSettings = field(default_factory=PostgreSQLSettings)
+    jwt: JWTSettings = field(default_factory=JWTSettings)
+    authorization_token: AuthorizationTokenSettings = field(
+        default_factory=AuthorizationTokenSettings,
     )

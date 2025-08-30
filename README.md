@@ -1,4 +1,6 @@
-![Tests](https://github.com/novozhilov-ivan/FastApi-App-Sleep-Diary/actions/workflows/run_tests.yml/badge.svg)
+![Pre-commit](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/pre-commit.yaml?label=pre-commit)
+![Build](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/build.yaml?label=build)
+![Tests](https://img.shields.io/github/actions/workflow/status/novozhilov-ivan/FastApi-App-Sleep-Diary/tests.yaml?label=tests)
 # Sleep Diary
 # FastApi + PostgreSQL Application
 
