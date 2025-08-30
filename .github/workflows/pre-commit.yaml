@@ -1,0 +1,21 @@
+name: Pre-commit
+
+on:
+  push:
+    branches-ignore: [master, development, api-ddd]
+  pull_request:
+    branches: [master, development, api-ddd]
+
+jobs:
+  pre-commit:
+    name: Code Quality
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
