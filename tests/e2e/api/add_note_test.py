@@ -30,6 +30,7 @@ def test_add_note_201(app: FastAPI, authorized_client: TestClient) -> None:
         url=app.url_path_for("add_note"),
         json=convert_points_to_json(Points(*points_order_desc_from_went_to_bed)),
     )
+
     assert response.status_code == status.HTTP_201_CREATED, response.json()
     assert response.json() is None
 
@@ -87,6 +88,7 @@ def test_add_note_400_write_note_twice_exception(
     assert status.HTTP_400_BAD_REQUEST == response.status_code, response.json()
 
     with pytest.raises(ApplicationException) as excinfo:
+        print("diary_with_orm.write")
         diary_with_orm.write(api_user.oid, *points_order_desc_from_went_to_bed)
 
     assert excinfo.type is expected_exception

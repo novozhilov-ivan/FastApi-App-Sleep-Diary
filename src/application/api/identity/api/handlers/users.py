@@ -1,6 +1,6 @@
 from typing import Annotated
 
-from dishka.integrations.fastapi import DishkaRoute, FromDishka
+from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
 from fastapi import APIRouter, Form, Response, status
 from fastapi.responses import JSONResponse
 
@@ -14,7 +14,7 @@ from src.infra.identity.sign_in import SignIn
 
 router = APIRouter(
     prefix="/users",
-    route_class=DishkaRoute,
+    route_class=DishkaSyncRoute,
 )
 
 

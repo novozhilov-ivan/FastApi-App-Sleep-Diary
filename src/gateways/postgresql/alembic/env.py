@@ -4,7 +4,7 @@ from alembic import context
 from sqlalchemy import engine_from_config, pool
 
 from src.gateways.postgresql.models import ORMBase
-from src.project.container import config as project_config
+from src.project.containers import config as project_config
 
 
 config = context.config

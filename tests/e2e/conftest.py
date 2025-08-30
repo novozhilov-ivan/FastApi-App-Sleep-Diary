@@ -1,5 +1,7 @@
 import pytest
 
+from dishka import Container
+from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
@@ -29,8 +31,10 @@ def api_user() -> UserEntity:
 
 
 @pytest.fixture(scope="session")
-def app() -> FastAPI:
-    return create_app()
+def app(test_container: Container) -> FastAPI:
+    app = create_app()
+    setup_dishka(test_container, app)
+    return app
 
 
 @pytest.fixture(scope="session")
@@ -140,6 +144,7 @@ def authorized_client(
     client: TestClient,
     auth_settings: AuthorizationTokenSettings,
     jwt_token: JWTToken,
+    register_user: None,
 ) -> TestClient:
     client.cookies.set(
         name=auth_settings.cookies_key,

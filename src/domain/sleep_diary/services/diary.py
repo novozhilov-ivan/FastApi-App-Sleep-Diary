@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 
 
 if TYPE_CHECKING:
-    from src.sleep_diary.domain.entities import NoteEntity
+    from src.domain.sleep_diary.entities.note import NoteEntity
 
 
 @dataclass

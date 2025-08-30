@@ -47,7 +47,7 @@ services:
     entrypoint:
       - uvicorn
       - --factory
-      - src.main:create_app
+      - src.main:create_production_app
       - --host=0.0.0.0
       - --port=8000
       - --reload

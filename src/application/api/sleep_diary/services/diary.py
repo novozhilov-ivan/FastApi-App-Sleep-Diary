@@ -37,7 +37,8 @@ class Diary:
         diary = DiaryService.create(
             notes=self.repository.get_all_notes(owner_oid),
         )
-
+        print(f"{diary=}")
+        print(f"{self=}")
         if not diary.can_write(note):
             raise NonUniqueNoteBedtimeDateException(note.points.bedtime_date)
 

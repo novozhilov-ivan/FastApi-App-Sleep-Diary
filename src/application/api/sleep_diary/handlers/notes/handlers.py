@@ -1,10 +1,9 @@
 from typing import Annotated
 from uuid import UUID
 
-from dishka.integrations.fastapi import DishkaRoute, FromDishka
-from fastapi import APIRouter, Header, HTTPException
+from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
+from fastapi import APIRouter, Header, HTTPException, Request, status
 from pydantic import UUID4
-from starlette import status
 
 from src.application.api.identity.auth.token_auth import TokenAuth
 from src.application.api.sleep_diary.handlers.notes.schemas import (
@@ -12,6 +11,8 @@ from src.application.api.sleep_diary.handlers.notes.schemas import (
 )
 from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.exceptions.base import ApplicationException
+from src.infra.identity.access_token_processor import AccessTokenProcessor
+from src.project.settings import AuthorizationTokenSettings
 
 
 HeaderOwnerOid = Annotated[UUID4, Header(convert_underscores=False)]
@@ -21,7 +22,7 @@ router = APIRouter(
     responses={
         status.HTTP_401_UNAUTHORIZED: {"model": None},
     },
-    route_class=DishkaRoute,
+    route_class=DishkaSyncRoute,
 )
 
 
@@ -35,10 +36,17 @@ router = APIRouter(
     },
 )
 def add_note(
+    request: Request,
     schema: CreatePointsRequestSchema,
-    token_auth: FromDishka[TokenAuth],
+    token_processor: FromDishka[AccessTokenProcessor],
+    settings: FromDishka[AuthorizationTokenSettings],
     diary: FromDishka[Diary],
 ) -> None:
+    token_auth = TokenAuth(
+        request=request,
+        token_processor=token_processor,
+        settings=settings,
+    )
 
     try:
         diary.write(

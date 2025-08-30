@@ -11,6 +11,7 @@ import pytest
 
 from alembic.command import upgrade
 from alembic.config import Config
+from dishka import Container
 from sqlalchemy import create_engine, Engine, text
 
 from src.application.api.sleep_diary.services.diary import Diary
@@ -20,6 +21,7 @@ from src.domain.sleep_diary.values.points import Points
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMUser
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
+from src.project.containers import get_test_container
 from src.project.settings import PostgreSQLSettings
 
 
@@ -108,10 +110,15 @@ def test_db_engine(
 
 
 @pytest.fixture(scope="session")
+def test_container() -> Container:
+    return get_test_container()
+
+
+@pytest.fixture(scope="session")
 def database(
-    postgres_settings: PostgreSQLSettings,
+    test_container: Container,
 ) -> Database:
-    return Database(url=postgres_settings.test_url)
+    return test_container.get(Database)
 
 
 @pytest.fixture(autouse=True)
