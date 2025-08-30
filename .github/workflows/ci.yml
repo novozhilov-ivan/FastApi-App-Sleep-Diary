@@ -2,12 +2,24 @@ name: CI
 
 on:
   push:
-    branches-ignore: [master, development]
+    branches-ignore: [master, development, api-ddd]
   pull_request:
-    branches: [master, development]
-
+    branches: [master, development, api-ddd]
 
 jobs:
+  pre-commit:
+    name: Pre-commit проверки
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.0
+
   build-sleep-diary-app-image:
     name: Сборка образа Приложения, запуск сервиса PostgreSQL и запуск тестов приложения
     runs-on: ubuntu-22.04
