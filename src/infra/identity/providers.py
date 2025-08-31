@@ -3,7 +3,7 @@ from typing import ClassVar
 from dishka import Provider, Scope, from_context, provide
 from fastapi import Request
 
-from src.application.api.identity.auth.token_auth import TokenAuth
+from src.application.api.identity.services.token_auth import TokenAuth
 from src.domain.identity.jwt_processor import IJWTProcessor, JWTProcessor
 from src.domain.sleep_diary.services.base import IUsersRepository
 from src.infra.identity.access_token_processor import AccessTokenProcessor

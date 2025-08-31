@@ -4,10 +4,10 @@ from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
 from fastapi import APIRouter, Form, Response, status
 from fastapi.responses import JSONResponse
 
-from src.application.api.identity.api.handlers.schemas import (
+from src.application.api.identity.handlers.schemas import (
     SignInRequestSchema,
 )
-from src.application.api.identity.auth.token_auth import TokenAuth
+from src.application.api.identity.services.token_auth import TokenAuth
 from src.infra.identity.commands import SignInInputData
 from src.infra.identity.sign_in import SignIn
 
