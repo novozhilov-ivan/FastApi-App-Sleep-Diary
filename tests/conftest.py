@@ -7,7 +7,7 @@ from uuid import UUID, uuid4
 
 import pytest
 from alembic.command import upgrade
-from alembic.config import Config
+from alembic.config import Config as AlembicConfig
 from dishka import Container
 from sqlalchemy import Engine, create_engine, text
 
@@ -22,6 +22,11 @@ from src.project.containers import get_test_container
 from src.project.settings import PostgreSQLSettings
 
 STMT_CHECK_DATABASE = "SELECT 1 FROM pg_database WHERE datname = :test_db_name;"
+
+
+@pytest.fixture(scope="session")
+def test_container() -> Container:
+    return get_test_container()
 
 
 @pytest.fixture(scope="session")
@@ -53,19 +58,19 @@ def user_entity(
 
 
 @pytest.fixture(scope="session")
-def postgres_settings() -> PostgreSQLSettings:
-    return PostgreSQLSettings()
+def postgres_settings(test_container: Container) -> PostgreSQLSettings:
+    return test_container.get(PostgreSQLSettings)
 
 
 @pytest.fixture(scope="session")
 def alembic_test_config(
     postgres_settings: PostgreSQLSettings,
-) -> Config:
+) -> AlembicConfig:
     base_dir = Path(__file__).parent.parent
     alembic_ini = base_dir / "src" / "alembic.ini"
 
     stdout = io.StringIO("")
-    alembic_config = Config(str(alembic_ini), stdout=stdout)
+    alembic_config = AlembicConfig(str(alembic_ini), stdout=stdout)
     alembic_config.set_main_option("sqlalchemy.url", postgres_settings.test_url)
 
     return alembic_config
@@ -74,7 +79,7 @@ def alembic_test_config(
 @pytest.fixture(scope="session")
 def test_db_engine(
     postgres_settings: PostgreSQLSettings,
-    alembic_test_config: Config,
+    alembic_test_config: AlembicConfig,
 ) -> Generator[Engine, None, None]:
     test_db_name = postgres_settings.test_db
     test_db_url = postgres_settings.test_url
@@ -103,11 +108,6 @@ def test_db_engine(
         yield engine
     finally:
         engine.dispose()
-
-
-@pytest.fixture(scope="session")
-def test_container() -> Container:
-    return get_test_container()
 
 
 @pytest.fixture(scope="session")
