@@ -1,6 +1,6 @@
 from fastapi import APIRouter, status
 
-from src.application.api.identity.api.handlers.users import router as user_router
+from src.application.api.identity.handlers.users import router as user_router
 from src.application.api.schemas import ErrorSchema
 from src.application.api.sleep_diary.handlers.about.handlers import (
     router as about_router,

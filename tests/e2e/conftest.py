@@ -4,7 +4,7 @@ from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.application.api.identity.api.handlers.schemas import SignInRequestSchema
+from src.application.api.identity.handlers.schemas import SignInRequestSchema
 from src.domain.identity.entities import AccessTokenClaims
 from src.domain.identity.jwt_processor import JWTProcessor
 from src.domain.identity.types import JWTToken
