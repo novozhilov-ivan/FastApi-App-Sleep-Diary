@@ -36,3 +36,9 @@ class CredentialsRequiredError(IdentityError):
     @property
     def message(self) -> str:
         return "Наличие Username обязательно."
+
+
+class PasswordsMismatchError(IdentityError):
+    @property
+    def message(self) -> str:
+        return "Пароли не совпадают."
