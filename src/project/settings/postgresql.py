@@ -23,10 +23,7 @@ class PostgreSQLSettings(BaseSettings):
 
     @model_validator(mode="before")
     @classmethod
-    def assemble_postgres_url(
-        cls: type["PostgreSQLSettings"],
-        values: dict[str, str],
-    ) -> dict[str, str]:
+    def assemble_postgres_url(cls, values: dict[str, str]) -> dict[str, str]:
         if values.get("db_url"):
             return values
 

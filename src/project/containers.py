@@ -7,6 +7,7 @@ from src.gateways.postgresql.providers import DatabaseProvider, TestDatabaseProv
 from src.infra.identity.providers import InfraIdentityProvider
 from src.infra.sleep_diary.providers import InfraSleepDiaryProvider
 from src.project.settings import Config
+from src.project.settings.providers import SettingsProvider
 
 config = Config()
 
@@ -17,6 +18,7 @@ def get_container() -> Container:
         InfraIdentityProvider(),
         InfraSleepDiaryProvider(),
         DatabaseProvider(),
+        SettingsProvider(),
         FastapiProvider(),
         context={Config: config},
     )
@@ -28,6 +30,7 @@ def get_test_container() -> Container:
         InfraIdentityProvider(),
         InfraSleepDiaryProvider(),
         TestDatabaseProvider(),
+        SettingsProvider(),
         FastapiProvider(),
         context={Config: config},
     )
