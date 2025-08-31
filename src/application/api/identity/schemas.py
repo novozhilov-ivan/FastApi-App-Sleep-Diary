@@ -1,6 +1,6 @@
 from pydantic import BaseModel, Field, model_validator
 
-from src.infra.identity.commands import SignUpInputData
+from src.infra.identity.use_cases.commands import SignUpInputData
 
 
 class SignInRequestSchema(BaseModel):

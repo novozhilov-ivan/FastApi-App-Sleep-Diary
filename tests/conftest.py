@@ -11,13 +11,13 @@ from alembic.config import Config as AlembicConfig
 from dishka import Container
 from sqlalchemy import Engine, create_engine, text
 
-from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.services.base import INotesRepository
 from src.domain.sleep_diary.values.points import Points
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMUser
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
+from src.infra.sleep_diary.use_cases.diary import Diary
 from src.project.containers import get_test_container
 from src.project.settings import PostgreSQLSettings
 

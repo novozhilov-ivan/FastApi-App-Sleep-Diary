@@ -4,18 +4,18 @@ from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.application.api.identity.handlers.schemas import SignInRequestSchema
+from src.application.api.identity.schemas import SignInRequestSchema
 from src.domain.identity.entities import AccessTokenClaims
 from src.domain.identity.jwt_processor import JWTProcessor
 from src.domain.identity.types import JWTToken
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.gateways.postgresql.database import Database
-from src.infra.identity.access_token_processor import AccessTokenProcessor
-from src.infra.identity.authentication import (
+from src.infra.identity.services.access_token_processor import AccessTokenProcessor
+from src.infra.identity.services.authentication import (
     UserAuthenticationService,
 )
-from src.infra.identity.commands import SignInInputData
-from src.infra.identity.sign_in import SignIn
+from src.infra.identity.use_cases.commands import SignInInputData
+from src.infra.identity.use_cases.sign_in import SignIn
 from src.infra.sleep_diary.repository.orm_user import ORMUsersRepository
 from src.main import create_app
 from src.project.settings import AuthorizationTokenSettings, JWTSettings

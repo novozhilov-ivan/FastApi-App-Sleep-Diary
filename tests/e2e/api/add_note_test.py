@@ -3,7 +3,6 @@ from fastapi import FastAPI, status
 from fastapi.testclient import TestClient
 from httpx import Response
 
-from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.exceptions.base import ApplicationError
 from src.domain.sleep_diary.exceptions.note import (
@@ -14,6 +13,7 @@ from src.domain.sleep_diary.exceptions.note import (
 from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateError
 from src.domain.sleep_diary.values.points import Points
 from src.infra.sleep_diary.converters import convert_points_to_json
+from src.infra.sleep_diary.use_cases.diary import Diary
 from tests.conftest import (
     TN,
     T,

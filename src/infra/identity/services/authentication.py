@@ -4,17 +4,17 @@ from typing import ClassVar
 
 from bcrypt import checkpw, gensalt, hashpw
 
-from src.application.api.identity.exceptions.credentials import (
-    UserCredentialsFormatError,
-)
-from src.application.api.identity.exceptions.login import LogInError
-from src.application.api.identity.exceptions.register import (
-    UserNameAlreadyExistError,
-)
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.services.base import IUsersRepository
 from src.domain.sleep_diary.specifications.user_credentials import (
     UserCredentialsSpecification,
+)
+from src.infra.identity.exceptions.credentials import (
+    UserCredentialsFormatError,
+)
+from src.infra.identity.exceptions.login import LogInError
+from src.infra.identity.exceptions.register import (
+    UserNameAlreadyExistError,
 )
 
 

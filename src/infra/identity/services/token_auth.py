@@ -4,7 +4,7 @@ from fastapi import Request, Response
 
 from src.domain.identity.entities import AccessTokenClaims
 from src.domain.identity.exceptions import UnauthorizedError
-from src.infra.identity.access_token_processor import AccessTokenProcessor
+from src.infra.identity.services.access_token_processor import AccessTokenProcessor
 from src.project.settings.token_auth import AuthorizationTokenSettings
 
 

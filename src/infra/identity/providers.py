@@ -2,14 +2,14 @@ from typing import ClassVar
 
 from dishka import Provider, Scope, WithParents, provide, provide_all
 
-from src.application.api.identity.services.token_auth import TokenAuth
 from src.domain.identity.jwt_processor import JWTProcessor
-from src.infra.identity.access_token_processor import AccessTokenProcessor
-from src.infra.identity.authentication import (
+from src.infra.identity.services.access_token_processor import AccessTokenProcessor
+from src.infra.identity.services.authentication import (
     UserAuthenticationService,
 )
-from src.infra.identity.sign_in import SignIn
-from src.infra.identity.sign_up import SignUp
+from src.infra.identity.services.token_auth import TokenAuth
+from src.infra.identity.use_cases.sign_in import SignIn
+from src.infra.identity.use_cases.sign_up import SignUp
 
 
 class InfraIdentityProvider(Provider):
