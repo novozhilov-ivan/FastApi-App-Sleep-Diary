@@ -1,11 +1,11 @@
 import pytest
 
-from src.application.api.sleep_diary.services.diary import Diary
 from src.domain.sleep_diary.entities.user import UserEntity
 from src.domain.sleep_diary.services.base import INotesRepository
-from src.infra.identity.authentication import UserAuthenticationService
+from src.infra.identity.services.authentication import UserAuthenticationService
 from src.infra.sleep_diary.repository.memory_notes import MemoryNotesRepository
 from src.infra.sleep_diary.repository.memory_users import MemoryUsersRepository
+from src.infra.sleep_diary.use_cases.diary import Diary
 
 
 @pytest.fixture(scope="session")

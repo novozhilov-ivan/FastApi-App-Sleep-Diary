@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 from starlette import status
 
-from src.application.api.sleep_diary.handlers.about.schemas import (
+from src.application.api.about.schemas import (
     AboutSleepDiarySchema,
 )
 

@@ -1,9 +1,9 @@
 from dataclasses import dataclass
 
 from src.domain.identity.entities import AccessTokenClaims
-from src.infra.identity.authentication import IUserAuthenticationService
-from src.infra.identity.commands import SignUpInputData
-from src.infra.identity.sign_in import SignIn
+from src.infra.identity.services.authentication import IUserAuthenticationService
+from src.infra.identity.use_cases.commands import SignUpInputData
+from src.infra.identity.use_cases.sign_in import SignIn
 
 
 @dataclass

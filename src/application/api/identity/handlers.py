@@ -4,18 +4,19 @@ from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
 from fastapi import APIRouter, Form, HTTPException, Response, status
 from fastapi.responses import JSONResponse
 
-from src.application.api.identity.handlers.schemas import (
+from src.application.api.identity.schemas import (
     SignInRequestSchema,
     SignUpRequestSchema,
 )
-from src.application.api.identity.services.token_auth import TokenAuth
 from src.domain.sleep_diary.exceptions.base import ApplicationError
-from src.infra.identity.commands import SignInInputData
-from src.infra.identity.sign_in import SignIn
-from src.infra.identity.sign_up import SignUp
+from src.infra.identity.services.token_auth import TokenAuth
+from src.infra.identity.use_cases.commands import SignInInputData
+from src.infra.identity.use_cases.sign_in import SignIn
+from src.infra.identity.use_cases.sign_up import SignUp
 
 router = APIRouter(
     prefix="/users",
+    tags=["Identity"],
     route_class=DishkaSyncRoute,
 )
 

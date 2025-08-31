@@ -1,9 +1,7 @@
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from src.application.api.sleep_diary.handlers.about.schemas import (
-    AboutSleepDiarySchema,
-)
+from src.application.api.about.schemas import AboutSleepDiarySchema
 
 
 def test_about(app: FastAPI, client: TestClient) -> None:

@@ -9,7 +9,7 @@ from src.domain.identity.exceptions import (
 )
 from src.domain.identity.jwt_processor import IJWTProcessor
 from src.domain.identity.types import JWTToken
-from src.infra.identity.access_token_processor import AccessTokenProcessor
+from src.infra.identity.services.access_token_processor import AccessTokenProcessor
 
 
 def test_access_token_processor_encode(

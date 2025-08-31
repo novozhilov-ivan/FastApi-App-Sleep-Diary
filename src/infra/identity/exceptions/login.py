@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from src.application.api.identity.exceptions.base import AuthenticationError
+from src.infra.identity.exceptions.base import AuthenticationError
 
 
 @dataclass(eq=False)

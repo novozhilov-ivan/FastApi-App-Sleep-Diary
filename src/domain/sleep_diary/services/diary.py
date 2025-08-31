@@ -10,10 +10,7 @@ class DiaryService:
     _notes: set["NoteEntity"] = field(default_factory=set, init=False)
 
     @classmethod
-    def create(
-        cls: type["DiaryService"],
-        notes: set["NoteEntity"],
-    ) -> "DiaryService":
+    def create(cls, notes: set["NoteEntity"]) -> "DiaryService":
         diary = cls()
         diary._notes = set(notes)
         return diary

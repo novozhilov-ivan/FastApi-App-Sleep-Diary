@@ -2,8 +2,8 @@ from dataclasses import dataclass
 
 from src.domain.identity.entities import AccessTokenClaims
 from src.domain.identity.types import TokenType
-from src.infra.identity.authentication import IUserAuthenticationService
-from src.infra.identity.commands import SignInInputData
+from src.infra.identity.services.authentication import IUserAuthenticationService
+from src.infra.identity.use_cases.commands import SignInInputData
 from src.project.settings.jwt import JWTSettings
 
 
