@@ -42,7 +42,7 @@ logs-pgadmin:
 sh:
 	docker exec -it sleep_diary bash
 migrate:
-	docker exec -it sleep_diary alembic upgrade head
+	docker exec -it sleep_diary alembic -c src/alembic.ini upgrade head
 all-cov:
 	coverage run -m pytest
 	coverage report -m
