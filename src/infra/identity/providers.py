@@ -1,6 +1,6 @@
 from typing import ClassVar
 
-from dishka import Provider, Scope, from_context, provide
+from dishka import Provider, Scope, from_context, provide, provide_all
 from fastapi import Request
 
 from src.application.api.identity.services.token_auth import TokenAuth
@@ -12,6 +12,7 @@ from src.infra.identity.authentication import (
     UserAuthenticationService,
 )
 from src.infra.identity.sign_in import SignIn
+from src.infra.identity.sign_up import SignUp
 from src.project.settings import AuthorizationTokenSettings, Config
 
 
@@ -19,6 +20,9 @@ class InfraIdentityProvider(Provider):
     scope: ClassVar[Scope] = Scope.APP
 
     config = from_context(provides=Config, scope=Scope.APP)
+    interactors = provide_all(
+        SignUp,
+    )
 
     @provide
     def get_token_auth_settings(self) -> AuthorizationTokenSettings:
