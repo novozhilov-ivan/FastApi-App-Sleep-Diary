@@ -2,7 +2,7 @@ from abc import ABC, abstractmethod
 from datetime import date
 from uuid import UUID
 
-from src.domain.sleep_diary.dtos import Week
+from src.domain.sleep_diary.dtos import WeekInfo
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.entities.user import UserEntity
 
@@ -45,5 +45,5 @@ class IUsersRepository(ABC):
 
 class IWeeksRepository(ABC):
     @abstractmethod
-    def get_weeks_info(self, owner_oid: UUID) -> list[Week]:
+    def get_weeks_info(self, owner_oid: UUID) -> list[WeekInfo]:
         raise NotImplementedError
