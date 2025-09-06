@@ -1,5 +1,6 @@
 from typing import ClassVar
 
+from fastapi.security import APIKeyCookie
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -14,3 +15,13 @@ class AuthorizationTokenSettings(BaseSettings):
     )
 
     cookies_key: str = "authorization_token"
+    bearer_token_url: str = "/users/sign-in"
+
+    @property
+    def jwt_api_key_cookies(self) -> APIKeyCookie:
+        return APIKeyCookie(
+            name=self.cookies_key,
+            scheme_name="JWT authorization user",
+            description="JWT stored in cookie after sign-in",
+            auto_error=False,
+        )

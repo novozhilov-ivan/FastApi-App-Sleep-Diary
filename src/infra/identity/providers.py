@@ -8,6 +8,7 @@ from src.infra.identity.services.authentication import (
     UserAuthenticationService,
 )
 from src.infra.identity.services.token_auth import TokenAuth
+from src.infra.identity.use_cases.get_user_identity import GetUserIdentityUseCase
 from src.infra.identity.use_cases.sign_in import SignIn
 from src.infra.identity.use_cases.sign_up import SignUp
 
@@ -26,3 +27,8 @@ class InfraIdentityProvider(Provider):
         provides=WithParents[UserAuthenticationService],
     )
     token_auth = provide(TokenAuth, scope=Scope.REQUEST)
+    get_user_identity_use_case = provide(
+        GetUserIdentityUseCase,
+        provides=WithParents[GetUserIdentityUseCase],
+        scope=Scope.REQUEST,
+    )
