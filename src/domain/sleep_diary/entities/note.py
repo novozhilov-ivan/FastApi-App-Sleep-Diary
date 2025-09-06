@@ -6,6 +6,9 @@ from typing import TYPE_CHECKING
 from uuid import UUID
 
 from src.domain.sleep_diary.entities.base import BaseEntity
+from src.domain.sleep_diary.services.base import IDurations, IStatistics
+from src.domain.sleep_diary.services.durations import Durations
+from src.domain.sleep_diary.services.note_statistics import Statistics
 
 if TYPE_CHECKING:
     from src.domain.sleep_diary.values.points import Points
@@ -33,3 +36,11 @@ class NoteEntity(BaseEntity):
         if not isinstance(other, NoteEntity):
             return NotImplemented
         return gt(self.points.bedtime_date, other.points.bedtime_date)
+
+    @property
+    def durations(self) -> IDurations:
+        return Durations(self.points)
+
+    @property
+    def statistics(self) -> IStatistics:
+        return Statistics(self.durations)
