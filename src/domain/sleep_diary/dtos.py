@@ -3,7 +3,6 @@ from datetime import date
 
 
 @dataclass
-class Week:
-    number: int
+class WeekInfo:
     start_date: date
     filled_notes_count: int
