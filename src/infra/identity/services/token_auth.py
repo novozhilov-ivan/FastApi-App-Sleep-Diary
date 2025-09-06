@@ -25,9 +25,12 @@ class TokenAuth:
 
         return response
 
-    def get_access_token(self) -> AccessTokenClaims:
+    def get_session_token(self) -> str:
         token_key = self.settings.cookies_key
-        cookies_token = self.request.cookies.get(token_key)
+        return self.request.cookies.get(token_key)
+
+    def get_access_token(self) -> AccessTokenClaims:
+        cookies_token = self.get_session_token()
 
         if not cookies_token:
             raise UnauthorizedError()
