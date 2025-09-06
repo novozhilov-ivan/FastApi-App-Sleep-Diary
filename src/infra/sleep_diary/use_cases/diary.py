@@ -4,7 +4,7 @@ from uuid import UUID
 
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.exceptions.write import NonUniqueNoteBedtimeDateError
-from src.domain.sleep_diary.services.base import INotesRepository
+from src.domain.sleep_diary.repositories.base import INotesRepository
 from src.domain.sleep_diary.services.diary import DiaryService
 from src.domain.sleep_diary.values.points import Points
 

@@ -6,7 +6,7 @@ import pytest
 from src.domain.identity.entities import AccessTokenClaims
 from src.domain.identity.jwt_processor import IJWTProcessor, JWTProcessor
 from src.domain.identity.types import JWTClaims, JWTToken, TokenType
-from src.domain.sleep_diary.services.base import IUsersRepository
+from src.domain.sleep_diary.repositories.base import IUsersRepository
 from src.infra.identity.services.access_token_processor import AccessTokenProcessor
 from src.infra.identity.services.authentication import (
     IUserAuthenticationService,

@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 
 from src.domain.sleep_diary.entities.user import UserEntity
-from src.domain.sleep_diary.services.base import IUsersRepository
+from src.domain.sleep_diary.repositories.base import IUsersRepository
 
 
 @dataclass

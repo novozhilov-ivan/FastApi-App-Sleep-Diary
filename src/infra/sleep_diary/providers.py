@@ -4,6 +4,7 @@ from dishka import Provider, Scope, WithParents, provide
 
 from src.infra.sleep_diary.repository.orm_notes import ORMNotesRepository
 from src.infra.sleep_diary.repository.orm_user import ORMUsersRepository
+from src.infra.sleep_diary.repository.orm_weeks import ORMWeeksRepository
 from src.infra.sleep_diary.use_cases.diary import Diary
 
 
@@ -13,3 +14,4 @@ class InfraSleepDiaryProvider(Provider):
     user_repo = provide(ORMUsersRepository, provides=WithParents[ORMUsersRepository])
     notes_repo = provide(ORMNotesRepository, provides=WithParents[ORMNotesRepository])
     diary = provide(Diary)
+    weeks_repo = provide(ORMWeeksRepository, provides=WithParents[ORMWeeksRepository])

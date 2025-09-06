@@ -12,7 +12,7 @@ from dishka import Container
 from sqlalchemy import Engine, create_engine, text
 
 from src.domain.sleep_diary.entities.user import UserEntity
-from src.domain.sleep_diary.services.base import INotesRepository
+from src.domain.sleep_diary.repositories.base import INotesRepository
 from src.domain.sleep_diary.values.points import Points
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMUser

@@ -2,11 +2,13 @@ from dataclasses import dataclass
 from datetime import time, timedelta
 from operator import floordiv, mod, truediv
 
-from src.domain.sleep_diary.services.base import IStatistics
+from src.domain.sleep_diary.services.base import IDurations, IStatistics
 
 
 @dataclass
 class Statistics(IStatistics):
+    durations: IDurations
+
     @property
     def sleep(self) -> time:
         return self._convert_timedelta_seconds_to_time(self.durations.sleep)
