@@ -25,7 +25,7 @@ class JWTSettings(BaseSettings):
     access_token_expire: int = Field(
         default_factory=lambda: int(
             timedelta(
-                minutes=3,
+                minutes=30,
             ).total_seconds(),
         ),
     )
