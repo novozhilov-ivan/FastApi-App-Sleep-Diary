@@ -5,7 +5,7 @@ from uuid import UUID
 from sqlalchemy import select
 
 from src.domain.sleep_diary.entities.note import NoteEntity
-from src.domain.sleep_diary.services.base import INotesRepository
+from src.domain.sleep_diary.repositories.base import INotesRepository
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models.note import ORMNote
 

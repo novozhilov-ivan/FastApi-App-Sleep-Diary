@@ -3,7 +3,7 @@ from datetime import date
 from uuid import UUID
 
 from src.domain.sleep_diary.entities.note import NoteEntity
-from src.domain.sleep_diary.services.base import INotesRepository
+from src.domain.sleep_diary.repositories.base import INotesRepository
 
 
 @dataclass

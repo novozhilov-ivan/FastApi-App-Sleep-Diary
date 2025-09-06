@@ -1,12 +1,18 @@
 from dataclasses import dataclass
 from datetime import time, timedelta
 from operator import ge, sub
+from typing import TYPE_CHECKING
 
 from src.domain.sleep_diary.services.base import IDurations
+
+if TYPE_CHECKING:
+    from src.domain.sleep_diary.values.points import Points
 
 
 @dataclass
 class Durations(IDurations):
+    points: "Points"
+
     @property
     def sleep(self) -> timedelta:
         return self._get_duration(self.points.woke_up, self.points.fell_asleep)

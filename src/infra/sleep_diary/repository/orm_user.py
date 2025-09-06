@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from sqlalchemy import delete, select
 
 from src.domain.sleep_diary.entities.user import UserEntity
-from src.domain.sleep_diary.services.base import IUsersRepository
+from src.domain.sleep_diary.repositories.base import IUsersRepository
 from src.gateways.postgresql.database import Database
 from src.gateways.postgresql.models import ORMUser
 
