@@ -1,6 +1,7 @@
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
+from src.application.api.exceptions.register import register_exception_handlers
 from src.application.api.router import router as api_router
 from src.project.containers import get_container
 
@@ -14,6 +15,7 @@ def create_app() -> FastAPI:
         redoc_url=None,
     )
     app.include_router(api_router)
+    register_exception_handlers(app)
     return app
 
 
