@@ -20,7 +20,7 @@
                     <input type="file" class="mt-2 mt-md-0 border-dark py-2 border ps-4 pe-1" name="importfile" id="importfile">
                     <input type="submit" class="btn btn-success w-auto mt-2 mt-md-0" onClick="javascript: DisableEnable();" name="import" id="import" value="Импортировать дневник">
                 </div>
-                <p class="text-black-50">Скачать файл для заполнения с примером можно <a href="{{ url_for('static', filename='example/diary.csv') }}" title="Пример дневника сна" download="{{ url_for('static', filename='example/diary.csv') }}">тут</a></p>
+                <p class="text-black-50">Скачать файл для заполнения с примером можно <a href="{{ url_for('static', path='example/diary.csv') }}" title="Пример дневника сна" download="{{ url_for('static', path='example/diary.csv') }}">тут</a></p>
             </div>
         </form>
         <form class="container" method="POST">
