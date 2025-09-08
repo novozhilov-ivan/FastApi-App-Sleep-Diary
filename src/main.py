@@ -3,7 +3,8 @@ from fastapi import FastAPI
 
 from src.application.api.exceptions.register import register_exception_handlers
 from src.application.api.router import router as api_router
-from src.project.containers import get_container
+from src.application.ui.router import router as ui_router
+from src.project.containers import config, get_container
 
 
 def create_app() -> FastAPI:
@@ -15,7 +16,13 @@ def create_app() -> FastAPI:
         redoc_url=None,
     )
     app.include_router(api_router)
+    app.include_router(ui_router)
     register_exception_handlers(app)
+    app.mount(
+        path=config.ui.app_static_path,
+        app=config.ui.static_files,
+        name="static",
+    )
     return app
 
 

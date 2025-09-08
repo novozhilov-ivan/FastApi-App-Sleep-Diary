@@ -13,6 +13,7 @@ from src.application.api.weeks.handlers import (
 )
 
 router = APIRouter(
+    prefix="/api",
     responses={
         status.HTTP_400_BAD_REQUEST: {"model": ErrorSchema},
         status.HTTP_403_FORBIDDEN: {"model": ErrorSchema},

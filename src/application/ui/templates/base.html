@@ -5,10 +5,10 @@
     <meta http-equiv="x-ua-compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="canonical" href="https://getbootstrap.com/docs/5.0/examples/headers/">
-    <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
-    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet">
-    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/notebook.png') }}">
+    <link href="{{ url_for('static', path='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='css/bootstrap-icons.css') }}" rel="stylesheet">
+    <link href="{{ url_for('static', path='css/main.css') }}" rel="stylesheet">
+    <link rel="icon" type="image/png" href="{{ url_for('static', path='img/notebook.png') }}">
     <title>{% block title %}{% endblock %}</title>
 </head>
 <body>
@@ -66,6 +66,6 @@
     {% block login %}{% endblock %}
     <h6 class="text-danger text-center">{{ mode }}</h6>
 </div>
-<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+<script src="{{ url_for('static', path='js/bootstrap.bundle.min.js') }}"></script>
 </body>
 </html>

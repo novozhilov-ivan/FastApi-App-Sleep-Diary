@@ -1,12 +1,14 @@
 from typing import ClassVar
 
 from dishka import Provider, Scope, from_context, provide
+from starlette.templating import Jinja2Templates
 
 from src.project.settings import (
     AuthorizationTokenSettings,
     Config,
     JWTSettings,
     PostgreSQLSettings,
+    UISettings,
 )
 
 
@@ -26,3 +28,11 @@ class SettingsProvider(Provider):
     @provide
     def authorization_token(self, config: Config) -> AuthorizationTokenSettings:
         return config.authorization_token
+
+    @provide
+    def ui(self, config: Config) -> UISettings:
+        return config.ui
+
+    @provide
+    def jinja_2_templates(self, settings: UISettings) -> Jinja2Templates:
+        return settings.templates
