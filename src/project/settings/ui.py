@@ -18,8 +18,8 @@ class UISettings(BaseSettings):
     _BASE_DIR: ClassVar[Path] = Path(__file__).parent.parent.parent.parent
 
     app_static_path: str = "/static"
-    static_path: Path = _BASE_DIR / "src" / "application" / "ui" / "static"
-    templates_path: Path = _BASE_DIR / "src" / "application" / "ui" / "templates"
+    static_path: Path = _BASE_DIR / "src" / "static"
+    templates_path: Path = _BASE_DIR / "src" / "templates"
 
     @property
     def static_files(self) -> StaticFiles:

@@ -2,10 +2,10 @@ from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
 from fastapi import APIRouter
 from fastapi.responses import HTMLResponse
 
-from src.infra.application.pages.weeks_info import WeeksInfoPage
+from src.infra.application.pages.about import AboutPage
 
 router = APIRouter(
-    prefix="/weeks",
+    prefix="/about",
     route_class=DishkaSyncRoute,
 )
 
@@ -14,7 +14,7 @@ router = APIRouter(
     path="",
     response_class=HTMLResponse,
 )
-def weeks_page(
-    page: FromDishka[WeeksInfoPage],
+def about_page(
+    page: FromDishka[AboutPage],
 ) -> HTMLResponse:
     return page()
