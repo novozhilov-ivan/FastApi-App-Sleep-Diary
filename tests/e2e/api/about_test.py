@@ -10,7 +10,7 @@ def test_about(app: FastAPI, client: TestClient) -> None:
     response = client.get(url)
 
     expected_json = AboutSleepDiarySchema.model_validate(
-        AboutInfo,
+        AboutInfo(),
         from_attributes=True,
     ).model_dump()
     assert response.is_success
