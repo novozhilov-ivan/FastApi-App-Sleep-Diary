@@ -63,7 +63,7 @@ function renderWeekDays(container, weekData, weekIndex) {
                                 </div>
                             </div>
                             <div class="mt-3">
-                                <a href="/weeks/${note.bedtime_date}" class="btn btn-sm btn-success">
+                                <a href="{{ url_for('week_page', path=${note.bedtime_date}) }}" class="btn btn-sm btn-success">
                                     Редактировать
                                 </a>
                             </div>

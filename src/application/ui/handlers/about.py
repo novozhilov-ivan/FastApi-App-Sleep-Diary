@@ -5,13 +5,16 @@ from fastapi.responses import HTMLResponse
 from src.infra.application.pages.about import AboutPage
 
 router = APIRouter(
-    prefix="/about",
     route_class=DishkaSyncRoute,
 )
 
 
 @router.get(
-    path="",
+    path="/",
+    response_class=HTMLResponse,
+)
+@router.get(
+    path="/about",
     response_class=HTMLResponse,
 )
 def about_page(

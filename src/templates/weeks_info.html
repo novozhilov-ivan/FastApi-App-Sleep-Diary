@@ -55,6 +55,6 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script src="/static/js/weekService.js?v=1"></script>
-    <script src="/static/js/weekRenderer.js?v=1"></script>
+    <script src="{{ url_for('static', path='/js/weekService.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/weekRenderer.js') }}"></script>
 {% endblock %}
