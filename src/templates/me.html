@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Профиль пользователя{% endblock %}
+{% block content %}
+    <div class="container mt-5"
+         id="meContainer"
+         data-signin-url="{{ url_for("fetch_sign_in_page") }}">
+        <h2>Профиль пользователя</h2>
+        <div class="card p-3 mt-3 card-custom-width">
+            <p>
+                <strong>Username:</strong> <span id="username">-</span>
+            </p>
+            <p>
+                <strong>Token ID (jti):</strong> <span id="jti">-</span>
+            </p>
+            <p>
+                <strong>Выпущен (iat):</strong> <span id="iat">-</span>
+            </p>
+            <p>
+                <strong>Истекает (exp):</strong> <span id="exp">-</span>
+            </p>
+            <p>
+                <strong>Обратный отсчёт:</strong> <span id="countdown">-</span>
+            </p>
+            <button id="logoutBtn" class="btn btn-danger mt-3">Выйти</button>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{{ url_for('static', path='/js/auth.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/me.js') }}"></script>
+{% endblock %}

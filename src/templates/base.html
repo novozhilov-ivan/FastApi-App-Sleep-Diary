@@ -9,10 +9,14 @@
         <meta name="keywords" content="сон, дневник, здоровье, отслеживание">
         <link rel="canonical"
               href="https://getbootstrap.com/docs/5.0/examples/headers/" />
-        <link href="/static/css/bootstrap.min.css?v=1" rel="stylesheet" />
-        <link href="/static/css/bootstrap-icons.css?v=1" rel="stylesheet" />
-        <link href="/static/css/main.css?v=1" rel="stylesheet" />
-        <link rel="icon" type="image/png" href="/static/img/notebook.png" />
+        <link href="{{ url_for('static', path='/css/bootstrap.min.css') }}"
+              rel="stylesheet" />
+        <link href="{{ url_for('static', path='/css/bootstrap-icons.css') }}"
+              rel="stylesheet" />
+        <link href="{{ url_for('static', path='/css/main.css') }}" rel="stylesheet" />
+        <link rel="icon"
+              type="image/png"
+              href="{{ url_for('static', path='/img/notebook.png') }}" />
         <title>
             {% block title %}Дневник сна{% endblock %}
         </title>
@@ -24,7 +28,7 @@
                     <div class="d-flex flex-wrap align-items-center justify-content-center">
                         <ul class="nav col-12 col-lg-auto my-2 my-md-0 justify-content-center text-small">
                             <li>
-                                <a href="/about" class="nav-link text-white mx-3">
+                                <a href="{{ url_for("about_page") }}" class="nav-link text-white mx-3">
                                     <svg class="bi d-block mx-auto mb-1"
                                          width="26"
                                          height="26"
@@ -36,7 +40,7 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="/weeks" class="nav-link text-white">
+                                <a href="{{ url_for("weeks_info_page") }}" class="nav-link text-white">
                                     <svg class="bi d-block mx-auto mb-1"
                                          width="30"
                                          height="28"
@@ -44,31 +48,20 @@
                                         <path fill="currentColor" d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z">
                                         </path>
                                     </svg>
-                                    Недели
+                                    Дневник сна
                                 </a>
                             </li>
-                            <!-- Временно закомментированы остальные пункты меню
-                        <li>
-                            <a href="/diary/edit" class="nav-link text-white">
-                                <svg class="bi d-block mx-auto mb-1" width="24" height="28"><use href="/static/img/bootstrap-icons.svg#journal-code"></use></svg>
-                                Редактировать дневник
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/sleep" class="nav-link text-white">
-                                <svg class="bi d-block mx-auto mb-1" width="30" height="28" viewBox="0 0 640 512"><path fill="currentColor" d="M176 256c44.11 0 80-35.89 80-80s-35.89-80-80-80-80 35.89-80 80 35.89 80 80 80zm352-128H304c-8.84 0-16 7.16-16 16v144H64V80c0-8.84-7.16-16-16-16H16C7.16 64 0 71.16 0 80v352c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16v-48h512v48c0 8.84 7.16 16 16 16h32c8.84 0 16-7.16 16-16V240c0-61.86-50.14-112-112-112z"></path></svg>
-                                Дневник сна
-                            </a>
-                        </li>
-                        <li>
-                            <a href="/auth/login" class="nav-link text-white">
-                                <svg class="bi d-block mx-auto mb-1" width="29" height="28">
-                                    <use href="/static/img/bootstrap-icons.svg#person-circle"></use>
-                                </svg>
-                                Пользователь
-                            </a>
-                        </li>
-                        -->
+                            <li>
+                                <a href="#"
+                                   class="nav-link text-white"
+                                   data-me-url="{{ url_for("me_page") }}"
+                                   data-signin-url="{{ url_for("fetch_sign_in_page") }}">
+                                    <svg class="bi d-block mx-auto mb-1" width="29" height="28">
+                                        <use href="{{ url_for('static', path='/img/bootstrap-icons.svg#person-circle') }}"></use>
+                                    </svg>
+                                    Пользователь
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </div>
@@ -77,7 +70,8 @@
         <div class="container">
             {% block content %}{% endblock %}
         </div>
-        <script src="/static/js/bootstrap.bundle.min.js?v=1"></script>
+        <script src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
+        <script src="{{ url_for('static', path='/js/auth.js') }}"></script>
         {% block scripts %}{% endblock %}
     </body>
 </html>

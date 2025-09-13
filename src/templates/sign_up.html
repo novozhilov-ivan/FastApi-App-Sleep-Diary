@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация - Дневник сна{% endblock %}
+{% block content %}
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-6 col-lg-4">
+                <div class="card mt-5">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="card-title mb-0 text-center">Регистрация</h4>
+                    </div>
+                    <div class="card-body">
+                        <form method="post" action="/identity/sign-up">
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Имя пользователя</label>
+                                <input type="text"
+                                       class="form-control"
+                                       id="username"
+                                       name="username"
+                                       required
+                                       minlength="3"
+                                       maxlength="50">
+                            </div>
+                            <div class="mb-3">
+                                <label for="plain_password_first" class="form-label">Пароль</label>
+                                <input type="password"
+                                       class="form-control"
+                                       id="plain_password_first"
+                                       name="plain_password_first"
+                                       required
+                                       minlength="8">
+                            </div>
+                            <div class="mb-3">
+                                <label for="plain_password_second" class="form-label">Подтвердите пароль</label>
+                                <input type="password"
+                                       class="form-control"
+                                       id="plain_password_second"
+                                       name="plain_password_second"
+                                       required
+                                       minlength="8">
+                            </div>
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="card-footer text-center">
+                        <small class="text-muted">
+                            Уже есть аккаунт?
+                            <a href="{{ url_for("fetch_sign_in_page") }}"
+                               class="text-decoration-none">Войти</a>
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

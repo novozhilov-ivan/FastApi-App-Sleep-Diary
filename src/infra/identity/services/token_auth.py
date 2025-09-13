@@ -20,7 +20,7 @@ class TokenAuth:
         response.set_cookie(
             key=self.settings.cookies_key,
             value=jwt_token,
-            httponly=True,
+            httponly=False,
         )
 
         return response
