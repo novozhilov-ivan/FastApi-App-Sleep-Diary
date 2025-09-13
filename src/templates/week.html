@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+{% block title %}Неделя - Дневник сна{% endblock %}
+{% block content %}
+    <div class="container-fluid">
+        <div class="row justify-content-center mb-4">
+            <div class="col-12">
+                <h3 class="alert alert-primary text-center mb-3">
+                    Неделя с {{ week_notes.week_notes[0].bedtime_date if week_notes.week_notes else 'не определено' }}
+                </h3>
+            </div>
+        </div>
+        <!-- Статистика недели (в разработке) -->
+        <div class="row justify-content-center mb-4">
+            <div class="col-12 col-lg-8">
+                <div class="card">
+                    <div class="card-header bg-info text-white">
+                        <h5 class="card-title mb-0">
+                            <i class="bi bi-graph-up"></i>
+                            Статистика недели
+                        </h5>
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="alert alert-warning">
+                            <h6>🚧 В разработке</h6>
+                            <p class="mb-0">Статистика по неделе будет добавлена в следующих обновлениях</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Аккордеон с днями -->
+        <div class="row justify-content-center">
+            <div class="col-12 col-lg-10">
+                {% if not week_notes.week_notes %}
+                    <div class="alert alert-info text-center">
+                        <h5>Записей за эту неделю пока нет</h5>
+                        <p>Начните вести дневник сна, чтобы увидеть данные</p>
+                    </div>
+                {% else %}
+                    <div class="accordion" id="days-accordion">
+                        {% for note in week_notes.week_notes %}
+                            <div class="accordion-item">
+                                <div class="accordion-header">
+                                    <button class="accordion-button collapsed"
+                                            type="button"
+                                            data-bs-toggle="collapse"
+                                            data-bs-target="#day-{{ loop.index }}">
+                                        <div class="d-flex justify-content-between align-items-center w-100">
+                                            <div>
+                                                <strong>
+                                                    {{ note.bedtime_date.strftime("%A") }}
+                                                    {{ note.bedtime_date.strftime("%d.%m.%Y") }}
+                                                </strong>
+                                            </div>
+                                            <div class="me-3">
+                                                {% if note.statistics_sleep_efficiency >= 85 %}
+                                                    <span class="badge bg-success">{{ "%.1f"|format(note.statistics_sleep_efficiency) }}%</span>
+                                                {% elif note.statistics_sleep_efficiency >= 70 %}
+                                                    <span class="badge bg-warning">{{ "%.1f"|format(note.statistics_sleep_efficiency) }}%</span>
+                                                {% else %}
+                                                    <span class="badge bg-danger">{{ "%.1f"|format(note.statistics_sleep_efficiency) }}%</span>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </button>
+                                </div>
+                                <div id="day-{{ loop.index }}"
+                                     class="accordion-collapse collapse"
+                                     data-bs-parent="#days-accordion">
+                                    <div class="accordion-body">
+                                        <div class="row">
+                                            <!-- Основные времена -->
+                                            <div class="col-md-6">
+                                                <h6 class="text-muted mb-3">Время сна</h6>
+                                                <div class="row mb-2">
+                                                    <div class="col-6">
+                                                        <strong>Лег в кровать:</strong>
+                                                    </div>
+                                                    <div class="col-6">{{ note.went_to_bed.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-6">
+                                                        <strong>Уснул в:</strong>
+                                                    </div>
+                                                    <div class="col-6">{{ note.fell_asleep.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-6">
+                                                        <strong>Проснулся в:</strong>
+                                                    </div>
+                                                    <div class="col-6">{{ note.woke_up.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-6">
+                                                        <strong>Встал с кровати:</strong>
+                                                    </div>
+                                                    <div class="col-6">{{ note.got_up.strftime("%H:%M") }}</div>
+                                                </div>
+                                            </div>
+                                            <!-- Длительности и статистика -->
+                                            <div class="col-md-6">
+                                                <h6 class="text-muted mb-3">Анализ сна</h6>
+                                                <div class="row mb-2">
+                                                    <div class="col-7">
+                                                        <strong>Время сна:</strong>
+                                                    </div>
+                                                    <div class="col-5">{{ note.statistics_sleep.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-7">
+                                                        <strong>Время в кровати:</strong>
+                                                    </div>
+                                                    <div class="col-5">{{ note.statistics_in_bed.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-2">
+                                                    <div class="col-7">
+                                                        <strong>Без сна:</strong>
+                                                    </div>
+                                                    <div class="col-5">{{ note.no_sleep.strftime("%H:%M") }}</div>
+                                                </div>
+                                                <div class="row mb-3">
+                                                    <div class="col-7">
+                                                        <strong>Эффективность сна:</strong>
+                                                    </div>
+                                                    <div class="col-5">
+                                                        <span class="h5 text-primary">{{ "%.1f"|format(note.statistics_sleep_efficiency) }}%</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- Кнопки действий -->
+                                        <div class="row mt-3">
+                                            <div class="col-12">
+                                                <hr>
+                                                <div class="d-flex gap-2">
+                                                    <button class="btn btn-primary btn-sm" disabled>
+                                                        <i class="bi bi-pencil"></i>
+                                                        Редактировать
+                                                    </button>
+                                                    <button class="btn btn-outline-secondary btn-sm" disabled>
+                                                        <i class="bi bi-trash"></i>
+                                                        Удалить
+                                                    </button>
+                                                </div>
+                                                <small class="text-muted">Функции в разработке</small>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+        <!-- Кнопка назад -->
+        <div class="row justify-content-center mt-4">
+            <div class="col-12 text-center">
+                <a href="/weeks" class="btn btn-outline-primary">
+                    <i class="bi bi-arrow-left"></i>
+                    Назад к неделям
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
