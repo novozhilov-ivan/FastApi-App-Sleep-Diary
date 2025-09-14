@@ -9,7 +9,7 @@
                         <h4 class="card-title mb-0 text-center">Регистрация</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="/identity/sign-up">
+                        <form method="post" action="{{ url_for("make_sign_up_page") }}">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Имя пользователя</label>
                                 <input type="text"

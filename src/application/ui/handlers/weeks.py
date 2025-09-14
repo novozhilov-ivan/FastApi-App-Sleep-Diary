@@ -2,7 +2,7 @@ from datetime import date
 from typing import Annotated
 
 from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
-from fastapi import APIRouter, Depends, Path
+from fastapi import APIRouter, Depends, Path, status
 from fastapi.responses import HTMLResponse
 
 from src.infra.application.pages.week import WeekPage
@@ -20,6 +20,7 @@ router = APIRouter(
 
 @router.get(
     path="",
+    status_code=status.HTTP_200_OK,
     response_class=HTMLResponse,
 )
 def weeks_info_page(
@@ -30,6 +31,7 @@ def weeks_info_page(
 
 @router.get(
     path="/{start_date}",
+    status_code=status.HTTP_200_OK,
     response_class=HTMLResponse,
 )
 def week_page(
