@@ -72,6 +72,13 @@
                     <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
             {% endif %}
+            {% if request.query_params.get('success') %}
+                <div class="alert alert-success alert-dismissible fade show mt-3"
+                     role="alert">
+                    {{ request.query_params.get("success") }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
         <script src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>
