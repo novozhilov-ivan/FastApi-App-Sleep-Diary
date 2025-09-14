@@ -40,3 +40,11 @@ class TokenAuth:
     def get_subject(self) -> str:
         token_claims = self.get_access_token()
         return token_claims.subject
+
+    def delete_session(self, response: Response) -> Response:
+        token_key = self.settings.cookies_key
+        response.delete_cookie(
+            key=token_key,
+            httponly=True,
+        )
+        return response

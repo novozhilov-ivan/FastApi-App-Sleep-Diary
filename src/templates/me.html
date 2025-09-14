@@ -23,8 +23,10 @@
             <p>
                 <strong>Обратный отсчёт:</strong> <span id="countdown">-</span>
             </p>
-            <form method="post" action="/logout">
-                <button type="submit" class="btn btn-danger mt-3">Выйти</button>
+            <form method="post" action="{{ url_for("make_sign_out") }}">
+                <button type="submit"
+                        class="btn btn-danger mt-3"
+                        onclick="return confirm('Вы уверены, что хотите выйти?')">Выйти</button>
             </form>
         </div>
     </div>
