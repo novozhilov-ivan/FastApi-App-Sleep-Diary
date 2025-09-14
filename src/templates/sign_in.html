@@ -9,7 +9,7 @@
                         <h4 class="card-title mb-0 text-center">Вход</h4>
                     </div>
                     <div class="card-body">
-                        <form method="post" action="/identity/sign-in">
+                        <form method="post" action="{{ url_for("make_sign_in_page") }}">
                             <div class="mb-3">
                                 <label for="username" class="form-label">Имя пользователя</label>
                                 <input type="text"

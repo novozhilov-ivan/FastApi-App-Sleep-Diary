@@ -1,6 +1,6 @@
 from pydantic import BaseModel, model_validator
 
-from src.infra.identity.use_cases.commands import SignUpInputData
+from src.infra.identity.use_cases.commands import SignInInputData, SignUpInputData
 
 
 class MakeSignUpSchema(BaseModel):
@@ -22,6 +22,9 @@ class MakeSignUpSchema(BaseModel):
         )
 
 
-class MakeSignIn(BaseModel):
+class MakeSignInSchema(BaseModel):
     username: str
-    plain_password: str
+    password: str
+
+    def to_command(self) -> SignInInputData:
+        return SignInInputData(username=self.username, password=self.password)
