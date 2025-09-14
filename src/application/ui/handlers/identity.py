@@ -104,8 +104,25 @@ def make_sign_in_page(
         )
 
     response = RedirectResponse(
-        url=(f"{request.url_for('weeks_info_page')}/?success=Успешная аутентификация"),
+        url=f"{request.url_for('weeks_info_page')}/?success=Успешная аутентификация",
         status_code=status.HTTP_302_FOUND,
     )
 
     return token_auth.set_session(access_token_claims, response)
+
+
+@router.post(
+    path="/sign-out",
+    status_code=status.HTTP_200_OK,
+    response_class=RedirectResponse,
+)
+def make_sign_out(
+    request: Request,
+    token_auth: FromDishka[TokenAuth],
+) -> RedirectResponse:
+    response = RedirectResponse(
+        url=f"{request.url_for('about_page')}",
+        status_code=status.HTTP_302_FOUND,
+    )
+    token_auth.delete_session(response)
+    return response
