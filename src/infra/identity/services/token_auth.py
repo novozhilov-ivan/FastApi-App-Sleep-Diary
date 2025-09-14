@@ -3,7 +3,7 @@ from dataclasses import dataclass
 from fastapi import Request, Response
 
 from src.domain.identity.entities import AccessTokenClaims
-from src.domain.identity.exceptions import UnauthorizedError
+from src.infra.identity.exceptions.base import NotAuthenticatedError
 from src.infra.identity.services.access_token_processor import AccessTokenProcessor
 from src.project.settings.token_auth import AuthorizationTokenSettings
 
@@ -20,7 +20,7 @@ class TokenAuth:
         response.set_cookie(
             key=self.settings.cookies_key,
             value=jwt_token,
-            httponly=False,
+            httponly=True,
         )
 
         return response
@@ -33,7 +33,7 @@ class TokenAuth:
         cookies_token = self.get_session_token()
 
         if not cookies_token:
-            raise UnauthorizedError()
+            raise NotAuthenticatedError()
 
         return self.token_processor.decode(cookies_token)
 

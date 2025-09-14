@@ -1,9 +1,10 @@
 from dishka.integrations.fastapi import setup_dishka
 from fastapi import FastAPI
 
-from src.application.api.exceptions.register import register_exception_handlers
 from src.application.api.router import router as api_router
 from src.application.ui.router import router as ui_router
+from src.domain.identity.exceptions import IdentityError
+from src.infra.application.exceptions.identity import identity_error_handler
 from src.project.containers import config, get_container
 
 
@@ -17,7 +18,9 @@ def create_app() -> FastAPI:
     )
     app.include_router(api_router)
     app.include_router(ui_router)
-    register_exception_handlers(app)
+
+    app.add_exception_handler(IdentityError, identity_error_handler)
+
     app.mount(
         path=config.ui.app_static_path,
         app=config.ui.static_files,

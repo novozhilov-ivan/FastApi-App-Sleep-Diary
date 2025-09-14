@@ -19,10 +19,3 @@ function getCookie(name) {
     if (parts.length === 2) return parts.pop().split(";").shift();
     return null;
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    const accountLinks = document.querySelectorAll("a[data-me-url][data-signin-url]");
-    accountLinks.forEach((link) => {
-        link.addEventListener("click", handleAccountClick);
-    });
-});

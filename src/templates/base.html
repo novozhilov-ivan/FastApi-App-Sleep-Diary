@@ -52,14 +52,11 @@
                                 </a>
                             </li>
                             <li>
-                                <a href="#"
-                                   class="nav-link text-white"
-                                   data-me-url="{{ url_for("me_page") }}"
-                                   data-signin-url="{{ url_for("fetch_sign_in_page") }}">
+                                <a href="{{ url_for("me_page") }}" class="nav-link text-white">
                                     <svg class="bi d-block mx-auto mb-1" width="29" height="28">
                                         <use href="{{ url_for('static', path='/img/bootstrap-icons.svg#person-circle') }}"></use>
                                     </svg>
-                                    Пользователь
+                                    Профиль
                                 </a>
                             </li>
                         </ul>
@@ -68,6 +65,13 @@
             </div>
         </header>
         <div class="container">
+            {% if request.query_params.get('error') %}
+                <div class="alert alert-danger alert-dismissible fade show mt-3"
+                     role="alert">
+                    {{ request.query_params.get("error") }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            {% endif %}
             {% block content %}{% endblock %}
         </div>
         <script src="{{ url_for('static', path='/js/bootstrap.bundle.min.js') }}"></script>

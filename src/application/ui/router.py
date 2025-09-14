@@ -5,6 +5,7 @@ from src.application.ui.handlers.identity import router as identity_router
 from src.application.ui.handlers.weeks import router as weeks_router
 
 router = APIRouter(
+    prefix="/ui",
     tags=["UI"],
 )
 router.include_router(about_router)

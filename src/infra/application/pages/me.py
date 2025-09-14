@@ -5,6 +5,8 @@ from fastapi import Request
 from fastapi.responses import HTMLResponse
 from starlette.templating import Jinja2Templates
 
+from src.infra.identity.services.token_auth import TokenAuth
+
 
 @dataclass
 class MePage:
@@ -12,6 +14,7 @@ class MePage:
 
     request: Request
     templates: Jinja2Templates
+    token_auth: TokenAuth
 
     def __call__(self) -> HTMLResponse:
         return self.templates.TemplateResponse(
@@ -19,5 +22,6 @@ class MePage:
             name=self.template_file_name,
             context={
                 "request": self.request,
+                "user_data": self.token_auth.get_access_token(),
             },
         )
