@@ -10,10 +10,6 @@ router = APIRouter(
 
 
 @router.get(
-    path="/",
-    response_class=HTMLResponse,
-)
-@router.get(
     path="/about",
     response_class=HTMLResponse,
 )

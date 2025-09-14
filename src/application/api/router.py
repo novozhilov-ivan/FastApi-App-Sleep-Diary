@@ -19,7 +19,6 @@ router = APIRouter(
         status.HTTP_403_FORBIDDEN: {"model": ErrorSchema},
     },
 )
-
 router.include_router(about_router)
 router.include_router(notes_router)
 router.include_router(weeks_router)

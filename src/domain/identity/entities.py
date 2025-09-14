@@ -37,3 +37,11 @@ class AccessTokenClaims:
             "typ": self.token_type,
             "username": self.username,
         }
+
+    @property
+    def issued_at_datetime(self) -> datetime:
+        return datetime.fromtimestamp(self.issued_at)
+
+    @property
+    def expired_at_datetime(self) -> datetime:
+        return datetime.fromtimestamp(self.expired_at)
