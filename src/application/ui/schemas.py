@@ -1,3 +1,5 @@
+from datetime import date, time
+
 from pydantic import BaseModel, model_validator
 
 from src.infra.identity.use_cases.commands import SignInInputData, SignUpInputData
@@ -28,3 +30,12 @@ class MakeSignInSchema(BaseModel):
 
     def to_command(self) -> SignInInputData:
         return SignInInputData(username=self.username, password=self.password)
+
+
+class CreateNoteSchema(BaseModel):
+    bedtime_date: date
+    went_to_bed: time
+    fell_asleep: time
+    woke_up: time
+    got_up: time
+    no_sleep: time = time()
