@@ -1,0 +1,91 @@
+<div class="container-fluid text-center mt-4">
+    <div class="p-2">
+        <div class="row justify-content-center mb-3">
+            <div class="col-12">
+                {% if note %}
+                    <h5 class="alert alert-warning">Редактировать запись за {{ note.bedtime_date.strftime("%d.%m.%Y") }}</h5>
+                {% else %}
+                    <h5 class="alert alert-success">Добавить новую запись</h5>
+                {% endif %}
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="row justify-content-center mb-3">
+                <div class="col-md-3 col-12">
+                    <label class="form-label" for="calendar_date">Дата</label>
+                    <input required
+                           type="date"
+                           name="calendar_date"
+                           id="calendar_date"
+                           class="form-control"
+                           value="{{ note.bedtime_date.strftime("%Y-%m-%d") if note else (selected_date or today_date) }}"
+                           {% if note %}readonly{% endif %} />
+                </div>
+            </div>
+            <div class="row justify-content-center mb-3">
+                <div class="col-6 col-lg-2 mb-3">
+                    <label class="form-label fw-bold small" for="bedtime">Лег в кровать</label>
+                    <input required
+                           type="time"
+                           name="bedtime"
+                           id="bedtime"
+                           class="form-control text-center"
+                           value="{{ note.went_to_bed.strftime("%H:%M") if note else '23:00' }}" />
+                </div>
+                <div class="col-6 col-lg-2 mb-3">
+                    <label class="form-label fw-bold small" for="asleep">Уснул в</label>
+                    <input required
+                           type="time"
+                           name="asleep"
+                           id="asleep"
+                           class="form-control text-center"
+                           value="{{ note.fell_asleep.strftime("%H:%M") if note else '23:30' }}" />
+                </div>
+                <div class="col-6 col-lg-2 mb-3">
+                    <label class="form-label fw-bold small" for="awake">Проснулся в</label>
+                    <input required
+                           type="time"
+                           name="awake"
+                           id="awake"
+                           class="form-control text-center"
+                           value="{{ note.woke_up.strftime("%H:%M") if note else '07:00' }}" />
+                </div>
+                <div class="col-6 col-lg-2 mb-3">
+                    <label class="form-label fw-bold small" for="rise">Встал с кровати</label>
+                    <input required
+                           type="time"
+                           name="rise"
+                           id="rise"
+                           class="form-control text-center"
+                           value="{{ note.got_up.strftime("%H:%M") if note else '07:30' }}" />
+                </div>
+                <div class="col-6 col-lg-2 mb-3">
+                    <label class="form-label fw-bold small" for="without_sleep">Время без сна</label>
+                    <input required
+                           type="time"
+                           name="without_sleep"
+                           id="without_sleep"
+                           class="form-control text-center"
+                           value="{{ note.no_sleep.strftime("%H:%M") if note else '00:00' }}" />
+                </div>
+            </div>
+            <div class="row justify-content-center mb-4">
+                <div class="col-md-8">
+                    {% if note %}
+                        <button type="button"
+                                onclick="updateSleepEntry()"
+                                class="btn btn-warning me-2">Обновить запись</button>
+                        <button type="button"
+                                onclick="deleteSleepEntry()"
+                                class="btn btn-danger me-2">Удалить запись</button>
+                        <a href="{{ url_for("weeks_info_page") }}"
+                           class="btn btn-outline-secondary">Отмена</a>
+                    {% else %}
+                        <button type="button" onclick="saveSleepEntry()" class="btn btn-success me-2">Сохранить запись</button>
+                        <button type="button" onclick="clearForm()" class="btn btn-outline-secondary">Очистить форму</button>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

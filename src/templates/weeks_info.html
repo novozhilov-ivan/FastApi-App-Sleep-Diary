@@ -1,60 +1,67 @@
 {% extends 'base.html' %}
 {% block title %}Дневник сна - Недели{% endblock %}
 {% block content %}
+    <link href="{{ url_for('static', path='/css/sleepForms.css') }}"
+          rel="stylesheet" />
     <div class="container-fluid">
         <div class="row justify-content-center">
             <h4 class="alert alert-primary m-1 text-center">Дневник сна по неделям</h4>
         </div>
+        <!-- Список недель -->
         {% if not weeks %}
-            <div class="alert alert-info m-3 text-center">У вас еще нет записей в дневнике сна</div>
-        {% else %}
-            <div class="accordion mt-4" id="weeks-accordion">
-                {% for week in weeks %}
-                    <div class="accordion-item">
-                        <div class="accordion-header">
-                            <button class="accordion-button collapsed"
-                                    type="button"
-                                    data-bs-toggle="collapse"
-                                    data-bs-target="#week-{{ loop.index }}"
-                                    data-week-start="{{ week.start_date }}"
-                                    data-week-index="{{ loop.index }}"
-                                    onclick="loadWeekDays(this)">
-                                <div class="d-flex justify-content-between align-items-center w-100">
-                                    <div>
-                                        <strong>Неделя {{ loop.index }}</strong>
-                                        <small class="text-muted ms-2">с {{ week.start_date }}</small>
-                                    </div>
-                                    <div class="me-3">
-                                        {% if week.filled_notes_count == 0 %}
-                                            <span class="badge bg-secondary">{{ week.filled_notes_count }}/7</span>
-                                        {% elif week.filled_notes_count < 7 %}
-                                            <span class="badge bg-warning">{{ week.filled_notes_count }}/7</span>
-                                        {% else %}
-                                            <span class="badge bg-success">{{ week.filled_notes_count }}/7</span>
-                                        {% endif %}
-                                    </div>
+            <div class="alert alert-info m-3 text-center">
+                <h5>У вас еще нет записей в дневнике сна</h5>
+                <p>Раскройте неделю ниже и добавьте первую запись!</p>
+            </div>
+        {% endif %}
+        <div class="accordion mt-4" id="weeks-accordion">
+            {% for week in weeks %}
+                <div class="accordion-item">
+                    <div class="accordion-header">
+                        <button class="accordion-button collapsed"
+                                type="button"
+                                data-bs-toggle="collapse"
+                                data-bs-target="#week-{{ loop.index }}"
+                                data-week-start="{{ week.start_date }}"
+                                data-week-index="{{ loop.index }}"
+                                onclick="loadWeekDays(this)">
+                            <div class="d-flex justify-content-between align-items-center w-100">
+                                <div>
+                                    <strong>Неделя {{ loop.index }}</strong>
+                                    <small class="text-muted ms-2">с {{ week.start_date }}</small>
                                 </div>
-                            </button>
-                        </div>
-                        <div id="week-{{ loop.index }}"
-                             class="accordion-collapse collapse"
-                             data-bs-parent="#weeks-accordion">
-                            <div class="accordion-body" id="week-content-{{ loop.index }}">
-                                <div class="text-center p-4">
-                                    <div class="spinner-border text-primary" role="status">
-                                        <span class="visually-hidden">Загрузка данных недели...</span>
-                                    </div>
-                                    <p class="mt-2 text-muted">Загружаем записи за неделю...</p>
+                                <div class="me-3">
+                                    {% if week.filled_notes_count == 0 %}
+                                        <span class="badge bg-secondary">{{ week.filled_notes_count }}/7</span>
+                                    {% elif week.filled_notes_count < 7 %}
+                                        <span class="badge bg-warning">{{ week.filled_notes_count }}/7</span>
+                                    {% else %}
+                                        <span class="badge bg-success">{{ week.filled_notes_count }}/7</span>
+                                    {% endif %}
                                 </div>
+                            </div>
+                        </button>
+                    </div>
+                    <div id="week-{{ loop.index }}"
+                         class="accordion-collapse collapse"
+                         data-bs-parent="#weeks-accordion">
+                        <div class="accordion-body" id="week-content-{{ loop.index }}">
+                            <div class="text-center p-4">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Загрузка данных недели...</span>
+                                </div>
+                                <p class="mt-2 text-muted">Загружаем записи за неделю...</p>
                             </div>
                         </div>
                     </div>
-                {% endfor %}
-            </div>
-        {% endif %}
+                </div>
+            {% endfor %}
+        </div>
     </div>
 {% endblock %}
 {% block scripts %}
-    <script src="{{ url_for('static', path='/js/weekService.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/noteTemplates.js') }}"></script>
     <script src="{{ url_for('static', path='/js/weekRenderer.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/weekService.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/noteForm.js') }}"></script>
 {% endblock %}
