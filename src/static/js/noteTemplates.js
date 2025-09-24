@@ -31,7 +31,7 @@ const NOTE_TEMPLATES = {
                         </div>
                     </div>
                     <div class="mt-3">
-                        <a href="/sleep/edit/${note.bedtime_date}" class="btn btn-sm btn-warning">
+                        <a href="/notes/edit/${note.bedtime_date}" class="btn btn-sm btn-warning">
                             Редактировать
                         </a>
                     </div>
@@ -60,60 +60,37 @@ const NOTE_TEMPLATES = {
                     <div class="alert alert-info">
                         <h6>Добавить запись за ${dayName} (${dateStr})</h6>
                     </div>
-                    <div class="sleep-form-container">
+                    <form method="post" action="${window.ADD_NOTE_URL}">
+                        <input type="hidden" name="bedtime_date" value="${dateStr}" />
                         <div class="row justify-content-center mb-3">
                             <div class="col-6 col-lg-2 mb-3">
-                                <label class="form-label fw-bold small" for="bedtime_${weekIndex}_${dayIndex}">Лег в кровать</label>
-                                <input required
-                                       type="time"
-                                       id="bedtime_${weekIndex}_${dayIndex}"
-                                       class="form-control text-center"
-                                       value="23:00" />
+                                <label class="form-label fw-bold small">Лег в кровать</label>
+                                <input required type="time" name="went_to_bed" class="form-control text-center" value="23:00" />
                             </div>
                             <div class="col-6 col-lg-2 mb-3">
-                                <label class="form-label fw-bold small" for="asleep_${weekIndex}_${dayIndex}">Уснул в</label>
-                                <input required
-                                       type="time"
-                                       id="asleep_${weekIndex}_${dayIndex}"
-                                       class="form-control text-center"
-                                       value="23:30" />
+                                <label class="form-label fw-bold small">Уснул в</label>
+                                <input required type="time" name="fell_asleep" class="form-control text-center" value="23:30" />
                             </div>
                             <div class="col-6 col-lg-2 mb-3">
-                                <label class="form-label fw-bold small" for="awake_${weekIndex}_${dayIndex}">Проснулся в</label>
-                                <input required
-                                       type="time"
-                                       id="awake_${weekIndex}_${dayIndex}"
-                                       class="form-control text-center"
-                                       value="07:00" />
+                                <label class="form-label fw-bold small">Проснулся в</label>
+                                <input required type="time" name="woke_up" class="form-control text-center" value="07:00" />
                             </div>
                             <div class="col-6 col-lg-2 mb-3">
-                                <label class="form-label fw-bold small" for="rise_${weekIndex}_${dayIndex}">Встал с кровати</label>
-                                <input required
-                                       type="time"
-                                       id="rise_${weekIndex}_${dayIndex}"
-                                       class="form-control text-center"
-                                       value="07:30" />
+                                <label class="form-label fw-bold small">Встал с кровати</label>
+                                <input required type="time" name="got_up" class="form-control text-center" value="07:30" />
                             </div>
                             <div class="col-6 col-lg-2 mb-3">
-                                <label class="form-label fw-bold small" for="without_sleep_${weekIndex}_${dayIndex}">Время без сна</label>
-                                <input required
-                                       type="time"
-                                       id="without_sleep_${weekIndex}_${dayIndex}"
-                                       class="form-control text-center"
-                                       value="00:00" />
+                                <label class="form-label fw-bold small">Время без сна</label>
+                                <input required type="time" name="no_sleep" class="form-control text-center" value="00:00" />
                             </div>
                         </div>
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
-                                <button type="button" onclick="saveInlineEntry('${dateStr}', ${weekIndex}, ${dayIndex})" class="btn btn-success me-2">
-                                    Сохранить запись
-                                </button>
-                                <button type="button" onclick="clearInlineForm(${weekIndex}, ${dayIndex})" class="btn btn-outline-secondary">
-                                    Очистить
-                                </button>
+                                <button type="submit" class="btn btn-success me-2">Сохранить запись</button>
+                                <button type="reset" class="btn btn-outline-secondary">Очистить</button>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -140,15 +117,6 @@ const NOTE_TEMPLATES = {
     noDataAlert: () => `
         <div class="alert alert-info">
             <p class="mb-0">За эту неделю записей пока нет</p>
-        </div>
-    `,
-
-    loadingSpinner: () => `
-        <div class="text-center p-4">
-            <div class="spinner-border text-primary" role="status">
-                <span class="visually-hidden">Загружаем записи за неделю...</span>
-            </div>
-            <p class="mt-2 text-muted">Загружаем записи за неделю...</p>
         </div>
     `,
 
