@@ -7,7 +7,15 @@
         <div class="row justify-content-center">
             <h4 class="alert alert-primary m-1 text-center">Дневник сна по неделям</h4>
         </div>
-        <!-- Список недель -->
+        <div class="container-fluid text-center mt-4">
+            <div class="card">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Добавить запись на сегодня</h5>
+                </div>
+                <div class="card-body">{% include 'note_form.html' with context %}</div>
+            </div>
+        </div>
+        <hr class="my-4">
         {% if not weeks %}
             <div class="alert alert-info m-3 text-center">
                 <h5>У вас еще нет записей в дневнике сна</h5>
@@ -60,8 +68,8 @@
     </div>
 {% endblock %}
 {% block scripts %}
+    <script>window.ADD_NOTE_URL = "{{ url_for('add_note_page') }}";</script>
     <script src="{{ url_for('static', path='/js/noteTemplates.js') }}"></script>
     <script src="{{ url_for('static', path='/js/weekRenderer.js') }}"></script>
     <script src="{{ url_for('static', path='/js/weekService.js') }}"></script>
-    <script src="{{ url_for('static', path='/js/noteForm.js') }}"></script>
 {% endblock %}
