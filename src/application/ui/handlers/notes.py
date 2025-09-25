@@ -1,12 +1,12 @@
+from datetime import date
 from typing import Annotated
 from uuid import UUID
 
 from dishka.integrations.fastapi import DishkaSyncRoute, FromDishka
-from fastapi import APIRouter, Depends, Form, Request, status
+from fastapi import APIRouter, Depends, Form, Path, Request, status
 from fastapi.responses import HTMLResponse, RedirectResponse
 
-from src.application.ui.schemas import CreateNoteSchema
-from src.domain.identity.exceptions import IdentityError
+from src.application.ui.schemas import CreateNoteSchema, PatchNoteSchema
 from src.domain.sleep_diary.exceptions.base import ApplicationError
 from src.infra.identity.services.token_auth import TokenAuth
 from src.infra.sleep_diary.use_cases.diary import Diary
@@ -42,13 +42,50 @@ def add_note_page(
             schema.got_up,
             schema.no_sleep,
         )
-    except (ApplicationError, IdentityError) as error:
+    except ApplicationError as error:
         return RedirectResponse(
-            url=f"{request.url_for('fetch_sign_up_page')}/?error={error.message}",
+            url=f"{request.url_for('weeks_info_page')}/?error={error.message}",
             status_code=status.HTTP_302_FOUND,
         )
 
     return RedirectResponse(
         url=f"{request.url_for('weeks_info_page')}/?success=Запись успешно сохранена!",
         status_code=status.HTTP_302_FOUND,
+    )
+
+
+@router.patch(
+    path="/{note_date}",
+    status_code=status.HTTP_303_SEE_OTHER,
+    response_class=HTMLResponse,
+    dependencies=[
+        Depends(config.authorization_token.jwt_api_key_cookies),
+    ],
+)
+def edit_note_page(
+    request: Request,
+    note_date: Annotated[date, Path()],
+    schema: Annotated[PatchNoteSchema, Form()],
+    dairy: FromDishka[Diary],
+    token_auth: FromDishka[TokenAuth],
+) -> HTMLResponse:
+    try:
+        command = schema.to_command(
+            owner_oid=token_auth.get_subject(),
+            note_date=note_date,
+        )
+        dairy.edit(command)
+    except ApplicationError as error:
+        return RedirectResponse(
+            url=request.url_for("weeks_info_page").replace_query_params(
+                error=error.message,
+            ),
+            status_code=status.HTTP_302_FOUND,
+        )
+
+    return RedirectResponse(
+        url=request.url_for("weeks_info_page").replace_query_params(
+            success="Запись успешно сохранена!",
+        ),
+        status_code=status.HTTP_303_SEE_OTHER,
     )

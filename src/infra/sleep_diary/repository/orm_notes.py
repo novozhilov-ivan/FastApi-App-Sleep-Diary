@@ -18,6 +18,10 @@ class ORMNotesRepository(INotesRepository):
         with self.database.get_session() as session:
             session.add(ORMNote.from_entity(note))
 
+    def update(self, note: NoteEntity) -> None:
+        with self.database.get_session() as session:
+            session.merge(ORMNote.from_entity(note))
+
     def get_by_oid(self, oid: UUID) -> NoteEntity | None:
         stmt = select(ORMNote).where(ORMNote.oid == oid).limit(1)
 

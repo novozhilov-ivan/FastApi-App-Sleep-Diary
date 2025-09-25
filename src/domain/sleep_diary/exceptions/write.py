@@ -11,3 +11,10 @@ class NonUniqueNoteBedtimeDateError(ApplicationError):
     @property
     def message(self) -> str:
         return f"Запись о сне с датой {self.bedtime_date} уже существует в дневнике."
+
+
+@dataclass(eq=False)
+class NoteNotFoundError(ApplicationError):
+    @property
+    def message(self) -> str:
+        return "Запись не найдена."

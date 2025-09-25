@@ -66,7 +66,9 @@ def make_sign_up_page(
         )
 
     response = RedirectResponse(
-        url=f"{request.url_for('weeks_info_page')}/?success=Регистрация успешна",
+        url=request.url_for("weeks_info_page").replace_query_params(
+            success="Регистрация успешна",
+        ),
         status_code=status.HTTP_302_FOUND,
     )
 

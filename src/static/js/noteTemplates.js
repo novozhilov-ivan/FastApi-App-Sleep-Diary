@@ -31,9 +31,43 @@ const NOTE_TEMPLATES = {
                         </div>
                     </div>
                     <div class="mt-3">
-                        <a href="/notes/edit/${note.bedtime_date}" class="btn btn-sm btn-warning">
+                        <button onclick="showEditForm('${note.bedtime_date}', ${weekIndex}, ${dayIndex}, '${formatTime(note.went_to_bed)}', '${formatTime(note.fell_asleep)}', '${formatTime(note.woke_up)}', '${formatTime(note.got_up)}', '${formatTime(note.no_sleep)}')" class="btn btn-sm btn-warning">
                             Редактировать
-                        </a>
+                        </button>
+                    </div>
+                    <div id="edit-form-${weekIndex}-${dayIndex}" style="display: none;" class="mt-3">
+                        <hr>
+                        <h6>Редактировать запись</h6>
+                        <form onsubmit="return sendPatch(event, '${note.bedtime_date}')">
+                            <div class="row justify-content-center mb-3">
+                                <div class="col-6 col-lg-2 mb-3">
+                                    <label class="form-label fw-bold small">Лег в кровать</label>
+                                    <input required type="time" name="went_to_bed" class="form-control text-center" value="${formatTime(note.went_to_bed)}" />
+                                </div>
+                                <div class="col-6 col-lg-2 mb-3">
+                                    <label class="form-label fw-bold small">Уснул в</label>
+                                    <input required type="time" name="fell_asleep" class="form-control text-center" value="${formatTime(note.fell_asleep)}" />
+                                </div>
+                                <div class="col-6 col-lg-2 mb-3">
+                                    <label class="form-label fw-bold small">Проснулся в</label>
+                                    <input required type="time" name="woke_up" class="form-control text-center" value="${formatTime(note.woke_up)}" />
+                                </div>
+                                <div class="col-6 col-lg-2 mb-3">
+                                    <label class="form-label fw-bold small">Встал с кровати</label>
+                                    <input required type="time" name="got_up" class="form-control text-center" value="${formatTime(note.got_up)}" />
+                                </div>
+                                <div class="col-6 col-lg-2 mb-3">
+                                    <label class="form-label fw-bold small">Время без сна</label>
+                                    <input required type="time" name="no_sleep" class="form-control text-center" value="${formatTime(note.no_sleep)}" />
+                                </div>
+                            </div>
+                            <div class="row justify-content-center">
+                                <div class="col-md-6 text-center">
+                                    <button type="submit" class="btn btn-warning me-2">Обновить запись</button>
+                                    <button type="button" onclick="hideEditForm(${weekIndex}, ${dayIndex})" class="btn btn-outline-secondary">Отмена</button>
+                                </div>
+                            </div>
+                        </form>
                     </div>
                 </div>
             </div>
