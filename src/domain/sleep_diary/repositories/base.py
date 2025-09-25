@@ -13,6 +13,10 @@ class INotesRepository(ABC):
         raise NotImplementedError
 
     @abstractmethod
+    def update(self, note: NoteEntity) -> None:
+        raise NotImplementedError
+
+    @abstractmethod
     def get_by_oid(self, oid: UUID) -> NoteEntity | None:
         raise NotImplementedError
 

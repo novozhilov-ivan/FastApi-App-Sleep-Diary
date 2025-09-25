@@ -68,8 +68,12 @@
     </div>
 {% endblock %}
 {% block scripts %}
-    <script>window.ADD_NOTE_URL = "{{ url_for('add_note_page') }}";</script>
+    <script>
+        window.ADD_NOTE_URL = "{{ url_for('add_note_page') }}";
+        window.EDIT_NOTE_URL = "{{ url_for('edit_note_page', note_date='__NOTE_DATE__') }}";
+    </script>
     <script src="{{ url_for('static', path='/js/noteTemplates.js') }}"></script>
     <script src="{{ url_for('static', path='/js/weekRenderer.js') }}"></script>
     <script src="{{ url_for('static', path='/js/weekService.js') }}"></script>
+    <script src="{{ url_for('static', path='/js/noteForm.js') }}"></script>
 {% endblock %}

@@ -13,6 +13,9 @@ class MemoryNotesRepository(INotesRepository):
     def add(self, note: NoteEntity) -> None:
         self._saved_notes.add(note)
 
+    def update(self, note: NoteEntity) -> None:
+        self.add(note)
+
     def get_by_oid(self, oid: UUID) -> NoteEntity | None:
         try:
             return next(note for note in self._saved_notes if note.oid == oid)
