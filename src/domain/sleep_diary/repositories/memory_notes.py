@@ -14,7 +14,10 @@ class MemoryNotesRepository(INotesRepository):
         self._saved_notes.add(note)
 
     def update(self, note: NoteEntity) -> None:
-        self.add(note)
+        self._saved_notes.add(note)
+
+    def delete(self, note: NoteEntity) -> None:
+        self._saved_notes.remove(note)
 
     def get_by_oid(self, oid: UUID) -> NoteEntity | None:
         try:

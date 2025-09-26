@@ -31,7 +31,7 @@ function renderWeekDays(container, weekData, weekIndex) {
 
     let daysHtml = `
         <div class="row">
-            <div class="col-md-8">
+            <div class="col-12">
                 <div class="accordion" id="days-accordion-${weekIndex}">
     `;
 
@@ -53,10 +53,8 @@ function renderWeekDays(container, weekData, weekIndex) {
     daysHtml += `
                 </div>
             </div>
+        </div>
     `;
-
-    daysHtml += NOTE_TEMPLATES.weekStats();
-    daysHtml += `</div>`;
 
     container.innerHTML = daysHtml;
 }
