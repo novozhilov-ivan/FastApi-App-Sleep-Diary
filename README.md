@@ -28,3 +28,9 @@
     openssl genrsa -out jwt-private.pem 2048
     openssl rsa -in jwt-private.pem -outform PEM -pubout -out jwt-public.pem
     ```
+
+3. **Start up**
+   ```sh
+   make up
+   ```
+4. **[Open app in browser](http://127.0.0.1:8000/ui/about)** on http://127.0.0.1:8000/ui/about
