@@ -11,10 +11,10 @@ from src.project.containers import config, get_container
 def create_app() -> FastAPI:
     app = FastAPI(
         title="Sleep Diary",
-        debug=True,
-        # openapi_url=None,
-        # docs_url=None,
-        # redoc_url=None,
+        debug=False,
+        openapi_url=None,
+        docs_url=None,
+        redoc_url=None,
     )
     app.include_router(api_router)
     app.include_router(ui_router)

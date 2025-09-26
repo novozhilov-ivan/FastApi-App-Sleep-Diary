@@ -61,7 +61,9 @@ def make_sign_up_page(
         access_token_claims = sign_up(form.to_command())
     except (ApplicationError, IdentityError) as error:
         return RedirectResponse(
-            url=f"{request.url_for('fetch_sign_up_page')}/?error={error.message}",
+            url=request.url_for("fetch_sign_up_page").replace_query_params(
+                error=error.message,
+            ),
             status_code=status.HTTP_302_FOUND,
         )
 
@@ -69,7 +71,7 @@ def make_sign_up_page(
         url=request.url_for("weeks_info_page").replace_query_params(
             success="Регистрация успешна",
         ),
-        status_code=status.HTTP_302_FOUND,
+        status_code=status.HTTP_303_SEE_OTHER,
     )
 
     return token_auth.set_session(access_token_claims, response)
@@ -101,13 +103,17 @@ def make_sign_in_page(
         access_token_claims = sign_in(form.to_command())
     except (ApplicationError, IdentityError) as error:
         return RedirectResponse(
-            url=f"{request.url_for('fetch_sign_in_page')}/?error={error.message}",
+            url=request.url_for("fetch_sign_up_page").replace_query_params(
+                error=error.message,
+            ),
             status_code=status.HTTP_302_FOUND,
         )
 
     response = RedirectResponse(
-        url=f"{request.url_for('weeks_info_page')}/?success=Успешная аутентификация",
-        status_code=status.HTTP_302_FOUND,
+        url=request.url_for("weeks_info_page").replace_query_params(
+            success="Успешная аутентификация",
+        ),
+        status_code=status.HTTP_303_SEE_OTHER,
     )
 
     return token_auth.set_session(access_token_claims, response)
@@ -123,7 +129,7 @@ def make_sign_out(
     token_auth: FromDishka[TokenAuth],
 ) -> RedirectResponse:
     response = RedirectResponse(
-        url=f"{request.url_for('about_page')}",
+        url=request.url_for("about_page"),
         status_code=status.HTTP_302_FOUND,
     )
     token_auth.delete_session(response)

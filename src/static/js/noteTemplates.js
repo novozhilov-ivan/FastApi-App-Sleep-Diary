@@ -31,8 +31,11 @@ const NOTE_TEMPLATES = {
                         </div>
                     </div>
                     <div class="mt-3">
-                        <button onclick="showEditForm('${note.bedtime_date}', ${weekIndex}, ${dayIndex}, '${formatTime(note.went_to_bed)}', '${formatTime(note.fell_asleep)}', '${formatTime(note.woke_up)}', '${formatTime(note.got_up)}', '${formatTime(note.no_sleep)}')" class="btn btn-sm btn-warning">
+                        <button onclick="showEditForm('${note.bedtime_date}', ${weekIndex}, ${dayIndex}, '${formatTime(note.went_to_bed)}', '${formatTime(note.fell_asleep)}', '${formatTime(note.woke_up)}', '${formatTime(note.got_up)}', '${formatTime(note.no_sleep)}')" class="btn btn-sm btn-warning me-2">
                             Редактировать
+                        </button>
+                        <button onclick="deleteNote('${note.bedtime_date}')" class="btn btn-sm btn-danger">
+                            Удалить
                         </button>
                     </div>
                     <div id="edit-form-${weekIndex}-${dayIndex}" style="display: none;" class="mt-3">
@@ -121,7 +124,6 @@ const NOTE_TEMPLATES = {
                         <div class="row justify-content-center">
                             <div class="col-md-6 text-center">
                                 <button type="submit" class="btn btn-success me-2">Сохранить запись</button>
-                                <button type="reset" class="btn btn-outline-secondary">Очистить</button>
                             </div>
                         </div>
                     </form>
@@ -130,23 +132,7 @@ const NOTE_TEMPLATES = {
         </div>
     `,
 
-    weekStats: () => `
-        <div class="col-md-4">
-            <div class="card">
-                <div class="card-header">
-                    <h6>Статистика за неделю</h6>
-                </div>
-                <div class="card-body">
-                    <p><strong>Средняя эффективность:</strong><br>
-                       <span class="h4">В разработке</span></p>
-                    <p><strong>Среднее время сна:</strong><br>
-                       <span class="h5">В разработке</span></p>
-                    <p><strong>Среднее время в кровати:</strong><br>
-                       <span class="h5">В разработке</span></p>
-                </div>
-            </div>
-        </div>
-    `,
+    weekStats: () => ``,
 
     noDataAlert: () => `
         <div class="alert alert-info">

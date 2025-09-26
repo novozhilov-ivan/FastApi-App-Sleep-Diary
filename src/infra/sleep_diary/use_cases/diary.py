@@ -10,7 +10,7 @@ from src.domain.sleep_diary.exceptions.write import (
 from src.domain.sleep_diary.repositories.base import INotesRepository
 from src.domain.sleep_diary.services.diary import DiaryService
 from src.domain.sleep_diary.values.points import Points
-from src.infra.sleep_diary.commands import EditNoteCommand
+from src.infra.sleep_diary.commands import DeleteNoteCommand, EditNoteCommand
 
 
 @dataclass
@@ -58,3 +58,12 @@ class Diary:
         command.edit_note(note)
 
         self.repository.update(note)
+
+    def delete(self, command: DeleteNoteCommand) -> None:
+        note: NoteEntity | None = self.repository.get_by_bedtime_date(
+            bedtime_date=command.note_date,
+            owner_oid=command.owner_oid,
+        )
+
+        if note:
+            self.repository.delete(note)

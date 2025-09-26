@@ -2,7 +2,7 @@ from dataclasses import dataclass
 from datetime import date
 from uuid import UUID
 
-from sqlalchemy import select
+from sqlalchemy import delete, select
 
 from src.domain.sleep_diary.entities.note import NoteEntity
 from src.domain.sleep_diary.repositories.base import INotesRepository
@@ -21,6 +21,11 @@ class ORMNotesRepository(INotesRepository):
     def update(self, note: NoteEntity) -> None:
         with self.database.get_session() as session:
             session.merge(ORMNote.from_entity(note))
+
+    def delete(self, note: NoteEntity) -> None:
+        query = delete(ORMNote).where(ORMNote.oid == note.oid)
+        with self.database.get_session() as session:
+            session.execute(query)
 
     def get_by_oid(self, oid: UUID) -> NoteEntity | None:
         stmt = select(ORMNote).where(ORMNote.oid == oid).limit(1)

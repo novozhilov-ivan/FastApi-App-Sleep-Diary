@@ -19,9 +19,10 @@ def ui_identity_error_handler[R_co](
     @wraps(func)
     def wrapper(request: Request, exc: IdentityError) -> R_co:
         if request.url.path.startswith("/ui"):
-            sign_in_url = request.url_for("fetch_sign_in_page")
             return RedirectResponse(
-                url=f"{sign_in_url}?error={exc.message}",
+                url=request.url_for("fetch_sign_in_page").replace_query_params(
+                    error=exc.message,
+                ),
                 status_code=status.HTTP_302_FOUND,
             )
         return func(request, exc)

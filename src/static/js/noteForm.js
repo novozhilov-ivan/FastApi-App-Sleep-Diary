@@ -9,7 +9,6 @@ function sendPatch(event, noteDate) {
         credentials: "include",
     })
         .then((response) => {
-            if (!response.redirected) return;
             window.location.href = response.url;
         })
         .catch((error) => {
@@ -18,6 +17,26 @@ function sendPatch(event, noteDate) {
         });
 
     return false;
+}
+
+function deleteNote(noteDate) {
+    if (!confirm("Вы уверены, что хотите удалить эту запись?")) {
+        return;
+    }
+
+    const url = window.DELETE_NOTE_URL.replace("__NOTE_DATE__", noteDate);
+
+    fetch(url, {
+        method: "DELETE",
+        credentials: "include",
+    })
+        .then((response) => {
+            window.location.href = response.url;
+        })
+        .catch((error) => {
+            console.error("Error:", error);
+            alert("Ошибка при удалении записи");
+        });
 }
 
 function showEditForm(noteDate, weekIndex, dayIndex, wentToBed, fellAsleep, wokeUp, gotUp, noSleep) {

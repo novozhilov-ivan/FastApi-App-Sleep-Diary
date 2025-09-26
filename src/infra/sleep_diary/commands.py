@@ -25,3 +25,9 @@ class EditNoteCommand:
             got_up=self.got_up or note_entity.points.got_up,
             no_sleep=self.no_sleep or note_entity.points.no_sleep,
         )
+
+
+@dataclass
+class DeleteNoteCommand:
+    owner_oid: UUID
+    note_date: date
